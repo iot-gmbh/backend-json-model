@@ -44,6 +44,10 @@ annotate my.Tasks with @(UI : {
         Description    : {Value : description},
     },
     Identification  : [
+    {Value : due},
+    {Value : begin},
+    {Value : effort},
+    {Value : estimate},
     {Value : project_ID},
     {Value : personResponsible_ID}
     ],
@@ -67,6 +71,16 @@ annotate my.Tasks with @(UI : {
     },
     {
         $Type : 'UI.DataField',
+        Value : project.title,
+        Label : '{i18n>Tasks.project}'
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : personResponsible.name,
+        Label : '{i18n>Tasks.personResponsible}'
+    },
+    {
+        $Type : 'UI.DataField',
         Value : begin,
     },
     {
@@ -80,16 +94,6 @@ annotate my.Tasks with @(UI : {
     {
         $Type : 'UI.DataField',
         Value : estimate,
-    },
-    {
-        $Type            : 'UI.DataField',
-        Value            : project.title,
-        ![@Common.Label] : '{i18n>Tasks.project}'
-    },
-    {
-        $Type            : 'UI.DataField',
-        Value            : personResponsible.name,
-        ![@Common.Label] : '{i18n>Tasks.personResponsible}'
     },
     ]
 })
