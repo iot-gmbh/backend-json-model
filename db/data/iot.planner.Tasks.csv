@@ -1,0 +1,7 @@
+ID;title;description;due;begin;estimate;effort;project_ID;personResponsible_ID;
+4ee7a4e6-089a-4355-bd22-819cb62400f3;Entwicklung;Detailimplementierung;2021-01-01;2021-01-01;2;3;0f138721-7d8c-4906-b1af-696b993eeef7;62017269-ae4e-4d7e-9d29-5ec9b4eb6e6c;
+d5f03d2c-d0e6-4ca4-abbd-48ad4d31ea98;Test;Automatisierte Tests;2021-01-01;2021-01-01;2;3;0f138721-7d8c-4906-b1af-696b993eeef7;62017269-ae4e-4d7e-9d29-5ec9b4eb6e6c;
+8faecfc7-f589-4209-9472-aae3b465e564;Qualitätssicherung;Automatisierte Tests;2021-01-01;2021-01-01;2;3;0f138721-7d8c-4906-b1af-696b993eeef7;3b2df362-87e9-4c43-81bb-8ff03ca95b10;
+cf6378a9-4855-4277-a583-6b27c9659055;Dokumentation;Doku und Konzept;2021-01-01;2021-01-01;2;3;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;3b2df362-87e9-4c43-81bb-8ff03ca95b10;
+c11f4f28-597b-4fc9-853e-be18ca317ba5;Deployment;CI/CD;2021-01-01;2021-01-01;2;3;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;c52c1e8f-8ab2-43a1-a73c-e1eacecaca56;
+b0bb9f98-e402-4331-8f66-95e63c7001f1;Entwicklung;Wireframes und Mockups;2021-01-01;2021-01-01;2;3;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;7bf7a5b3-6634-4975-8f7b-eba1e62810f8;

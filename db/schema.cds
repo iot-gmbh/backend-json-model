@@ -7,15 +7,22 @@ using {
 
 namespace iot.planner;
 
-entity Employees : cuid {
+entity Employees : managed, cuid {
     name  : String @title : '{i18n>Employees.name}';
     tasks : Association to many Tasks
                 on tasks.personResponsible = $self;
 }
 
-entity Projects : cuid {
+entity Customers : managed, cuid {
+    name     : String @title : '{i18n>Customers.name}';
+    projects : Association to many Projects
+                   on projects.customer = $self;
+}
+
+entity Projects : managed, cuid {
     title       : String @title : '{i18n>Projects.title}';
     description : String @title : '{i18n>Projects.description}';
+    customer    : Association to Customers;
     manager     : Association to Employees;
     tasks       : Association to many Tasks
                       on tasks.project = $self;
