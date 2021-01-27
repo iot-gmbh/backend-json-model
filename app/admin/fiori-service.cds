@@ -1,10 +1,5 @@
-using AdminService from '../../srv/admin-service';
+using {AdminService as my} from '../../srv/admin-service';
 
-annotate AdminService.Employees with @UI : {
-    SelectionFields : [name, ],
-    LineItem        : [{
-        $Type : 'UI.DataField',
-        Value : name,
-    }, ]
-}
-                                     @odata.draft.enabled;
+annotate my.Employees;
+annotate my.Projects;
+annotate my.Tasks with @odata.draft.enabled;

@@ -7,13 +7,13 @@ using {
 
 namespace iot.planner;
 
-entity Employees : managed, cuid {
+entity Employees : cuid {
     name  : String @title : '{i18n>Employees.name}';
     tasks : Association to many Tasks
                 on tasks.personResponsible = $self;
 }
 
-entity Projects : managed, cuid {
+entity Projects : cuid {
     title       : String @title : '{i18n>Projects.title}';
     description : String @title : '{i18n>Projects.description}';
     manager     : Association to Employees;
@@ -21,6 +21,7 @@ entity Projects : managed, cuid {
                       on tasks.project = $self;
 }
 
+@cds.odata.valuelist
 entity Tasks : managed, cuid {
     title             : String                   @title : '{i18n>Tasks.title}';
     description       : String                   @title : '{i18n>Tasks.description}';
