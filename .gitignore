@@ -27,3 +27,17 @@ mta_archives/
 # IDEs
 # .vscode
 # .idea
+
+# From yeoman easy-ui5
+node_modules/
+.idea/
+.mta/
+*.mtar
+dist/
+package-lock.json
+mta_archives/
+deployer/resources/
+Makefile*
+mta-*
+approuter/*/webapp/
+
