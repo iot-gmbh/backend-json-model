@@ -44,8 +44,8 @@ annotate my.Tasks with @(UI : {
         Description    : {Value : description},
     },
     Identification  : [
-    {Value : due},
-    {Value : begin},
+    {Value : dueDate},
+    {Value : beginDate},
     {Value : effort},
     {Value : estimate},
     {Value : project_ID},
@@ -81,11 +81,11 @@ annotate my.Tasks with @(UI : {
     },
     {
         $Type : 'UI.DataField',
-        Value : begin,
+        Value : beginDate,
     },
     {
         $Type : 'UI.DataField',
-        Value : due,
+        Value : dueDate,
     },
     {
         $Type : 'UI.DataField',

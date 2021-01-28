@@ -32,10 +32,15 @@ entity Projects : managed, cuid {
 entity Tasks : managed, cuid {
     title             : String                   @title : '{i18n>Tasks.title}';
     description       : String                   @title : '{i18n>Tasks.description}';
-    due               : Date                     @title : '{i18n>Tasks.due}';
-    begin             : Date                     @title : '{i18n>Tasks.begin}';
+    dueDate           : Date                     @title : '{i18n>Tasks.due}';
+    deliveryDate      : Date                     @title : '{i18n>Tasks.dueDate}';
+    beginFrom         : Date                     @title : '{i18n>Tasks.beginFrom}';
+    beginDate         : Date                     @title : '{i18n>Tasks.beginDate}';
     estimate          : Integer                  @title : '{i18n>Tasks.estimate}';
+    estimateMin       : Integer                  @title : '{i18n>Tasks.estimateMin}';
+    estimateMax       : Integer                  @title : '{i18n>Tasks.estimateMax}';
     effort            : Integer                  @title : '{i18n>Tasks.effort}';
+    priority          : Integer                  @title : '{i18n>Tasks.priority}';
     personResponsible : Association to Employees @title : '{i18n>Tasks.personResponsible}';
     project           : Association to Projects  @title : '{i18n>Tasks.project}';
 };
