@@ -7,6 +7,8 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^4",
+    "azure-devops-node-api": "^10.2.1",
+    "dotenv": "^8.2.0",
     "express": "^4"
   },
   "devDependencies": {
