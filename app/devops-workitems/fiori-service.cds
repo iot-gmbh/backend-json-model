@@ -31,21 +31,12 @@ annotate my.Items with @(UI : {
     },
     {
         $Type : 'UI.DataField',
-        Value : CreatedDate
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : ChangedDate,
-    },
-    {
-        $Type : 'UI.DataField',
         Value : OriginalEstimate,
     },
     {
         $Type : 'UI.DataField',
         Value : CompletedWork,
     },
-
     {
         $Type : 'UI.DataField',
         Value : Reason
@@ -53,6 +44,14 @@ annotate my.Items with @(UI : {
     {
         $Type : 'UI.DataField',
         Value : State
-    }
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : CreatedDate
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : ChangedDate,
+    },
     ]
 });

@@ -34,14 +34,14 @@ module.exports = cds.service.impl(async function () {
         AssignedTo: item["System.AssignedTo"].uniqueName,
         AssignedToName: item["System.AssignedTo"].displayName,
         ChangedDate: item["System.ChangedDate"],
+        CompletedWork: item["Microsoft.VSTS.Scheduling.CompletedWork"],
         CreatedDate: item["System.CreatedDate"],
+        OriginalEstimate: item["Microsoft.VSTS.Scheduling.OriginalEstimate"],
         Reason: item["System.Reason"],
         State: item["System.State"],
         TeamProject: item["System.TeamProject"],
         Title: item["System.Title"],
         WorkItemType: item["System.WorkItemType"],
-        CompletedWork: item["Microsoft.VSTS.Scheduling.CompletedWork"],
-        OriginalEstimate: item["Microsoft.VSTS.Scheduling.OriginalEstimate"],
       }));
 
     results.$count = results.length;
