@@ -6,16 +6,25 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@azure/msal-node": "^1.0.0-beta.5",
+    "@microsoft/microsoft-graph-client": "^2.2.1",
     "@sap/cds": "^4",
+    "@sap/hana-client": "^2.7.21",
+    "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
     "azure-devops-node-api": "^10.2.1",
+    "cdse": "^1.1.1",
     "dotenv": "^8.2.0",
-    "express": "^4"
+    "express": "^4",
+    "isomorphic-fetch": "^3.0.0",
+    "sap-cf-axios": "^0.2.26"
   },
   "devDependencies": {
     "sqlite3": "^5"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds run",
+    "build": "mbt build",
+    "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar"
   },
   "files": [
     "db",
@@ -25,8 +34,7 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
-        "model": "*"
+        "kind": "sql"
       }
     }
   }
