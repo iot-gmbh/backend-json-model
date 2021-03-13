@@ -1,3 +1,5 @@
+# source: https://giehlman.de/2018/02/16/keep-your-swagger-yaml-version-in-sync-with-package-json/
+
 # Get the version from package.json
 PACKAGE_VERSION=$(cat package.json \
   | grep version \
