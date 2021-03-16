@@ -16,7 +16,16 @@ module.exports = cds.service.impl(async function () {
   }
 
   function getWhereClause(substring) {
-    return getSubstringBetween(substring, "WHERE", "ORDER BY");
+    const genericWhereClause = getSubstringBetween(
+      substring,
+      "WHERE",
+      "ORDER BY"
+    );
+    const whereClause = SQLString.values.reduce((string, value) => {
+      return string.replace("?", `'${value}'`);
+    }, genericWhereClause);
+
+    return whereClause;
   }
 
   function transformToWIQL(substring) {
@@ -49,23 +58,16 @@ module.exports = cds.service.impl(async function () {
   let workItemAPI = await connection.getWorkItemTrackingApi();
 
   this.on("READ", Items, async (req) => {
-    const { where } = req?.query?.SELECT;
-    const userID = where && where[2]?.val;
     const selectBuilder = new SelectBuilder(req.query);
     const SQLString = selectBuilder.build();
 
-    const whereClauseGeneric = getWhereClause(SQLString.sql);
-
-    const whereClause = SQLString.values.reduce((string, value) => {
-      return string.replace("?", `'${value}'`);
-    }, whereClauseGeneric);
-
-    const whereClauseWIQL = transformToWIQL(whereClause);
+    const whereClause = getWhereClause(SQLString.sql);
+    const WIQLWhereClause = transformToWIQL(whereClause);
 
     if (!userID) return [];
 
     const workItemsByWIQL = await workItemAPI.queryByWiql({
-      query: `SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' AND ${whereClauseWIQL}`,
+      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' AND ${WIQLWhereClause}`,
     });
 
     const ids = workItemsByWIQL.workItems.map(({ id }) => id);

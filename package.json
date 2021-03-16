@@ -8,8 +8,8 @@
   "dependencies": {
     "@azure/msal-node": "^1.0.1",
     "@microsoft/microsoft-graph-client": "^2.2.1",
-    "@sap/cds": "^4.6.4",
-    "@sap/hana-client": "^2.7.23",
+    "@sap/cds": "^4.6.5",
+    "@sap/hana-client": "^2.7.26",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
     "azure-devops-node-api": "^10.2.1",
     "cdse": "^1.1.1",
