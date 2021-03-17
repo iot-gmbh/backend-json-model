@@ -41,11 +41,11 @@ function transformToWIQL(substring) {
 const azdev = require("azure-devops-node-api");
 const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
 
+require("dotenv").config();
+
 const orgUrl = "https://dev.azure.com/iot-gmbh";
 const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
-
-require("dotenv").config();
 
 module.exports = cds.service.impl(async function () {
   const connection = new azdev.WebApi(orgUrl, authHandler);
