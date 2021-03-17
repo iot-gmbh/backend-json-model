@@ -10,7 +10,7 @@ module.exports = cds.service.impl(async function () {
     let values = [];
     try {
       values = await service.run({
-        url: `/v1.0/users/f4203119-a2ad-4411-96d6-72c8df8545ff/events`,
+        url: `/v1.0/me`,
       });
     } catch (error) {
       console.log(error);
