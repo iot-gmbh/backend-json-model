@@ -35,6 +35,11 @@
     "requires": {
       "db": {
         "kind": "sql"
+      },
+      "MicrosoftGraphBHOPersonalAD": {
+        "credentials": {
+          "destination": "MicrosoftGraphBHOPersonalAD"
+        }
       }
     }
   }
