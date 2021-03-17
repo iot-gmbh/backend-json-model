@@ -19,12 +19,24 @@
     "sap-cf-axios": "^0.2.29"
   },
   "devDependencies": {
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "sqlite3": "^5.0.2"
   },
   "scripts": {
     "start": "cds run",
     "build": "mbt build",
-    "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar"
+    "lint": "eslint srv && eslint app",
+    "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
+    "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
+    "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv"
   },
   "files": [
     "db",

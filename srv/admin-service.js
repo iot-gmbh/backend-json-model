@@ -10,7 +10,7 @@ function getDaysBetween(startDate, endDate) {
 }
 
 module.exports = (srv) => {
-  srv.after("READ", "Tasks", (tasks, req) => {
+  srv.after("READ", "Tasks", (tasks) => {
     return tasks.map(async (task) => {
       task.daysBetween = (
         getDaysBetween(task.beginFrom, task.dueDate) || 0
