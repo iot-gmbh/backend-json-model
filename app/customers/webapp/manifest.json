@@ -15,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/admin/",
+                "uri": "admin/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"

@@ -19,6 +19,15 @@ builder:
       configuration:
         appFolder: webapp
         destDir: dist
+    - name: webide-extension-task-resources
+      afterTask: webide-extension-task-updateManifestJson
+      configuration:
+        nameSpace: ns
+    - name: webide-extension-task-copyFile
+      afterTask: webide-extension-task-resources
+      configuration:
+        srcFile: "/xs-app.json"
+        destFile: "/xs-app.json"
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
       configuration:
