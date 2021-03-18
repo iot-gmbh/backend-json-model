@@ -25,6 +25,7 @@
     "@sap/approuter": "^6"
   },
   "devDependencies": {
+    "@sap/ux-specification": "^1.84.5",
     "eslint": "^7.20.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -44,9 +45,7 @@
     ]
   },
   "scripts": {
-    "start": "run-p start:srv start:ui",
-    "start:srv": "cds run",
-    "start:ui": "node node_modules/@sap/approuter/approuter.js",
+    "start": "cds run",
     "build": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
@@ -73,5 +72,8 @@
         }
       }
     }
-  }
+  },
+  "sapux": [
+    "app\\customers"
+  ]
 }
