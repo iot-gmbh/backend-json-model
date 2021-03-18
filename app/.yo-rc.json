@@ -1,0 +1,16 @@
+{
+  "generator-easy-ui5": {
+    "projectname": "planner",
+    "namespace": "iot",
+    "platform": "Cloud Foundry HTML5 Application Repository",
+    "viewtype": "XML",
+    "viewname": "Planner",
+    "ui5libs": "Local resources (SAPUI5)",
+    "newdir": true,
+    "namespaceURI": "iot",
+    "uimodules": [
+      "uimodule"
+    ],
+    "setupCompleted": true
+  }
+}

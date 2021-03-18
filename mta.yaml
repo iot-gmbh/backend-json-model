@@ -17,6 +17,45 @@ build-parameters:
         - npx -p @sap/cds-dk cds build --production
 
 modules:
+  # --------------------- UI MODULE ------------------------
+  - name: project-planning
+    # ------------------------------------------------------------
+    type: nodejs
+    path: app
+    parameters:
+      disk-quota: 512M
+      memory: 512M
+    build-parameters:
+      builder: custom
+      commands:
+        - npm run build:planner --prefix ..
+      supported-platforms: []
+    requires:
+      - name: project-planning-html5-repo-runtime
+      - name: project-planning-portal
+      - name: project-planning-uaa
+      - name: srv-api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          strictSSL: true
+          name: srv-api
+          url: ~{url}
+
+  - name: project-planning-deployer
+    type: com.sap.html5.application-content
+    path: deployer
+    requires:
+      - name: project-planning-html5-repo-host
+
+  - name: project-planning-launchpad-deployer
+    type: com.sap.portal.content
+    path: flp
+    requires:
+      - name: project-planning-html5-repo-host
+      - name: project-planning-portal
+      - name: project-planning-uaa
+
   # --------------------- SERVER MODULE ------------------------
   - name: project-planning-srv
     # ------------------------------------------------------------
@@ -29,7 +68,7 @@ modules:
     provides:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
-          srv-url: ${default-url}
+          url: ${default-url}
 
   # -------------------- SIDECAR MODULE ------------------------
   - name: project-planning-db-deployer
@@ -59,3 +98,29 @@ resources:
     type: org.cloudfoundry.existing-service
     parameters:
       service-name: project-planning-destinations
+
+  - name: project-planning-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+
+  - name: project-planning-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+      config:
+        sizeLimit: 5
+
+  - name: project-planning-portal
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: standard
+      service: portal
+
+  - name: project-planning-uaa
+    type: com.sap.xs.uaa
+    parameters:
+      service: xsuaa
+      path: xs-security.json
