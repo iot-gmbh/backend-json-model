@@ -10,7 +10,14 @@ service AzureDevopsService @(_requires : 'authenticated-user') {
             TeamProject      : String   @title : '{i18n>WorkItems.TeamProject}';
             Title            : String   @title : '{i18n>WorkItems.Title}';
             WorkItemType     : String   @title : '{i18n>WorkItems.WorkItemType}';
+            // Scheduling
             CompletedWork    : Integer  @title : '{i18n>WorkItems.CompletedWork}';
+            RemainingWork    : Integer  @title : '{i18n>WorkItems.RemainingWork}';
             OriginalEstimate : Integer  @title : '{i18n>WorkItems.OriginalEstimate}';
+            // Documentation
+            ActivatedDate    : DateTime @title : '{i18n>WorkItems.ActivatedDate}';
+            ResolvedDate     : DateTime @title : '{i18n>WorkItems.ResolvedDate}';
+            CompletedDate    : DateTime @title : '{i18n>WorkItems.CompletedDate}';
+            ClosedDate       : DateTime @title : '{i18n>WorkItems.ClosedDate}';
     };
 };

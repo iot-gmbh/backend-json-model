@@ -38,6 +38,12 @@ function transformToWIQL(substring) {
   return WIQL;
 }
 
+function isISODate(str) {
+  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
+  var d = new Date(str);
+  return d.toISOString() === str;
+}
+
 const azdev = require("azure-devops-node-api");
 const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
 
@@ -82,17 +88,42 @@ module.exports = cds.service.impl(async function () {
         AssignedToName: item["System.AssignedTo"].displayName,
         ChangedDate: item["System.ChangedDate"],
         CreatedDate: item["System.CreatedDate"],
-        CompletedWork: item["Microsoft.VSTS.Scheduling.CompletedWork"],
-        OriginalEstimate: item["Microsoft.VSTS.Scheduling.OriginalEstimate"],
         Reason: item["System.Reason"],
         State: item["System.State"],
         TeamProject: item["System.TeamProject"],
         Title: item["System.Title"],
         WorkItemType: item["System.WorkItemType"],
-      }));
+        // Documentation
+        ActivatedDate: item["Microsoft.VSTS.Common.ActivatedDate"],
+        ResolvedDate: item["Microsoft.VSTS.Common.ResolvedDate"],
+        ClosedDate: item["Microsoft.VSTS.Common.ClosedDate"],
+        // Scheduling
+        CompletedWork: item["Microsoft.VSTS.Scheduling.CompletedWork"],
+        RemainingWork: item["Microsoft.VSTS.Scheduling.RemainingWork"],
+        OriginalEstimate: item["Microsoft.VSTS.Scheduling.OriginalEstimate"],
+      }))
+      .map((item) => {
+        /* Azure DevOps gives us Datestrings with .456 Milliseconds. The Default Milliseconds for OData DateTimeOffset is 0:https://openui5.hana.ondemand.com/api/sap.ui.model.odata.type.DateTimeOffset#constructor.
+        In order to avoid we do a manual transformation */
+        for (let [key, value] of Object.entries(item)) {
+          if (isISODate(value)) {
+            item[key] = value.split(".")[0] + "Z";
+          }
+        }
+
+        item.CompletedDate = item.ClosedDate || item.ResolvedDate;
+        return item;
+      });
+
+    // const sortedByResolvedDay = results
+    //   .filter(({ ResolvedDate }) => !!ResolvedDate)
+    //   .sort((a, b) => (a.ResolvedDate <= b.ResolvedDate ? -1 : 1));
+
+    //   sortedByResolvedDay.$count = sortedByResolvedDay.length;
+
+    //   return sortedByResolvedDay;
 
     results.$count = results.length;
-
     return results;
   });
 });

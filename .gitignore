@@ -15,7 +15,7 @@ target/
 *_mta_build_tmp
 *.mtar
 mta_archives/
-resources
+resources/
 
 # Other
 .DS_Store
