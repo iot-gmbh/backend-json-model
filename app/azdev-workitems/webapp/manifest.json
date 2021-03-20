@@ -1,11 +1,11 @@
 {
-    "_version": "1.1.0",
+    "_version": "1.9.0",
     "sap.cloud": {
         "public": true,
         "service": "iot.project.planning"
     },
     "sap.app": {
-        "id": "iot.customers",
+        "id": "iot.project.planning.azdevworkitems",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -15,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "admin/",
+                "uri": "azure-devops/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"
@@ -30,14 +30,14 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "iot-customers-inbound": {
+                "iot-project-planning-azdevworkitems-inbound": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
-                    "semanticObject": "Customer",
+                    "semanticObject": "AzDevOpsWorkItem",
                     "action": "display",
-                    "title": "Kunden anzeigen",
+                    "title": "Find and display Azure Devops Work-Items",
                     "subTitle": "",
                     "icon": ""
                 }
@@ -92,63 +92,41 @@
             "routes": [
                 {
                     "pattern": ":?query:",
-                    "name": "CustomersList",
-                    "target": "CustomersList"
+                    "name": "ItemsList",
+                    "target": "ItemsList"
                 },
                 {
-                    "pattern": "Customers({key}):?query:",
-                    "name": "CustomersObjectPage",
-                    "target": "CustomersObjectPage"
-                },
-                {
-                    "pattern": "Customers({key})/projects({key2}):?query:",
-                    "name": "ProjectsObjectPage",
-                    "target": "ProjectsObjectPage"
+                    "pattern": "Items({key}):?query:",
+                    "name": "ItemsObjectPage",
+                    "target": "ItemsObjectPage"
                 }
             ],
             "targets": {
-                "CustomersList": {
+                "ItemsList": {
                     "type": "Component",
-                    "id": "CustomersList",
+                    "id": "ItemsList",
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings": {
-                            "entitySet": "Customers",
+                            "entitySet": "Items",
                             "variantManagement": "Page",
                             "navigation": {
-                                "Customers": {
+                                "Items": {
                                     "detail": {
-                                        "route": "CustomersObjectPage"
+                                        "route": "ItemsObjectPage"
                                     }
                                 }
                             }
                         }
                     }
                 },
-                "CustomersObjectPage": {
+                "ItemsObjectPage": {
                     "type": "Component",
-                    "id": "CustomersObjectPage",
+                    "id": "ItemsObjectPage",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
-                            "entitySet": "Customers",
-                            "navigation": {
-                                "projects": {
-                                    "detail": {
-                                        "route": "ProjectsObjectPage"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "ProjectsObjectPage": {
-                    "type": "Component",
-                    "id": "ProjectsObjectPage",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings": {
-                            "entitySet": "Projects"
+                            "entitySet": "Items"
                         }
                     }
                 }
