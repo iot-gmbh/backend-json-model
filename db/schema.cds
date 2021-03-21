@@ -98,13 +98,13 @@ entity WorkItems {
 
                                                     @title : '{i18n>WorkItems.WorkItemType}';
         // Scheduling
-        CompletedWork    : Integer
+        CompletedWork    : Decimal
 
                                                     @title : '{i18n>WorkItems.CompletedWork}';
-        RemainingWork    : Integer
+        RemainingWork    : Decimal
 
                                                     @title : '{i18n>WorkItems.RemainingWork}';
-        OriginalEstimate : Integer
+        OriginalEstimate : Decimal
 
                                                     @title : '{i18n>WorkItems.OriginalEstimate}';
         // Documentation
