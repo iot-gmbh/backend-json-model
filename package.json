@@ -49,7 +49,8 @@
     ]
   },
   "scripts": {
-    "start": "run-p start:srv start:spc start:planner",
+    "start": "cds run",
+    "start:lcl": "run-p start:srv start:spc start:planner",
     "start:srv": "cds run",
     "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8082",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8081",

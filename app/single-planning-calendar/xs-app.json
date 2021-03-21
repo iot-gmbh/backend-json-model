@@ -3,9 +3,9 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^azure-devops/(.*)$",
-      "target": "azure-devops/$1",
-      "destination": "srv-api",
+      "source": "^/azure-devops/(.*)$",
+      "target": "/azure-devops/$1",
+      "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },

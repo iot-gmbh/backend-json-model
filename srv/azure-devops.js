@@ -111,8 +111,8 @@ module.exports = cds.service.impl(async function () {
     const SQLString = selectBuilder.build();
     const whereClause = getWhereClause(SQLString);
 
-    // const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = ${req.user.id}`;
-    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = 'nick.obendorf@iot-online.de'`;
+    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = ${req.user.id}`;
+    // const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = 'nick.obendorf@iot-online.de'`;
 
     const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
