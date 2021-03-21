@@ -128,6 +128,13 @@ module.exports = cds.service.impl(async function () {
       .map((DevOpsObject) => {
         let CDSObject = destructureDevOpsObj(DevOpsObject);
 
+        for (let [key, value] of Object.entries(CDSObject)) {
+          if (isISODate(value)) {
+            // Strip milliseconds: https://stackoverflow.com/questions/31171810/stripping-milliseconds-from-extended-iso-format
+            CDSObject[key] = value.substring(0, 19) + "Z";
+          }
+        }
+
         CDSObject.CompletedDate =
           CDSObject.ClosedDate || CDSObject.ResolvedDate;
         return CDSObject;

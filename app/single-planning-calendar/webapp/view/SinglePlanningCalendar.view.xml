@@ -6,7 +6,7 @@
 		<App id="app">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" selectedView="SinglePlanningCalendarDayView" startDateChange="onStartDateChange">
+					<SinglePlanningCalendar id="SPCalendar" selectedView="SinglePlanningCalendarDayView" startDateChange="onStartDateChange" viewChange="onChangeView">
 						<views>
 							<SinglePlanningCalendarDayView key="DayView" title="Day" />
 							<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />

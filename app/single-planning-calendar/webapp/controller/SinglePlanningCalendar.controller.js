@@ -17,6 +17,10 @@ sap.ui.define(
           this._bindAppointments();
         },
 
+        onChangeView: function () {
+          this._bindAppointments();
+        },
+
         onStartDateChange: function () {
           this._bindAppointments();
         },
