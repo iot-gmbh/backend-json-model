@@ -1,7 +1,6 @@
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
   AssignedTo: "System.AssignedTo",
-  AssignedToName: "System.AssignedTo",
   ChangedDate: "System.ChangedDate",
   CreatedDate: "System.CreatedDate",
   Reason: "System.Reason",
@@ -18,6 +17,29 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   RemainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
   OriginalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
 };
+
+function destructureDevOpsObj(devOpsObj) {
+  let cds = {};
+  ({
+    id: cds.ID,
+    "System.AssignedTo": { uniqueName: cds.AssignedToUserID },
+    "System.AssignedTo": { displayName: cds.AssignedToName },
+    "System.ChangedDate": cds.ChangedDate,
+    "System.CreatedDate": cds.CreatedDate,
+    "System.Reason": cds.Reason,
+    "System.State": cds.State,
+    "System.TeamProject": cds.TeamProject,
+    "System.Title": cds.Title,
+    "System.WorkItemType": cds.WorkItemType,
+    "Microsoft.VSTS.Common.ActivatedDate": cds.ActivatedDate,
+    "Microsoft.VSTS.Common.ResolvedDate": cds.ResolvedDate,
+    "Microsoft.VSTS.Common.ClosedDate": cds.ClosedDate,
+    "Microsoft.VSTS.Scheduling.CompletedWork": cds.CompletedWork,
+    "Microsoft.VSTS.Scheduling.RemainingWork": cds.RemainingWork,
+    "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.OriginalEstimate,
+  } = devOpsObj);
+  return cds;
+}
 
 function getSubstringBetween(string, begin, end) {
   const substringBetween = string.substring(
@@ -58,16 +80,6 @@ function transformToWIQL(substring) {
     }, "");
 
   return WIQL;
-}
-
-function invertMapping(map) {
-  // Source: https://stackoverflow.com/questions/23013573/swap-key-with-value-json/23013744
-  return Object.fromEntries(Object.entries(map).map((a) => a.reverse()));
-}
-
-function getCDSFieldName(DevOpsName) {
-  const mapCDStoDevOps = invertMapping(MAP_DEVOPS_TO_CDS_NAMES);
-  return mapCDStoDevOps[DevOpsName];
 }
 
 function getDevOpsFieldName(CDSName) {
@@ -114,17 +126,7 @@ module.exports = cds.service.impl(async function () {
       .map((item) => ({ id: item.id, ...item.fields }))
       .reduce((acc, item) => acc.concat(item), [])
       .map((DevOpsObject) => {
-        const keys = Object.entries(MAP_DEVOPS_TO_CDS_NAMES);
-        let CDSObject = {};
-
-        for (let [CDSName, DevOpsName] of keys) {
-          let value = DevOpsObject[DevOpsName];
-          if (isISODate(value)) {
-            // CDSObject[CDSName] = value.split(".")[0] + "Z";
-          } else {
-          }
-          CDSObject[CDSName] = value;
-        }
+        let CDSObject = destructureDevOpsObj(DevOpsObject);
 
         CDSObject.CompletedDate =
           CDSObject.ClosedDate || CDSObject.ResolvedDate;
