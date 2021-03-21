@@ -1,5 +1,5 @@
-ID;name;modifiedAt
-62017269-ae4e-4d7e-9d29-5ec9b4eb6e6c;Benedikt Hölker;2020-07-03T14:05:19.732Z
-3b2df362-87e9-4c43-81bb-8ff03ca95b10;Nick Obendorf;2020-07-03T14:05:19.732Z
-7bf7a5b3-6634-4975-8f7b-eba1e62810f8;Adriana Rieber;2020-07-03T14:05:19.732Z
-c52c1e8f-8ab2-43a1-a73c-e1eacecaca56;Dennis Kiedrowicz;2020-07-03T14:05:19.732Z
+ID;name;modifiedAt;principalName
+62017269-ae4e-4d7e-9d29-5ec9b4eb6e6c;Benedikt Hölker;2020-07-03T14:05:19.732Z;benedikt.hoelker@iot-online.de
+3b2df362-87e9-4c43-81bb-8ff03ca95b10;Nick Obendorf;2020-07-03T14:05:19.732Z;nick.obendorf@iot-online.de
+7bf7a5b3-6634-4975-8f7b-eba1e62810f8;Adriana Rieber;2020-07-03T14:05:19.732Z;adriana.rieber@iot-online.de
+c52c1e8f-8ab2-43a1-a73c-e1eacecaca56;Dennis Kiedrowicz;2020-07-03T14:05:19.732Z;dennis.kiedrowicz@iot-online.de

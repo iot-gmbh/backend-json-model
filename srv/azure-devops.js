@@ -57,9 +57,9 @@ module.exports = cds.service.impl(async function () {
   const connection = new azdev.WebApi(orgUrl, authHandler);
   const workItemAPI = await connection.getWorkItemTrackingApi();
 
-  const { Items } = this.entities;
+  const { Employees, Items, WorkItems } = this.entities;
 
-  this.on("READ", Items, async (req) => {
+  this.on("READ", WorkItems, async (req) => {
     const selectBuilder = new SelectBuilder(req.query);
     const SQLString = selectBuilder.build();
 
