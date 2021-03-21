@@ -1,3 +1,24 @@
+const MAP_DEVOPS_TO_CDS_NAMES = {
+  ID: "id",
+  AssignedTo: "System.AssignedTo",
+  AssignedToName: "System.AssignedTo",
+  ChangedDate: "System.ChangedDate",
+  CreatedDate: "System.CreatedDate",
+  Reason: "System.Reason",
+  State: "System.State",
+  TeamProject: "System.TeamProject",
+  Title: "System.Title",
+  WorkItemType: "System.WorkItemType",
+  // Documentation
+  ActivatedDate: "Microsoft.VSTS.Common.ActivatedDate",
+  ResolvedDate: "Microsoft.VSTS.Common.ResolvedDate",
+  ClosedDate: "Microsoft.VSTS.Common.ClosedDate",
+  // Scheduling
+  CompletedWork: "Microsoft.VSTS.Scheduling.CompletedWork",
+  RemainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
+  OriginalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
+};
+
 function getSubstringBetween(string, begin, end) {
   const substringBetween = string.substring(
     string.lastIndexOf(begin) + begin.length,
@@ -8,12 +29,18 @@ function getSubstringBetween(string, begin, end) {
 }
 
 function getWhereClause({ sql, values }) {
-  if (!sql || !sql.includes("WHERE")) return false;
+  if (!sql || !sql.includes("WHERE")) return "";
 
   const genericWhereClause = getSubstringBetween(sql, "WHERE", "ORDER BY");
 
   const whereClause = values.reduce((string, value) => {
-    return string.replace("?", `'${value}'`);
+    let replace = value;
+
+    if (isISODate(value)) {
+      replace = replace.substring(0, 10);
+    }
+
+    return string.replace("?", `'${replace}'`);
   }, genericWhereClause);
 
   return "AND" + whereClause;
@@ -25,12 +52,7 @@ function transformToWIQL(substring) {
   const WIQL = substrings
     .filter((str) => str.length > 0)
     .reduce((str, substr) => {
-      const next =
-        substr.length > 3 &&
-        !(substr === substr.toUpperCase()) &&
-        !substr.startsWith("'")
-          ? `[System.${substr}]`
-          : substr;
+      const next = getDevOpsFieldName(substr) || substr;
       const result = str.concat(` ${next}`);
       return result;
     }, "");
@@ -38,10 +60,25 @@ function transformToWIQL(substring) {
   return WIQL;
 }
 
+function invertMapping(map) {
+  // Source: https://stackoverflow.com/questions/23013573/swap-key-with-value-json/23013744
+  return Object.fromEntries(Object.entries(map).map((a) => a.reverse()));
+}
+
+function getCDSFieldName(DevOpsName) {
+  const mapCDStoDevOps = invertMapping(MAP_DEVOPS_TO_CDS_NAMES);
+  return mapCDStoDevOps[DevOpsName];
+}
+
+function getDevOpsFieldName(CDSName) {
+  return MAP_DEVOPS_TO_CDS_NAMES[CDSName];
+}
+
 function isISODate(str) {
-  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
-  var d = new Date(str);
-  return d.toISOString() === str;
+  // Regex-Source: https://stackoverflow.com/questions/3143070/javascript-regex-iso-datetime
+  const dateRegexp = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+
+  return dateRegexp.test(str);
 }
 
 const azdev = require("azure-devops-node-api");
@@ -57,24 +94,18 @@ module.exports = cds.service.impl(async function () {
   const connection = new azdev.WebApi(orgUrl, authHandler);
   const workItemAPI = await connection.getWorkItemTrackingApi();
 
-  const { Employees, Items, WorkItems } = this.entities;
-
-  this.on("READ", WorkItems, async (req) => {
+  this.on("READ", "MyWorkItems", async (req) => {
     const selectBuilder = new SelectBuilder(req.query);
     const SQLString = selectBuilder.build();
-
     const whereClause = getWhereClause(SQLString);
 
-    if (!whereClause) {
-      const results = [];
-      results.$count = results.length;
-      return results;
-    }
+    // const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = ${req.user.id}`;
+    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = 'nick.obendorf@iot-online.de'`;
 
-    const WIQLWhereClause = transformToWIQL(whereClause);
+    const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
     const workItemsByWIQL = await workItemAPI.queryByWiql({
-      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> ''${WIQLWhereClause}`,
+      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' ${WIQLWhereClause}`,
     });
 
     const ids = workItemsByWIQL.workItems.map(({ id }) => id);
@@ -82,46 +113,23 @@ module.exports = cds.service.impl(async function () {
     const results = wiDetails
       .map((item) => ({ id: item.id, ...item.fields }))
       .reduce((acc, item) => acc.concat(item), [])
-      .map((item) => ({
-        ID: item.id,
-        AssignedTo: item["System.AssignedTo"].uniqueName,
-        AssignedToName: item["System.AssignedTo"].displayName,
-        ChangedDate: item["System.ChangedDate"],
-        CreatedDate: item["System.CreatedDate"],
-        Reason: item["System.Reason"],
-        State: item["System.State"],
-        TeamProject: item["System.TeamProject"],
-        Title: item["System.Title"],
-        WorkItemType: item["System.WorkItemType"],
-        // Documentation
-        ActivatedDate: item["Microsoft.VSTS.Common.ActivatedDate"],
-        ResolvedDate: item["Microsoft.VSTS.Common.ResolvedDate"],
-        ClosedDate: item["Microsoft.VSTS.Common.ClosedDate"],
-        // Scheduling
-        CompletedWork: item["Microsoft.VSTS.Scheduling.CompletedWork"],
-        RemainingWork: item["Microsoft.VSTS.Scheduling.RemainingWork"],
-        OriginalEstimate: item["Microsoft.VSTS.Scheduling.OriginalEstimate"],
-      }))
-      .map((item) => {
-        /* Azure DevOps gives us Datestrings with .456 Milliseconds. The Default Milliseconds for OData DateTimeOffset is 0:https://openui5.hana.ondemand.com/api/sap.ui.model.odata.type.DateTimeOffset#constructor.
-        In order to avoid we do a manual transformation */
-        for (let [key, value] of Object.entries(item)) {
+      .map((DevOpsObject) => {
+        const keys = Object.entries(MAP_DEVOPS_TO_CDS_NAMES);
+        let CDSObject = {};
+
+        for (let [CDSName, DevOpsName] of keys) {
+          let value = DevOpsObject[DevOpsName];
           if (isISODate(value)) {
-            item[key] = value.split(".")[0] + "Z";
+            // CDSObject[CDSName] = value.split(".")[0] + "Z";
+          } else {
           }
+          CDSObject[CDSName] = value;
         }
 
-        item.CompletedDate = item.ClosedDate || item.ResolvedDate;
-        return item;
+        CDSObject.CompletedDate =
+          CDSObject.ClosedDate || CDSObject.ResolvedDate;
+        return CDSObject;
       });
-
-    // const sortedByResolvedDay = results
-    //   .filter(({ ResolvedDate }) => !!ResolvedDate)
-    //   .sort((a, b) => (a.ResolvedDate <= b.ResolvedDate ? -1 : 1));
-
-    //   sortedByResolvedDay.$count = sortedByResolvedDay.length;
-
-    //   return sortedByResolvedDay;
 
     results.$count = results.length;
     return results;
