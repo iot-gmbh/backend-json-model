@@ -3,145 +3,149 @@ ID: project-planning
 description: A simple CAP project.
 version: 1.0.0
 modules:
-  - name: project-planning-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: project-planning-db
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
-
-  - name: project-planning-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: project-planning-db
-    parameters:
-      buildpack: nodejs_buildpack
-
-  - name: project-planning-content
-    type: com.sap.application.content
-    requires:
-      - name: project-planning-uaa
-        parameters:
-          service-key:
-            name: project-planning-uaa-key
-      - name: project-planning-repo-host
-        parameters:
-          service-key:
-            name: project-planning-repo-host-key
-      - name: project-planning-dest
-        parameters:
-          content-target: true
-    parameters:
-      content:
-        subaccount:
-          destinations:
-            - Name: project-planning-repo-host
-              ServiceInstanceName: project-planning-repo-host-service
-              ServiceKeyName: project-planning-repo-host-key
-              sap.cloud.service: iot.project.planning
-            - Authentication: OAuth2UserTokenExchange
-              Name: iot.project.planning-uaa
-              ServiceInstanceName: project-planning-xsuaa-service
-              ServiceKeyName: iot.project.planning-uaa-key
-              sap.cloud.service: iot.project.planning
-          existing_destinations_policy: update
-    build-parameters:
-      no-source: true
-
-  - name: project-planning-ui-deployer
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: project-planning-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - iot-customers.zip
-          name: fiori-customers
-          target-path: resources/
-        - artifacts:
-            - iotprojectplanningazdevworkitems.zip
-          name: iotprojectplanningazdevworkitems
-          target-path: resources/
-
-  - name: fiori-customers
-    type: html5
-    path: app/customers
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm run build
-      supported-platforms: []
-
-  - name: iotprojectplanningazdevworkitems
-    type: html5
-    path: app\azdev-workitems
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-
-resources:
+- name: project-planning-srv
+  type: nodejs
+  path: gen/srv
+  requires:
   - name: project-planning-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hanatrial
-      service-plan: hdi-shared
+  provides:
+  - name: srv-api
     properties:
-      hdi-service-name: ${service-name}
-
-  - name: project-planning-dest
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
-                URL: https://ui5.sap.com
-            existing_destinations_policy: update
-        version: 1.0.0
-      service: destination
-      service-name: project-planning-dest-service
-      service-plan: lite
-    requires:
-      - name: srv-api
-
-  - name: project-planning-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-name: project-planning-repo-host-service
-      service-plan: app-host
-
+      srv-url: ${default-url}
+- name: project-planning-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: project-planning-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: project-planning-content
+  type: com.sap.application.content
+  requires:
   - name: project-planning-uaa
-    type: org.cloudfoundry.managed-service
     parameters:
-      path: ./xs-security.json
-      service: xsuaa
-      service-name: project-planning-xsuaa-service
-      service-plan: application
-
+      service-key:
+        name: project-planning-uaa-key
+  - name: project-planning-repo-host
+    parameters:
+      service-key:
+        name: project-planning-repo-host-key
+  - name: project-planning-dest
+    parameters:
+      content-target: true
+  parameters:
+    content:
+      subaccount:
+        destinations:
+        - Name: project-planning-repo-host
+          ServiceInstanceName: project-planning-repo-host-service
+          ServiceKeyName: project-planning-repo-host-key
+          sap.cloud.service: iot.project.planning
+        - Authentication: OAuth2UserTokenExchange
+          Name: iot.project.planning-uaa
+          ServiceInstanceName: project-planning-xsuaa-service
+          ServiceKeyName: iot.project.planning-uaa-key
+          sap.cloud.service: iot.project.planning
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+- name: project-planning-ui-deployer
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: project-planning-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - iot-customers.zip
+      name: fiori-customers
+      target-path: resources/
+    - artifacts:
+      - iotprojectplanningazdevworkitems.zip
+      name: iotprojectplanningazdevworkitems
+      target-path: resources/
+    - artifacts:
+      - iotsingleplanningcalendar.zip
+      name: iotsingleplanningcalendar
+      target-path: resources/
+- name: fiori-customers
+  type: html5
+  path: app/customers
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: iotprojectplanningazdevworkitems
+  type: html5
+  path: app\azdev-workitems
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: iotsingleplanningcalendar
+  type: html5
+  path: app\single-planning-calendar
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: project-planning-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hanatrial
+    service-plan: hdi-shared
+  properties:
+    hdi-service-name: ${service-name}
+- name: project-planning-dest
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: project-planning-dest-service
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: project-planning-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: project-planning-repo-host-service
+    service-plan: app-host
+- name: project-planning-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: project-planning-xsuaa-service
+    service-plan: application
 parameters:
   deploy_mode: html5-repo
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
+  - builder: custom
+    commands:
+    - npm install --production
+    - npx -p @sap/cds-dk cds build --production

@@ -49,8 +49,10 @@
     ]
   },
   "scripts": {
-    "start": "cds run && npm start:*",
-    "start:planner": "ui5 serve --config=app/planner/ui5.yaml",
+    "start": "run-p start:srv start:spc start:planner",
+    "start:srv": "cds run",
+    "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8082",
+    "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8081",
     "build": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
@@ -81,6 +83,7 @@
   },
   "sapux": [
     "app\\customers",
-    "app\\azdev-workitems"
+    "app\\azdev-workitems",
+    "app\\single-planning-calendar"
   ]
 }

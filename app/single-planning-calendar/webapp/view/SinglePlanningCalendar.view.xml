@@ -1,0 +1,19 @@
+<mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
+	xmlns="sap.m"
+	xmlns:unified="sap.ui.unified"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page showHeader="false">
+					<SinglePlanningCalendar id="planningCalendar" appointments="{/WorkItems}">
+						<appointments>
+							<unified:CalendarAppointment startDate="{ActivatedDate}" endDate="{CompletedDate}" title="{Title}">
+							</unified:CalendarAppointment>
+						</appointments>
+					</SinglePlanningCalendar>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
