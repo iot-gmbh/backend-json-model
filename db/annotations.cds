@@ -4,54 +4,54 @@ annotate my.WorkItems with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>WorkItem}',
         TypeNamePlural : '{i18n>WorkItems}',
-        Title          : {Value : Title},
+        Title          : {Value : title},
     },
     Identification  : [
-        {Value : Title},
-        {Value : WorkItemType},
-        {Value : CreatedDate},
-        {Value : ChangedDate},
-        {Value : OriginalEstimate},
-        {Value : CompletedWork},
-        {Value : Reason},
-        {Value : State},
+        {Value : title},
+        {Value : workItemType},
+        {Value : createdDate},
+        {Value : changedDate},
+        {Value : originalEstimate},
+        {Value : completedWork},
+        {Value : reason},
+        {Value : state},
     ],
     SelectionFields : [
-        Title,
-        AssignedTo_ID
+        title,
+        assignedTo_ID
     ],
     LineItem        : [
         {
             $Type : 'UI.DataField',
-            Value : Title,
+            Value : title,
         },
         {
             $Type : 'UI.DataField',
-            Value : WorkItemType,
+            Value : workItemType,
         },
         {
             $Type : 'UI.DataField',
-            Value : OriginalEstimate,
+            Value : originalEstimate,
         },
         {
             $Type : 'UI.DataField',
-            Value : CompletedWork,
+            Value : completedWork,
         },
         {
             $Type : 'UI.DataField',
-            Value : Reason
+            Value : reason
         },
         {
             $Type : 'UI.DataField',
-            Value : State
+            Value : state
         },
         {
             $Type : 'UI.DataField',
-            Value : CreatedDate
+            Value : createdDate
         },
         {
             $Type : 'UI.DataField',
-            Value : CompletedDate,
+            Value : completedDate,
         },
     ]
 });

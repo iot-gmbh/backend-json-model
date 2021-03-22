@@ -6,21 +6,23 @@ module.exports = cds.service.impl(async function () {
 
   this.on("READ", "Events", async (req) => {
     const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
+    const user = "benedikt.hoelker@iot-online.de";
+    // const user = req.user.id
 
     let events = [];
     try {
       const { value } = await service.run({
-        url: `/v1.0/users/benedikt.hoelker@iot-online.de/events`,
-        // url: `/v1.0/users/${req.user.id}/events`,
+        url: `/v1.0/users/${user}/events`,
       });
 
       events = value.map(
         ({ id, subject, start, end, categories: [customer], sensitivity }) => ({
           ID: id,
-          subject,
+          title: subject,
           customer,
-          start: start.dateTime.substring(0, 19) + "Z",
-          end: end.dateTime.substring(0, 19) + "Z",
+          activatedDate: start.dateTime.substring(0, 19) + "Z",
+          completedDate: end.dateTime.substring(0, 19) + "Z",
+          assignedTo: user,
           private: sensitivity === "private",
         })
       );

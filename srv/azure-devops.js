@@ -1,45 +1,45 @@
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
-  AssignedTo: "System.AssignedTo",
-  AssignedTo_ID: "System.AssignedTo",
-  ChangedDate: "System.ChangedDate",
-  CreatedDate: "System.CreatedDate",
-  Reason: "System.Reason",
-  State: "System.State",
-  TeamProject: "System.TeamProject",
-  Title: "System.Title",
-  WorkItemType: "System.WorkItemType",
+  assignedTo: "System.AssignedTo",
+  assignedTo_ID: "System.AssignedTo",
+  changedDate: "System.ChangedDate",
+  createdDate: "System.CreatedDate",
+  reason: "System.Reason",
+  state: "System.State",
+  teamProject: "System.TeamProject",
+  title: "System.Title",
+  workItemType: "System.WorkItemType",
   // Documentation
-  ActivatedDate: "Microsoft.VSTS.Common.ActivatedDate",
-  ResolvedDate: "Microsoft.VSTS.Common.ResolvedDate",
-  ClosedDate: "Microsoft.VSTS.Common.ClosedDate",
+  activatedDate: "Microsoft.VSTS.Common.ActivatedDate",
+  resolvedDate: "Microsoft.VSTS.Common.ResolvedDate",
+  closedDate: "Microsoft.VSTS.Common.ClosedDate",
   // Scheduling
-  CompletedWork: "Microsoft.VSTS.Scheduling.CompletedWork",
-  RemainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
-  OriginalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
+  completedWork: "Microsoft.VSTS.Scheduling.CompletedWork",
+  remainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
+  originalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
 };
 
 function destructureDevOpsObj(devOpsObj) {
   let cds = {};
   ({
     id: cds.ID,
-    "System.AssignedTo": { uniqueName: cds.AssignedTo },
-    "System.AssignedTo": { displayName: cds.AssignedToName },
-    "System.ChangedDate": cds.ChangedDate,
-    "System.CreatedDate": cds.CreatedDate,
-    "System.Reason": cds.Reason,
-    "System.State": cds.State,
-    "System.TeamProject": cds.TeamProject,
-    "System.Title": cds.Title,
-    "System.WorkItemType": cds.WorkItemType,
+    "System.AssignedTo": { uniqueName: cds.assignedTo_ID },
+    "System.AssignedTo": { displayName: cds.assignedToName },
+    "System.ChangedDate": cds.changedDate,
+    "System.CreatedDate": cds.createdDate,
+    "System.Reason": cds.reason,
+    "System.State": cds.state,
+    "System.TeamProject": cds.teamProject,
+    "System.Title": cds.title,
+    "System.WorkItemType": cds.workItemType,
     // Documentation
-    "Microsoft.VSTS.Common.ActivatedDate": cds.ActivatedDate,
-    "Microsoft.VSTS.Common.ResolvedDate": cds.ResolvedDate,
-    "Microsoft.VSTS.Common.ClosedDate": cds.ClosedDate,
+    "Microsoft.VSTS.Common.ActivatedDate": cds.activatedDate,
+    "Microsoft.VSTS.Common.ResolvedDate": cds.resolvedDate,
+    "Microsoft.VSTS.Common.ClosedDate": cds.closedDate,
     // Scheduling
-    "Microsoft.VSTS.Scheduling.CompletedWork": cds.CompletedWork,
-    "Microsoft.VSTS.Scheduling.RemainingWork": cds.RemainingWork,
-    "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.OriginalEstimate,
+    "Microsoft.VSTS.Scheduling.CompletedWork": cds.completedWork,
+    "Microsoft.VSTS.Scheduling.RemainingWork": cds.remainingWork,
+    "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.originalEstimate,
   } = devOpsObj);
   return cds;
 }
@@ -111,7 +111,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
 
   const whereClause = getWhereClause(SQLString);
   const whereClauseFilterByAssignedTo = restrictToOwnUser
-    ? `${whereClause} AND AssignedTo = '${req.user.id}'`
+    ? `${whereClause} AND assignedTo = '${req.user.id}'`
     : whereClause;
   const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
@@ -123,7 +123,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
   const wiDetails = (await workItemAPI.getWorkItems(ids)) || [];
   const results = wiDetails
     // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
-    .map((item) => ({ id: item.id, ...item.fields }))
+    .map((item) => ({ id: item.id.toString(), ...item.fields }))
     .reduce((acc, item) => acc.concat(item), [])
     .map((DevOpsObject) => {
       let CDSObject = destructureDevOpsObj(DevOpsObject);
@@ -135,7 +135,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
         }
       }
 
-      CDSObject.CompletedDate = CDSObject.ClosedDate || CDSObject.ResolvedDate;
+      CDSObject.completedDate = CDSObject.closedDate || CDSObject.resolvedDate;
       return CDSObject;
     });
 
@@ -144,12 +144,66 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
   return results;
 }
 
+async function getEventsFromMSGraph(req) {
+  const cdsapi = require("@sapmentors/cds-scp-api");
+  const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
+  const user = "benedikt.hoelker@iot-online.de";
+  // const user = req.user.id;
+
+  let events = [];
+  try {
+    const queryString = Object.entries(req._query)
+      .filter(([key]) => !key.includes("$select"))
+      .reduce(
+        (str, [key, value], index) =>
+          str.concat(index > 0 ? "&" : "", key, "=", value),
+        "?"
+      )
+      // TODO: Replace with a better transformation
+      .replace("activatedDate ge ", "start/dateTime ge '")
+      .replace("Z", "Z'");
+
+    // const queryString =
+    //   "?$top=12 &$filter=start/dateTime gt '2021-03-21T09:30:00Z'";
+
+    const { value } = await service.run({
+      url: `/v1.0/users/${user}/events${queryString}`,
+    });
+
+    events = value.map(
+      ({ id, subject, start, end, categories: [customer], sensitivity }) => ({
+        ID: id,
+        title: subject,
+        customer,
+        activatedDate: start.dateTime.substring(0, 19) + "Z",
+        completedDate: end.dateTime.substring(0, 19) + "Z",
+        assignedTo_ID: user,
+        private: sensitivity === "private",
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
+  return events;
+}
+
 require("dotenv").config();
 
 module.exports = cds.service.impl(async function () {
-  this.on("READ", "MyWorkItems", async (req) =>
-    getWorkItemsFromDevOps({ req, restrictToOwnUser: true })
-  );
+  this.on("READ", "MyWorkItems", async (req) => {
+    const [...data] = await Promise.all([
+      getWorkItemsFromDevOps({
+        req,
+        restrictToOwnUser: true,
+      }),
+      getEventsFromMSGraph(req),
+    ]);
+
+    const results = data.reduce((acc, item) => acc.concat(item), []);
+
+    return results;
+  });
 
   this.on("READ", "WorkItems", async (req) =>
     getWorkItemsFromDevOps({ req, restrictToOwnUser: false })

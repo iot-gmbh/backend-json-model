@@ -30,9 +30,9 @@ sap.ui.define(
           const startDate = calendar.getStartDate();
 
           const template = new CalendarAppointment({
-            startDate: "{ActivatedDate}",
-            endDate: "{CompletedDate}",
-            title: "{Title}",
+            startDate: "{activatedDate}",
+            endDate: "{completedDate}",
+            title: "{title}",
           });
 
           // Bind the Aggregation
@@ -43,7 +43,7 @@ sap.ui.define(
             templateShareable: true,
             filters: [
               new Filter({
-                path: "ActivatedDate",
+                path: "activatedDate",
                 operator: "GE",
                 value1: startDate.toISOString(),
               }),
