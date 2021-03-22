@@ -79,6 +79,11 @@
         "credentials": {
           "destination": "MicrosoftGraphBHOPersonalAD"
         }
+      },
+      "MicrosoftGraphIOTGmbH": {
+        "credentials": {
+          "destination": "MicrosoftGraphIOTGmbH"
+        }
       }
     }
   },

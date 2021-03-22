@@ -108,7 +108,7 @@
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings": {
-                            "entitySet": "Items",
+                            "entitySet": "WorkItems",
                             "variantManagement": "Page",
                             "navigation": {
                                 "Items": {
@@ -126,7 +126,7 @@
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
-                            "entitySet": "Items"
+                            "entitySet": "WorkItems"
                         }
                     }
                 }

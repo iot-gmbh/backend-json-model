@@ -5,21 +5,23 @@ module.exports = cds.service.impl(async function () {
   const { Users } = this.entities;
 
   this.on("READ", "Users", async (request) => {
-    const service = await cdsapi.connect.to("MicrosoftGraphBHOPersonalAD");
+    const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
 
-    let values = [];
+    let users = [];
     try {
-      values = await service.run({
-        url: `/v1.0/me`,
+      const { value } = await service.run({
+        url: `/v1.0/users`,
       });
+
+      users = value.map(({ id, businessPhones, ...usr }) => ({
+        ID: id,
+        ...usr,
+      }));
     } catch (error) {
       console.log(error);
     }
 
-    return values;
-    // return user.value.map(({ id, businessPhones, ...usr }) => ({
-    //   ID: id,
-    //   ...usr,
-    // }));
+    // return values;
+    return users;
   });
 });
