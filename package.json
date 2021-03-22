@@ -52,8 +52,8 @@
     "start": "cds run",
     "start:lcl": "run-p start:srv start:spc start:planner",
     "start:srv": "cds run",
-    "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8082",
-    "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8081",
+    "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8081",
+    "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
     "build": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
@@ -70,21 +70,10 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "hana"
+        "kind": "sql"
       },
       "uaa": {
         "kind": "xsuaa"
-      },
-      "auth": {
-        "strategy": "mock",
-        "users": {
-          "benedikt.hoelker@iot-online.de": {
-            "password": "123"
-          },
-          "nick.obendorf@iot-online.de": {
-            "password": "123"
-          }
-        }
       },
       "MicrosoftGraphBHOPersonalAD": {
         "credentials": {

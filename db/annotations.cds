@@ -1,5 +1,61 @@
 using {iot.planner as my} from './schema';
 
+annotate my.WorkItems with @(UI : {
+    HeaderInfo      : {
+        TypeName       : '{i18n>WorkItem}',
+        TypeNamePlural : '{i18n>WorkItems}',
+        Title          : {Value : Title},
+    },
+    Identification  : [
+        {Value : Title},
+        {Value : WorkItemType},
+        {Value : CreatedDate},
+        {Value : ChangedDate},
+        {Value : OriginalEstimate},
+        {Value : CompletedWork},
+        {Value : Reason},
+        {Value : State},
+    ],
+    SelectionFields : [
+        Title,
+        AssignedTo_ID
+    ],
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : Title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : WorkItemType,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : OriginalEstimate,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CompletedWork,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Reason
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : State
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CreatedDate
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CompletedDate,
+        },
+    ]
+});
+
 annotate my.Employees with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>Employee}',
@@ -44,12 +100,12 @@ annotate my.Tasks with @(UI : {
         Description    : {Value : description},
     },
     Identification  : [
-    {Value : dueDate},
-    {Value : beginDate},
-    {Value : effort},
-    {Value : estimate},
-    {Value : project_ID},
-    {Value : personResponsible_ID}
+        {Value : dueDate},
+        {Value : beginDate},
+        {Value : effort},
+        {Value : estimate},
+        {Value : project_ID},
+        {Value : personResponsible_ID}
     ],
     Facets          : [{
         $Type  : 'UI.ReferenceFacet',
@@ -57,44 +113,44 @@ annotate my.Tasks with @(UI : {
         Target : '@UI.Identification'
     }, ],
     SelectionFields : [
-    title,
-    description
+        title,
+        description
     ],
     LineItem        : [
-    {
-        $Type : 'UI.DataField',
-        Value : title,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : description,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : project.title,
-        Label : '{i18n>Tasks.project}'
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : personResponsible.name,
-        Label : '{i18n>Tasks.personResponsible}'
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : beginDate,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : dueDate,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : effort,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : estimate,
-    },
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : project.title,
+            Label : '{i18n>Tasks.project}'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : personResponsible.name,
+            Label : '{i18n>Tasks.personResponsible}'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : beginDate,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : dueDate,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : effort,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : estimate,
+        },
     ]
 })
                        @cds.odata.valuelist {
@@ -129,24 +185,24 @@ annotate my.Projects with @(UI : {
     }, ],
     Identification  : [{Value : customer_ID}, ],
     SelectionFields : [
-    title,
-    description,
-    customer_ID
+        title,
+        description,
+        customer_ID
     ],
     LineItem        : [
-    {
-        $Type : 'UI.DataField',
-        Value : title,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : description,
-    },
-    {
-        $Type : 'UI.DataField',
-        Label : '{i18n>Projects.customer}',
-        Value : customer.name,
-    },
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>Projects.customer}',
+            Value : customer.name,
+        },
     ]
 })
                           @cds.odata.valuelist {

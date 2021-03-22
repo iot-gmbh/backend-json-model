@@ -1,6 +1,7 @@
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
   AssignedTo: "System.AssignedTo",
+  AssignedTo_ID: "System.AssignedTo",
   ChangedDate: "System.ChangedDate",
   CreatedDate: "System.CreatedDate",
   Reason: "System.Reason",
@@ -22,7 +23,7 @@ function destructureDevOpsObj(devOpsObj) {
   let cds = {};
   ({
     id: cds.ID,
-    "System.AssignedTo": { uniqueName: cds.AssignedToUserID },
+    "System.AssignedTo": { uniqueName: cds.AssignedTo },
     "System.AssignedTo": { displayName: cds.AssignedToName },
     "System.ChangedDate": cds.ChangedDate,
     "System.CreatedDate": cds.CreatedDate,
@@ -95,56 +96,62 @@ function isISODate(str) {
   return dateRegexp.test(str);
 }
 
-function getWorkItemsFromDevOps() {}
+async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
+  const azdev = require("azure-devops-node-api");
+  const orgUrl = "https://dev.azure.com/iot-gmbh";
+  const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
+  const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
-const azdev = require("azure-devops-node-api");
-const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
-
-require("dotenv").config();
-
-const orgUrl = "https://dev.azure.com/iot-gmbh";
-const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
-const authHandler = azdev.getPersonalAccessTokenHandler(token);
-
-module.exports = cds.service.impl(async function () {
   const connection = new azdev.WebApi(orgUrl, authHandler);
   const workItemAPI = await connection.getWorkItemTrackingApi();
 
-  this.on("READ", "MyWorkItems", async (req) => {
-    const selectBuilder = new SelectBuilder(req.query);
-    const SQLString = selectBuilder.build();
+  const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
+  const selectBuilder = new SelectBuilder(req.query);
+  const SQLString = selectBuilder.build();
 
-    const whereClause = getWhereClause(SQLString);
-    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = '${req.user.id}'`;
-    const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
+  const whereClause = getWhereClause(SQLString);
+  const whereClauseFilterByAssignedTo = restrictToOwnUser
+    ? `${whereClause} AND AssignedTo = '${req.user.id}'`
+    : whereClause;
+  const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
-    const workItemsByWIQL = await workItemAPI.queryByWiql({
-      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' ${WIQLWhereClause}`,
+  const workItemsByWIQL = await workItemAPI.queryByWiql({
+    query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' ${WIQLWhereClause}`,
+  });
+
+  const ids = workItemsByWIQL.workItems.map(({ id }) => id);
+  const wiDetails = (await workItemAPI.getWorkItems(ids)) || [];
+  const results = wiDetails
+    // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
+    .map((item) => ({ id: item.id, ...item.fields }))
+    .reduce((acc, item) => acc.concat(item), [])
+    .map((DevOpsObject) => {
+      let CDSObject = destructureDevOpsObj(DevOpsObject);
+
+      for (let [key, value] of Object.entries(CDSObject)) {
+        if (isISODate(value)) {
+          // Strip milliseconds: https://stackoverflow.com/questions/31171810/stripping-milliseconds-from-extended-iso-format
+          CDSObject[key] = value.substring(0, 19) + "Z";
+        }
+      }
+
+      CDSObject.CompletedDate = CDSObject.ClosedDate || CDSObject.ResolvedDate;
+      return CDSObject;
     });
 
-    const ids = workItemsByWIQL.workItems.map(({ id }) => id);
-    const wiDetails = (await workItemAPI.getWorkItems(ids)) || [];
-    const results = wiDetails
-      // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
-      .map((item) => ({ id: item.id, ...item.fields }))
-      .reduce((acc, item) => acc.concat(item), [])
-      .map((DevOpsObject) => {
-        let CDSObject = destructureDevOpsObj(DevOpsObject);
+  // Adds the OData-inlinecount
+  results.$count = results.length;
+  return results;
+}
 
-        for (let [key, value] of Object.entries(CDSObject)) {
-          if (isISODate(value)) {
-            // Strip milliseconds: https://stackoverflow.com/questions/31171810/stripping-milliseconds-from-extended-iso-format
-            CDSObject[key] = value.substring(0, 19) + "Z";
-          }
-        }
+require("dotenv").config();
 
-        CDSObject.CompletedDate =
-          CDSObject.ClosedDate || CDSObject.ResolvedDate;
-        return CDSObject;
-      });
+module.exports = cds.service.impl(async function () {
+  this.on("READ", "MyWorkItems", async (req) =>
+    getWorkItemsFromDevOps({ req, restrictToOwnUser: true })
+  );
 
-    // Adds the OData-inlinecount
-    results.$count = results.length;
-    return results;
-  });
+  this.on("READ", "WorkItems", async (req) =>
+    getWorkItemsFromDevOps({ req, restrictToOwnUser: false })
+  );
 });

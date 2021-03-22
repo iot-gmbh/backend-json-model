@@ -20,14 +20,13 @@ entity Users {
         userPrincipalName : String;
 };
 
-entity Employees : managed, cuid {
-    name          : String @title : '{i18n>Employees.name}';
-    userName      : String;
-    principalName : String;
-    tasks         : Association to many Tasks
+entity Employees : managed {
+    key ID        : String;
+        name      : String @title : '{i18n>Employees.name}';
+        tasks     : Association to many Tasks
                         on tasks.personResponsible = $self;
-    workItems     : Association to many WorkItems
-                        on workItems.AssignedToUserID = principalName;
+        workItems : Association to many WorkItems
+                        on workItems.AssignedTo = $self;
 }
 
 entity Customers : managed, cuid {
@@ -71,11 +70,9 @@ entity Tasks : managed, cuid {
 @cds.persistence.skip
 entity WorkItems {
     key ID               : Integer                  @title : '{i18n>WorkItems.ID}';
-        AssignedToUserID : String;
+        // AssignedToUserID : String;
         AssignedTo       : Association to Employees @title : '{i18n>WorkItems.AssignedTo}';
-        AssignedToName   : String
-
-                                                    @title : '{i18n>WorkItems.AssignedToName}';
+        AssignedToName   : String                   @title : '{i18n>WorkItems.AssignedToName}';
         ChangedDate      : DateTime
 
                                                     @title : '{i18n>WorkItems.ChangedDate}';
