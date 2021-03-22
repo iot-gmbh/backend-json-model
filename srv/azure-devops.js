@@ -31,9 +31,11 @@ function destructureDevOpsObj(devOpsObj) {
     "System.TeamProject": cds.TeamProject,
     "System.Title": cds.Title,
     "System.WorkItemType": cds.WorkItemType,
+    // Documentation
     "Microsoft.VSTS.Common.ActivatedDate": cds.ActivatedDate,
     "Microsoft.VSTS.Common.ResolvedDate": cds.ResolvedDate,
     "Microsoft.VSTS.Common.ClosedDate": cds.ClosedDate,
+    // Scheduling
     "Microsoft.VSTS.Scheduling.CompletedWork": cds.CompletedWork,
     "Microsoft.VSTS.Scheduling.RemainingWork": cds.RemainingWork,
     "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.OriginalEstimate,
@@ -93,6 +95,8 @@ function isISODate(str) {
   return dateRegexp.test(str);
 }
 
+function getWorkItemsFromDevOps() {}
+
 const azdev = require("azure-devops-node-api");
 const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
 
@@ -109,11 +113,9 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MyWorkItems", async (req) => {
     const selectBuilder = new SelectBuilder(req.query);
     const SQLString = selectBuilder.build();
+
     const whereClause = getWhereClause(SQLString);
-
-    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = ${req.user.id}`;
-    // const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = 'nick.obendorf@iot-online.de'`;
-
+    const whereClauseFilterByAssignedTo = `${whereClause} AND AssignedTo = '${req.user.id}'`;
     const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
     const workItemsByWIQL = await workItemAPI.queryByWiql({
@@ -123,6 +125,7 @@ module.exports = cds.service.impl(async function () {
     const ids = workItemsByWIQL.workItems.map(({ id }) => id);
     const wiDetails = (await workItemAPI.getWorkItems(ids)) || [];
     const results = wiDetails
+      // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
       .map((item) => ({ id: item.id, ...item.fields }))
       .reduce((acc, item) => acc.concat(item), [])
       .map((DevOpsObject) => {
@@ -140,6 +143,7 @@ module.exports = cds.service.impl(async function () {
         return CDSObject;
       });
 
+    // Adds the OData-inlinecount
     results.$count = results.length;
     return results;
   });

@@ -8,6 +8,7 @@
   "dependencies": {
     "@azure/msal-node": "^1.0.1",
     "@microsoft/microsoft-graph-client": "^2.2.1",
+    "@sap/approuter": "^6",
     "@sap/audit-logging": "^5.0.0",
     "@sap/cds": "^4.6.5",
     "@sap/hana-client": "^2.7.26",
@@ -21,8 +22,7 @@
     "isomorphic-fetch": "^3.0.0",
     "msal": "^1.4.8",
     "passport": "^0.4.1",
-    "sap-cf-axios": "^0.2.29",
-    "@sap/approuter": "^6"
+    "sap-cf-axios": "^0.2.29"
   },
   "devDependencies": {
     "@sap/ux-specification": "^1.84.6",
@@ -74,6 +74,17 @@
       },
       "uaa": {
         "kind": "xsuaa"
+      },
+      "auth": {
+        "strategy": "mock",
+        "users": {
+          "benedikt.hoelker@iot-online.de": {
+            "password": "123"
+          },
+          "nick.obendorf@iot-online.de": {
+            "password": "123"
+          }
+        }
       },
       "MicrosoftGraphBHOPersonalAD": {
         "credentials": {

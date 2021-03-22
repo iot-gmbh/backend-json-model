@@ -1,6 +1,6 @@
 using {iot.planner as my} from '../db/schema';
 
-service AzureDevopsService @(_requires : 'authenticated-user') {
+service AzureDevopsService @(requires : 'authenticated-user') {
     // entity WorkItems   as projection on my.WorkItems;
     entity MyWorkItems as projection on my.WorkItems;
     entity Employees   as projection on my.Employees;
