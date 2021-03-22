@@ -13,7 +13,11 @@ service MSGraphService {
     };
 
     entity Events {
-        ID      : UUID;
-        subject : String;
+        ID       : String;
+        subject  : String;
+        start    : DateTime;
+        end      : DateTime;
+        customer : String;
+        private  : Boolean;
     }
 };

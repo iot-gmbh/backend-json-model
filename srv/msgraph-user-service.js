@@ -10,13 +10,20 @@ module.exports = cds.service.impl(async function () {
     let events = [];
     try {
       const { value } = await service.run({
-        url: `/v1.0/me/events`,
+        url: `/v1.0/users/benedikt.hoelker@iot-online.de/events`,
+        // url: `/v1.0/users/${req.user.id}/events`,
       });
 
-      events = value.map(({ id, subject }) => ({
-        ID: id,
-        subject,
-      }));
+      events = value.map(
+        ({ id, subject, start, end, categories: [customer], sensitivity }) => ({
+          ID: id,
+          subject,
+          customer,
+          start: start.dateTime.substring(0, 19) + "Z",
+          end: end.dateTime.substring(0, 19) + "Z",
+          private: sensitivity === "private",
+        })
+      );
     } catch (error) {
       console.log(error);
     }
