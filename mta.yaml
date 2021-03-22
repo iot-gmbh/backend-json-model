@@ -9,7 +9,7 @@ modules:
     requires:
       - name: project-planning-db
       - name: project-planning-uaa
-      - name: project-planning-dest
+      # - name: project-planning-dest
     provides:
       - name: srv-api
         properties:

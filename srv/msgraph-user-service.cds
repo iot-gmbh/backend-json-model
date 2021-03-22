@@ -11,4 +11,9 @@ service MSGraphService {
         surname           : String;
         userPrincipalName : String;
     };
+
+    entity Events {
+        ID      : UUID;
+        subject : String;
+    }
 };

@@ -58,7 +58,9 @@
     "lint": "eslint srv && eslint app",
     "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
     "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
+    "build:ui": "mbt module-build -m iotprojectplanningazdevworkitems,fiori-customers,iotsingleplanningcalendar -g",
     "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
+    "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db"
   },

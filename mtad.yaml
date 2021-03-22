@@ -5,16 +5,17 @@ version: 1.0.0
 modules:
   - name: project-planning-srv
     type: javascript.nodejs
-    path: srv
+    path: project-planning-srv
     requires:
       - name: project-planning-db
+      - name: project-planning-uaa
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
   - name: project-planning-db-deployer
     type: com.sap.xs.hdi
-    path: .
+    path: project-planning-db-deployer
     requires:
       - name: project-planning-db
     parameters:
@@ -44,12 +45,12 @@ modules:
             - Authentication: OAuth2UserTokenExchange
               Name: iot.project.planning-uaa
               ServiceInstanceName: project-planning-xsuaa-service
-              ServiceKeyName: iot.project.planning-uaa-key
+              ServiceKeyName: project-planning-uaa-key
               sap.cloud.service: iot.project.planning
           existing_destinations_policy: update
   - name: project-planning-ui-deployer
     type: com.sap.application.content
-    path: project-planning-ui-deployer
+    path: ./
     requires:
       - name: project-planning-repo-host
         parameters:
