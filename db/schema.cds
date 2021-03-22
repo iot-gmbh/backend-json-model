@@ -89,4 +89,5 @@ entity WorkItems {
         closedDate       : DateTime                 @title : '{i18n>WorkItems.ClosedDate}';
         customer         : String;
         private          : Boolean;
+        type             : String;
 };

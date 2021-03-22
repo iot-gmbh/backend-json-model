@@ -136,6 +136,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
       }
 
       CDSObject.completedDate = CDSObject.closedDate || CDSObject.resolvedDate;
+      CDSObject.type = "WorkItem";
       return CDSObject;
     });
 
@@ -155,16 +156,13 @@ async function getEventsFromMSGraph(req) {
     const queryString = Object.entries(req._query)
       .filter(([key]) => !key.includes("$select"))
       .reduce(
-        (str, [key, value], index) =>
-          str.concat(index > 0 ? "&" : "", key, "=", value),
-        "?"
+        (str, [key, value], index) => str.concat("&", key, "=", value),
+        // str.concat(index > 0 ? "&" : "", key, "=", value),
+        "?$select=id,subject,start,end,categories,sensitivity"
       )
       // TODO: Replace with a better transformation
       .replace("activatedDate ge ", "start/dateTime ge '")
       .replace("Z", "Z'");
-
-    // const queryString =
-    //   "?$top=12 &$filter=start/dateTime gt '2021-03-21T09:30:00Z'";
 
     const { value } = await service.run({
       url: `/v1.0/users/${user}/events${queryString}`,
@@ -179,6 +177,7 @@ async function getEventsFromMSGraph(req) {
         completedDate: end.dateTime.substring(0, 19) + "Z",
         assignedTo_ID: user,
         private: sensitivity === "private",
+        type: "Event",
       })
     );
   } catch (error) {

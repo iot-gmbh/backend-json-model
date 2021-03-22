@@ -33,6 +33,7 @@ sap.ui.define(
             startDate: "{activatedDate}",
             endDate: "{completedDate}",
             title: "{title}",
+            color: "{= ${type} === 'Event' ? 'blue' : 'green'}",
           });
 
           // Bind the Aggregation
