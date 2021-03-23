@@ -6,12 +6,12 @@
 		<App id="app">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" selectedView="SinglePlanningCalendarDayView" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+					<SinglePlanningCalendar id="SPCalendar" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
 						<views>
-							<SinglePlanningCalendarDayView key="DayView" title="Day" />
+							<SinglePlanningCalendarDayView id="dayView" key="DayView" title="Day" />
 							<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
 							<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
-							<SinglePlanningCalendarMonthView key="MonthView" title="Month" />
+							<SinglePlanningCalendarMonthView id="monthView" key="MonthView" title="Month" />
 						</views>
 					</SinglePlanningCalendar>
 				</Page>

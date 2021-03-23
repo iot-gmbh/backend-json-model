@@ -1,7 +1,7 @@
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
-  assignedTo: "System.AssignedTo",
-  assignedTo_ID: "System.AssignedTo",
+  assignedTo: "[System.AssignedTo]",
+  assignedTo_ID: "[System.AssignedTo]",
   changedDate: "System.ChangedDate",
   createdDate: "System.CreatedDate",
   reason: "System.Reason",
@@ -10,9 +10,10 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   title: "System.Title",
   workItemType: "System.WorkItemType",
   // Documentation
-  activatedDate: "Microsoft.VSTS.Common.ActivatedDate",
+  activatedDate: "[Microsoft.VSTS.Common.ActivatedDate]",
   resolvedDate: "Microsoft.VSTS.Common.ResolvedDate",
-  closedDate: "Microsoft.VSTS.Common.ClosedDate",
+  closedDate: "[Microsoft.VSTS.Common.ClosedDate]",
+  completedDate: "[Microsoft.VSTS.Common.ClosedDate]",
   // Scheduling
   completedWork: "Microsoft.VSTS.Scheduling.CompletedWork",
   remainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
@@ -97,6 +98,8 @@ function isISODate(str) {
 }
 
 async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
+  const user = "benedikt.hoelker@iot-online.de";
+  // const user = req.user.id;
   const azdev = require("azure-devops-node-api");
   const orgUrl = "https://dev.azure.com/iot-gmbh";
   const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
@@ -111,7 +114,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
 
   const whereClause = getWhereClause(SQLString);
   const whereClauseFilterByAssignedTo = restrictToOwnUser
-    ? `${whereClause} AND assignedTo = '${req.user.id}'`
+    ? `${whereClause} AND assignedTo = '${user}'`
     : whereClause;
   const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
@@ -156,13 +159,14 @@ async function getEventsFromMSGraph(req) {
     const queryString = Object.entries(req._query)
       .filter(([key]) => !key.includes("$select"))
       .reduce(
-        (str, [key, value], index) => str.concat("&", key, "=", value),
+        (str, [key, value]) => str.concat("&", key, "=", value),
         // str.concat(index > 0 ? "&" : "", key, "=", value),
         "?$select=id,subject,start,end,categories,sensitivity"
       )
       // TODO: Replace with a better transformation
-      .replace("activatedDate ge ", "start/dateTime ge '")
-      .replace("Z", "Z'");
+      .replace("completedDate gt ", "end/dateTime gt '")
+      .replace("activatedDate le ", "start/dateTime le '")
+      .replace(/Z/g, "Z'");
 
     const { value } = await service.run({
       url: `/v1.0/users/${user}/events${queryString}`,
@@ -190,7 +194,7 @@ async function getEventsFromMSGraph(req) {
 require("dotenv").config();
 
 module.exports = cds.service.impl(async function () {
-  this.on("READ", "MyWorkItems", async (req) => {
+  this.on("READ", "MyWork", async (req) => {
     const [...data] = await Promise.all([
       getWorkItemsFromDevOps({
         req,
@@ -201,10 +205,15 @@ module.exports = cds.service.impl(async function () {
 
     const results = data.reduce((acc, item) => acc.concat(item), []);
 
+    results.$count = results.length;
     return results;
   });
 
   this.on("READ", "WorkItems", async (req) =>
+    getWorkItemsFromDevOps({ req, restrictToOwnUser: false })
+  );
+
+  this.on("READ", "MyWorkItems", async (req) =>
     getWorkItemsFromDevOps({ req, restrictToOwnUser: false })
   );
 });

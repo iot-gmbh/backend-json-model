@@ -1,9 +1,10 @@
 using {iot.planner as my} from '../db/schema';
 
 // service AzureDevopsService @(requires : 'authenticated-user') {
-service AzureDevopsService @(requires : 'authenticated-user') {
+service AzureDevopsService {
     entity WorkItems   as projection on my.WorkItems;
     entity MyWorkItems as projection on my.WorkItems;
+    entity MyWork      as projection on my.WorkItems;
 
     entity Employees   as projection on my.Employees {
         * , workItems : redirected to MyWorkItems

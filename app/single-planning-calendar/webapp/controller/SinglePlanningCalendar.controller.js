@@ -14,6 +14,18 @@ sap.ui.define(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         onInit: function () {
+          const calendar = this.getView().byId("SPCalendar");
+          const monthView = calendar.getViews()[3];
+          const today = new Date();
+          const firstDayOfMonth = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1
+          );
+
+          calendar.setSelectedView(monthView);
+          calendar.setStartDate(firstDayOfMonth);
+
           this._bindAppointments();
         },
 
@@ -25,28 +37,42 @@ sap.ui.define(
           this._bindAppointments();
         },
 
+        getDateOneMonthLater(date) {
+          const dateCompare = new Date(date);
+          const newDate = new Date(
+            dateCompare.setMonth(dateCompare.getMonth() + 1)
+          );
+          return newDate;
+        },
+
         _bindAppointments() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
+          const oneMonthLater = this.getDateOneMonthLater(startDate);
 
           const template = new CalendarAppointment({
             startDate: "{activatedDate}",
             endDate: "{completedDate}",
             title: "{title}",
-            color: "{= ${type} === 'Event' ? 'blue' : 'green'}",
+            type: "{= ${type} === 'Event' ? 'Type01' : 'Type06'}",
           });
 
           // Bind the Aggregation
           calendar.bindAggregation("appointments", {
-            path: "/MyWorkItems",
+            path: "/MyWork",
             sorter: null,
             template,
             templateShareable: true,
             filters: [
               new Filter({
-                path: "activatedDate",
-                operator: "GE",
+                path: "completedDate",
+                operator: "GT",
                 value1: startDate.toISOString(),
+              }),
+              new Filter({
+                path: "activatedDate",
+                operator: "LE",
+                value1: oneMonthLater.toISOString(),
               }),
             ],
           });
