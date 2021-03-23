@@ -33,7 +33,7 @@ module.exports = cds.service.impl(async function () {
     return events;
   });
 
-  this.on("READ", "Users", async (request) => {
+  this.on("READ", "Users", async () => {
     const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
 
     let users = [];
@@ -42,7 +42,7 @@ module.exports = cds.service.impl(async function () {
         url: `/v1.0/users`,
       });
 
-      users = value.map(({ id, businessPhones, ...usr }) => ({
+      users = value.map(({ id, ...usr }) => ({
         ID: id,
         ...usr,
       }));
