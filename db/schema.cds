@@ -18,15 +18,15 @@ entity Users {
         preferredLanguage : String;
         surname           : String;
         userPrincipalName : String;
+        workItems         : Association to many WorkItems
+                                on workItems.assignedTo = $self;
 };
 
 entity Employees : managed {
-    key ID        : String;
-        name      : String @title : '{i18n>Employees.name}';
-        tasks     : Association to many Tasks
-                        on tasks.personResponsible = $self;
-        workItems : Association to many WorkItems
-                        on workItems.assignedTo = $self;
+    key ID    : String;
+        name  : String @title : '{i18n>Employees.name}';
+        tasks : Association to many Tasks
+                    on tasks.personResponsible = $self;
 }
 
 entity Customers : managed, cuid {
@@ -42,6 +42,8 @@ entity Projects : managed, cuid {
     manager     : Association to Employees;
     tasks       : Association to many Tasks
                       on tasks.project = $self;
+    workItems   : Association to many WorkItems
+                      on workItems.project = $self;
 }
 
 @cds.odata.valuelist
@@ -63,29 +65,28 @@ entity Tasks : managed, cuid {
     project           : Association to Projects  @title : '{i18n>Tasks.project}';
 };
 
-@cds.persistence.skip
 entity WorkItems {
-    key ID               : String                   @title : '{i18n>WorkItems.ID}';
-        // AssignedToUserID : String;
-        assignedTo       : Association to Employees @title : '{i18n>WorkItems.AssignedTo}';
-        assignedToName   : String                   @title : '{i18n>WorkItems.AssignedToName}';
-        changedDate      : DateTime                 @title : '{i18n>WorkItems.ChangedDate}';
-        createdDate      : DateTime                 @title : '{i18n>WorkItems.CreatedDate}';
-        reason           : String                   @title : '{i18n>WorkItems.Reason}';
-        state            : String                   @title : '{i18n>WorkItems.State}';
-        teamProject      : String                   @title : '{i18n>WorkItems.TeamProject}';
-        title            : String                   @title : '{i18n>WorkItems.Title}';
-        workItemType     : String                   @title : '{i18n>WorkItems.WorkItemType}';
+    key ID               : String                  @title : '{i18n>WorkItems.ID}';
+        assignedTo       : Association to Users    @title : '{i18n>WorkItems.AssignedTo}';
+        assignedToName   : String                  @title : '{i18n>WorkItems.AssignedToName}';
+        changedDate      : DateTime                @title : '{i18n>WorkItems.ChangedDate}';
+        createdDate      : DateTime                @title : '{i18n>WorkItems.CreatedDate}';
+        reason           : String                  @title : '{i18n>WorkItems.Reason}';
+        state            : String                  @title : '{i18n>WorkItems.State}';
+        teamProject      : String                  @title : '{i18n>WorkItems.TeamProject}';
+        title            : String                  @title : '{i18n>WorkItems.Title}';
+        workItemType     : String                  @title : '{i18n>WorkItems.WorkItemType}';
         // Scheduling
-        completedWork    : Decimal                  @title : '{i18n>WorkItems.CompletedWork}';
-        remainingWork    : Decimal                  @title : '{i18n>WorkItems.RemainingWork}';
-        originalEstimate : Decimal                  @title : '{i18n>WorkItems.OriginalEstimate}';
+        completedWork    : Decimal                 @title : '{i18n>WorkItems.CompletedWork}';
+        remainingWork    : Decimal                 @title : '{i18n>WorkItems.RemainingWork}';
+        originalEstimate : Decimal                 @title : '{i18n>WorkItems.OriginalEstimate}';
         // Documentation
-        activatedDate    : DateTime                 @title : '{i18n>WorkItems.ActivatedDate}';
-        resolvedDate     : DateTime                 @title : '{i18n>WorkItems.ResolvedDate}';
-        completedDate    : DateTime                 @title : '{i18n>WorkItems.CompletedDate}';
-        closedDate       : DateTime                 @title : '{i18n>WorkItems.ClosedDate}';
-        customer         : String                   @title : '{i18n>WorkItems.customer}';
-        private          : Boolean                  @title : '{i18n>WorkItems.private}';
-        type             : String                   @title : '{i18n>WorkItems.type}';
+        activatedDate    : DateTime                @title : '{i18n>WorkItems.ActivatedDate}';
+        resolvedDate     : DateTime                @title : '{i18n>WorkItems.ResolvedDate}';
+        completedDate    : DateTime                @title : '{i18n>WorkItems.CompletedDate}';
+        closedDate       : DateTime                @title : '{i18n>WorkItems.ClosedDate}';
+        customer         : String                  @title : '{i18n>WorkItems.customer}';
+        private          : Boolean                 @title : '{i18n>WorkItems.private}';
+        type             : String                  @title : '{i18n>WorkItems.type}';
+        project          : Association to Projects @title : '{i18n>WorkItems.project}'
 };

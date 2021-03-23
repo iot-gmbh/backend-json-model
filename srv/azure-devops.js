@@ -196,6 +196,10 @@ async function getEventsFromMSGraph(req) {
 require("dotenv").config();
 
 module.exports = cds.service.impl(async function () {
+  this.before("CREATE", "MyWork", async (req) => {
+    req.data = {};
+  });
+
   this.on("READ", "MyWork", async (req) => {
     const [...data] = await Promise.all([
       getWorkItemsFromDevOps({

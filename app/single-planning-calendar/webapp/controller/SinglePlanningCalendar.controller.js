@@ -14,7 +14,7 @@ sap.ui.define(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         onInit: function () {
-          const calendar = this.getView().byId("SPCalendar");
+          const calendar = this.byId("SPCalendar");
           const monthView = calendar.getViews()[3];
           const today = new Date();
           const firstDayOfMonth = new Date(
@@ -29,6 +29,17 @@ sap.ui.define(
           this._bindAppointments();
         },
 
+        onCreateAppointment() {
+          const dialog = this.byId("createItemDialog");
+          const appointmentsBinding = this.byId("SPCalendar").getBinding(
+            "appointments"
+          );
+          const context = appointmentsBinding.create();
+
+          dialog.setBindingContext(context);
+          dialog.open();
+        },
+
         onChangeView: function () {
           this._bindAppointments();
         },
@@ -37,18 +48,10 @@ sap.ui.define(
           this._bindAppointments();
         },
 
-        getDateOneMonthLater(date) {
-          const dateCompare = new Date(date);
-          const newDate = new Date(
-            dateCompare.setMonth(dateCompare.getMonth() + 1)
-          );
-          return newDate;
-        },
-
         _bindAppointments() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
-          const oneMonthLater = this.getDateOneMonthLater(startDate);
+          const oneMonthLater = this._getDateOneMonthLater(startDate);
 
           const template = new CalendarAppointment({
             startDate: "{activatedDate}",
@@ -77,6 +80,14 @@ sap.ui.define(
               }),
             ],
           });
+        },
+
+        _getDateOneMonthLater(date) {
+          const dateCompare = new Date(date);
+          const newDate = new Date(
+            dateCompare.setMonth(dateCompare.getMonth() + 1)
+          );
+          return newDate;
         },
       }
     );

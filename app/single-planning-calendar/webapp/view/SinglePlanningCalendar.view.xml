@@ -1,12 +1,34 @@
 <mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
 	xmlns="sap.m"
 	xmlns:unified="sap.ui.unified"
+	xmlns:form="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
 				<Page showHeader="false">
 					<SinglePlanningCalendar id="SPCalendar" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+						<actions>
+							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
+						</actions>
+						<dependents>
+							<Dialog id="createItemDialog" title="Neuen Eintrag anlegen">
+								<buttons>
+									<Button text="OK" type="Emphasized" press="onSubmitNewItem"/>
+									<Button press="closeDialog" text="Abbrechen"/>
+								</buttons>
+								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
+									<Label text="Project"/>
+									<Input value="{project_ID}"/>
+									<Label text="Title"/>
+									<Input value="{title}"/>
+									<Label text="Begin"/>
+									<DateTimePicker value="{activatedDate}"/>
+									<Label text="Completed"/>
+									<DateTimePicker value="{completedDate}"/>
+								</form:SimpleForm>
+							</Dialog>
+						</dependents>
 						<views>
 							<SinglePlanningCalendarDayView id="dayView" key="DayView" title="Day" />
 							<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
