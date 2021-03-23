@@ -1,4 +1,4 @@
-service MSGraphService {
+service MSGraphService @(requires : 'authenticated-user') {
     entity Users {
         ID                : UUID; // It's a GUID that was casted to String
         displayName       : String;
@@ -13,11 +13,11 @@ service MSGraphService {
     };
 
     entity Events {
-        ID       : String;
-        subject  : String;
-        start    : DateTime;
-        end      : DateTime;
-        customer : String;
-        private  : Boolean;
+        ID        : String;
+        subject   : String;
+        startDate : DateTime;
+        endDate   : DateTime;
+        customer  : String;
+        private   : Boolean;
     }
 };

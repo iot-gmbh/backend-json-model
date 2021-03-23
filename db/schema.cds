@@ -61,8 +61,6 @@ entity Tasks : managed, cuid {
     priority          : Integer                  @title : '{i18n>Tasks.priority}';
     personResponsible : Association to Employees @title : '{i18n>Tasks.personResponsible}';
     project           : Association to Projects  @title : '{i18n>Tasks.project}';
-// items             : Composition of many WorkItems
-//                         on items.task = $self @title : '{i18n>Tasks.toDos}'
 };
 
 @cds.persistence.skip
