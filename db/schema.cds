@@ -85,7 +85,7 @@ entity WorkItems {
         resolvedDate     : DateTime                 @title : '{i18n>WorkItems.ResolvedDate}';
         completedDate    : DateTime                 @title : '{i18n>WorkItems.CompletedDate}';
         closedDate       : DateTime                 @title : '{i18n>WorkItems.ClosedDate}';
-        customer         : String;
-        private          : Boolean;
-        type             : String;
+        customer         : String                   @title : '{i18n>WorkItems.customer}';
+        private          : Boolean                  @title : '{i18n>WorkItems.private}';
+        type             : String                   @title : '{i18n>WorkItems.type}';
 };

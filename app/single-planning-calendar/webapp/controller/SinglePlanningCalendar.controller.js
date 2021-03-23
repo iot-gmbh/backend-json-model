@@ -54,6 +54,7 @@ sap.ui.define(
             startDate: "{activatedDate}",
             endDate: "{completedDate}",
             title: "{title}",
+            text: "{customer}",
             type: "{= ${type} === 'Event' ? 'Type01' : 'Type06'}",
           });
 
