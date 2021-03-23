@@ -2,12 +2,11 @@ const cds = require("@sap/cds");
 const cdsapi = require("@sapmentors/cds-scp-api");
 
 module.exports = cds.service.impl(async function () {
-  const { Users } = this.entities;
-
   this.on("READ", "Events", async (req) => {
     const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
-    const user = "benedikt.hoelker@iot-online.de";
-    // const user = req.user.id
+    const user = process.env.NODE_ENV
+      ? req.user.id
+      : "benedikt.hoelker@iot-online.de";
 
     let events = [];
     try {

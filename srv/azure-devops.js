@@ -98,8 +98,9 @@ function isISODate(str) {
 }
 
 async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
-  const user = "benedikt.hoelker@iot-online.de";
-  // const user = req.user.id;
+  const user = process.env.NODE_ENV
+    ? req.user.id
+    : "benedikt.hoelker@iot-online.de";
   const azdev = require("azure-devops-node-api");
   const orgUrl = "https://dev.azure.com/iot-gmbh";
   const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
@@ -151,8 +152,9 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
 async function getEventsFromMSGraph(req) {
   const cdsapi = require("@sapmentors/cds-scp-api");
   const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
-  const user = "benedikt.hoelker@iot-online.de";
-  // const user = req.user.id;
+  const user = process.env.NODE_ENV
+    ? req.user.id
+    : "benedikt.hoelker@iot-online.de";
 
   let events = [];
   try {
