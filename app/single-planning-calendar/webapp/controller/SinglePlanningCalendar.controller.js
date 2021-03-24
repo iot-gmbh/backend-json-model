@@ -36,10 +36,7 @@ sap.ui.define(
         },
 
         onCreateAppointment() {
-          const appointmentsBinding = this.byId("SPCalendar").getBinding(
-            "appointments"
-          );
-          const context = appointmentsBinding.create({ ID: "hallo" });
+          const context = this.getView().getModel().createEntry("/MyWork");
           this._bindAndOpenDialog(context);
         },
 

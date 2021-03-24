@@ -3,7 +3,14 @@
   "authenticationMethod": "none",
   "routes": [
     {
-      "source": "^/azure-devops/(.*)$",
+      "source": "/v2/azure-devops/(.*)$",
+      "target": "/v2/azure-devops/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "/azure-devops/(.*)$",
       "target": "/azure-devops/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",

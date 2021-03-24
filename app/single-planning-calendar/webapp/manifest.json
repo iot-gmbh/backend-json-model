@@ -17,10 +17,10 @@
         "ach": "ach",
         "dataSources": {
             "mainService": {
-                "uri": "azure-devops/",
+                "uri": "v2/azure-devops/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0"
+                    "odataVersion": "2.0"
                 }
             }
         },
@@ -86,10 +86,8 @@
             "": {
                 "dataSource": "mainService",
                 "settings": {
-                    "groupId": "$auto",
-                    "synchronizationMode": "None",
-                    "operationMode": "Server",
-                    "autoExpandSelect": true
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "None"
                 }
             }
         },

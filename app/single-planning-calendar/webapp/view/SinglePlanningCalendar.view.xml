@@ -1,6 +1,7 @@
 <mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
 	xmlns="sap.m"
 	xmlns:unified="sap.ui.unified"
+	xmlns:smartfield="sap.ui.comp.smartfield"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
 	<Shell id="shell">
@@ -19,7 +20,7 @@
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="Project"/>
-									<Input value="{project_ID}"/>
+									<smartfield:SmartField value="{project_ID}"/>
 									<Label text="Title"/>
 									<Input value="{title}"/>
 									<Label text="Begin"/>

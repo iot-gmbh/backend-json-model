@@ -1,9 +1,7 @@
-const { query } = require("express");
-
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
   assignedTo: "[System.AssignedTo]",
-  assignedTo_ID: "[System.AssignedTo]",
+  assignedTo_userPrincipalName: "[System.AssignedTo]",
   changedDate: "System.ChangedDate",
   createdDate: "System.CreatedDate",
   reason: "System.Reason",
@@ -26,7 +24,7 @@ function destructureDevOpsObj(devOpsObj) {
   let cds = {};
   ({
     id: cds.ID,
-    "System.AssignedTo": { uniqueName: cds.assignedTo_ID },
+    "System.AssignedTo": { uniqueName: cds.assignedTo_userPrincipalName },
     "System.AssignedTo": { displayName: cds.assignedToName },
     "System.ChangedDate": cds.changedDate,
     "System.CreatedDate": cds.createdDate,
@@ -185,7 +183,7 @@ async function getEventsFromMSGraph({ req, MSGraphSrv }) {
         customer,
         activatedDate: start.dateTime.substring(0, 19) + "Z",
         completedDate: end.dateTime.substring(0, 19) + "Z",
-        assignedTo_ID: user,
+        assignedTo_userPrincipalName: user,
         private: sensitivity === "private",
         type: "Event",
       })

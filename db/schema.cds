@@ -8,7 +8,7 @@ using {
 namespace iot.planner;
 
 entity Users {
-    key ID                : UUID; // It's a GUID that was casted to String
+    key userPrincipalName : String; // It's a GUID that was casted to String
         displayName       : String;
         givenName         : String;
         jobTitle          : String;
@@ -17,7 +17,6 @@ entity Users {
         officeLocation    : String;
         preferredLanguage : String;
         surname           : String;
-        userPrincipalName : String;
         workItems         : Association to many WorkItems
                                 on workItems.assignedTo = $self;
 };
