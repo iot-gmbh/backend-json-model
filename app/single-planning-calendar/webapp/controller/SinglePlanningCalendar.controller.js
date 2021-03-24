@@ -3,12 +3,14 @@ sap.ui.define(
     "sap/ui/unified/CalendarAppointment",
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/Filter",
+    "../model/formatter",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (CalendarAppointment, Controller, Filter) {
+  function (CalendarAppointment, Controller, Filter, formatter) {
     "use strict";
+    formatter;
 
     return Controller.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
@@ -29,12 +31,20 @@ sap.ui.define(
           this._bindAppointments();
         },
 
+        closeDialog(event) {
+          event.getSource().getParent().close();
+        },
+
         onCreateAppointment() {
-          const dialog = this.byId("createItemDialog");
           const appointmentsBinding = this.byId("SPCalendar").getBinding(
             "appointments"
           );
-          const context = appointmentsBinding.create();
+          const context = appointmentsBinding.create({ ID: "hallo" });
+          this._bindAndOpenDialog(context);
+        },
+
+        _bindAndOpenDialog(context) {
+          const dialog = this.byId("createItemDialog");
 
           dialog.setBindingContext(context);
           dialog.open();
@@ -48,6 +58,11 @@ sap.ui.define(
           this._bindAppointments();
         },
 
+        onPressAppointment(event) {
+          const { appointment } = event.getParameters();
+          this._bindAndOpenDialog(appointment.getBindingContext());
+        },
+
         _bindAppointments() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
@@ -58,7 +73,7 @@ sap.ui.define(
             endDate: "{completedDate}",
             title: "{title}",
             text: "{customer}",
-            type: "{= ${type} === 'Event' ? 'Type01' : 'Type06'}",
+            type: { path: "type", formatter: formatter.getDisplayType },
           });
 
           // Bind the Aggregation

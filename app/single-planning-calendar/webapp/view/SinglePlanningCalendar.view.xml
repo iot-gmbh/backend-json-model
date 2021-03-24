@@ -7,14 +7,14 @@
 		<App id="app">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+					<SinglePlanningCalendar id="SPCalendar" appointmentSelect="onPressAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						</actions>
 						<dependents>
 							<Dialog id="createItemDialog" title="Neuen Eintrag anlegen">
 								<buttons>
-									<Button text="OK" type="Emphasized" press="onSubmitNewItem"/>
+									<Button text="OK" type="Emphasized" press="closeDialog"/>
 									<Button press="closeDialog" text="Abbrechen"/>
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">

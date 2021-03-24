@@ -1,3 +1,5 @@
+const { query } = require("express");
+
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
   assignedTo: "[System.AssignedTo]",
@@ -11,7 +13,7 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   workItemType: "System.WorkItemType",
   // Documentation
   activatedDate: "[Microsoft.VSTS.Common.ActivatedDate]",
-  resolvedDate: "Microsoft.VSTS.Common.ResolvedDate",
+  resolvedDate: "[Microsoft.VSTS.Common.ResolvedDate]",
   closedDate: "[Microsoft.VSTS.Common.ClosedDate]",
   completedDate: "[Microsoft.VSTS.Common.ClosedDate]",
   // Scheduling
@@ -97,21 +99,20 @@ function isISODate(str) {
   return dateRegexp.test(str);
 }
 
-async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
+async function getWorkItemsFromDevOps({ req, restrictToOwnUser, workItemAPI }) {
   const user = process.env.NODE_ENV
     ? req.user.id
     : "benedikt.hoelker@iot-online.de";
-  const azdev = require("azure-devops-node-api");
-  const orgUrl = "https://dev.azure.com/iot-gmbh";
-  const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
-  const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
-  const connection = new azdev.WebApi(orgUrl, authHandler);
-  const workItemAPI = await connection.getWorkItemTrackingApi();
-
-  const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
-  const selectBuilder = new SelectBuilder(req.query);
-  const SQLString = selectBuilder.build();
+  let SQLString = "";
+  try {
+    const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
+    const selectBuilder = new SelectBuilder(req.query);
+    SQLString = selectBuilder.build();
+  } catch (error) {
+    return [];
+    // whereClause = `[System.Id] = '${req.data.ID}'`;
+  }
 
   const whereClause = getWhereClause(SQLString);
   const whereClauseFilterByAssignedTo = restrictToOwnUser
@@ -149,28 +150,31 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser }) {
   return results;
 }
 
-async function getEventsFromMSGraph(req) {
-  const cdsapi = require("@sapmentors/cds-scp-api");
-  const service = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
+async function getEventsFromMSGraph({ req, MSGraphSrv }) {
   const user = process.env.NODE_ENV
     ? req.user.id
     : "benedikt.hoelker@iot-online.de";
 
   let events = [];
-  try {
-    const queryString = Object.entries(req._query)
-      .filter(([key]) => !key.includes("$select"))
-      .reduce(
-        (str, [key, value]) => str.concat("&", key, "=", value),
-        // str.concat(index > 0 ? "&" : "", key, "=", value),
-        "?$select=id,subject,start,end,categories,sensitivity"
-      )
-      // TODO: Replace with a better transformation
-      .replace("completedDate gt ", "end/dateTime gt '")
-      .replace("activatedDate le ", "start/dateTime le '")
-      .replace(/Z/g, "Z'");
+  let queryString = "";
 
-    const { value } = await service.run({
+  try {
+    if (req.data.ID) queryString = `/${req.data.ID}`;
+    else {
+      queryString = Object.entries(req._query)
+        .filter(([key]) => !key.includes("$select"))
+        .reduce(
+          (str, [key, value]) => str.concat("&", key, "=", value),
+          // str.concat(index > 0 ? "&" : "", key, "=", value),
+          "?$select=id,subject,start,end,categories,sensitivity"
+        )
+        // TODO: Replace with a better transformation
+        .replace("completedDate gt ", "end/dateTime gt '")
+        .replace("activatedDate le ", "start/dateTime le '")
+        .replace(/Z/g, "Z'");
+    }
+
+    const { value } = await MSGraphSrv.run({
       url: `/v1.0/users/${user}/events${queryString}`,
     });
 
@@ -187,7 +191,7 @@ async function getEventsFromMSGraph(req) {
       })
     );
   } catch (error) {
-    console.log(error);
+    // TODO: Implement error handling
   }
 
   return events;
@@ -196,17 +200,38 @@ async function getEventsFromMSGraph(req) {
 require("dotenv").config();
 
 module.exports = cds.service.impl(async function () {
-  this.before("CREATE", "MyWork", async (req) => {
-    req.data = {};
+  const cdsapi = require("@sapmentors/cds-scp-api");
+  const MSGraphSrv = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
+
+  const azdev = require("azure-devops-node-api");
+  const orgUrl = "https://dev.azure.com/iot-gmbh";
+  const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
+  const authHandler = azdev.getPersonalAccessTokenHandler(token);
+  const connection = new azdev.WebApi(orgUrl, authHandler);
+  const workItemAPI = await connection.getWorkItemTrackingApi();
+
+  const uuid = require("uuid");
+  const db = await cds.connect.to("db");
+
+  this.on("CREATE", "MyWork", (req, next) => {
+    // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
+    req.data.ID = uuid.v4();
+    req.data.type = "Manual";
+
+    return next();
   });
 
   this.on("READ", "MyWork", async (req) => {
+    const tx = db.tx(req);
+
     const [...data] = await Promise.all([
+      tx.run(req.query),
       getWorkItemsFromDevOps({
         req,
         restrictToOwnUser: true,
+        workItemAPI,
       }),
-      getEventsFromMSGraph(req),
+      getEventsFromMSGraph({ req, MSGraphSrv }),
     ]);
 
     const results = data.reduce((acc, item) => acc.concat(item), []);
@@ -216,10 +241,10 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("READ", "WorkItems", async (req) =>
-    getWorkItemsFromDevOps({ req, restrictToOwnUser: false })
+    getWorkItemsFromDevOps({ req, restrictToOwnUser: false, workItemAPI })
   );
 
   this.on("READ", "MyWorkItems", async (req) =>
-    getWorkItemsFromDevOps({ req, restrictToOwnUser: false })
+    getWorkItemsFromDevOps({ req, restrictToOwnUser: false, workItemAPI })
   );
 });

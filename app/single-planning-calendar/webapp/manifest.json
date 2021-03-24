@@ -86,15 +86,10 @@
             "": {
                 "dataSource": "mainService",
                 "settings": {
+                    "groupId": "$auto",
                     "synchronizationMode": "None",
                     "operationMode": "Server",
-                    "autoExpandSelect": true,
-                    "earlyRequests": true,
-                    "groupProperties": {
-                        "default": {
-                            "submit": "Auto"
-                        }
-                    }
+                    "autoExpandSelect": true
                 }
             }
         },

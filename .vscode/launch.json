@@ -10,6 +10,13 @@
       "request": "launch",
       "type": "node-terminal",
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "command": "npm run start:lcl",
+      "name": "app + srv",
+      "request": "launch",
+      "type": "node-terminal",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

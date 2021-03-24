@@ -22,7 +22,8 @@
     "isomorphic-fetch": "^3.0.0",
     "msal": "^1.4.8",
     "passport": "^0.4.1",
-    "sap-cf-axios": "^0.2.29"
+    "sap-cf-axios": "^0.2.29",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@sap/ux-specification": "^1.84.6",
@@ -50,11 +51,12 @@
   },
   "scripts": {
     "start": "cds run",
-    "start:lcl": "run-p start:srv start:spc start:planner start:approuter",
+    "start:lcl": "run-p start:srv start:spc start:planner",
     "start:srv": "cds run",
     "start:approuter": "cd app/single-planning-calendar && node node_modules/@sap/approuter/approuter.js",
     "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8081",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
+    "debug": "run-p start:srv start:spc start:planner",
     "build": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
