@@ -60,6 +60,12 @@ sap.ui.define(
           this._bindAndOpenDialog(appointment.getBindingContext());
         },
 
+        onPressSubmitAppointment(event) {
+          this.getView().getModel().submitChanges();
+
+          event.getSource().getParent().close();
+        },
+
         _bindAppointments() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();

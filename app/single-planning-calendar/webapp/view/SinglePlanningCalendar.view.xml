@@ -15,18 +15,18 @@
 						<dependents>
 							<Dialog id="createItemDialog" title="Neuen Eintrag anlegen">
 								<buttons>
-									<Button text="OK" type="Emphasized" press="closeDialog"/>
+									<Button text="OK" type="Emphasized" press="onPressSubmitAppointment"/>
 									<Button press="closeDialog" text="Abbrechen"/>
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="Project"/>
 									<smartfield:SmartField value="{project_ID}"/>
 									<Label text="Title"/>
-									<Input value="{title}"/>
+									<smartfield:SmartField value="{title}"/>
 									<Label text="Begin"/>
-									<DateTimePicker value="{activatedDate}"/>
+									<smartfield:SmartField value="{activatedDate}"/>
 									<Label text="Completed"/>
-									<DateTimePicker value="{completedDate}"/>
+									<smartfield:SmartField value="{completedDate}"/>
 								</form:SimpleForm>
 							</Dialog>
 						</dependents>
