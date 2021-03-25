@@ -12,21 +12,29 @@ sap.ui.define(
     "use strict";
     formatter;
 
+    function getMonday(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
     return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         onInit: function () {
           const calendar = this.byId("SPCalendar");
-          const monthView = calendar.getViews()[3];
-          const today = new Date();
-          const firstDayOfMonth = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            1
-          );
+          // const monthView = calendar.getViews()[3];
+          // const today = new Date();
+          // const firstDayOfMonth = new Date(
+          //   today.getFullYear(),
+          //   today.getMonth(),
+          //   1
+          // );
 
-          calendar.setSelectedView(monthView);
-          calendar.setStartDate(firstDayOfMonth);
+          const workWeekView = calendar.getViews()[1];
+          calendar.setSelectedView(workWeekView);
+          calendar.setStartDate(getMonday(new Date()));
 
           this._bindAppointments();
         },
@@ -34,6 +42,14 @@ sap.ui.define(
         onCreateAppointment() {
           const context = this._createAppointment();
           this._bindAndOpenDialog(context);
+        },
+
+        onChangeSelectedProject(event) {
+          const dialog = this.byId("createItemDialog");
+          const selectCtrl = event.getSource();
+          const projectName = selectCtrl.getSelectedItem().getText();
+          const path = dialog.getBindingContext().getPath();
+          this.getModel().setProperty(`${path}/projectName`, projectName);
         },
 
         onSubmitEntry(event) {
@@ -95,7 +111,7 @@ sap.ui.define(
             startDate: "{activatedDate}",
             endDate: "{completedDate}",
             title: "{title}",
-            text: "{customer}",
+            text: "{projectName}",
             type: { path: "type", formatter: formatter.getDisplayType },
           });
 

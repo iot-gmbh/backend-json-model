@@ -66,9 +66,11 @@ entity Tasks : managed, cuid {
 
 entity WorkItems {
     key ID               : String                  @title : '{i18n>WorkItems.ID}';
+    key activatedDate    : DateTime                @title : '{i18n>WorkItems.ActivatedDate}';
+    key completedDate    : DateTime                @title : '{i18n>WorkItems.CompletedDate}';
         assignedTo       : Association to Users    @title : '{i18n>WorkItems.AssignedTo}';
-        assignedToName   : String                  @title : '{i18n>WorkItems.AssignedToName}';
         changedDate      : DateTime                @title : '{i18n>WorkItems.ChangedDate}';
+        assignedToName   : String                  @title : '{i18n>WorkItems.AssignedToName}';
         createdDate      : DateTime                @title : '{i18n>WorkItems.CreatedDate}';
         reason           : String                  @title : '{i18n>WorkItems.Reason}';
         state            : String                  @title : '{i18n>WorkItems.State}';
@@ -80,12 +82,11 @@ entity WorkItems {
         remainingWork    : Decimal                 @title : '{i18n>WorkItems.RemainingWork}';
         originalEstimate : Decimal                 @title : '{i18n>WorkItems.OriginalEstimate}';
         // Documentation
-        activatedDate    : DateTime                @title : '{i18n>WorkItems.ActivatedDate}';
         resolvedDate     : DateTime                @title : '{i18n>WorkItems.ResolvedDate}';
-        completedDate    : DateTime                @title : '{i18n>WorkItems.CompletedDate}';
         closedDate       : DateTime                @title : '{i18n>WorkItems.ClosedDate}';
         customer         : String                  @title : '{i18n>WorkItems.customer}';
         private          : Boolean                 @title : '{i18n>WorkItems.private}';
         type             : String                  @title : '{i18n>WorkItems.type}';
-        project          : Association to Projects @title : '{i18n>WorkItems.project}'
+        project          : Association to Projects @title : '{i18n>WorkItems.project}';
+        projectName      : String;
 };

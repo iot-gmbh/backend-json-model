@@ -88,7 +88,6 @@
                 "settings": {
                     "useBatch": "false",
                     "defaultBindingMode": "TwoWay",
-                    "defaultUpdateMethod": "PUT",
                     "defaultCountMode": "None"
                 }
             }

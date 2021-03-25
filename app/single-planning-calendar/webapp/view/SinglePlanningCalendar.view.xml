@@ -21,7 +21,7 @@
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="Project"/>
-									<Select selectedKey="{project_ID}" items="{/Projects}" forceSelection="false">
+									<Select selectedKey="{project_ID}" items="{/Projects}" forceSelection="false" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

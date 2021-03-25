@@ -128,6 +128,7 @@ async function getWorkItemsFromDevOps({ req, restrictToOwnUser, workItemAPI }) {
     // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
     .map((item) => ({ id: item.id.toString(), ...item.fields }))
     .reduce((acc, item) => acc.concat(item), [])
+    .filter((item) => !!item["Microsoft.VSTS.Common.ActivatedDate"])
     .map((DevOpsObject) => {
       let CDSObject = destructureDevOpsObj(DevOpsObject);
 
@@ -211,6 +212,21 @@ module.exports = cds.service.impl(async function () {
   const uuid = require("uuid");
   const db = await cds.connect.to("db");
 
+  this.on("UPDATE", "MyWork", async (req) => {
+    const tx = db.tx(req); //> ensure tenant isolation & transaction management
+    const entries = await tx
+      .read("iot.planner.WorkItems")
+      .where({ ID: req.data.ID });
+
+    if (entries.length === 0)
+      db.run(
+        INSERT.into("iot.planner.WorkItems").entries({
+          ...req.data,
+          isFromRemoteSource: true,
+        })
+      );
+  });
+
   this.on("CREATE", "MyWork", (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
@@ -222,7 +238,7 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MyWork", async (req) => {
     const tx = db.tx(req);
 
-    const [...data] = await Promise.all([
+    const [local, devOps, MSGraph] = await Promise.all([
       tx.run(req.query),
       getWorkItemsFromDevOps({
         req,
@@ -232,11 +248,18 @@ module.exports = cds.service.impl(async function () {
       getEventsFromMSGraph({ req, MSGraphSrv }),
     ]);
 
-    const map = data
+    const map = [...local, devOps, MSGraph]
       .reduce((acc, item) => acc.concat(item), [])
-      .filter((itm) => itm && !!itm.ID)
+      /*
+       Nur Items mit ID und AssignedTo übernehmen
+       => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
+       */
+      .filter((itm) => itm && itm.ID && itm.assignedTo)
       .reduce((acc, curr) => {
-        acc[curr.ID] = { ...acc[curr.ID], ...curr };
+        acc[curr.ID] = {
+          ...acc[curr.ID],
+          ...curr,
+        };
         return acc;
       }, {});
 
