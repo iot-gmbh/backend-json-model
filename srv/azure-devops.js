@@ -232,7 +232,15 @@ module.exports = cds.service.impl(async function () {
       getEventsFromMSGraph({ req, MSGraphSrv }),
     ]);
 
-    const results = data.reduce((acc, item) => acc.concat(item), []);
+    const map = data
+      .reduce((acc, item) => acc.concat(item), [])
+      .filter((itm) => itm && !!itm.ID)
+      .reduce((acc, curr) => {
+        acc[curr.ID] = { ...acc[curr.ID], ...curr };
+        return acc;
+      }, {});
+
+    const results = Object.values(map);
 
     results.$count = results.length;
     return results;

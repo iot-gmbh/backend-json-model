@@ -18,7 +18,7 @@ annotate my.WorkItems with @(UI : {
     ],
     SelectionFields : [
         title,
-        assignedTo_ID
+        assignedTo_userPrincipalName
     ],
     LineItem        : [
         {

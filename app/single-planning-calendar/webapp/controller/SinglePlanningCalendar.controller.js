@@ -1,18 +1,18 @@
 sap.ui.define(
   [
     "sap/ui/unified/CalendarAppointment",
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/Filter",
     "../model/formatter",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (CalendarAppointment, Controller, Filter, formatter) {
+  function (CalendarAppointment, BaseController, Filter, formatter) {
     "use strict";
     formatter;
 
-    return Controller.extend(
+    return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         onInit: function () {
@@ -31,13 +31,25 @@ sap.ui.define(
           this._bindAppointments();
         },
 
-        closeDialog(event) {
+        onCreateAppointment() {
+          const context = this._createAppointment();
+          this._bindAndOpenDialog(context);
+        },
+
+        onSubmitEntry(event) {
+          this.getModel().submitChanges();
           event.getSource().getParent().close();
         },
 
-        onCreateAppointment() {
-          const context = this.getView().getModel().createEntry("/MyWork");
-          this._bindAndOpenDialog(context);
+        onCloseDialog(event) {
+          this.getModel().resetChanges();
+          event.getSource().getParent().close();
+        },
+
+        _createAppointment(properties) {
+          return this.getModel().createEntry("/MyWork", {
+            properties,
+          });
         },
 
         _bindAndOpenDialog(context) {
@@ -57,13 +69,21 @@ sap.ui.define(
 
         onPressAppointment(event) {
           const { appointment } = event.getParameters();
+          if (!appointment) return;
           this._bindAndOpenDialog(appointment.getBindingContext());
         },
 
-        onPressSubmitAppointment(event) {
-          this.getView().getModel().submitChanges();
+        onCellPress(event) {
+          const { startDate, endDate } = event.getParameters();
+          const context = this._createAppointment({
+            activatedDate: startDate,
+            completedDate: endDate,
+          });
+          this._bindAndOpenDialog(context);
+        },
 
-          event.getSource().getParent().close();
+        _toISOString(date) {
+          return date.toISOString().substring(0, 19) + "Z";
         },
 
         _bindAppointments() {
