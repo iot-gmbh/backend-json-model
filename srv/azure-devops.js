@@ -236,34 +236,38 @@ module.exports = cds.service.impl(async function () {
 
   this.on("READ", "MyWork", async (req) => {
     const tx = db.tx(req);
+    let results = [];
+    try {
+      const [local, devOps, MSGraph] = await Promise.all([
+        getWorkItemsFromDevOps({
+          req,
+          restrictToOwnUser: true,
+          workItemAPI,
+        }),
+        getEventsFromMSGraph({ req, MSGraphSrv }),
+        tx.run(req.query),
+      ]);
 
-    const [local, devOps, MSGraph] = await Promise.all([
-      tx.run(req.query),
-      getWorkItemsFromDevOps({
-        req,
-        restrictToOwnUser: true,
-        workItemAPI,
-      }),
-      getEventsFromMSGraph({ req, MSGraphSrv }),
-    ]);
+      const map = [...devOps, MSGraph, local]
+        .reduce((acc, item) => acc.concat(item), [])
+        /*
+  Nur Items mit ID und AssignedTo übernehmen
+  => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
+  */
+        .filter((itm) => itm)
+        .filter(({ ID, completedDate }) => !!ID && !!completedDate)
+        .reduce((acc, curr) => {
+          acc[curr.ID] = {
+            ...acc[curr.ID],
+            ...curr,
+          };
+          return acc;
+        }, {});
 
-    const map = [...local, devOps, MSGraph]
-      .reduce((acc, item) => acc.concat(item), [])
-      /*
-       Nur Items mit ID und AssignedTo übernehmen
-       => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
-       */
-      .filter((itm) => itm)
-      .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((acc, curr) => {
-        acc[curr.ID] = {
-          ...acc[curr.ID],
-          ...curr,
-        };
-        return acc;
-      }, {});
-
-    const results = Object.values(map);
+      results = Object.values(map);
+    } catch (error) {
+      // Do nothing
+    }
 
     results.$count = results.length;
     return results;

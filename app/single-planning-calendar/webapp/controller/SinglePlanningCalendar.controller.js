@@ -80,13 +80,30 @@ sap.ui.define(
         },
 
         _submitEntry(appointment) {
+          const {
+            ID, // eslint-disable-next-line camelcase
+            project_ID,
+            title,
+            activatedDate,
+            completedDate,
+          } = appointment;
+
           // Update
-          if (appointment.ID) {
-            const path = this.getModel("OData").createKey(
-              "/MyWork",
-              appointment
-            );
-            return this.update({ path, data: appointment });
+          if (ID) {
+            // const path = this.getModel("OData").createKey("/MyWork", {
+            //   ID,
+            //   activatedDate: ,
+            //   completedDate: completedDate.toISOString(),
+            // });
+            const path = `/MyWork(ID='${encodeURIComponent(
+              ID
+            )}',activatedDate=datetimeoffset'${activatedDate.toISOString()}',completedDate=datetimeoffset'${completedDate.toISOString()}')`;
+
+            return this.update({
+              path,
+              // eslint-disable-next-line camelcase
+              data: { project_ID, title, activatedDate, completedDate },
+            });
           }
 
           // Create
@@ -138,7 +155,7 @@ sap.ui.define(
           const oneWeekLater = this._addDays(startDate, 7);
           const { results: appointments } = await this.read({
             path: "/MyWork",
-            urlParameters: { $top: 60 },
+            urlParameters: { $top: 100 },
             filters: [
               new Filter({
                 filters: [
