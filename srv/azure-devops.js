@@ -222,7 +222,6 @@ module.exports = cds.service.impl(async function () {
       db.run(
         INSERT.into("iot.planner.WorkItems").entries({
           ...req.data,
-          isFromRemoteSource: true,
         })
       );
   });
@@ -254,7 +253,7 @@ module.exports = cds.service.impl(async function () {
        Nur Items mit ID und AssignedTo übernehmen
        => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
        */
-      .filter((itm) => itm && itm.ID && itm.assignedTo)
+      .filter((itm) => itm && itm.ID)
       .reduce((acc, curr) => {
         acc[curr.ID] = {
           ...acc[curr.ID],

@@ -18,10 +18,7 @@
         "dataSources": {
             "mainService": {
                 "uri": "v2/azure-devops/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
+                "type": "OData"
             }
         },
         "crossNavigation": {
@@ -85,9 +82,12 @@
             },
             "": {
                 "dataSource": "mainService",
+                "type": "sap.ui.model.odata.v2.ODataModel",
                 "settings": {
-                    "useBatch": "false",
+                    "defaultUpdateMethod": "PUT",
+                    "defaultOperationMode": "Server",
                     "defaultBindingMode": "TwoWay",
+                    "refreshAfterChange": false,
                     "defaultCountMode": "None"
                 }
             }
