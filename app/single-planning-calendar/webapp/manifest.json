@@ -80,11 +80,11 @@
                     "bundleName": "iot.singleplanningcalendar.i18n.i18n"
                 }
             },
-            "": {
+            "OData": {
                 "dataSource": "mainService",
                 "type": "sap.ui.model.odata.v2.ODataModel",
                 "settings": {
-                    "defaultUpdateMethod": "PUT",
+                    "defaultUpdateMethod": "MERGE",
                     "defaultOperationMode": "Server",
                     "defaultBindingMode": "TwoWay",
                     "refreshAfterChange": false,

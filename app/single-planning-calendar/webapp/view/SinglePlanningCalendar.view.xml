@@ -9,29 +9,32 @@
 		<App id="app">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" appointmentSelect="onPressAppointment" cellPress="onCellPress" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" cellPress="onCellPress" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						</actions>
+						<appointments>
+							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{title}" text="{text}" type="{path: 'type', formatter: '.formatter.getDisplayType'}"/>
+						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" title="Create new entry">
+							<Dialog id="createItemDialog" title="Create new entry" binding="{/appointment}">
 								<buttons>
 									<Button text="OK" type="Emphasized" press="onSubmitEntry"/>
 									<Button press="onCloseDialog" text="Close"/>
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="Project"/>
-									<Select selectedKey="{project_ID}" items="{/Projects}" forceSelection="false" change="onChangeSelectedProject">
+									<Select selectedKey="{project_ID}" items="{OData>/Projects}" forceSelection="false" change="onChangeSelectedProject">
 										<items>
-											<core:Item text="{title}" key="{ID}"/>
+											<core:Item text="{OData>title}" key="{OData>ID}"/>
 										</items>
 									</Select>
 									<Label text="Title"/>
 									<Input value="{title}"/>
 									<Label text="Begin"/>
-									<smartfield:SmartField value="{activatedDate}"/>
+									<DateTimePicker value="{activatedDate}"/>
 									<Label text="Completed"/>
-									<smartfield:SmartField value="{completedDate}"/>
+									<DateTimePicker value="{completedDate}"/>
 								</form:SimpleForm>
 							</Dialog>
 						</dependents>

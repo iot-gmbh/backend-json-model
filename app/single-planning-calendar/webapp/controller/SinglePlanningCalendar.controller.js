@@ -1,16 +1,16 @@
 sap.ui.define(
   [
-    "sap/ui/unified/CalendarAppointment",
     "./BaseController",
     "sap/ui/model/Filter",
     "../model/formatter",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (CalendarAppointment, BaseController, Filter, formatter) {
+  function (BaseController, Filter, formatter, JSONModel, MessageBox) {
     "use strict";
-    formatter;
 
     function getMonday(d) {
       d = new Date(d);
@@ -22,6 +22,8 @@ sap.ui.define(
     return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
+        formatter,
+
         onInit: function () {
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
@@ -29,111 +31,140 @@ sap.ui.define(
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMonday(new Date()));
 
-          this._bindAppointments();
+          const model = new JSONModel({
+            appointments: [],
+            appointment: {
+              title: "",
+              completedDate: new Date(),
+              activatedDate: new Date(),
+              // eslint-disable-next-line camelcase
+              project_ID: "",
+            },
+          });
+
+          // Otherwise new entries won't be displayed in the calendar
+          model.setSizeLimit(300);
+
+          this.setModel(model);
+
+          this._loadData();
         },
 
         onCreateAppointment() {
-          const context = this._createAppointment();
-          this._bindAndOpenDialog(context);
+          this._bindAndOpenDialog();
         },
 
         onChangeSelectedProject(event) {
-          const dialog = this.byId("createItemDialog");
           const selectCtrl = event.getSource();
           const projectName = selectCtrl.getSelectedItem().getText();
-          const path = dialog.getBindingContext().getPath();
 
-          this.getModel().setProperty(`${path}/projectName`, projectName);
+          this.getModel().setProperty("/appointment/projectName", projectName);
         },
 
-        onSubmitEntry(event) {
-          this.getModel().submitChanges();
-          event.getSource().getParent().close();
+        async onSubmitEntry() {
+          const model = this.getModel();
+          let { appointment, appointments } = model.getData();
+
+          try {
+            const appointmentSync = await this._submitEntry(appointment);
+
+            model.setProperty(
+              "/appointments",
+              appointments.concat(appointmentSync)
+            );
+          } catch (error) {
+            MessageBox.error(error.message);
+          }
+
+          this.byId("createItemDialog").close();
+        },
+
+        _submitEntry(appointment) {
+          // Update
+          if (appointment.ID) {
+            const path = this.getModel("OData").createKey(
+              "/MyWork",
+              appointment
+            );
+            return this.update({ path, data: appointment });
+          }
+
+          // Create
+          else {
+            return this.create({ path: "/MyWork", data: appointment });
+          }
         },
 
         onCloseDialog(event) {
-          this.getModel().resetChanges();
           event.getSource().getParent().close();
         },
 
-        _createAppointment(properties) {
-          return this.getModel().createEntry("/MyWork", {
-            properties,
-            success: () => {
-              this.byId("SPCalendar").addAppointment();
-            },
-          });
-        },
-
-        _bindAndOpenDialog(context) {
-          const dialog = this.byId("createItemDialog");
-
-          dialog.setBindingContext(context);
-          dialog.open();
+        _bindAndOpenDialog(appointment = {}) {
+          this.getModel().setProperty("/appointment", appointment);
+          this.byId("createItemDialog").open();
         },
 
         onChangeView: function () {
-          this._bindAppointments();
+          this._loadData();
         },
 
         onStartDateChange: function () {
-          this._bindAppointments();
+          this._loadData();
         },
 
         onPressAppointment(event) {
           const { appointment } = event.getParameters();
           if (!appointment) return;
-          this._bindAndOpenDialog(appointment.getBindingContext());
+
+          this._bindAndOpenDialog(appointment.getBindingContext().getObject());
         },
 
         onCellPress(event) {
           const { startDate, endDate } = event.getParameters();
-          const context = this._createAppointment({
+
+          this._bindAndOpenDialog({
             activatedDate: startDate,
             completedDate: endDate,
           });
-          this._bindAndOpenDialog(context);
         },
 
         _toISOString(date) {
           return date.toISOString().substring(0, 19) + "Z";
         },
 
-        _getAppointmentTemplate() {
-          return new CalendarAppointment({
-            startDate: "{activatedDate}",
-            endDate: "{completedDate}",
-            title: "{title}",
-            text: "{projectName}",
-            type: { path: "type", formatter: formatter.getDisplayType },
-          });
-        },
-
-        _bindAppointments() {
+        async _loadData() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
-          const oneMonthLater = this._getDateOneMonthLater(startDate);
-          const template = this._getAppointmentTemplate();
-
-          // Bind the Aggregation
-          calendar.bindAggregation("appointments", {
+          const oneWeekLater = this._addDays(startDate, 7);
+          const { results: appointments } = await this.read({
             path: "/MyWork",
-            sorter: null,
-            template,
-            templateShareable: true,
+            urlParameters: { $top: 60 },
             filters: [
               new Filter({
-                path: "completedDate",
-                operator: "GT",
-                value1: startDate.toISOString(),
-              }),
-              new Filter({
-                path: "activatedDate",
-                operator: "LE",
-                value1: oneMonthLater.toISOString(),
+                filters: [
+                  new Filter({
+                    path: "completedDate",
+                    operator: "GT",
+                    value1: startDate,
+                  }),
+                  new Filter({
+                    path: "activatedDate",
+                    operator: "LE",
+                    value1: oneWeekLater,
+                  }),
+                ],
+                and: false,
               }),
             ],
           });
+
+          this.getModel().setProperty("/appointments", appointments);
+        },
+
+        _addDays(date, days) {
+          const result = new Date(date);
+          result.setDate(result.getDate() + days);
+          return result;
         },
 
         _getDateOneMonthLater(date) {

@@ -253,7 +253,8 @@ module.exports = cds.service.impl(async function () {
        Nur Items mit ID und AssignedTo übernehmen
        => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
        */
-      .filter((itm) => itm && itm.ID)
+      .filter((itm) => itm)
+      .filter(({ ID, completedDate }) => !!ID && !!completedDate)
       .reduce((acc, curr) => {
         acc[curr.ID] = {
           ...acc[curr.ID],

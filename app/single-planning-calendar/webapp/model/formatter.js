@@ -1,5 +1,5 @@
 sap.ui.define([], () => ({
-  getDisplayType: function (eventType) {
+  getDisplayType(eventType) {
     switch (eventType) {
       case "Manual":
         return "Type16";
