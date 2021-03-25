@@ -24,15 +24,8 @@ sap.ui.define(
       {
         onInit: function () {
           const calendar = this.byId("SPCalendar");
-          // const monthView = calendar.getViews()[3];
-          // const today = new Date();
-          // const firstDayOfMonth = new Date(
-          //   today.getFullYear(),
-          //   today.getMonth(),
-          //   1
-          // );
-
           const workWeekView = calendar.getViews()[1];
+
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMonday(new Date()));
 
@@ -49,6 +42,7 @@ sap.ui.define(
           const selectCtrl = event.getSource();
           const projectName = selectCtrl.getSelectedItem().getText();
           const path = dialog.getBindingContext().getPath();
+
           this.getModel().setProperty(`${path}/projectName`, projectName);
         },
 
@@ -65,6 +59,9 @@ sap.ui.define(
         _createAppointment(properties) {
           return this.getModel().createEntry("/MyWork", {
             properties,
+            success: () => {
+              this.byId("SPCalendar").addAppointment();
+            },
           });
         },
 
@@ -102,18 +99,21 @@ sap.ui.define(
           return date.toISOString().substring(0, 19) + "Z";
         },
 
-        _bindAppointments() {
-          const calendar = this.getView().byId("SPCalendar");
-          const startDate = calendar.getStartDate();
-          const oneMonthLater = this._getDateOneMonthLater(startDate);
-
-          const template = new CalendarAppointment({
+        _getAppointmentTemplate() {
+          return new CalendarAppointment({
             startDate: "{activatedDate}",
             endDate: "{completedDate}",
             title: "{title}",
             text: "{projectName}",
             type: { path: "type", formatter: formatter.getDisplayType },
           });
+        },
+
+        _bindAppointments() {
+          const calendar = this.getView().byId("SPCalendar");
+          const startDate = calendar.getStartDate();
+          const oneMonthLater = this._getDateOneMonthLater(startDate);
+          const template = this._getAppointmentTemplate();
 
           // Bind the Aggregation
           calendar.bindAggregation("appointments", {
