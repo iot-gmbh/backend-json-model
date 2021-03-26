@@ -68,30 +68,29 @@ entity Tasks : managed, cuid {
 
 entity WorkItems {
     key ID               : String                   @title : '{i18n>WorkItems.ID}';
-    key activatedDate    : DateTime                 @title : '{i18n>WorkItems.ActivatedDate}';
-    key completedDate    : DateTime                 @title : '{i18n>WorkItems.CompletedDate}';
-        assignedTo       : Association to Users     @title : '{i18n>WorkItems.AssignedTo}';
-        changedDate      : DateTime                 @title : '{i18n>WorkItems.ChangedDate}';
-        assignedToName   : String                   @title : '{i18n>WorkItems.AssignedToName}';
-        createdDate      : DateTime                 @title : '{i18n>WorkItems.CreatedDate}';
-        reason           : String                   @title : '{i18n>WorkItems.Reason}';
-        state            : String                   @title : '{i18n>WorkItems.State}';
-        teamProject      : String                   @title : '{i18n>WorkItems.TeamProject}';
-        title            : String                   @title : '{i18n>WorkItems.Title}';
-        workItemType     : String                   @title : '{i18n>WorkItems.WorkItemType}';
+        activatedDate    : DateTime                 @title : '{i18n>WorkItems.activatedDate}';
+        completedDate    : DateTime                 @title : '{i18n>WorkItems.completedDate}';
+        assignedTo       : Association to Users     @title : '{i18n>WorkItems.assignedTo}';
+        changedDate      : DateTime                 @title : '{i18n>WorkItems.changedDate}';
+        assignedToName   : String                   @title : '{i18n>WorkItems.assignedToName}';
+        createdDate      : DateTime                 @title : '{i18n>WorkItems.createdDate}';
+        reason           : String                   @title : '{i18n>WorkItems.reason}';
+        state            : String                   @title : '{i18n>WorkItems.state}';
+        teamProject      : String                   @title : '{i18n>WorkItems.teamProject}';
+        title            : String                   @title : '{i18n>WorkItems.title}';
+        workItemType     : String                   @title : '{i18n>WorkItems.workItemType}';
         // Scheduling
-        completedWork    : Decimal                  @title : '{i18n>WorkItems.CompletedWork}';
-        remainingWork    : Decimal                  @title : '{i18n>WorkItems.RemainingWork}';
-        originalEstimate : Decimal                  @title : '{i18n>WorkItems.OriginalEstimate}';
+        completedWork    : Decimal                  @title : '{i18n>WorkItems.completedWork}';
+        remainingWork    : Decimal                  @title : '{i18n>WorkItems.remainingWork}';
+        originalEstimate : Decimal                  @title : '{i18n>WorkItems.originalEstimate}';
         // Documentation
-        resolvedDate     : DateTime                 @title : '{i18n>WorkItems.ResolvedDate}';
-        closedDate       : DateTime                 @title : '{i18n>WorkItems.ClosedDate}';
+        resolvedDate     : DateTime                 @title : '{i18n>WorkItems.resolvedDate}';
+        closedDate       : DateTime                 @title : '{i18n>WorkItems.closedDate}';
         customer         : Association to Customers @title : '{i18n>WorkItems.customer}';
-        customerName     : String;
-        private          : Boolean
-                                                    @title : '{i18n>WorkItems.private}';
-        type             : String                   @title : '{i18n>WorkItems.type}';
+        customerName     : String                   @title : '{i18n>WorkItems.customerName}';
+        private          : Boolean                  @title : '{i18n>WorkItems.private}';
         project          : Association to Projects  @title : '{i18n>WorkItems.project}';
-        projectName      : String;
-        ticket           : String;
+        projectName      : String                   @title : '{i18n>WorkItems.projectName}';
+        ticket           : String                   @title : '{i18n>WorkItems.ticket}';
+        type             : String                   @title : '{i18n>WorkItems.type}';
 };

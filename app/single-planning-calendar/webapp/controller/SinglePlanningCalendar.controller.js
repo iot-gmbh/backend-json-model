@@ -101,13 +101,11 @@ sap.ui.define(
         // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert
         // eslint-disable-next-line no-unused-vars
         _submitEntry({ customer, ...appointment }) {
-          const { ID, activatedDate, completedDate } = appointment;
+          const { ID } = appointment;
 
           // Update
           if (ID) {
-            const path = `/MyWork(ID='${encodeURIComponent(
-              ID
-            )}',activatedDate=datetimeoffset'${activatedDate.toISOString()}',completedDate=datetimeoffset'${completedDate.toISOString()}')`;
+            const path = `/MyWork('${encodeURIComponent(ID)}')`;
 
             return this.update({
               path,
@@ -128,6 +126,7 @@ sap.ui.define(
         _bindAndOpenDialog(appointment = {}) {
           const model = this.getModel();
           const { customers } = model.getData();
+          const bundle = this.getResourceBundle();
 
           Object.defineProperty(appointment, "customer", {
             get: () =>
@@ -135,6 +134,13 @@ sap.ui.define(
           });
 
           model.setProperty("/appointment", appointment);
+          model.setProperty(
+            "/createItemDialogTitle",
+            appointment.ID
+              ? bundle.getText("editAppointment")
+              : bundle.getText("createAppointment")
+          );
+
           this.byId("createItemDialog").open();
         },
 

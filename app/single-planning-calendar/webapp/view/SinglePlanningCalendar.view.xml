@@ -17,33 +17,33 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_ID} {project_ID}" type="{parts: ['type', 'project_ID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_ID', formatter: '.formatter.getIconURL'}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" title="Create new entry" binding="{/appointment}">
-								<buttons>
-									<Button text="OK" type="Emphasized" press="onSubmitEntry"/>
-									<Button press="onCloseDialog" text="Close"/>
-								</buttons>
+							<Dialog id="createItemDialog" title="{/createItemDialogTitle}" binding="{/appointment}">
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
-									<Label text="Title"/>
+									<Label text="{i18n>WorkItems.title}" />
 									<Input value="{title}"/>
-									<Label text="Customer"/>
+									<Label text="{i18n>WorkItems.customer}"/>
 									<ComboBox selectedKey="{customer_ID}" items="{/customers}" change="onChangeSelectedCustomer">
 										<items>
 											<core:Item text="{name}" key="{ID}"/>
 										</items>
 									</ComboBox>
-									<Label text="Project"/>
+									<Label text="{i18n>WorkItems.project}"/>
 									<Select selectedKey="{project_ID}" items="{/appointment/customer/projects}" forceSelection="true" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
-									<Label text="Ticket"/>
+									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
-									<Label text="Begin"/>
+									<Label text="{i18n>WorkItems.activatedDate}"/>
 									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}" />
-									<Label text="Completed"/>
+									<Label text="{i18n>WorkItems.completedDate}"/>
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}"/>
 								</form:SimpleForm>
+								<buttons>
+									<Button text="{i18n>OK}" press="onSubmitEntry" type="Emphasized"/>
+									<Button text="{i18n>close}" press="onCloseDialog" />
+								</buttons>
 							</Dialog>
 						</dependents>
 						<views>
