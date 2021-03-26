@@ -36,18 +36,14 @@ sap.ui.define(
       {
         formatter,
 
-        onInit: function () {
+        onInit: async function () {
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
 
           const model = new JSONModel({
             appointments: [],
-            appointment: {
-              title: "",
-              completedDate: new Date(),
-              activatedDate: new Date(),
-              project_ID: "",
-            },
+            appointment: {},
+            busy: false,
             customers: [],
           });
 
@@ -58,8 +54,19 @@ sap.ui.define(
           model.setSizeLimit(300);
 
           this.setModel(model);
-          this._loadAppointments();
-          this._loadCustomersAndProjects();
+
+          model.setProperty("/busy", true);
+
+          try {
+            await Promise.all([
+              this._loadAppointments(),
+              this._loadCustomersAndProjects(),
+            ]);
+          } catch (error) {
+            MessageBox.error(ErrorParser.parse(error));
+          }
+
+          model.setProperty("/busy", false);
         },
 
         onCreateAppointment() {
@@ -128,14 +135,6 @@ sap.ui.define(
           });
 
           model.setProperty("/appointment", appointment);
-
-          // this.getModel().setProperty("/appointment", {
-          //   ...appointment,
-          //   get customer() {
-          //     return customers.find(({ ID }) => ID === this.customer_ID);
-          //   },
-          // });
-
           this.byId("createItemDialog").open();
         },
 
@@ -199,6 +198,7 @@ sap.ui.define(
             urlParameters: { $expand: "customer" },
           });
 
+          // Aus der Gesamtheit der Projekte werden die Kunden vereinzelt und Referenzen zu den jeweils zugeordneten Projekten abgegriffen => Ziel: dynamische Auswahl des Projekts abhängig vom gewählten Kunden
           const customers = Object.values(
             allProjects.reduce((map, { customer, ...project }) => {
               const mergeCustomer = map[customer.ID] || customer;
@@ -213,11 +213,7 @@ sap.ui.define(
             }, {})
           );
 
-          model.setData({
-            ...model.getData(),
-            // allProjects,
-            customers,
-          });
+          model.setProperty("/customers", customers);
         },
       }
     );

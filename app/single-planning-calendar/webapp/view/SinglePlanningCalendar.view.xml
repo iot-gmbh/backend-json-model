@@ -6,7 +6,7 @@
 	xmlns:smartfield="sap.ui.comp.smartfield"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
 	<Shell id="shell">
-		<App id="app">
+		<App id="app" busy="{/busy}" busyIndicatorDelay="0">
 			<pages>
 				<Page showHeader="false">
 					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" cellPress="onCellPress" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
@@ -14,7 +14,7 @@
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						</actions>
 						<appointments>
-							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_ID} {project_ID}" type="{path: 'type', formatter: '.formatter.getDisplayType'}"/>
+							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_ID} {project_ID}" type="{parts: ['type', 'project_ID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_ID', formatter: '.formatter.getIconURL'}"/>
 						</appointments>
 						<dependents>
 							<Dialog id="createItemDialog" title="Create new entry" binding="{/appointment}">
