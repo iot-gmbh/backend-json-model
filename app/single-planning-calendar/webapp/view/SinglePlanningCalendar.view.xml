@@ -23,14 +23,22 @@
 									<Button press="onCloseDialog" text="Close"/>
 								</buttons>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
+									<Label text="Title"/>
+									<Input value="{title}"/>
+									<Label text="Customer"/>
+									<ComboBox selectedKey="{customer_ID}" items="{OData>/Customers}" change="onChangeSelectedCustomer">
+										<items>
+											<core:Item text="{OData>name}" key="{OData>ID}"/>
+										</items>
+									</ComboBox>
 									<Label text="Project"/>
 									<Select selectedKey="{project_ID}" items="{OData>/Projects}" forceSelection="false" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{OData>title}" key="{OData>ID}"/>
 										</items>
 									</Select>
-									<Label text="Title"/>
-									<Input value="{title}"/>
+									<Label text="Ticket"/>
+									<Input value="{ticket}"/>
 									<Label text="Begin"/>
 									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}" />
 									<Label text="Completed"/>

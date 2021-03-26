@@ -11,4 +11,5 @@ service AzureDevopsService @(requires : 'authenticated-user') {
     };
 
     entity Tasks       as projection on my.Tasks;
+    entity Customers   as projection on my.Customers;
 };
