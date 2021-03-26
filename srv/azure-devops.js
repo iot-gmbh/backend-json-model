@@ -213,17 +213,16 @@ module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
 
   this.on("UPDATE", "MyWork", async (req) => {
-    const tx = db.tx(req); //> ensure tenant isolation & transaction management
+    const tx = db.tx(req);
+    // assignedTo... wird herausgenommen, da sonst die DB-Integrität verletzt ist
+    // eslint-disable-next-line no-unused-vars
+    const { assignedTo_userPrincipalName, ...item } = req.data;
     const entries = await tx
       .read("iot.planner.WorkItems")
-      .where({ ID: req.data.ID });
+      .where({ ID: item.ID });
 
     if (entries.length === 0)
-      db.run(
-        INSERT.into("iot.planner.WorkItems").entries({
-          ...req.data,
-        })
-      );
+      db.run(INSERT.into("iot.planner.WorkItems").entries(item));
   });
 
   this.on("CREATE", "MyWork", (req, next) => {
@@ -239,6 +238,7 @@ module.exports = cds.service.impl(async function () {
     let results = [];
     try {
       const [local, devOps, MSGraph] = await Promise.all([
+        // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
         getWorkItemsFromDevOps({
           req,
           restrictToOwnUser: true,
@@ -250,10 +250,9 @@ module.exports = cds.service.impl(async function () {
 
       const map = [...devOps, MSGraph, local]
         .reduce((acc, item) => acc.concat(item), [])
-        /*
-  Nur Items mit ID und AssignedTo übernehmen
-  => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
-  */
+        /* Nur Items mit ID und AssignedTo übernehmen
+           => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
+        */
         .filter((itm) => itm)
         .filter(({ ID, completedDate }) => !!ID && !!completedDate)
         .reduce((acc, curr) => {

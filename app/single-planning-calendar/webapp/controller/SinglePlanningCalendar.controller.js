@@ -1,6 +1,7 @@
 sap.ui.define(
   [
     "./BaseController",
+    "./ErrorParser",
     "sap/ui/model/Filter",
     "../model/formatter",
     "sap/ui/model/json/JSONModel",
@@ -9,7 +10,14 @@ sap.ui.define(
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (BaseController, Filter, formatter, JSONModel, MessageBox) {
+  function (
+    BaseController,
+    ErrorParser,
+    Filter,
+    formatter,
+    JSONModel,
+    MessageBox
+  ) {
     "use strict";
 
     function getMonday(d) {
@@ -73,7 +81,7 @@ sap.ui.define(
               appointments.concat(appointmentSync)
             );
           } catch (error) {
-            MessageBox.error(error.message);
+            MessageBox.error(ErrorParser.parse(error));
           }
 
           this.byId("createItemDialog").close();
@@ -82,27 +90,19 @@ sap.ui.define(
         _submitEntry(appointment) {
           const {
             ID, // eslint-disable-next-line camelcase
-            project_ID,
-            title,
             activatedDate,
             completedDate,
           } = appointment;
 
           // Update
           if (ID) {
-            // const path = this.getModel("OData").createKey("/MyWork", {
-            //   ID,
-            //   activatedDate: ,
-            //   completedDate: completedDate.toISOString(),
-            // });
             const path = `/MyWork(ID='${encodeURIComponent(
               ID
             )}',activatedDate=datetimeoffset'${activatedDate.toISOString()}',completedDate=datetimeoffset'${completedDate.toISOString()}')`;
 
             return this.update({
               path,
-              // eslint-disable-next-line camelcase
-              data: { project_ID, title, activatedDate, completedDate },
+              data: appointment,
             });
           }
 

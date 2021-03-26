@@ -32,9 +32,9 @@
 									<Label text="Title"/>
 									<Input value="{title}"/>
 									<Label text="Begin"/>
-									<DateTimePicker value="{activatedDate}"/>
+									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}" />
 									<Label text="Completed"/>
-									<DateTimePicker value="{completedDate}"/>
+									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}"/>
 								</form:SimpleForm>
 							</Dialog>
 						</dependents>
