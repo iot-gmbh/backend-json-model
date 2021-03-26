@@ -18,6 +18,8 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   completedWork: "Microsoft.VSTS.Scheduling.CompletedWork",
   remainingWork: "Microsoft.VSTS.Scheduling.RemainingWork",
   originalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
+  // Custom
+  ticket: "Custom.Ticket",
 };
 
 function destructureDevOpsObj(devOpsObj) {
@@ -41,6 +43,8 @@ function destructureDevOpsObj(devOpsObj) {
     "Microsoft.VSTS.Scheduling.CompletedWork": cds.completedWork,
     "Microsoft.VSTS.Scheduling.RemainingWork": cds.remainingWork,
     "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.originalEstimate,
+    // Custom
+    "Custom.Ticket": cds.ticket,
   } = devOpsObj);
   return cds;
 }
@@ -214,9 +218,7 @@ module.exports = cds.service.impl(async function () {
 
   this.on("UPDATE", "MyWork", async (req) => {
     const tx = db.tx(req);
-    // assignedTo... wird herausgenommen, da sonst die DB-Integrität verletzt ist
-    // eslint-disable-next-line no-unused-vars
-    const { assignedTo_userPrincipalName, ...item } = req.data;
+    const item = req.data;
     const entries = await tx
       .read("iot.planner.WorkItems")
       .where({ ID: item.ID });
@@ -238,7 +240,7 @@ module.exports = cds.service.impl(async function () {
     let results = [];
     try {
       const [local, devOps, MSGraph] = await Promise.all([
-        // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
+        // TODO: Durch Sortierung absichern. Aktuell ist Reihenfolge wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
         getWorkItemsFromDevOps({
           req,
           restrictToOwnUser: true,
@@ -248,7 +250,7 @@ module.exports = cds.service.impl(async function () {
         tx.run(req.query),
       ]);
 
-      const map = [...devOps, MSGraph, local]
+      const map = [...MSGraph, devOps, local]
         .reduce((acc, item) => acc.concat(item), [])
         /* Nur Items mit ID und AssignedTo übernehmen
            => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden

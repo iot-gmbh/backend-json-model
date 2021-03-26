@@ -8,7 +8,7 @@ using {
 namespace iot.planner;
 
 entity Users {
-    key userPrincipalName : String; // It's a GUID that was casted to String
+    key userPrincipalName : String;
         displayName       : String;
         givenName         : String;
         jobTitle          : String;
@@ -89,4 +89,5 @@ entity WorkItems {
         type             : String                  @title : '{i18n>WorkItems.type}';
         project          : Association to Projects @title : '{i18n>WorkItems.project}';
         projectName      : String;
+        ticket           : String;
 };
