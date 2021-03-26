@@ -89,8 +89,10 @@ entity WorkItems {
         customer         : Association to Customers @title : '{i18n>WorkItems.customer}';
         customerName     : String                   @title : '{i18n>WorkItems.customerName}';
         private          : Boolean                  @title : '{i18n>WorkItems.private}';
+        // Custom
         project          : Association to Projects  @title : '{i18n>WorkItems.project}';
         projectName      : String                   @title : '{i18n>WorkItems.projectName}';
         ticket           : String                   @title : '{i18n>WorkItems.ticket}';
         type             : String                   @title : '{i18n>WorkItems.type}';
+        duration         : Decimal                  @title : '{i18n>WorkItems.duration}'
 };

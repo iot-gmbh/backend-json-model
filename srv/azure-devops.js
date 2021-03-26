@@ -235,14 +235,27 @@ module.exports = cds.service.impl(async function () {
       .read("iot.planner.WorkItems")
       .where({ ID: item.ID });
 
+    const durationInMS =
+      new Date(item.completedDate) - new Date(item.activatedDate);
+    const durationInH = durationInMS / 1000 / 60 / 60;
+
+    item.duration = durationInH;
+
     if (entries.length === 0)
       db.run(INSERT.into("iot.planner.WorkItems").entries(item));
+    else UPDATE("iot.planner.WorkItems", item).with(item);
   });
 
   this.on("CREATE", "MyWork", (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
+
+    const durationInMS =
+      new Date(req.data.completedDate) - new Date(req.data.activatedDate);
+    const durationInH = durationInMS / 1000 / 60 / 60;
+
+    req.data.duration = durationInH;
 
     return next();
   });

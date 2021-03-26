@@ -2,13 +2,20 @@ using {iot.planner as my} from '../db/schema';
 
 service AzureDevopsService @(requires : 'authenticated-user') {
 
-
-    @(Analytics.AggregatedProperties : [{
-        Name                 : 'totalEstimate',
-        AggregationMethod    : 'sum',
-        AggregatableProperty : 'originalEstimate',
-        ![@Common.Label]     : 'Total Estimate'
-    }])
+    @(Analytics.AggregatedProperties : [
+        {
+            Name                 : 'totalEstimate',
+            AggregationMethod    : 'sum',
+            AggregatableProperty : 'originalEstimate',
+            ![@Common.Label]     : 'Total Estimate'
+        },
+        {
+            Name                 : 'totalDuration',
+            AggregationMethod    : 'sum',
+            AggregatableProperty : 'duration',
+            ![@Common.Label]     : 'Total Duration'
+        }
+    ])
     @Aggregation.ApplySupported : {
         $Type                  : 'Aggregation.ApplySupportedType',
         AggregatableProperties : [{
@@ -18,13 +25,18 @@ service AzureDevopsService @(requires : 'authenticated-user') {
     }
     entity WorkItemStatistics as projection on my.WorkItems {
         ID,
-        @Aggregation.Aggregatable
         @Analytics.AccumulativeMeasure
-
         originalEstimate,
-        @Aggregation.Groupable
+        @Analytics.AccumulativeMeasure
+        duration,
         @Analytics.Dimension
-        completedDate
+        completedDate,
+        @Analytics.Dimension
+        assignedTo,
+        @Analytics.Dimension
+        customer,
+        @Analytics.Dimension
+        project,
     }
 
     entity WorkItems          as projection on my.WorkItems;
