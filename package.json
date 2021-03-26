@@ -96,6 +96,7 @@
   "sapux": [
     "app\\customers",
     "app\\azdev-workitems",
-    "app\\single-planning-calendar"
+    "app\\single-planning-calendar",
+    "app\\workitems"
   ]
 }
