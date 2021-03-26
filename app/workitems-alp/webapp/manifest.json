@@ -1,5 +1,5 @@
 {
-    "_version": "",
+    "_version": "1.9.0",
     "sap.app": {
         "id": "iot.workitems.alp.workitemsalp",
         "type": "application",
