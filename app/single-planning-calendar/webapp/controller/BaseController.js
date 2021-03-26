@@ -45,6 +45,14 @@ sap.ui.define(
           return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
 
+        // async readAsMapByID(params) {
+        //   const { results } = await this.read(params);
+
+        //   const map = results.reduce((acc, {ID, ...curr}) => {
+        //     acc[ID] = acc[ID]curr
+        //   }, {});
+        // },
+
         async read({ path, ...params }) {
           return new Promise((resolve, reject) => {
             this.getModel("OData").read(path, {

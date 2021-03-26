@@ -28,21 +28,23 @@ entity Employees : managed {
                     on tasks.personResponsible = $self;
 }
 
-entity Customers : managed, cuid {
-    name     : String @title : '{i18n>Customers.name}';
-    projects : Association to many Projects
-                   on projects.customer = $self;
+entity Customers : managed {
+    key ID       : String;
+        name     : String @title : '{i18n>Customers.name}';
+        projects : Association to many Projects
+                       on projects.customer = $self;
 }
 
-entity Projects : managed, cuid {
-    title       : String @title : '{i18n>Projects.title}';
-    description : String @title : '{i18n>Projects.description}';
-    customer    : Association to Customers;
-    manager     : Association to Employees;
-    tasks       : Association to many Tasks
-                      on tasks.project = $self;
-    workItems   : Association to many WorkItems
-                      on workItems.project = $self;
+entity Projects : managed {
+    key ID          : String;
+        title       : String @title : '{i18n>Projects.title}';
+        description : String @title : '{i18n>Projects.description}';
+        customer    : Association to Customers;
+        manager     : Association to Employees;
+        tasks       : Association to many Tasks
+                          on tasks.project = $self;
+        workItems   : Association to many WorkItems
+                          on workItems.project = $self;
 }
 
 @cds.odata.valuelist

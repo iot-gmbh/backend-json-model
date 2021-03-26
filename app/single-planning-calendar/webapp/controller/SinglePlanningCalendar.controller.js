@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 sap.ui.define(
   [
     "./BaseController",
@@ -7,9 +8,6 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
   ],
-  /**
-   * @param {typeof sap.ui.core.mvc.Controller} Controller
-   */
   function (
     BaseController,
     ErrorParser,
@@ -19,6 +17,12 @@ sap.ui.define(
     MessageBox
   ) {
     "use strict";
+
+    function addDays(date, days) {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
 
     function getMonday(d) {
       d = new Date(d);
@@ -36,26 +40,26 @@ sap.ui.define(
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
 
-          calendar.setSelectedView(workWeekView);
-          calendar.setStartDate(getMonday(new Date()));
-
           const model = new JSONModel({
             appointments: [],
             appointment: {
               title: "",
               completedDate: new Date(),
               activatedDate: new Date(),
-              // eslint-disable-next-line camelcase
               project_ID: "",
             },
+            customers: [],
           });
+
+          calendar.setSelectedView(workWeekView);
+          calendar.setStartDate(getMonday(new Date()));
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
 
           this.setModel(model);
-
-          this._loadData();
+          this._loadAppointments();
+          this._loadCustomersAndProjects();
         },
 
         onCreateAppointment() {
@@ -87,12 +91,10 @@ sap.ui.define(
           this.byId("createItemDialog").close();
         },
 
-        _submitEntry(appointment) {
-          const {
-            ID, // eslint-disable-next-line camelcase
-            activatedDate,
-            completedDate,
-          } = appointment;
+        // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert
+        // eslint-disable-next-line no-unused-vars
+        _submitEntry({ customer, ...appointment }) {
+          const { ID, activatedDate, completedDate } = appointment;
 
           // Update
           if (ID) {
@@ -117,16 +119,32 @@ sap.ui.define(
         },
 
         _bindAndOpenDialog(appointment = {}) {
-          this.getModel().setProperty("/appointment", appointment);
+          const model = this.getModel();
+          const { customers } = model.getData();
+
+          Object.defineProperty(appointment, "customer", {
+            get: () =>
+              customers.find(({ ID }) => ID === appointment.customer_ID),
+          });
+
+          model.setProperty("/appointment", appointment);
+
+          // this.getModel().setProperty("/appointment", {
+          //   ...appointment,
+          //   get customer() {
+          //     return customers.find(({ ID }) => ID === this.customer_ID);
+          //   },
+          // });
+
           this.byId("createItemDialog").open();
         },
 
         onChangeView: function () {
-          this._loadData();
+          this._loadAppointments();
         },
 
         onStartDateChange: function () {
-          this._loadData();
+          this._loadAppointments();
         },
 
         onPressAppointment(event) {
@@ -145,14 +163,10 @@ sap.ui.define(
           });
         },
 
-        _toISOString(date) {
-          return date.toISOString().substring(0, 19) + "Z";
-        },
-
-        async _loadData() {
+        async _loadAppointments() {
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
-          const oneWeekLater = this._addDays(startDate, 7);
+          const oneWeekLater = addDays(startDate, 7);
           const { results: appointments } = await this.read({
             path: "/MyWork",
             urlParameters: { $top: 100 },
@@ -178,18 +192,32 @@ sap.ui.define(
           this.getModel().setProperty("/appointments", appointments);
         },
 
-        _addDays(date, days) {
-          const result = new Date(date);
-          result.setDate(result.getDate() + days);
-          return result;
-        },
+        async _loadCustomersAndProjects() {
+          const model = this.getModel();
+          const { results: allProjects } = await this.read({
+            path: "/Projects",
+            urlParameters: { $expand: "customer" },
+          });
 
-        _getDateOneMonthLater(date) {
-          const dateCompare = new Date(date);
-          const newDate = new Date(
-            dateCompare.setMonth(dateCompare.getMonth() + 1)
+          const customers = Object.values(
+            allProjects.reduce((map, { customer, ...project }) => {
+              const mergeCustomer = map[customer.ID] || customer;
+
+              if (typeof mergeCustomer.projects === Array)
+                mergeCustomer.projects.push(project);
+              else mergeCustomer.projects = [project];
+
+              map[customer.ID] = mergeCustomer;
+
+              return map;
+            }, {})
           );
-          return newDate;
+
+          model.setData({
+            ...model.getData(),
+            // allProjects,
+            customers,
+          });
         },
       }
     );

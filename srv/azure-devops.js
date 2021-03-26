@@ -20,6 +20,8 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   originalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
   // Custom
   ticket: "Custom.Ticket",
+  customer_ID: "Custom.Kunde",
+  project_ID: "Custom.Projekt",
 };
 
 function destructureDevOpsObj(devOpsObj) {
@@ -45,6 +47,8 @@ function destructureDevOpsObj(devOpsObj) {
     "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.originalEstimate,
     // Custom
     "Custom.Ticket": cds.ticket,
+    "Custom.Kunde": cds.customer_ID,
+    "Custom.Projekt": cds.project_ID,
   } = devOpsObj);
   return cds;
 }
@@ -182,10 +186,18 @@ async function getEventsFromMSGraph({ req, MSGraphSrv }) {
     });
 
     events = value.map(
-      ({ id, subject, start, end, categories: [customer], sensitivity }) => ({
+      // Die Kategorie wird als Kunde ausgelesen
+      ({
+        id,
+        subject,
+        start,
+        end,
+        categories: [customer_ID],
+        sensitivity,
+      }) => ({
         ID: id,
         title: subject,
-        customer,
+        customer_ID,
         activatedDate: start.dateTime.substring(0, 19) + "Z",
         completedDate: end.dateTime.substring(0, 19) + "Z",
         assignedTo_userPrincipalName: user,
@@ -239,8 +251,9 @@ module.exports = cds.service.impl(async function () {
     const tx = db.tx(req);
     let results = [];
     try {
-      const [local, devOps, MSGraph] = await Promise.all([
-        // TODO: Durch Sortierung absichern. Aktuell ist Reihenfolge wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
+      // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
+      // TODO: Durch explizite Sortierung absichern.
+      const [devOps, MSGraph, local] = await Promise.all([
         getWorkItemsFromDevOps({
           req,
           restrictToOwnUser: true,
@@ -250,7 +263,7 @@ module.exports = cds.service.impl(async function () {
         tx.run(req.query),
       ]);
 
-      const map = [...MSGraph, devOps, local]
+      const map = [...devOps, MSGraph, local]
         .reduce((acc, item) => acc.concat(item), [])
         /* Nur Items mit ID und AssignedTo übernehmen
            => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden

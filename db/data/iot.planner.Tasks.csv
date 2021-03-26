@@ -1,28 +1,28 @@
 ID;title;project_ID;estimateMin;estimateMax;estimate;priority;beginFrom;beginDate;dueDate;deliveryDate;personResponsible_ID;modifiedAt;
-22f797d8-7403-4298-b414-f5f002534973;Click&Reserve;8f56946b-d5fe-4528-90e6-09ef3c951feb;2;2;2;1;2021-01-25;2021-01-25;2021-01-29;;adriana.rieber@iot-online.de;2020-07-03T14:05:19.732Z;
-d43c838b-936a-4adb-a293-3c761fb43bec;Click&Reserve;8f56946b-d5fe-4528-90e6-09ef3c951feb;1;2;1.5;1;2021-01-26;2021-01-26;2021-02-05;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
-a9196132-2893-4064-ac6a-11bb28f9f4ba;Unterstützung CAS;6c478dda-0649-4754-87c0-70e3fe3cc406;30;40;35;;2021-01-01;2021-01-01;2021-03-31;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
-5f95670e-f34c-4034-b1e8-15c2b9d8343c;FSS Migration;6c478dda-0649-4754-87c0-70e3fe3cc406;5;7;6;;2021-01-01;2021-01-01;2021-01-31;2021-01-21;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
-213c7543-3651-410a-9f88-e708128132cf;Rollout-Betreuung;6c478dda-0649-4754-87c0-70e3fe3cc406;8;10;9;;2021-01-01;2021-01-01;2021-03-31;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
-0380f751-4fbb-4d76-b31f-9e12e599eb81;Vertrieb / Aquise;6c478dda-0649-4754-87c0-70e3fe3cc406;10;15;12.5;;2021-01-01;2021-01-01;2021-03-31;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
-e01ef3c8-f8a7-48a2-a418-7b42fd5c2fd1;Vertrieb / Aquise;6c478dda-0649-4754-87c0-70e3fe3cc406;7;7;7;;2021-01-01;2021-01-01;2021-03-31;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
-bc38d771-555d-49f2-be62-e688fe42d6eb;Fiori Guidelines. Qualitätssicherung;6c478dda-0649-4754-87c0-70e3fe3cc406;7;15;11;;2021-01-01;2021-01-01;2021-02-28;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
-6e031cc7-0386-4276-8663-a2ea9af8c70b;Pflanze;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;12;15;13.5;;2021-01-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-71d9af65-b803-4b6e-995c-e548aeb8eb51;Anpassung Reservierungsapp für B&B;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;1;2;1.5;;2021-01-01;2021-01-25;2021-01-29;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
-52e8c5c6-55ac-455b-983a-b760f239152e;Fiori Theme für B&B;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;0.2;0.4;0.3;;2021-01-01;2021-01-25;2021-01-29;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
-c7ca0f3b-a1d2-4d15-9479-9452a0c83e6a;CRM;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;25;36;30.5;;2021-03-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-b8606566-a96a-4a93-88c7-09a61375913e;Zertifikate / Druck;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;3;5;4;;2021-01-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-aa6f4307-afad-4c25-9bb0-c141a7e630a0;UI5 Update;4e6f9e57-cf3c-4cc5-a63b-3a899ad3eaeb;1;2;1.5;;2021-03-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-4aee94f8-d4af-4efd-bdf0-10a21e539fb6;Werkstatt;8f56946b-d5fe-4528-90e6-09ef3c951feb;35;45;40;;2021-04-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-960665cd-94be-44d5-b7a7-e97586e4c1fd;Filialapps Nachbearbeitung;8f56946b-d5fe-4528-90e6-09ef3c951feb;8;10;9;1;2021-01-01;2021-01-01;2021-02-01;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
-495cc1a2-23d2-4960-b809-9879b1a9c42f;Artikelankauf;8f56946b-d5fe-4528-90e6-09ef3c951feb;16;20;18;5;2021-01-01;2021-01-25;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
-05ab87a2-1b06-4c1e-aa82-f9f5eaca1d46;Jungjäger;8f56946b-d5fe-4528-90e6-09ef3c951feb;1;2;1.5;3;2021-01-01;2021-01-01;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
-c790ef3b-79ea-42f0-93a3-6ff208ca67aa;Katalogbestellung;8f56946b-d5fe-4528-90e6-09ef3c951feb;1;2;1.5;3;2021-01-01;2021-01-01;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
-f7b20596-aeb6-495b-8685-e2d9e6ae070a;Reservierung;8f56946b-d5fe-4528-90e6-09ef3c951feb;1;1;1;3;2021-01-01;2021-01-26;2021-02-05;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;Tests
-887bb502-3dc6-4318-8cab-59eff330f0cf;Application Management;8f56946b-d5fe-4528-90e6-09ef3c951feb;6;9;7.5;;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
-49831895-3eec-4363-aff8-9b5f44f6d8ca;Click&Collect;8f56946b-d5fe-4528-90e6-09ef3c951feb;2;4;3;4;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
-36987395-b56b-4c27-8254-261773e6b7d8;Retouren;8f56946b-d5fe-4528-90e6-09ef3c951feb;3;4;3.5;4;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
-09cb298e-08af-47a2-aebd-3339db384730;Kennzahlenapps;8f56946b-d5fe-4528-90e6-09ef3c951feb;1;3;2;;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
-07fbccee-8462-4a7c-908f-e26e3eb41966;Digitale Kasse;8f56946b-d5fe-4528-90e6-09ef3c951feb;;;0;;2021-06-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
-5fbda1d9-c80f-47fb-bdba-16fb72717c44;UI5-Entwicklung;8f56946b-d5fe-4528-90e6-09ef3c951feb;;;44.8;;2021-01-01;2021-01-01;2021-03-31;;adriana.rieber@iot-online.de;2020-07-03T14:05:19.732Z;3 bis 4 PT pro Woche => 70% von 64 => 44.8
-974f0b23-9982-4cc6-b6b9-d7bd18aa563a;Receipt4S;8a475c03-cb1a-4cb8-b5dd-67c9bef71891;6;9;7.5;;2021-01-01;;2021-03-31;;;2020-07-03T14:05:19.732Z;
+22f797d8-7403-4298-b414-f5f002534973;Click&Reserve;Frankonia Filialapps;2;2;2;1;2021-01-25;2021-01-25;2021-01-29;;adriana.rieber@iot-online.de;2020-07-03T14:05:19.732Z;
+d43c838b-936a-4adb-a293-3c761fb43bec;Click&Reserve;Frankonia Filialapps;1;2;1.5;1;2021-01-26;2021-01-26;2021-02-05;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
+a9196132-2893-4064-ac6a-11bb28f9f4ba;Unterstützung CAS;FSS;30;40;35;;2021-01-01;2021-01-01;2021-03-31;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
+5f95670e-f34c-4034-b1e8-15c2b9d8343c;FSS Migration;FSS;5;7;6;;2021-01-01;2021-01-01;2021-01-31;2021-01-21;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
+213c7543-3651-410a-9f88-e708128132cf;Rollout-Betreuung;FSS;8;10;9;;2021-01-01;2021-01-01;2021-03-31;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
+0380f751-4fbb-4d76-b31f-9e12e599eb81;Vertrieb / Aquise;FSS;10;15;12.5;;2021-01-01;2021-01-01;2021-03-31;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
+e01ef3c8-f8a7-48a2-a418-7b42fd5c2fd1;Vertrieb / Aquise;FSS;7;7;7;;2021-01-01;2021-01-01;2021-03-31;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
+bc38d771-555d-49f2-be62-e688fe42d6eb;Fiori Guidelines. Qualitätssicherung;FSS;7;15;11;;2021-01-01;2021-01-01;2021-02-28;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
+6e031cc7-0386-4276-8663-a2ea9af8c70b;Pflanze;MAN Fiori;12;15;13.5;;2021-01-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+71d9af65-b803-4b6e-995c-e548aeb8eb51;Anpassung Reservierungsapp für B&B;MAN Fiori;1;2;1.5;;2021-01-01;2021-01-25;2021-01-29;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
+52e8c5c6-55ac-455b-983a-b760f239152e;Fiori Theme für B&B;MAN Fiori;0.2;0.4;0.3;;2021-01-01;2021-01-25;2021-01-29;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;
+c7ca0f3b-a1d2-4d15-9479-9452a0c83e6a;CRM;MAN Fiori;25;36;30.5;;2021-03-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+b8606566-a96a-4a93-88c7-09a61375913e;Zertifikate / Druck;MAN Fiori;3;5;4;;2021-01-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+aa6f4307-afad-4c25-9bb0-c141a7e630a0;UI5 Update;MAN Fiori;1;2;1.5;;2021-03-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+4aee94f8-d4af-4efd-bdf0-10a21e539fb6;Werkstatt;Frankonia Filialapps;35;45;40;;2021-04-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+960665cd-94be-44d5-b7a7-e97586e4c1fd;Filialapps Nachbearbeitung;Frankonia Filialapps;8;10;9;1;2021-01-01;2021-01-01;2021-02-01;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
+495cc1a2-23d2-4960-b809-9879b1a9c42f;Artikelankauf;Frankonia Filialapps;16;20;18;5;2021-01-01;2021-01-25;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
+05ab87a2-1b06-4c1e-aa82-f9f5eaca1d46;Jungjäger;Frankonia Filialapps;1;2;1.5;3;2021-01-01;2021-01-01;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
+c790ef3b-79ea-42f0-93a3-6ff208ca67aa;Katalogbestellung;Frankonia Filialapps;1;2;1.5;3;2021-01-01;2021-01-01;2021-02-28;;nick.obendorf@iot-online.de;2020-07-03T14:05:19.732Z;
+f7b20596-aeb6-495b-8685-e2d9e6ae070a;Reservierung;Frankonia Filialapps;1;1;1;3;2021-01-01;2021-01-26;2021-02-05;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;Tests
+887bb502-3dc6-4318-8cab-59eff330f0cf;Application Management;Frankonia Filialapps;6;9;7.5;;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
+49831895-3eec-4363-aff8-9b5f44f6d8ca;Click&Collect;Frankonia Filialapps;2;4;3;4;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
+36987395-b56b-4c27-8254-261773e6b7d8;Retouren;Frankonia Filialapps;3;4;3.5;4;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
+09cb298e-08af-47a2-aebd-3339db384730;Kennzahlenapps;Frankonia Filialapps;1;3;2;;2021-01-01;;2021-02-28;;;2020-07-03T14:05:19.732Z;
+07fbccee-8462-4a7c-908f-e26e3eb41966;Digitale Kasse;Frankonia Filialapps;;;0;;2021-06-01;;2021-06-30;;;2020-07-03T14:05:19.732Z;
+5fbda1d9-c80f-47fb-bdba-16fb72717c44;UI5-Entwicklung;Frankonia Filialapps;;;44.8;;2021-01-01;2021-01-01;2021-03-31;;adriana.rieber@iot-online.de;2020-07-03T14:05:19.732Z;3 bis 4 PT pro Woche => 70% von 64 => 44.8
+974f0b23-9982-4cc6-b6b9-d7bd18aa563a;Receipt4S;Receipt4S;6;9;7.5;;2021-01-01;;2021-03-31;;;2020-07-03T14:05:19.732Z;
