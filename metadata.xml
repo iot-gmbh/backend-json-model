@@ -7,6 +7,9 @@
     <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Analytics.xml">
         <edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/>
     </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
     <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
         <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
     </edmx:Reference>
@@ -17,57 +20,25 @@
         <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
     </edmx:Reference>
     <edmx:DataServices m:DataServiceVersion="2.0">
-        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="AzureDevopsService">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="Statistics">
             <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
-                <EntitySet Name="Customers" EntityType="AzureDevopsService.Customers"/>
-                <EntitySet Name="MyWork" EntityType="AzureDevopsService.MyWork"/>
-                <EntitySet Name="MyWorkItems" EntityType="AzureDevopsService.MyWorkItems"/>
-                <EntitySet Name="Projects" EntityType="AzureDevopsService.Projects"/>
-                <EntitySet Name="Tasks" EntityType="AzureDevopsService.Tasks"/>
-                <EntitySet Name="Users" EntityType="AzureDevopsService.Users"/>
-                <EntitySet Name="WorkItemStatistics" EntityType="AzureDevopsService.WorkItemStatistics"/>
-                <EntitySet Name="WorkItems" EntityType="AzureDevopsService.WorkItems"/>
-                <AssociationSet Name="MyWork_assignedTo" Association="AzureDevopsService.MyWork_assignedTo">
-                    <End Role="MyWork" EntitySet="MyWork"/>
-                    <End Role="Users" EntitySet="Users"/>
-                </AssociationSet>
-                <AssociationSet Name="MyWork_customer" Association="AzureDevopsService.MyWork_customer">
-                    <End Role="MyWork" EntitySet="MyWork"/>
-                    <End Role="Customers" EntitySet="Customers"/>
-                </AssociationSet>
-                <AssociationSet Name="MyWork_project" Association="AzureDevopsService.MyWork_project">
-                    <End Role="MyWork" EntitySet="MyWork"/>
-                    <End Role="Projects" EntitySet="Projects"/>
-                </AssociationSet>
-                <AssociationSet Name="MyWorkItems_assignedTo" Association="AzureDevopsService.MyWorkItems_assignedTo">
-                    <End Role="MyWorkItems" EntitySet="MyWorkItems"/>
-                    <End Role="Users" EntitySet="Users"/>
-                </AssociationSet>
-                <AssociationSet Name="MyWorkItems_customer" Association="AzureDevopsService.MyWorkItems_customer">
-                    <End Role="MyWorkItems" EntitySet="MyWorkItems"/>
-                    <End Role="Customers" EntitySet="Customers"/>
-                </AssociationSet>
-                <AssociationSet Name="MyWorkItems_project" Association="AzureDevopsService.MyWorkItems_project">
-                    <End Role="MyWorkItems" EntitySet="MyWorkItems"/>
-                    <End Role="Projects" EntitySet="Projects"/>
-                </AssociationSet>
-                <AssociationSet Name="Projects_customer" Association="AzureDevopsService.Projects_customer">
+                <EntitySet Name="Customers" EntityType="Statistics.Customers"/>
+                <EntitySet Name="Projects" EntityType="Statistics.Projects"/>
+                <EntitySet Name="Users" EntityType="Statistics.Users"/>
+                <EntitySet Name="WorkItems" EntityType="Statistics.WorkItems"/>
+                <AssociationSet Name="Projects_customer" Association="Statistics.Projects_customer">
                     <End Role="Projects" EntitySet="Projects"/>
                     <End Role="Customers" EntitySet="Customers"/>
                 </AssociationSet>
-                <AssociationSet Name="Tasks_project" Association="AzureDevopsService.Tasks_project">
-                    <End Role="Tasks" EntitySet="Tasks"/>
-                    <End Role="Projects" EntitySet="Projects"/>
-                </AssociationSet>
-                <AssociationSet Name="WorkItems_assignedTo" Association="AzureDevopsService.WorkItems_assignedTo">
-                    <End Role="WorkItems" EntitySet="WorkItems"/>
-                    <End Role="Users" EntitySet="Users"/>
-                </AssociationSet>
-                <AssociationSet Name="WorkItems_customer" Association="AzureDevopsService.WorkItems_customer">
+                <AssociationSet Name="WorkItems_customer" Association="Statistics.WorkItems_customer">
                     <End Role="WorkItems" EntitySet="WorkItems"/>
                     <End Role="Customers" EntitySet="Customers"/>
                 </AssociationSet>
-                <AssociationSet Name="WorkItems_project" Association="AzureDevopsService.WorkItems_project">
+                <AssociationSet Name="WorkItems_assignedTo" Association="Statistics.WorkItems_assignedTo">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_project" Association="Statistics.WorkItems_project">
                     <End Role="WorkItems" EntitySet="WorkItems"/>
                     <End Role="Projects" EntitySet="Projects"/>
                 </AssociationSet>
@@ -82,71 +53,7 @@
                 <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
                 <Property Name="ID" Type="Edm.String" Nullable="false"/>
                 <Property Name="name" Type="Edm.String"/>
-                <NavigationProperty Name="projects" Relationship="AzureDevopsService.Projects_customer" FromRole="Customers" ToRole="Projects"/>
-            </EntityType>
-            <EntityType Name="MyWork">
-                <Key>
-                    <PropertyRef Name="ID"/>
-                </Key>
-                <Property Name="ID" Type="Edm.String" Nullable="false"/>
-                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="assignedTo" Relationship="AzureDevopsService.MyWork_assignedTo" FromRole="MyWork" ToRole="Users"/>
-                <Property Name="changedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="assignedToName" Type="Edm.String"/>
-                <Property Name="createdDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="reason" Type="Edm.String"/>
-                <Property Name="state" Type="Edm.String"/>
-                <Property Name="teamProject" Type="Edm.String"/>
-                <Property Name="title" Type="Edm.String"/>
-                <Property Name="workItemType" Type="Edm.String"/>
-                <Property Name="completedWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="remainingWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="originalEstimate" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="resolvedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="closedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="customer" Relationship="AzureDevopsService.MyWork_customer" FromRole="MyWork" ToRole="Customers"/>
-                <Property Name="customerName" Type="Edm.String"/>
-                <Property Name="private" Type="Edm.Boolean"/>
-                <NavigationProperty Name="project" Relationship="AzureDevopsService.MyWork_project" FromRole="MyWork" ToRole="Projects"/>
-                <Property Name="projectName" Type="Edm.String"/>
-                <Property Name="ticket" Type="Edm.String"/>
-                <Property Name="type" Type="Edm.String"/>
-                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
-                <Property Name="customer_ID" Type="Edm.String"/>
-                <Property Name="project_ID" Type="Edm.String"/>
-            </EntityType>
-            <EntityType Name="MyWorkItems">
-                <Key>
-                    <PropertyRef Name="ID"/>
-                </Key>
-                <Property Name="ID" Type="Edm.String" Nullable="false"/>
-                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="assignedTo" Relationship="AzureDevopsService.MyWorkItems_assignedTo" FromRole="MyWorkItems" ToRole="Users"/>
-                <Property Name="changedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="assignedToName" Type="Edm.String"/>
-                <Property Name="createdDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="reason" Type="Edm.String"/>
-                <Property Name="state" Type="Edm.String"/>
-                <Property Name="teamProject" Type="Edm.String"/>
-                <Property Name="title" Type="Edm.String"/>
-                <Property Name="workItemType" Type="Edm.String"/>
-                <Property Name="completedWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="remainingWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="originalEstimate" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="resolvedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="closedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="customer" Relationship="AzureDevopsService.MyWorkItems_customer" FromRole="MyWorkItems" ToRole="Customers"/>
-                <Property Name="customerName" Type="Edm.String"/>
-                <Property Name="private" Type="Edm.Boolean"/>
-                <NavigationProperty Name="project" Relationship="AzureDevopsService.MyWorkItems_project" FromRole="MyWorkItems" ToRole="Projects"/>
-                <Property Name="projectName" Type="Edm.String"/>
-                <Property Name="ticket" Type="Edm.String"/>
-                <Property Name="type" Type="Edm.String"/>
-                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
-                <Property Name="customer_ID" Type="Edm.String"/>
-                <Property Name="project_ID" Type="Edm.String"/>
+                <NavigationProperty Name="projects" Relationship="Statistics.Projects_customer" FromRole="Customers" ToRole="Projects"/>
             </EntityType>
             <EntityType Name="Projects">
                 <Key>
@@ -159,37 +66,10 @@
                 <Property Name="ID" Type="Edm.String" Nullable="false"/>
                 <Property Name="title" Type="Edm.String"/>
                 <Property Name="description" Type="Edm.String"/>
-                <NavigationProperty Name="customer" Relationship="AzureDevopsService.Projects_customer" FromRole="Projects" ToRole="Customers"/>
-                <NavigationProperty Name="tasks" Relationship="AzureDevopsService.Tasks_project" FromRole="Projects" ToRole="Tasks"/>
-                <NavigationProperty Name="workItems" Relationship="AzureDevopsService.MyWorkItems_project" FromRole="Projects" ToRole="MyWorkItems"/>
+                <NavigationProperty Name="customer" Relationship="Statistics.Projects_customer" FromRole="Projects" ToRole="Customers"/>
+                <NavigationProperty Name="workItems" Relationship="Statistics.WorkItems_project" FromRole="Projects" ToRole="WorkItems"/>
                 <Property Name="customer_ID" Type="Edm.String"/>
                 <Property Name="manager_ID" Type="Edm.String"/>
-            </EntityType>
-            <EntityType Name="Tasks">
-                <Key>
-                    <PropertyRef Name="ID"/>
-                </Key>
-                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
-                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
-                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
-                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
-                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
-                <Property Name="title" Type="Edm.String"/>
-                <Property Name="description" Type="Edm.String"/>
-                <Property Name="dueDate" Type="Edm.DateTime" sap:display-format="Date"/>
-                <Property Name="deliveryDate" Type="Edm.DateTime" sap:display-format="Date"/>
-                <Property Name="beginFrom" Type="Edm.DateTime" sap:display-format="Date"/>
-                <Property Name="beginDate" Type="Edm.DateTime" sap:display-format="Date"/>
-                <Property Name="daysBetween" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="workload" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="estimate" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="estimateMin" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="estimateMax" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="effort" Type="Edm.Decimal" Scale="2" Precision="10"/>
-                <Property Name="priority" Type="Edm.Int32"/>
-                <NavigationProperty Name="project" Relationship="AzureDevopsService.Tasks_project" FromRole="Tasks" ToRole="Projects"/>
-                <Property Name="personResponsible_ID" Type="Edm.String"/>
-                <Property Name="project_ID" Type="Edm.String"/>
             </EntityType>
             <EntityType Name="Users">
                 <Key>
@@ -204,123 +84,20 @@
                 <Property Name="officeLocation" Type="Edm.String"/>
                 <Property Name="preferredLanguage" Type="Edm.String"/>
                 <Property Name="surname" Type="Edm.String"/>
-                <NavigationProperty Name="workItems" Relationship="AzureDevopsService.MyWorkItems_assignedTo" FromRole="Users" ToRole="MyWorkItems"/>
-            </EntityType>
-            <EntityType Name="WorkItemStatistics" sap:semantics="aggregate">
-                <Key>
-                    <PropertyRef Name="ID"/>
-                </Key>
-                <Property Name="ID" Type="Edm.String" Nullable="false"/>
-                <Property Name="originalEstimate" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
+                <NavigationProperty Name="workItems" Relationship="Statistics.WorkItems_assignedTo" FromRole="Users" ToRole="WorkItems"/>
             </EntityType>
             <EntityType Name="WorkItems">
-                <Key>
-                    <PropertyRef Name="ID"/>
-                </Key>
-                <Property Name="ID" Type="Edm.String" Nullable="false"/>
-                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="assignedTo" Relationship="AzureDevopsService.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
-                <Property Name="changedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="assignedToName" Type="Edm.String"/>
-                <Property Name="createdDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="reason" Type="Edm.String"/>
-                <Property Name="state" Type="Edm.String"/>
-                <Property Name="teamProject" Type="Edm.String"/>
-                <Property Name="title" Type="Edm.String"/>
-                <Property Name="workItemType" Type="Edm.String"/>
-                <Property Name="completedWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="remainingWork" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="originalEstimate" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="resolvedDate" Type="Edm.DateTimeOffset"/>
-                <Property Name="closedDate" Type="Edm.DateTimeOffset"/>
-                <NavigationProperty Name="customer" Relationship="AzureDevopsService.WorkItems_customer" FromRole="WorkItems" ToRole="Customers"/>
-                <Property Name="customerName" Type="Edm.String"/>
-                <Property Name="private" Type="Edm.Boolean"/>
-                <NavigationProperty Name="project" Relationship="AzureDevopsService.WorkItems_project" FromRole="WorkItems" ToRole="Projects"/>
-                <Property Name="projectName" Type="Edm.String"/>
-                <Property Name="ticket" Type="Edm.String"/>
-                <Property Name="type" Type="Edm.String"/>
-                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
+                <Property Name="totalEstimate" Type="Edm.Int32"/>
+                <NavigationProperty Name="customer" Relationship="Statistics.WorkItems_customer" FromRole="WorkItems" ToRole="Customers"/>
+                <NavigationProperty Name="assignedTo" Relationship="Statistics.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
+                <NavigationProperty Name="project" Relationship="Statistics.WorkItems_project" FromRole="WorkItems" ToRole="Projects"/>
                 <Property Name="customer_ID" Type="Edm.String"/>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
                 <Property Name="project_ID" Type="Edm.String"/>
             </EntityType>
-            <Association Name="MyWork_assignedTo">
-                <End Role="MyWork" Type="AzureDevopsService.MyWork" Multiplicity="*"/>
-                <End Role="Users" Type="AzureDevopsService.Users" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Users">
-                        <PropertyRef Name="userPrincipalName"/>
-                    </Principal>
-                    <Dependent Role="MyWork">
-                        <PropertyRef Name="assignedTo_userPrincipalName"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="MyWork_customer">
-                <End Role="MyWork" Type="AzureDevopsService.MyWork" Multiplicity="*"/>
-                <End Role="Customers" Type="AzureDevopsService.Customers" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Customers">
-                        <PropertyRef Name="ID"/>
-                    </Principal>
-                    <Dependent Role="MyWork">
-                        <PropertyRef Name="customer_ID"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="MyWork_project">
-                <End Role="MyWork" Type="AzureDevopsService.MyWork" Multiplicity="*"/>
-                <End Role="Projects" Type="AzureDevopsService.Projects" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Projects">
-                        <PropertyRef Name="ID"/>
-                    </Principal>
-                    <Dependent Role="MyWork">
-                        <PropertyRef Name="project_ID"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="MyWorkItems_assignedTo">
-                <End Role="MyWorkItems" Type="AzureDevopsService.MyWorkItems" Multiplicity="*"/>
-                <End Role="Users" Type="AzureDevopsService.Users" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Users">
-                        <PropertyRef Name="userPrincipalName"/>
-                    </Principal>
-                    <Dependent Role="MyWorkItems">
-                        <PropertyRef Name="assignedTo_userPrincipalName"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="MyWorkItems_customer">
-                <End Role="MyWorkItems" Type="AzureDevopsService.MyWorkItems" Multiplicity="*"/>
-                <End Role="Customers" Type="AzureDevopsService.Customers" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Customers">
-                        <PropertyRef Name="ID"/>
-                    </Principal>
-                    <Dependent Role="MyWorkItems">
-                        <PropertyRef Name="customer_ID"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="MyWorkItems_project">
-                <End Role="MyWorkItems" Type="AzureDevopsService.MyWorkItems" Multiplicity="*"/>
-                <End Role="Projects" Type="AzureDevopsService.Projects" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Projects">
-                        <PropertyRef Name="ID"/>
-                    </Principal>
-                    <Dependent Role="MyWorkItems">
-                        <PropertyRef Name="project_ID"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
             <Association Name="Projects_customer">
-                <End Role="Projects" Type="AzureDevopsService.Projects" Multiplicity="*"/>
-                <End Role="Customers" Type="AzureDevopsService.Customers" Multiplicity="0..1"/>
+                <End Role="Projects" Type="Statistics.Projects" Multiplicity="*"/>
+                <End Role="Customers" Type="Statistics.Customers" Multiplicity="0..1"/>
                 <ReferentialConstraint>
                     <Principal Role="Customers">
                         <PropertyRef Name="ID"/>
@@ -330,33 +107,9 @@
                     </Dependent>
                 </ReferentialConstraint>
             </Association>
-            <Association Name="Tasks_project">
-                <End Role="Tasks" Type="AzureDevopsService.Tasks" Multiplicity="*"/>
-                <End Role="Projects" Type="AzureDevopsService.Projects" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Projects">
-                        <PropertyRef Name="ID"/>
-                    </Principal>
-                    <Dependent Role="Tasks">
-                        <PropertyRef Name="project_ID"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
-            <Association Name="WorkItems_assignedTo">
-                <End Role="WorkItems" Type="AzureDevopsService.WorkItems" Multiplicity="*"/>
-                <End Role="Users" Type="AzureDevopsService.Users" Multiplicity="0..1"/>
-                <ReferentialConstraint>
-                    <Principal Role="Users">
-                        <PropertyRef Name="userPrincipalName"/>
-                    </Principal>
-                    <Dependent Role="WorkItems">
-                        <PropertyRef Name="assignedTo_userPrincipalName"/>
-                    </Dependent>
-                </ReferentialConstraint>
-            </Association>
             <Association Name="WorkItems_customer">
-                <End Role="WorkItems" Type="AzureDevopsService.WorkItems" Multiplicity="*"/>
-                <End Role="Customers" Type="AzureDevopsService.Customers" Multiplicity="0..1"/>
+                <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
+                <End Role="Customers" Type="Statistics.Customers" Multiplicity="0..1"/>
                 <ReferentialConstraint>
                     <Principal Role="Customers">
                         <PropertyRef Name="ID"/>
@@ -366,9 +119,21 @@
                     </Dependent>
                 </ReferentialConstraint>
             </Association>
+            <Association Name="WorkItems_assignedTo">
+                <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
+                <End Role="Users" Type="Statistics.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="assignedTo_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
             <Association Name="WorkItems_project">
-                <End Role="WorkItems" Type="AzureDevopsService.WorkItems" Multiplicity="*"/>
-                <End Role="Projects" Type="AzureDevopsService.Projects" Multiplicity="0..1"/>
+                <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
+                <End Role="Projects" Type="Statistics.Projects" Multiplicity="0..1"/>
                 <ReferentialConstraint>
                     <Principal Role="Projects">
                         <PropertyRef Name="ID"/>
@@ -378,7 +143,14 @@
                     </Dependent>
                 </ReferentialConstraint>
             </Association>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.EntityContainer">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers">
                 <Annotation Term="UI.HeaderInfo">
                     <Record Type="UI.HeaderInfoType">
                         <PropertyValue Property="Title">
@@ -410,417 +182,37 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/createdAt">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/createdAt">
                 <Annotation Term="Common.Label" String="Created On"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Immutable" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/createdBy">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/createdBy">
                 <Annotation Term="Common.Label" String="Created By"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Description" String="User's unique ID"/>
                 <Annotation Term="Core.Immutable" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/modifiedAt">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/modifiedAt">
                 <Annotation Term="Common.Label" String="Changed On"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/modifiedBy">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/modifiedBy">
                 <Annotation Term="Common.Label" String="Changed By"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Description" String="User's unique ID"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/ID">
                 <Annotation Term="UI.Hidden" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Customers/name">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/name">
                 <Annotation Term="Common.Label" String="Name"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork">
-                <Annotation Term="UI.HeaderInfo">
-                    <Record Type="UI.HeaderInfoType">
-                        <PropertyValue Property="Title">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="title"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="TypeName" String="Work-Item"/>
-                        <PropertyValue Property="TypeNamePlural" String="Work-Items"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="changedDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedDate"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>title</PropertyPath>
-                        <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/ID">
-                <Annotation Term="Common.Label" String="ID"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/activatedDate">
-                <Annotation Term="Common.Label" String="Activated Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/completedDate">
-                <Annotation Term="Common.Label" String="Completed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/assignedTo">
-                <Annotation Term="Common.Label" String="Assigned To"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/changedDate">
-                <Annotation Term="Common.Label" String="Changed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/assignedToName">
-                <Annotation Term="Common.Label" String="Assigned To Name"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/createdDate">
-                <Annotation Term="Common.Label" String="Created Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/reason">
-                <Annotation Term="Common.Label" String="Reason"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/state">
-                <Annotation Term="Common.Label" String="State"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/teamProject">
-                <Annotation Term="Common.Label" String="Team Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/title">
-                <Annotation Term="Common.Label" String="Title"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/workItemType">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/completedWork">
-                <Annotation Term="Common.Label" String="Completed Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/remainingWork">
-                <Annotation Term="Common.Label" String="Remaining Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/originalEstimate">
-                <Annotation Term="Common.Label" String="Original Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/resolvedDate">
-                <Annotation Term="Common.Label" String="Resolved Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/closedDate">
-                <Annotation Term="Common.Label" String="Closed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/customer">
-                <Annotation Term="Common.Label" String="Customer"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/customerName">
-                <Annotation Term="Common.Label" String="WorkItems.customerName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/private">
-                <Annotation Term="Common.Label" String="Private"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/project">
-                <Annotation Term="Common.Label" String="Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/projectName">
-                <Annotation Term="Common.Label" String="WorkItems.projectName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/ticket">
-                <Annotation Term="Common.Label" String="Ticket"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/type">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/assignedTo_userPrincipalName">
-                <Annotation Term="Common.Label" String="Assigned To"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/customer_ID">
-                <Annotation Term="Common.Label" String="Customer"/>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Customer"/>
-                        <PropertyValue Property="CollectionPath" String="Customers"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="name"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWork/project_ID">
-                <Annotation Term="Common.Label" String="Project"/>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Project"/>
-                        <PropertyValue Property="CollectionPath" String="Projects"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="project_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="customer_ID"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems">
-                <Annotation Term="UI.HeaderInfo">
-                    <Record Type="UI.HeaderInfoType">
-                        <PropertyValue Property="Title">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="title"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="TypeName" String="Work-Item"/>
-                        <PropertyValue Property="TypeNamePlural" String="Work-Items"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="changedDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedDate"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>title</PropertyPath>
-                        <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/ID">
-                <Annotation Term="Common.Label" String="ID"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/activatedDate">
-                <Annotation Term="Common.Label" String="Activated Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/completedDate">
-                <Annotation Term="Common.Label" String="Completed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/assignedTo">
-                <Annotation Term="Common.Label" String="Assigned To"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/changedDate">
-                <Annotation Term="Common.Label" String="Changed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/assignedToName">
-                <Annotation Term="Common.Label" String="Assigned To Name"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/createdDate">
-                <Annotation Term="Common.Label" String="Created Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/reason">
-                <Annotation Term="Common.Label" String="Reason"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/state">
-                <Annotation Term="Common.Label" String="State"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/teamProject">
-                <Annotation Term="Common.Label" String="Team Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/title">
-                <Annotation Term="Common.Label" String="Title"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/workItemType">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/completedWork">
-                <Annotation Term="Common.Label" String="Completed Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/remainingWork">
-                <Annotation Term="Common.Label" String="Remaining Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/originalEstimate">
-                <Annotation Term="Common.Label" String="Original Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/resolvedDate">
-                <Annotation Term="Common.Label" String="Resolved Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/closedDate">
-                <Annotation Term="Common.Label" String="Closed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/customer">
-                <Annotation Term="Common.Label" String="Customer"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/customerName">
-                <Annotation Term="Common.Label" String="WorkItems.customerName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/private">
-                <Annotation Term="Common.Label" String="Private"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/project">
-                <Annotation Term="Common.Label" String="Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/projectName">
-                <Annotation Term="Common.Label" String="WorkItems.projectName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/ticket">
-                <Annotation Term="Common.Label" String="Ticket"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/type">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/assignedTo_userPrincipalName">
-                <Annotation Term="Common.Label" String="Assigned To"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/customer_ID">
-                <Annotation Term="Common.Label" String="Customer"/>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Customer"/>
-                        <PropertyValue Property="CollectionPath" String="Customers"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="name"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.MyWorkItems/project_ID">
-                <Annotation Term="Common.Label" String="Project"/>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Project"/>
-                        <PropertyValue Property="CollectionPath" String="Projects"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="project_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="customer_ID"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects">
                 <Annotation Term="UI.Facets">
                     <Collection>
                         <Record Type="UI.ReferenceFacet">
@@ -874,40 +266,40 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/createdAt">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/createdAt">
                 <Annotation Term="Common.Label" String="Created On"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Immutable" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/createdBy">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/createdBy">
                 <Annotation Term="Common.Label" String="Created By"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Description" String="User's unique ID"/>
                 <Annotation Term="Core.Immutable" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/modifiedAt">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/modifiedAt">
                 <Annotation Term="Common.Label" String="Changed On"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/modifiedBy">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/modifiedBy">
                 <Annotation Term="Common.Label" String="Changed By"/>
                 <Annotation Term="Core.Computed" Bool="true"/>
                 <Annotation Term="Core.Description" String="User's unique ID"/>
                 <Annotation Term="UI.HiddenFilter" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/ID">
                 <Annotation Term="UI.Hidden" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/title">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/title">
                 <Annotation Term="Common.Label" String="Title"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/description">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/description">
                 <Annotation Term="Common.Label" String="Description"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/customer_ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/customer_ID">
                 <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
                 <Annotation Term="Common.Text" Path="customer/name">
                     <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
@@ -930,7 +322,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Projects/manager_ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/manager_ID">
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
                         <PropertyValue Property="Label" String="Employees"/>
@@ -949,218 +341,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks">
-                <Annotation Term="UI.Facets">
-                    <Collection>
-                        <Record Type="UI.ReferenceFacet">
-                            <PropertyValue Property="Label" String="General"/>
-                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.HeaderInfo">
-                    <Record Type="UI.HeaderInfoType">
-                        <PropertyValue Property="Description">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="description"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="Title">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="title"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="TypeName" String="Task"/>
-                        <PropertyValue Property="TypeNamePlural" String="Tasks"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="dueDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="beginDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="effort"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="estimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="project_ID"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="personResponsible_ID"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="description"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="project/title"/>
-                            <PropertyValue Property="Label" String="Project"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="personResponsible/name"/>
-                            <PropertyValue Property="Label" String="Person Responsible"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="beginDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="dueDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="effort"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="estimate"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>title</PropertyPath>
-                        <PropertyPath>description</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/createdAt">
-                <Annotation Term="Common.Label" String="Created On"/>
-                <Annotation Term="Core.Computed" Bool="true"/>
-                <Annotation Term="Core.Immutable" Bool="true"/>
-                <Annotation Term="UI.HiddenFilter" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/createdBy">
-                <Annotation Term="Common.Label" String="Created By"/>
-                <Annotation Term="Core.Computed" Bool="true"/>
-                <Annotation Term="Core.Description" String="User's unique ID"/>
-                <Annotation Term="Core.Immutable" Bool="true"/>
-                <Annotation Term="UI.HiddenFilter" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/modifiedAt">
-                <Annotation Term="Common.Label" String="Changed On"/>
-                <Annotation Term="Core.Computed" Bool="true"/>
-                <Annotation Term="UI.HiddenFilter" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/modifiedBy">
-                <Annotation Term="Common.Label" String="Changed By"/>
-                <Annotation Term="Core.Computed" Bool="true"/>
-                <Annotation Term="Core.Description" String="User's unique ID"/>
-                <Annotation Term="UI.HiddenFilter" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/ID">
-                <Annotation Term="UI.Hidden" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/title">
-                <Annotation Term="Common.Label" String="Title"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/description">
-                <Annotation Term="Common.Label" String="Description"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/dueDate">
-                <Annotation Term="Common.Label" String="Tasks.due"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/deliveryDate">
-                <Annotation Term="Common.Label" String="Due Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/beginFrom">
-                <Annotation Term="Common.Label" String="Begin From"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/beginDate">
-                <Annotation Term="Common.Label" String="Begin Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/daysBetween">
-                <Annotation Term="Core.Computed" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/workload">
-                <Annotation Term="Core.Computed" Bool="true"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/estimate">
-                <Annotation Term="Common.Label" String="Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/estimateMin">
-                <Annotation Term="Common.Label" String="Min. Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/estimateMax">
-                <Annotation Term="Common.Label" String="Max. Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/effort">
-                <Annotation Term="Common.Label" String="Effort"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/priority">
-                <Annotation Term="Common.Label" String="Max. Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/project">
-                <Annotation Term="Common.Label" String="Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/personResponsible_ID">
-                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
-                <Annotation Term="Common.Label" String="Person Responsible"/>
-                <Annotation Term="Common.Text" Path="personResponsible/name">
-                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
-                </Annotation>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Person Responsible"/>
-                        <PropertyValue Property="CollectionPath" String="Employees"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="personResponsible_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="name"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.Tasks/project_ID">
-                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
-                <Annotation Term="Common.Label" String="Project"/>
-                <Annotation Term="Common.Text" Path="project/title">
-                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
-                </Annotation>
-                <Annotation Term="Common.ValueList">
-                    <Record Type="Common.ValueListType">
-                        <PropertyValue Property="Label" String="Project"/>
-                        <PropertyValue Property="CollectionPath" String="Projects"/>
-                        <PropertyValue Property="Parameters">
-                            <Collection>
-                                <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="project_ID"/>
-                                    <PropertyValue Property="ValueListProperty" String="ID"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="customer_ID"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
-                    </Record>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItemStatistics">
-                <Annotation Term="Analytics.AggregatedProperties">
-                    <Collection>
-                        <Record Type="Analytics.AggregatedPropertyType">
-                            <PropertyValue Property="Name" String="totalEstimate"/>
-                            <PropertyValue Property="AggregationMethod" String="sum"/>
-                            <PropertyValue Property="AggregatableProperty" PropertyPath="originalEstimate"/>
-                            <Annotation Term="Common.Label" String="Total Estimate"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems">
                 <Annotation Term="UI.HeaderInfo">
                     <Record Type="UI.HeaderInfoType">
                         <PropertyValue Property="Title">
@@ -1235,183 +416,38 @@
                     </Collection>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.EntityContainer/WorkItemStatistics">
-                <Annotation Term="Aggregation.ApplySupported">
-                    <Record Type="Aggregation.ApplySupportedType">
-                        <PropertyValue Property="AggregatableProperties">
-                            <Collection>
-                                <Record Type="Aggregation.AggregatablePropertyType">
-                                    <PropertyValue Property="Property" PropertyPath="originalEstimate"/>
-                                </Record>
-                            </Collection>
-                        </PropertyValue>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.EntityContainer/WorkItems">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItemStatistics/ID">
-                <Annotation Term="Common.Label" String="ID"/>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/totalEstimate">
+                <Annotation Term="Aggregation.default" EnumMember="Aggregation.defaultType/SUM"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItemStatistics/originalEstimate">
-                <Annotation Term="Aggregation.Aggregatable" Bool="true"/>
-                <Annotation Term="Analytics.AccumulativeMeasure" Bool="true"/>
-                <Annotation Term="Common.Label" String="Original Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItemStatistics/completedDate">
-                <Annotation Term="Aggregation.Groupable" Bool="true"/>
-                <Annotation Term="Analytics.Dimension" Bool="true"/>
-                <Annotation Term="Common.Label" String="Completed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems">
-                <Annotation Term="UI.HeaderInfo">
-                    <Record Type="UI.HeaderInfoType">
-                        <PropertyValue Property="Title">
-                            <Record Type="UI.DataField">
-                                <PropertyValue Property="Value" Path="title"/>
-                            </Record>
-                        </PropertyValue>
-                        <PropertyValue Property="TypeName" String="Work-Item"/>
-                        <PropertyValue Property="TypeNamePlural" String="Work-Items"/>
-                    </Record>
-                </Annotation>
-                <Annotation Term="UI.Identification">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="changedDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.LineItem">
-                    <Collection>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="workItemType"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="originalEstimate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedWork"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="reason"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="state"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="createdDate"/>
-                        </Record>
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="completedDate"/>
-                        </Record>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="UI.SelectionFields">
-                    <Collection>
-                        <PropertyPath>title</PropertyPath>
-                        <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
-                    </Collection>
-                </Annotation>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/ID">
-                <Annotation Term="Common.Label" String="ID"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/activatedDate">
-                <Annotation Term="Common.Label" String="Activated Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/completedDate">
-                <Annotation Term="Common.Label" String="Completed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/assignedTo">
-                <Annotation Term="Common.Label" String="Assigned To"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/changedDate">
-                <Annotation Term="Common.Label" String="Changed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/assignedToName">
-                <Annotation Term="Common.Label" String="Assigned To Name"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/createdDate">
-                <Annotation Term="Common.Label" String="Created Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/reason">
-                <Annotation Term="Common.Label" String="Reason"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/state">
-                <Annotation Term="Common.Label" String="State"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/teamProject">
-                <Annotation Term="Common.Label" String="Team Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/title">
-                <Annotation Term="Common.Label" String="Title"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/workItemType">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/completedWork">
-                <Annotation Term="Common.Label" String="Completed Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/remainingWork">
-                <Annotation Term="Common.Label" String="Remaining Work"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/originalEstimate">
-                <Annotation Term="Common.Label" String="Original Estimate"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/resolvedDate">
-                <Annotation Term="Common.Label" String="Resolved Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/closedDate">
-                <Annotation Term="Common.Label" String="Closed Date"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/customer">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/customer">
                 <Annotation Term="Common.Label" String="Customer"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/customerName">
-                <Annotation Term="Common.Label" String="WorkItems.customerName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/private">
-                <Annotation Term="Common.Label" String="Private"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/project">
-                <Annotation Term="Common.Label" String="Project"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/projectName">
-                <Annotation Term="Common.Label" String="WorkItems.projectName"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/ticket">
-                <Annotation Term="Common.Label" String="Ticket"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/type">
-                <Annotation Term="Common.Label" String="Type"/>
-            </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/assignedTo_userPrincipalName">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/assignedTo">
                 <Annotation Term="Common.Label" String="Assigned To"/>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/customer_ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/project">
+                <Annotation Term="Common.Label" String="Project"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/customer_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="Customer"/>
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
@@ -1431,7 +467,12 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AzureDevopsService.WorkItems/project_ID">
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.Label" String="Assigned To"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/project_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="Project"/>
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">

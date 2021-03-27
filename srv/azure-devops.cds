@@ -16,26 +16,21 @@ service AzureDevopsService @(requires : 'authenticated-user') {
             ![@Common.Label]     : 'Total Duration'
         }
     ])
-    @Aggregation.ApplySupported : {
-        $Type                  : 'Aggregation.ApplySupportedType',
-        AggregatableProperties : [{
-            $Type    : 'Aggregation.AggregatablePropertyType',
-            Property : originalEstimate,
-        }, ],
-    }
+    @Aggregation.ApplySupported.PropertyRestrictions : true
     entity WorkItemStatistics as projection on my.WorkItems {
-        ID,
-        @Analytics.AccumulativeMeasure
+        key ID,
+        @Analytics.AccumulativeMeasure : true
         originalEstimate,
-        @Analytics.AccumulativeMeasure
+        @Analytics.AccumulativeMeasure : true
+        @Aggregation.default           : #SUM
         duration,
-        @Analytics.Dimension
+        @Analytics.Dimension           : true
         completedDate,
-        @Analytics.Dimension
+        @Analytics.Dimension           : true
         assignedTo,
-        @Analytics.Dimension
+        @Analytics.Dimension           : true
         customer,
-        @Analytics.Dimension
+        @Analytics.Dimension           : true
         project,
     }
 

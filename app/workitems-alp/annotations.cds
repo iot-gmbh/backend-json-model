@@ -7,14 +7,6 @@ annotate my.WorkItemStatistics with @(UI : {LineItem : [
     },
     {
         $Type : 'UI.DataField',
-        Value : assignedTo,
-    },
-    {
-        $Type : 'UI.DataField',
         Value : customer,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : project,
     }
 ]});

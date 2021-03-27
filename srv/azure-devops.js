@@ -248,14 +248,19 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", "MyWork", (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-    req.data.ID = uuid.v4();
-    req.data.type = "Manual";
 
     const durationInMS =
       new Date(req.data.completedDate) - new Date(req.data.activatedDate);
     const durationInH = durationInMS / 1000 / 60 / 60;
 
+    const user = process.env.NODE_ENV
+      ? req.user.id
+      : "benedikt.hoelker@iot-online.de";
+
+    req.data.ID = uuid.v4();
+    req.data.type = "Manual";
     req.data.duration = durationInH;
+    req.data.assignedTo_userPrincipalName = user;
 
     return next();
   });
