@@ -45,6 +45,32 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
+                <!-- <Annotation Term="UI.SelectionPresentationVariant">
+                    <Record Type="UI.SelectionPresentationVariantType">
+                        <PropertyValue Property="SelectionVariant">
+                            <Record Type="UI.SelectionVariantType">
+                                <PropertyValue Property="Parameters">
+                                    <Annotation Term="Common.Label" String="Test"/>
+                                    <Collection>
+                                        <Record Type="UI.Parameter">
+                                            <PropertyValue Property="PropertyName" PropertyPath="duration"/>
+                                            <PropertyValue Property="PropertyValue" String="h"/>
+                                        </Record>
+                                    </Collection>
+                                </PropertyValue>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="PresentationVariant">
+                            <Record Type="UI.PresentationVariantType">
+                                <PropertyValue Property="Visualizations">
+                                    <Collection>
+                                        <AnnotationPath>@UI.Chart</AnnotationPath>
+                                    </Collection>
+                                </PropertyValue>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation> -->
             </Annotations>
         </Schema>
     </edmx:DataServices>

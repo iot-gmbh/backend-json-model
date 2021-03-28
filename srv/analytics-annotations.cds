@@ -2,6 +2,8 @@ using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
     SelectionFields : [
+        activatedDate,
+        completedDate,
         assignedTo_userPrincipalName,
         customer_ID,
         project_ID

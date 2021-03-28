@@ -1,6 +1,13 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
 <edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
     xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
     xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
+        <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Analytics.xml">
+        <edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/>
+    </edmx:Reference>
     <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
         <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
     </edmx:Reference>
@@ -16,7 +23,7 @@
                 <EntitySet Name="Customers" EntityType="AnalyticsService.Customers"/>
                 <EntitySet Name="Projects" EntityType="AnalyticsService.Projects"/>
                 <EntitySet Name="Users" EntityType="AnalyticsService.Users"/>
-                <EntitySet Name="WorkItems" EntityType="AnalyticsService.WorkItems"/>
+                <EntitySet Name="WorkItems" EntityType="AnalyticsService.WorkItems" sap:semantics="aggregate"/>
                 <AssociationSet Name="Projects_customer" Association="AnalyticsService.Projects_customer">
                     <End Role="Projects" EntitySet="Projects"/>
                     <End Role="Customers" EntitySet="Customers"/>
@@ -79,17 +86,18 @@
             </EntityType>
             <EntityType Name="WorkItems" sap:semantics="aggregate">
                 <Key>
-                    <PropertyRef Name="assignedTo_userPrincipalName"/>
-                    <PropertyRef Name="customer_ID"/>
-                    <PropertyRef Name="project_ID"/>
+                    <PropertyRef Name="ID__"/>
                 </Key>
-                <NavigationProperty Name="assignedTo" Relationship="AnalyticsService.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
-                <NavigationProperty Name="customer" Relationship="AnalyticsService.WorkItems_customer" FromRole="WorkItems" ToRole="Customers"/>
-                <NavigationProperty Name="project" Relationship="AnalyticsService.WorkItems_project" FromRole="WorkItems" ToRole="Projects"/>
-                <Property Name="duration" Type="Edm.Decimal" sap:variable-scale="true"/>
-                <Property Name="assignedTo_userPrincipalName" Type="Edm.String" Nullable="false"/>
-                <Property Name="customer_ID" Type="Edm.String" Nullable="false"/>
-                <Property Name="project_ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="ID__" Type="Edm.String" Nullable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="assignedTo" Relationship="AnalyticsService.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users" sap:aggregation-role="dimension" sap:label="Assigned To"/>
+                <NavigationProperty Name="customer" Relationship="AnalyticsService.WorkItems_customer" FromRole="WorkItems" ToRole="Customers" sap:aggregation-role="dimension" sap:label="Customer"/>
+                <NavigationProperty Name="project" Relationship="AnalyticsService.WorkItems_project" FromRole="WorkItems" ToRole="Projects" sap:aggregation-role="dimension" sap:label="Project"/>
+                <Property Name="duration" Type="Edm.Decimal" sap:label="Dauer" sap:variable-scale="true"/>
+                <Property Name="activatedDate" Type="Edm.DateTimeOffset" sap:label="Activated Date"/>
+                <Property Name="completedDate" Type="Edm.DateTimeOffset" sap:label="Completed Date"/>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String" sap:aggregation-role="dimension" sap:label="Assigned To"/>
+                <Property Name="customer_ID" Type="Edm.String" sap:aggregation-role="dimension" sap:label="Customer"/>
+                <Property Name="project_ID" Type="Edm.String" sap:aggregation-role="dimension" sap:label="Project"/>
             </EntityType>
             <Association Name="Projects_customer">
                 <End Role="Projects" Type="AnalyticsService.Projects" Multiplicity="*"/>
@@ -331,6 +339,16 @@
                 </Annotation>
             </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems">
+                <Annotation Term="Analytics.AggregatedProperties">
+                    <Collection>
+                        <Record Type="Analytics.AggregatedPropertyType">
+                            <PropertyValue Property="Name" String="totalDuration"/>
+                            <PropertyValue Property="AggregationMethod" String="sum"/>
+                            <PropertyValue Property="AggregatableProperty" PropertyPath="duration"/>
+                            <Annotation Term="Common.Label" String="Total Duration"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
                 <Annotation Term="UI.HeaderInfo">
                     <Record Type="UI.HeaderInfoType">
                         <PropertyValue Property="Title">
@@ -382,17 +400,29 @@
                             <PropertyValue Property="Value" Path="project_ID"/>
                         </Record>
                         <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="duration"/>
+                            <PropertyValue Property="Value" Path="totalDuration"/>
                         </Record>
                     </Collection>
                 </Annotation>
                 <Annotation Term="UI.SelectionFields">
                     <Collection>
+                        <PropertyPath>activatedDate</PropertyPath>
+                        <PropertyPath>completedDate</PropertyPath>
                         <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
                         <PropertyPath>customer_ID</PropertyPath>
                         <PropertyPath>project_ID</PropertyPath>
                     </Collection>
                 </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.EntityContainer/WorkItems">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/ID__">
+                <Annotation Term="UI.Hidden" Bool="true"/>
             </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/assignedTo">
                 <Annotation Term="Common.Label" String="Assigned To"/>
@@ -404,12 +434,22 @@
                 <Annotation Term="Common.Label" String="Project"/>
             </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/duration">
+                <Annotation Term="Aggregation.default" EnumMember="Aggregation.defaultType/SUM"/>
+                <Annotation Term="Analytics.AccumulativeMeasure" Bool="true"/>
                 <Annotation Term="Common.Label" String="Dauer"/>
             </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/activatedDate">
+                <Annotation Term="Common.Label" String="Activated Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/completedDate">
+                <Annotation Term="Common.Label" String="Completed Date"/>
+            </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="Assigned To"/>
             </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/customer_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="Customer"/>
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
@@ -430,6 +470,7 @@
                 </Annotation>
             </Annotations>
             <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/project_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="Project"/>
                 <Annotation Term="Common.ValueList">
                     <Record Type="Common.ValueListType">
