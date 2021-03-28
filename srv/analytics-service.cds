@@ -2,7 +2,7 @@ using {iot.planner as my} from '../db/schema';
 
 
 service AnalyticsService {
-    // @Aggregation.ApplySupported.PropertyRestrictions : true
+    @Aggregation.ApplySupported.PropertyRestrictions : true
     entity WorkItems as projection on my.WorkItems {
         @Analytics.Dimension: true
         key assignedTo, 

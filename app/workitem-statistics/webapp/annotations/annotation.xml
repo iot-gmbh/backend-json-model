@@ -5,9 +5,6 @@
     <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
         <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
     </edmx:Reference>
-    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Communication.xml">
-        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
-    </edmx:Reference>
     <edmx:Reference Uri="/v2/analytics/$metadata">
         <edmx:Include Namespace="AnalyticsService"/>
     </edmx:Reference>
@@ -26,7 +23,7 @@
                             <Collection>
                                 <Record Type="UI.ChartDimensionAttributeType">
                                     <PropertyValue Property="Dimension" PropertyPath="customer_ID"/>
-                                    <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Series"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
@@ -39,13 +36,13 @@
                             <Collection>
                                 <Record Type="UI.ChartMeasureAttributeType">
                                     <PropertyValue Property="Measure" PropertyPath="duration"/>
-                                    <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis2"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
                 </Annotation>
-                <!-- <Annotation Term="UI.SelectionPresentationVariant">
+                <Annotation Term="UI.SelectionPresentationVariant">
                     <Record Type="UI.SelectionPresentationVariantType">
                         <PropertyValue Property="SelectionVariant">
                             <Record Type="UI.SelectionVariantType">
@@ -67,10 +64,16 @@
                                         <AnnotationPath>@UI.Chart</AnnotationPath>
                                     </Collection>
                                 </PropertyValue>
+                                <PropertyValue Property="RequestAtLeast">
+                                    <Collection>
+                                        <PropertyPath>customer_ID</PropertyPath>
+                                        <PropertyPath>duration</PropertyPath>
+                                    </Collection>
+                                </PropertyValue>
                             </Record>
                         </PropertyValue>
                     </Record>
-                </Annotation> -->
+                </Annotation>
             </Annotations>
         </Schema>
     </edmx:DataServices>

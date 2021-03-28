@@ -10,6 +10,13 @@ module.exports = (srv) => {
       "project_ID",
     ];
 
+    // if (!req.query.SELECT.columns.find(({ ref }) => ref[0] === "duration")) {
+    //   req.query.SELECT.columns.push({ ref: ["duration"] });
+    // }
+
+    // query.SELECT.from = query.SELECT.from;
+    // .concat([]);
+
     const selectBuilder = new SelectBuilder(query);
     const { sql, values } = selectBuilder.build();
 
