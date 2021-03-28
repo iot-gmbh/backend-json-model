@@ -137,6 +137,7 @@
                         "multiSelect": false,
                         "qualifier": "",
                         "autoHide": true,
+                        "defaultFilterMode": "compact",
                         "smartVariantManagement": false,
                         "keyPerformanceIndicators": {}
                     }

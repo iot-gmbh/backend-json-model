@@ -1,497 +1,454 @@
 <edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
-xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
-xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
-    <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
-</edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Analytics.xml">
-    <edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/>
-</edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
-    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
-</edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
-    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
-</edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
-    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
-</edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
-    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
-</edmx:Reference>
-<edmx:DataServices m:DataServiceVersion="2.0">
-    <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="Statistics">
-        <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
-            <EntitySet Name="Customers" EntityType="Statistics.Customers"/>
-            <EntitySet Name="Projects" EntityType="Statistics.Projects"/>
-            <EntitySet Name="Users" EntityType="Statistics.Users"/>
-            <EntitySet Name="WorkItems" EntityType="Statistics.WorkItems"/>
-            <AssociationSet Name="Projects_customer" Association="Statistics.Projects_customer">
-                <End Role="Projects" EntitySet="Projects"/>
-                <End Role="Customers" EntitySet="Customers"/>
-            </AssociationSet>
-            <AssociationSet Name="WorkItems_customer" Association="Statistics.WorkItems_customer">
-                <End Role="WorkItems" EntitySet="WorkItems"/>
-                <End Role="Customers" EntitySet="Customers"/>
-            </AssociationSet>
-            <AssociationSet Name="WorkItems_assignedTo" Association="Statistics.WorkItems_assignedTo">
-                <End Role="WorkItems" EntitySet="WorkItems"/>
-                <End Role="Users" EntitySet="Users"/>
-            </AssociationSet>
-            <AssociationSet Name="WorkItems_project" Association="Statistics.WorkItems_project">
-                <End Role="WorkItems" EntitySet="WorkItems"/>
-                <End Role="Projects" EntitySet="Projects"/>
-            </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Customers">
-            <Key>
-                <PropertyRef Name="ID"/>
-            </Key>
-            <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
-            <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
-            <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
-            <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
-            <Property Name="ID" Type="Edm.String" Nullable="false"/>
-            <Property Name="name" Type="Edm.String"/>
-            <NavigationProperty Name="projects" Relationship="Statistics.Projects_customer" FromRole="Customers" ToRole="Projects"/>
-        </EntityType>
-        <EntityType Name="Projects">
-            <Key>
-                <PropertyRef Name="ID"/>
-            </Key>
-            <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
-            <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
-            <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
-            <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
-            <Property Name="ID" Type="Edm.String" Nullable="false"/>
-            <Property Name="title" Type="Edm.String"/>
-            <Property Name="description" Type="Edm.String"/>
-            <NavigationProperty Name="customer" Relationship="Statistics.Projects_customer" FromRole="Projects" ToRole="Customers"/>
-            <NavigationProperty Name="workItems" Relationship="Statistics.WorkItems_project" FromRole="Projects" ToRole="WorkItems"/>
-            <Property Name="customer_ID" Type="Edm.String"/>
-            <Property Name="manager_ID" Type="Edm.String"/>
-        </EntityType>
-        <EntityType Name="Users">
-            <Key>
-                <PropertyRef Name="userPrincipalName"/>
-            </Key>
-            <Property Name="userPrincipalName" Type="Edm.String" Nullable="false"/>
-            <Property Name="displayName" Type="Edm.String"/>
-            <Property Name="givenName" Type="Edm.String"/>
-            <Property Name="jobTitle" Type="Edm.String"/>
-            <Property Name="mail" Type="Edm.String"/>
-            <Property Name="mobilePhone" Type="Edm.String"/>
-            <Property Name="officeLocation" Type="Edm.String"/>
-            <Property Name="preferredLanguage" Type="Edm.String"/>
-            <Property Name="surname" Type="Edm.String"/>
-            <NavigationProperty Name="workItems" Relationship="Statistics.WorkItems_assignedTo" FromRole="Users" ToRole="WorkItems"/>
-        </EntityType>
-        <EntityType Name="WorkItems">
-            <Property Name="totalEstimate" Type="Edm.Int32"/>
-            <NavigationProperty Name="customer" Relationship="Statistics.WorkItems_customer" FromRole="WorkItems" ToRole="Customers"/>
-            <NavigationProperty Name="assignedTo" Relationship="Statistics.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
-            <NavigationProperty Name="project" Relationship="Statistics.WorkItems_project" FromRole="WorkItems" ToRole="Projects"/>
-            <Property Name="customer_ID" Type="Edm.String"/>
-            <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
-            <Property Name="project_ID" Type="Edm.String"/>
-        </EntityType>
-        <Association Name="Projects_customer">
-            <End Role="Projects" Type="Statistics.Projects" Multiplicity="*"/>
-            <End Role="Customers" Type="Statistics.Customers" Multiplicity="0..1"/>
-            <ReferentialConstraint>
-                <Principal Role="Customers">
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="AnalyticsService">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Customers" EntityType="AnalyticsService.Customers"/>
+                <EntitySet Name="Projects" EntityType="AnalyticsService.Projects"/>
+                <EntitySet Name="Users" EntityType="AnalyticsService.Users"/>
+                <EntitySet Name="WorkItems" EntityType="AnalyticsService.WorkItems"/>
+                <AssociationSet Name="Projects_customer" Association="AnalyticsService.Projects_customer">
+                    <End Role="Projects" EntitySet="Projects"/>
+                    <End Role="Customers" EntitySet="Customers"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_assignedTo" Association="AnalyticsService.WorkItems_assignedTo">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_customer" Association="AnalyticsService.WorkItems_customer">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Customers" EntitySet="Customers"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_project" Association="AnalyticsService.WorkItems_project">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Projects" EntitySet="Projects"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="Customers">
+                <Key>
                     <PropertyRef Name="ID"/>
-                </Principal>
-                <Dependent Role="Projects">
-                    <PropertyRef Name="customer_ID"/>
-                </Dependent>
-            </ReferentialConstraint>
-        </Association>
-        <Association Name="WorkItems_customer">
-            <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
-            <End Role="Customers" Type="Statistics.Customers" Multiplicity="0..1"/>
-            <ReferentialConstraint>
-                <Principal Role="Customers">
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="name" Type="Edm.String"/>
+                <NavigationProperty Name="projects" Relationship="AnalyticsService.Projects_customer" FromRole="Customers" ToRole="Projects"/>
+            </EntityType>
+            <EntityType Name="Projects">
+                <Key>
                     <PropertyRef Name="ID"/>
-                </Principal>
-                <Dependent Role="WorkItems">
-                    <PropertyRef Name="customer_ID"/>
-                </Dependent>
-            </ReferentialConstraint>
-        </Association>
-        <Association Name="WorkItems_assignedTo">
-            <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
-            <End Role="Users" Type="Statistics.Users" Multiplicity="0..1"/>
-            <ReferentialConstraint>
-                <Principal Role="Users">
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="description" Type="Edm.String"/>
+                <NavigationProperty Name="customer" Relationship="AnalyticsService.Projects_customer" FromRole="Projects" ToRole="Customers"/>
+                <NavigationProperty Name="workItems" Relationship="AnalyticsService.WorkItems_project" FromRole="Projects" ToRole="WorkItems"/>
+                <Property Name="customer_ID" Type="Edm.String"/>
+                <Property Name="manager_ID" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Users">
+                <Key>
                     <PropertyRef Name="userPrincipalName"/>
-                </Principal>
-                <Dependent Role="WorkItems">
+                </Key>
+                <Property Name="userPrincipalName" Type="Edm.String" Nullable="false"/>
+                <Property Name="displayName" Type="Edm.String"/>
+                <Property Name="givenName" Type="Edm.String"/>
+                <Property Name="jobTitle" Type="Edm.String"/>
+                <Property Name="mail" Type="Edm.String"/>
+                <Property Name="mobilePhone" Type="Edm.String"/>
+                <Property Name="officeLocation" Type="Edm.String"/>
+                <Property Name="preferredLanguage" Type="Edm.String"/>
+                <Property Name="surname" Type="Edm.String"/>
+                <NavigationProperty Name="workItems" Relationship="AnalyticsService.WorkItems_assignedTo" FromRole="Users" ToRole="WorkItems"/>
+            </EntityType>
+            <EntityType Name="WorkItems" sap:semantics="aggregate">
+                <Key>
                     <PropertyRef Name="assignedTo_userPrincipalName"/>
-                </Dependent>
-            </ReferentialConstraint>
-        </Association>
-        <Association Name="WorkItems_project">
-            <End Role="WorkItems" Type="Statistics.WorkItems" Multiplicity="*"/>
-            <End Role="Projects" Type="Statistics.Projects" Multiplicity="0..1"/>
-            <ReferentialConstraint>
-                <Principal Role="Projects">
-                    <PropertyRef Name="ID"/>
-                </Principal>
-                <Dependent Role="WorkItems">
+                    <PropertyRef Name="customer_ID"/>
                     <PropertyRef Name="project_ID"/>
-                </Dependent>
-            </ReferentialConstraint>
-        </Association>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.EntityContainer">
-            <Annotation Term="Aggregation.ApplySupported">
-                <Record Type="Aggregation.ApplySupportedType">
-                    <PropertyValue Property="PropertyRestrictions" Bool="true"/>
-                </Record>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers">
-            <Annotation Term="UI.HeaderInfo">
-                <Record Type="UI.HeaderInfoType">
-                    <PropertyValue Property="Title">
+                </Key>
+                <NavigationProperty Name="assignedTo" Relationship="AnalyticsService.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
+                <NavigationProperty Name="customer" Relationship="AnalyticsService.WorkItems_customer" FromRole="WorkItems" ToRole="Customers"/>
+                <NavigationProperty Name="project" Relationship="AnalyticsService.WorkItems_project" FromRole="WorkItems" ToRole="Projects"/>
+                <Property Name="duration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String" Nullable="false"/>
+                <Property Name="customer_ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="project_ID" Type="Edm.String" Nullable="false"/>
+            </EntityType>
+            <Association Name="Projects_customer">
+                <End Role="Projects" Type="AnalyticsService.Projects" Multiplicity="*"/>
+                <End Role="Customers" Type="AnalyticsService.Customers" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Customers">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Projects">
+                        <PropertyRef Name="customer_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_assignedTo">
+                <End Role="WorkItems" Type="AnalyticsService.WorkItems" Multiplicity="*"/>
+                <End Role="Users" Type="AnalyticsService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="assignedTo_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_customer">
+                <End Role="WorkItems" Type="AnalyticsService.WorkItems" Multiplicity="*"/>
+                <End Role="Customers" Type="AnalyticsService.Customers" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Customers">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="customer_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_project">
+                <End Role="WorkItems" Type="AnalyticsService.WorkItems" Multiplicity="*"/>
+                <End Role="Projects" Type="AnalyticsService.Projects" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Projects">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="project_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="name"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="TypeName" String="Customer"/>
+                        <PropertyValue Property="TypeNamePlural" String="Customers"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="name"/>
                         </Record>
-                    </PropertyValue>
-                    <PropertyValue Property="TypeName" String="Customer"/>
-                    <PropertyValue Property="TypeNamePlural" String="Customers"/>
-                </Record>
-            </Annotation>
-            <Annotation Term="UI.Identification">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="name"/>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="name"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>name</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/ID">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Customers/name">
+                <Annotation Term="Common.Label" String="Name"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects">
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="General"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="description"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="TypeName" String="Project"/>
+                        <PropertyValue Property="TypeNamePlural" String="Projects"/>
                     </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.LineItem">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="name"/>
-                    </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.SelectionFields">
-                <Collection>
-                    <PropertyPath>name</PropertyPath>
-                </Collection>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/createdAt">
-            <Annotation Term="Common.Label" String="Created On"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Immutable" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/createdBy">
-            <Annotation Term="Common.Label" String="Created By"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Description" String="User's unique ID"/>
-            <Annotation Term="Core.Immutable" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/modifiedAt">
-            <Annotation Term="Common.Label" String="Changed On"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/modifiedBy">
-            <Annotation Term="Common.Label" String="Changed By"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Description" String="User's unique ID"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/ID">
-            <Annotation Term="UI.Hidden" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Customers/name">
-            <Annotation Term="Common.Label" String="Name"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects">
-            <Annotation Term="UI.Facets">
-                <Collection>
-                    <Record Type="UI.ReferenceFacet">
-                        <PropertyValue Property="Label" String="General"/>
-                        <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
-                    </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.HeaderInfo">
-                <Record Type="UI.HeaderInfoType">
-                    <PropertyValue Property="Description">
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="customer_ID"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="description"/>
                         </Record>
-                    </PropertyValue>
-                    <PropertyValue Property="Title">
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Customer"/>
+                            <PropertyValue Property="Value" Path="customer/name"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>title</PropertyPath>
+                        <PropertyPath>description</PropertyPath>
+                        <PropertyPath>customer_ID</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/ID">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/title">
+                <Annotation Term="Common.Label" String="Title"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/description">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/customer_ID">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.Text" Path="customer/name">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Customers"/>
+                        <PropertyValue Property="CollectionPath" String="Customers"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.Projects/manager_ID">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Employees"/>
+                        <PropertyValue Property="CollectionPath" String="Employees"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="manager_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="TypeName" String="Work-Item"/>
+                        <PropertyValue Property="TypeNamePlural" String="Work-Items"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
                         <Record Type="UI.DataField">
                             <PropertyValue Property="Value" Path="title"/>
                         </Record>
-                    </PropertyValue>
-                    <PropertyValue Property="TypeName" String="Project"/>
-                    <PropertyValue Property="TypeNamePlural" String="Projects"/>
-                </Record>
-            </Annotation>
-            <Annotation Term="UI.Identification">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="customer_ID"/>
-                    </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.LineItem">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="title"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="description"/>
-                    </Record>
-                    <Record Type="UI.DataField">
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="workItemType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="createdDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="changedDate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="originalEstimate"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="completedWork"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reason"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="state"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="assignedTo_userPrincipalName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="customer_ID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="project_ID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="duration"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
+                        <PropertyPath>customer_ID</PropertyPath>
+                        <PropertyPath>project_ID</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/assignedTo">
+                <Annotation Term="Common.Label" String="Assigned To"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/customer">
+                <Annotation Term="Common.Label" String="Customer"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/project">
+                <Annotation Term="Common.Label" String="Project"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/duration">
+                <Annotation Term="Common.Label" String="Dauer"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Common.Label" String="Assigned To"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/customer_ID">
+                <Annotation Term="Common.Label" String="Customer"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
                         <PropertyValue Property="Label" String="Customer"/>
-                        <PropertyValue Property="Value" Path="customer/name"/>
+                        <PropertyValue Property="CollectionPath" String="Customers"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
                     </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.SelectionFields">
-                <Collection>
-                    <PropertyPath>title</PropertyPath>
-                    <PropertyPath>description</PropertyPath>
-                    <PropertyPath>customer_ID</PropertyPath>
-                </Collection>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/createdAt">
-            <Annotation Term="Common.Label" String="Created On"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Immutable" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/createdBy">
-            <Annotation Term="Common.Label" String="Created By"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Description" String="User's unique ID"/>
-            <Annotation Term="Core.Immutable" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/modifiedAt">
-            <Annotation Term="Common.Label" String="Changed On"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/modifiedBy">
-            <Annotation Term="Common.Label" String="Changed By"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-            <Annotation Term="Core.Description" String="User's unique ID"/>
-            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/ID">
-            <Annotation Term="UI.Hidden" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/title">
-            <Annotation Term="Common.Label" String="Title"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/description">
-            <Annotation Term="Common.Label" String="Description"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/customer_ID">
-            <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
-            <Annotation Term="Common.Text" Path="customer/name">
-                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
-            </Annotation>
-            <Annotation Term="Common.ValueList">
-                <Record Type="Common.ValueListType">
-                    <PropertyValue Property="Label" String="Customers"/>
-                    <PropertyValue Property="CollectionPath" String="Customers"/>
-                    <PropertyValue Property="Parameters">
-                        <Collection>
-                            <Record Type="Common.ValueListParameterInOut">
-                                <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
-                                <PropertyValue Property="ValueListProperty" String="ID"/>
-                            </Record>
-                            <Record Type="Common.ValueListParameterDisplayOnly">
-                                <PropertyValue Property="ValueListProperty" String="name"/>
-                            </Record>
-                        </Collection>
-                    </PropertyValue>
-                </Record>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.Projects/manager_ID">
-            <Annotation Term="Common.ValueList">
-                <Record Type="Common.ValueListType">
-                    <PropertyValue Property="Label" String="Employees"/>
-                    <PropertyValue Property="CollectionPath" String="Employees"/>
-                    <PropertyValue Property="Parameters">
-                        <Collection>
-                            <Record Type="Common.ValueListParameterInOut">
-                                <PropertyValue Property="LocalDataProperty" PropertyPath="manager_ID"/>
-                                <PropertyValue Property="ValueListProperty" String="ID"/>
-                            </Record>
-                            <Record Type="Common.ValueListParameterDisplayOnly">
-                                <PropertyValue Property="ValueListProperty" String="name"/>
-                            </Record>
-                        </Collection>
-                    </PropertyValue>
-                </Record>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems">
-            <Annotation Term="UI.HeaderInfo">
-                <Record Type="UI.HeaderInfoType">
-                    <PropertyValue Property="Title">
-                        <Record Type="UI.DataField">
-                            <PropertyValue Property="Value" Path="title"/>
-                        </Record>
-                    </PropertyValue>
-                    <PropertyValue Property="TypeName" String="Work-Item"/>
-                    <PropertyValue Property="TypeNamePlural" String="Work-Items"/>
-                </Record>
-            </Annotation>
-            <Annotation Term="UI.Identification">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="title"/>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AnalyticsService.WorkItems/project_ID">
+                <Annotation Term="Common.Label" String="Project"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Project"/>
+                        <PropertyValue Property="CollectionPath" String="Projects"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="project_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="customer_ID"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
                     </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="workItemType"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="createdDate"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="changedDate"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="originalEstimate"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="completedWork"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="reason"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="state"/>
-                    </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.LineItem">
-                <Collection>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="title"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="workItemType"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="originalEstimate"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="completedWork"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="reason"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="state"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="createdDate"/>
-                    </Record>
-                    <Record Type="UI.DataField">
-                        <PropertyValue Property="Value" Path="completedDate"/>
-                    </Record>
-                </Collection>
-            </Annotation>
-            <Annotation Term="UI.SelectionFields">
-                <Collection>
-                    <PropertyPath>title</PropertyPath>
-                    <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
-                </Collection>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.EntityContainer/WorkItems">
-            <Annotation Term="Capabilities.DeleteRestrictions">
-                <Record Type="Capabilities.DeleteRestrictionsType">
-                    <PropertyValue Property="Deletable" Bool="false"/>
-                </Record>
-            </Annotation>
-            <Annotation Term="Capabilities.InsertRestrictions">
-                <Record Type="Capabilities.InsertRestrictionsType">
-                    <PropertyValue Property="Insertable" Bool="false"/>
-                </Record>
-            </Annotation>
-            <Annotation Term="Capabilities.UpdateRestrictions">
-                <Record Type="Capabilities.UpdateRestrictionsType">
-                    <PropertyValue Property="Updatable" Bool="false"/>
-                </Record>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/totalEstimate">
-            <Annotation Term="Aggregation.default" EnumMember="Aggregation.defaultType/SUM"/>
-            <Annotation Term="Core.Computed" Bool="true"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/customer">
-            <Annotation Term="Common.Label" String="Customer"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/assignedTo">
-            <Annotation Term="Common.Label" String="Assigned To"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/project">
-            <Annotation Term="Common.Label" String="Project"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/customer_ID">
-            <Annotation Term="Analytics.Dimension" Bool="true"/>
-            <Annotation Term="Common.Label" String="Customer"/>
-            <Annotation Term="Common.ValueList">
-                <Record Type="Common.ValueListType">
-                    <PropertyValue Property="Label" String="Customer"/>
-                    <PropertyValue Property="CollectionPath" String="Customers"/>
-                    <PropertyValue Property="Parameters">
-                        <Collection>
-                            <Record Type="Common.ValueListParameterInOut">
-                                <PropertyValue Property="LocalDataProperty" PropertyPath="customer_ID"/>
-                                <PropertyValue Property="ValueListProperty" String="ID"/>
-                            </Record>
-                            <Record Type="Common.ValueListParameterDisplayOnly">
-                                <PropertyValue Property="ValueListProperty" String="name"/>
-                            </Record>
-                        </Collection>
-                    </PropertyValue>
-                </Record>
-            </Annotation>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/assignedTo_userPrincipalName">
-            <Annotation Term="Analytics.Dimension" Bool="true"/>
-            <Annotation Term="Common.Label" String="Assigned To"/>
-        </Annotations>
-        <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="Statistics.WorkItems/project_ID">
-            <Annotation Term="Analytics.Dimension" Bool="true"/>
-            <Annotation Term="Common.Label" String="Project"/>
-            <Annotation Term="Common.ValueList">
-                <Record Type="Common.ValueListType">
-                    <PropertyValue Property="Label" String="Project"/>
-                    <PropertyValue Property="CollectionPath" String="Projects"/>
-                    <PropertyValue Property="Parameters">
-                        <Collection>
-                            <Record Type="Common.ValueListParameterInOut">
-                                <PropertyValue Property="LocalDataProperty" PropertyPath="project_ID"/>
-                                <PropertyValue Property="ValueListProperty" String="ID"/>
-                            </Record>
-                            <Record Type="Common.ValueListParameterDisplayOnly">
-                                <PropertyValue Property="ValueListProperty" String="customer_ID"/>
-                            </Record>
-                        </Collection>
-                    </PropertyValue>
-                </Record>
-            </Annotation>
-        </Annotations>
-    </Schema>
-</edmx:DataServices>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
 </edmx:Edmx>
