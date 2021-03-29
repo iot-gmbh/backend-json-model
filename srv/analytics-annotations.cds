@@ -1,6 +1,22 @@
 using {AnalyticsService as my} from './analytics-service';
 
-annotate my.WorkItems with @(UI : {
+annotate my.WorkItemsAggr with @(UI : {
+    Chart           : {
+        $Type               : 'UI.ChartDefinitionType',
+        ChartType           : #Donut,
+        DimensionAttributes : [{
+            $Type     : 'UI.ChartDimensionAttributeType',
+            Dimension : customer_ID,
+            Role      : #Category
+        }, ],
+        MeasureAttributes   : [{
+            $Type   : 'UI.ChartMeasureAttributeType',
+            Measure : duration,
+            Role    : #Axis1
+        }],
+        Dimensions          : [customer_ID],
+        Measures            : [duration],
+    },
     SelectionFields : [
         activatedDate,
         completedDate,

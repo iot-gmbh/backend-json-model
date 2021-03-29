@@ -29,13 +29,13 @@
                         </PropertyValue>
                         <PropertyValue Property="Measures">
                             <Collection>
-                                <PropertyPath>duration</PropertyPath>
+                                <PropertyPath>@Analytics.AggregatedProperties/totalDuration</PropertyPath>
                             </Collection>
                         </PropertyValue>
                         <PropertyValue Property="MeasureAttributes">
                             <Collection>
                                 <Record Type="UI.ChartMeasureAttributeType">
-                                    <PropertyValue Property="Measure" PropertyPath="duration"/>
+                                    <PropertyValue Property="Measure" PropertyPath="@Analytics.AggregatedProperties/totalDuration"/>
                                     <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis2"/>
                                 </Record>
                             </Collection>
