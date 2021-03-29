@@ -23,11 +23,11 @@ service AnalyticsService {
     @Aggregation.ApplySupported.PropertyRestrictions : true 
     entity WorkItemsAggr as projection on my.WorkItems {
         @Analytics.Dimension: true
-        assignedTo, 
+        key assignedTo, 
         @Analytics.Dimension: true
-        customer,
+        key customer,
         @Analytics.Dimension: true
-        project,
+        key project,
 
         @Analytics.Measure: true
         @Aggregation.default           : #SUM
