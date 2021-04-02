@@ -62,8 +62,16 @@ modules:
       build-result: resources
       requires:
         - artifacts:
-            - iot-customers.zip
+            - fiori-customers.zip
           name: fiori-customers
+          target-path: resources/
+        - artifacts:
+            - fiori-projects.zip
+          name: fiori-projects
+          target-path: resources/
+        - artifacts:
+            - workitems-alp.zip
+          name: workitems-alp
           target-path: resources/
         - artifacts:
             - iotprojectplanningazdevworkitems.zip
@@ -76,6 +84,33 @@ modules:
   - name: fiori-customers
     type: html5
     path: app/customers
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms: []
+  - name: fiori-projects
+    type: html5
+    path: app/projects
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms: []
+  - name: fiori-workitems-alp
+    type: html5
+    path: app/workitems-alp
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms: []
+  - name: iotsingleplanningcalendar
+    type: html5
+    path: app/projects
     build-parameters:
       build-result: dist
       builder: custom

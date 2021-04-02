@@ -1,5 +1,9 @@
 {
     "_version": "1.31.0",
+    "sap.cloud": {
+        "public": true,
+        "service": "iot.project.planning"
+    },
     "sap.app": {
         "id": "iot.planner.projects",
         "type": "application",

@@ -30,7 +30,7 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "iot-customers-inbound": {
+                "fiori-customers-inbound": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"

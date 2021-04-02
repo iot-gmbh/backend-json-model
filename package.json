@@ -98,6 +98,7 @@
     "app\\azdev-workitems",
     "app\\single-planning-calendar",
     "app\\workitems",
+    "app\\workitems-alp",
     "app\\projects"
   ]
 }
