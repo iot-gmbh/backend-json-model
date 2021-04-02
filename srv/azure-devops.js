@@ -21,7 +21,7 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   // Custom
   ticket: "Custom.Ticket",
   customer_friendlyID: "Custom.Kunde",
-  project_ID: "Custom.Projekt",
+  project_friendlyID: "Custom.Projekt",
 };
 
 function destructureDevOpsObj(devOpsObj) {
@@ -48,7 +48,7 @@ function destructureDevOpsObj(devOpsObj) {
     // Custom
     "Custom.Ticket": cds.ticket,
     "Custom.Kunde": cds.customer_friendlyID,
-    "Custom.Projekt": cds.project_ID,
+    "Custom.Projekt": cds.project_friendlyID,
   } = devOpsObj);
   return cds;
 }

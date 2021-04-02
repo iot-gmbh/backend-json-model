@@ -9,8 +9,6 @@ service AzureDevopsService @(requires : 'authenticated-user') {
         * , workItems : redirected to MyWorkItems
     };
 
-    entity Tasks       as projection on my.Tasks;
-
     entity Users       as projection on my.Users {
         * , workItems : redirected to MyWorkItems
     };

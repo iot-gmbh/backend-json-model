@@ -22,7 +22,7 @@ annotate my.WorkItems with @(UI : {
         completedDate,
         assignedTo_userPrincipalName,
         customer_friendlyID,
-        project_ID
+        project_friendlyID
     ],
     LineItem        : [
         {
@@ -35,7 +35,7 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Value : project_ID,
+            Value : project_friendlyID,
         },
         {
             $Type : 'UI.DataField',

@@ -1,4 +1,4 @@
-ID;title;project_ID;estimateMin;estimateMax;estimate;priority;beginFrom;beginDate;dueDate;deliveryDate;personResponsible_ID;modifiedAt;
+ID;title;project_friendlyID;estimateMin;estimateMax;estimate;priority;beginFrom;beginDate;dueDate;deliveryDate;personResponsible_ID;modifiedAt;
 22f797d8-7403-4298-b414-f5f002534973;Click&Reserve;Frankonia Filialapps;2;2;2;1;2021-01-25;2021-01-25;2021-01-29;;adriana.rieber@iot-online.de;2020-07-03T14:05:19.732Z;
 d43c838b-936a-4adb-a293-3c761fb43bec;Click&Reserve;Frankonia Filialapps;1;2;1.5;1;2021-01-26;2021-01-26;2021-02-05;;benedikt.hoelker@iot-online.de;2020-07-03T14:05:19.732Z;
 a9196132-2893-4064-ac6a-11bb28f9f4ba;Unterstützung CAS;FSS;30;40;35;;2021-01-01;2021-01-01;2021-03-31;;dennis.kiedrowicz@iot-online.de;2020-07-03T14:05:19.732Z;

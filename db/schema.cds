@@ -21,53 +21,26 @@ entity Users {
                                 on workItems.assignedTo = $self;
 };
 
-entity Employees : managed {
-    key ID    : String;
-        name  : String @title : '{i18n>Employees.name}';
-        tasks : Association to many Tasks
-                    on tasks.personResponsible = $self;
-}
-
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-    // key ID         : String;
     friendlyID : String @mandatory : true
                         @title     : '{i18n>Customers.friendlyID}';
     name       : String @title     : '{i18n>Customers.name}';
-    projects   : Association to many Projects
+    projects   : Composition of many Projects
                      on projects.customer = $self;
 }
 
-entity Projects : managed {
-    key ID          : String;
-        title       : String @title : '{i18n>Projects.title}';
-        description : String @title : '{i18n>Projects.description}';
-        customer    : Association to Customers;
-        manager     : Association to Employees;
-        tasks       : Association to many Tasks
-                          on tasks.project = $self;
-        workItems   : Association to many WorkItems
-                          on workItems.project = $self;
+@assert.unique : {friendlyID : [friendlyID]}
+entity Projects : managed, cuid {
+    friendlyID  : String @mandatory : true
+                         @title     : '{i18n>Projects.friendlyID}';
+    title       : String @title     : '{i18n>Projects.title}';
+    description : String @title     : '{i18n>Projects.description}';
+    customer    : Association to Customers;
+    manager     : Association to Users;
+    workItems   : Association to many WorkItems
+                      on workItems.project = $self;
 }
-
-@cds.odata.valuelist
-entity Tasks : managed, cuid {
-    title             : String                   @title : '{i18n>Tasks.title}';
-    description       : String                   @title : '{i18n>Tasks.description}';
-    dueDate           : Date                     @title : '{i18n>Tasks.due}';
-    deliveryDate      : Date                     @title : '{i18n>Tasks.dueDate}';
-    beginFrom         : Date                     @title : '{i18n>Tasks.beginFrom}';
-    beginDate         : Date                     @title : '{i18n>Tasks.beginDate}';
-    daysBetween       : Decimal(10, 2)           @Core.Computed;
-    workload          : Decimal(10, 2)           @Core.Computed;
-    estimate          : Decimal(10, 2)           @title : '{i18n>Tasks.estimate}';
-    estimateMin       : Decimal(10, 2)           @title : '{i18n>Tasks.estimateMin}';
-    estimateMax       : Decimal(10, 2)           @title : '{i18n>Tasks.estimateMax}';
-    effort            : Decimal(10, 2)           @title : '{i18n>Tasks.effort}';
-    priority          : Integer                  @title : '{i18n>Tasks.priority}';
-    personResponsible : Association to Employees @title : '{i18n>Tasks.personResponsible}';
-    project           : Association to Projects  @title : '{i18n>Tasks.project}';
-};
 
 entity WorkItems {
     key ID                  : String                                           @title : '{i18n>WorkItems.ID}';
@@ -95,7 +68,9 @@ entity WorkItems {
         customerName        : String                                           @title : '{i18n>WorkItems.customerName}';
         private             : Boolean                                          @title : '{i18n>WorkItems.private}';
         // Custom
-        project             : Association to Projects                          @title : '{i18n>WorkItems.project}';
+        project_friendlyID  : String;
+        project             : Association to Projects
+                                  on project.friendlyID = project_friendlyID   @title : '{i18n>WorkItems.project}';
         projectName         : String                                           @title : '{i18n>WorkItems.projectName}';
         ticket              : String                                           @title : '{i18n>WorkItems.ticket}';
         type                : String                                           @title : '{i18n>WorkItems.type}';

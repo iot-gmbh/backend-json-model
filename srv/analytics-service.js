@@ -7,7 +7,7 @@ module.exports = (srv) => {
     query.SELECT.groupBy = [
       "customer_friendlyID",
       "assignedTo_userPrincipalName",
-      "project_ID",
+      "project_friendlyID",
     ];
 
     // if (!req.query.SELECT.columns.find(({ ref }) => ref[0] === "duration")) {

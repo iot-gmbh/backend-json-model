@@ -27,7 +27,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@sap/ux-specification": "^1.84.6",
+    "@sap/ux-specification": "^1.84.7",
     "eslint": "^7.20.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -97,6 +97,7 @@
     "app\\customers",
     "app\\azdev-workitems",
     "app\\single-planning-calendar",
-    "app\\workitems"
+    "app\\workitems",
+    "app\\projects"
   ]
 }

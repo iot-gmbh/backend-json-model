@@ -93,94 +93,21 @@ annotate my.Customers with @(UI : {
             Value : friendlyID,
         },
     ],
-    Facets          : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>Identification}',
-        Target : '@UI.Identification'
-    }]
+    Facets          : [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Identification}',
+            Target : '@UI.Identification'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Customers.projects}',
+            Target : 'projects/@UI.LineItem'
+        }
+    ]
 }) {
     ID @UI.Hidden;
 }
-
-
-annotate my.Tasks with @(UI : {
-    HeaderInfo      : {
-        TypeName       : '{i18n>Task}',
-        TypeNamePlural : '{i18n>Tasks}',
-        Title          : {Value : title},
-        Description    : {Value : description},
-    },
-    Identification  : [
-        {Value : dueDate},
-        {Value : beginDate},
-        {Value : effort},
-        {Value : estimate},
-        {Value : project_ID},
-        {Value : personResponsible_ID}
-    ],
-    Facets          : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>General}',
-        Target : '@UI.Identification'
-    }, ],
-    SelectionFields : [
-        title,
-        description
-    ],
-    LineItem        : [
-        {
-            $Type : 'UI.DataField',
-            Value : title,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : description,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : project.title,
-            Label : '{i18n>Tasks.project}'
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : personResponsible.name,
-            Label : '{i18n>Tasks.personResponsible}'
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : beginDate,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : dueDate,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : effort,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : estimate,
-        },
-    ]
-})
-                       @cds.odata.valuelist {
-    ID                @UI.Hidden;
-    project           @(Common : {
-        Text         : {
-            $value                 : project.title,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-    personResponsible @(Common : {
-        Text         : {
-            $value                 : personResponsible.name,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-};
 
 annotate my.Projects with @(UI : {
     HeaderInfo      : {
@@ -189,12 +116,19 @@ annotate my.Projects with @(UI : {
         Title          : {Value : title},
         Description    : {Value : description},
     },
-    Facets          : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>General}',
-        Target : '@UI.Identification'
-    }, ],
-    Identification  : [{Value : customer_ID}, ],
+    Facets          : [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>General}',
+            Target : '@UI.Identification'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Projects.workItems}',
+            Target : 'workItems/@UI.LineItem'
+        },
+    ],
+    Identification  : [{Value : friendlyID}, ],
     SelectionFields : [
         title,
         description,
@@ -208,6 +142,10 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : description,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : friendlyID,
         },
         {
             $Type : 'UI.DataField',

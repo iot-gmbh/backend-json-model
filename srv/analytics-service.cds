@@ -8,7 +8,7 @@ service AnalyticsService {
         @Analytics.Dimension: true
         key customer_friendlyID,
         @Analytics.Dimension: true
-        key project,
+        key project_friendlyID,
 
         @Analytics.Dimension: true
         activatedDate, 
@@ -18,7 +18,8 @@ service AnalyticsService {
         @Analytics.Measure: true
         @Aggregation.default           : #SUM
         duration, 
-        customer
+        customer,
+        project
     };
 
     entity Customers as projection on my.Customers;

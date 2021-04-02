@@ -131,7 +131,8 @@ sap.ui.define(
           Object.defineProperty(appointment, "customer", {
             get: () =>
               customers.find(
-                ({ ID }) => ID === appointment.customer_friendlyID
+                ({ friendlyID }) =>
+                  friendlyID === appointment.customer_friendlyID
               ),
           });
 
@@ -211,7 +212,7 @@ sap.ui.define(
             allProjects.reduce((map, { customer, ...project }) => {
               const mergeCustomer = map[customer.ID] || customer;
 
-              if (typeof mergeCustomer.projects === Array)
+              if (Array.isArray(mergeCustomer.projects))
                 mergeCustomer.projects.push(project);
               else mergeCustomer.projects = [project];
 
