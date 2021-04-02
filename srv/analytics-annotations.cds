@@ -6,7 +6,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Donut,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : customer_ID,
+            Dimension : customer_friendlyID,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -14,14 +14,14 @@ annotate my.WorkItems with @(UI : {
             Measure : duration,
             Role    : #Axis1
         }],
-        Dimensions          : [customer_ID],
+        Dimensions          : [customer_friendlyID],
         Measures            : [duration],
     },
     SelectionFields : [
         activatedDate,
         completedDate,
         assignedTo_userPrincipalName,
-        customer_ID,
+        customer_friendlyID,
         project_ID
     ],
     LineItem        : [
@@ -31,7 +31,7 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Value : customer_ID,
+            Value : customer_friendlyID,
         },
         {
             $Type : 'UI.DataField',
@@ -43,3 +43,14 @@ annotate my.WorkItems with @(UI : {
         },
     ]
 });
+
+//                            @(Common : {ValueList #WorkItems : {
+//     $Type                        : 'Common.ValueListType',
+//     CollectionPath               : 'WorkItems',
+//     PresentationVariantQualifier : 'PriorityTxt',
+//     Parameters                   : [{
+//         $Type             : 'Common.ValueListParameterInOut',
+//         LocalDataProperty : 'PriorityTxt',
+//         ValueListProperty : 'PriorityTxt'
+//     }]
+// }});

@@ -20,7 +20,7 @@ const MAP_DEVOPS_TO_CDS_NAMES = {
   originalEstimate: "Microsoft.VSTS.Scheduling.OriginalEstimate",
   // Custom
   ticket: "Custom.Ticket",
-  customer_ID: "Custom.Kunde",
+  customer_friendlyID: "Custom.Kunde",
   project_ID: "Custom.Projekt",
 };
 
@@ -47,7 +47,7 @@ function destructureDevOpsObj(devOpsObj) {
     "Microsoft.VSTS.Scheduling.OriginalEstimate": cds.originalEstimate,
     // Custom
     "Custom.Ticket": cds.ticket,
-    "Custom.Kunde": cds.customer_ID,
+    "Custom.Kunde": cds.customer_friendlyID,
     "Custom.Projekt": cds.project_ID,
   } = devOpsObj);
   return cds;
@@ -192,12 +192,12 @@ async function getEventsFromMSGraph({ req, MSGraphSrv }) {
         subject,
         start,
         end,
-        categories: [customer_ID],
+        categories: [customer_friendlyID],
         sensitivity,
       }) => ({
         ID: id,
         title: subject,
-        customer_ID,
+        customer_friendlyID,
         activatedDate: start.dateTime.substring(0, 19) + "Z",
         completedDate: end.dateTime.substring(0, 19) + "Z",
         assignedTo_userPrincipalName: user,

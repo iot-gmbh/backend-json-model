@@ -5,7 +5,7 @@ module.exports = (srv) => {
   srv.on("READ", WorkItems, async (req) => {
     let query = req.query;
     query.SELECT.groupBy = [
-      "customer_ID",
+      "customer_friendlyID",
       "assignedTo_userPrincipalName",
       "project_ID",
     ];

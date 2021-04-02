@@ -130,7 +130,9 @@ sap.ui.define(
 
           Object.defineProperty(appointment, "customer", {
             get: () =>
-              customers.find(({ ID }) => ID === appointment.customer_ID),
+              customers.find(
+                ({ ID }) => ID === appointment.customer_friendlyID
+              ),
           });
 
           model.setProperty("/appointment", appointment);

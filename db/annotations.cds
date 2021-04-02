@@ -56,6 +56,7 @@ annotate my.WorkItems with @(UI : {
     ]
 });
 
+@cds.odata.valuelist
 annotate my.Employees with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>Employee}',
@@ -69,28 +70,38 @@ annotate my.Employees with @(UI : {
         $Type : 'UI.DataField',
         Value : name,
     }, ]
-})
-                           @cds.odata.valuelist {
+}) {
     ID @UI.Hidden;
 };
 
+@cds.odata.valuelist
 annotate my.Customers with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>Customer}',
         TypeNamePlural : '{i18n>Customers}',
         Title          : {Value : name},
-
     },
-    Identification  : [{Value : name}],
+    Identification  : [{Value : friendlyID}],
     SelectionFields : [name, ],
-    LineItem        : [{
-        $Type : 'UI.DataField',
-        Value : name,
-    }, ]
-})
-                           @cds.odata.valuelist {
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : name,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : friendlyID,
+        },
+    ],
+    Facets          : [{
+        $Type  : 'UI.ReferenceFacet',
+        Label  : '{i18n>Identification}',
+        Target : '@UI.Identification'
+    }]
+}) {
     ID @UI.Hidden;
-};
+}
+
 
 annotate my.Tasks with @(UI : {
     HeaderInfo      : {
