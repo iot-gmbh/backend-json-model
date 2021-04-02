@@ -1,6 +1,6 @@
 using {AnalyticsService as my} from './analytics-service';
 
-annotate my.WorkItemsAggr with @(UI : {
+annotate my.WorkItems with @(UI : {
     Chart           : {
         $Type               : 'UI.ChartDefinitionType',
         ChartType           : #Donut,

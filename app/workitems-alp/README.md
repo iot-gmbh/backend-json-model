@@ -1,7 +1,7 @@
 ## Application Details
 |               |
 | ------------- |
-|**Generation Date and Time**<br>Fri Mar 26 2021 20:58:39 GMT+0100 (Mitteleuropäische Normalzeit)|
+|**Generation Date and Time**<br>Fri Apr 02 2021 16:06:22 GMT+0200 (Mitteleuropäische Sommerzeit)|
 |**App Generator**<br>@sap/generator-fiori|
 |**App Generator Version**<br>1.1.6|
 |**Generation Platform**<br>Visual Studio Code|
@@ -9,16 +9,17 @@
 |**Service Type**<br>File|
 |**Metadata File**<br>metadata.xml
 |**Module Name**<br>workitems-alp|
-|**Application Title**<br>Work-Items Analytical List Page|
-|**Namespace**<br>iot.workitems.alp|
+|**Application Title**<br>Work-Item Analytic List Page|
+|**Namespace**<br>iot.planner|
 |**UI5 Theme**<br>sap_fiori_3|
 |**UI5 Version**<br>Latest|
 |**Enable Telemetry**<br>True|
-|**Main Entity**<br>WorkItemStatistics|
+|**Main Entity**<br>WorkItems|
+|**Navigation Entity**<br>None|
 
 ## workitems-alp
 
-Analysis of Work-Items
+Analytic List Page for analyizing Work-Items
 
 ### Starting the generated app
 

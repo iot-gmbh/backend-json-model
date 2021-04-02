@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"sapux": true,
-	"description": "Analysis of Work-Items",
+	"description": "Analytic List Page for analyizing Work-Items",
 	"keywords": [
 		"ui5",
 		"openui5",
