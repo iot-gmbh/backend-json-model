@@ -31,6 +31,6 @@ builder:
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
       configuration:
-        archiveName: iotprojectplanningazdevworkitems
+        archiveName: fiori-azdev-workitems
         additionalFiles:
           - xs-app.json

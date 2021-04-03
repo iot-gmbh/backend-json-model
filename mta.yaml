@@ -70,16 +70,16 @@ modules:
           name: fiori-projects
           target-path: resources/
         - artifacts:
-            - workitems-alp.zip
-          name: workitems-alp
+            - fiori-workitems-alp.zip
+          name: fiori-workitems-alp
           target-path: resources/
         - artifacts:
-            - iotprojectplanningazdevworkitems.zip
-          name: iotprojectplanningazdevworkitems
+            - fiori-azdev-workitems.zip
+          name: fiori-azdev-workitems
           target-path: resources/
         - artifacts:
-            - iotsingleplanningcalendar.zip
-          name: iotsingleplanningcalendar
+            - fiori-single-planning-calendar.zip
+          name: fiori-single-planning-calendar
           target-path: resources/
   - name: fiori-customers
     type: html5
@@ -106,18 +106,9 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm run build
+        - npm run build:cf
       supported-platforms: []
-  - name: iotsingleplanningcalendar
-    type: html5
-    path: app/projects
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm run build
-      supported-platforms: []
-  - name: iotprojectplanningazdevworkitems
+  - name: fiori-azdev-workitems
     type: html5
     path: app\azdev-workitems
     build-parameters:
@@ -127,7 +118,7 @@ modules:
         - npm install
         - npm run build:cf
       supported-platforms: []
-  - name: iotsingleplanningcalendar
+  - name: fiori-single-planning-calendar
     type: html5
     path: app\single-planning-calendar
     build-parameters:

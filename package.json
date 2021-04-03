@@ -21,25 +21,26 @@
     "dotenv": "^8.2.0",
     "express": "^4",
     "isomorphic-fetch": "^3.0.0",
-    "msal": "^1.4.8",
+    "msal": "^1.4.9",
     "passport": "^0.4.1",
-    "sap-cf-axios": "^0.2.29",
+    "sap-cf-axios": "^0.2.30",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@sap/ui5-builder-webide-extension": "1.0.x",
     "@sap/ux-specification": "^1.84.7",
-    "eslint": "^7.20.0",
+    "eslint": "^7.23.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "npm-run-all": "^4.1.5",
     "sqlite3": "^5.0.2",
-    "ui5-middleware-livereload": "^0.5.2",
+    "ui5-middleware-livereload": "^0.5.3",
     "ui5-middleware-simpleproxy": "^0.7.1",
     "ui5-task-zipper": "^0.4.2"
   },
@@ -52,17 +53,15 @@
   },
   "scripts": {
     "start": "cds run",
-    "start:lcl": "run-p start:srv start:spc start:planner",
+    "start:lcl": "run-p start:srv start:spc",
     "start:srv": "cds run",
     "start:approuter": "cd app/single-planning-calendar && node node_modules/@sap/approuter/approuter.js",
-    "start:planner": "ui5 serve --config=app/planner/ui5.yaml -p 8081",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
-    "debug": "run-p start:srv start:spc start:planner",
-    "build": "mbt build",
+    "debug": "run-p start:srv start:spc",
+    "build": "cds build --production && mbt build",
     "lint": "eslint srv && eslint app",
-    "build:planner": "ui5 build --config=app/planner/ui5.yaml --clean-dest --dest deployer/resources/planner --include-task=generateManifestBundle",
     "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
-    "build:ui": "mbt module-build -m iotprojectplanningazdevworkitems,fiori-customers,iotsingleplanningcalendar -g",
+    "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
     "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
@@ -76,7 +75,7 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite"
+        "kind": "hana"
       },
       "uaa": {
         "kind": "xsuaa"

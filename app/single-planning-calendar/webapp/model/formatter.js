@@ -51,6 +51,6 @@ sap.ui.define([], () => ({
     if (location.hostname.startsWith("localhost"))
       return `./img/${customerID}.png`;
     else
-      return `.iotprojectplanning.iotsingleplanningcalendar/img/${customerID}.png`;
+      return `.iotprojectplanning.iot.singleplanningcalendar/img/${customerID}.png`;
   },
 }));

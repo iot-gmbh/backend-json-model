@@ -15,6 +15,7 @@
 		"start-local": "",
 		"build": "ui5 build -a --clean-dest --include-task=generateManifestBundle generateCachebusterInfo",
 		"deploy": "fiori verify",
+		"build:cf": "ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateManifestBundle generateCachebusterInfo",
 		"deploy-config": "fiori add deploy-config",
 		"start-mock": "fiori run --open test/flpSandboxMockServer.html#masterDetail-display"
 	},
@@ -23,11 +24,15 @@
 		"@ui5/fs": "^2.0.6",
 		"@ui5/logger": "^2.0.1",
 		"@sap/ux-ui5-tooling": "1",
-		"@sap/ux-specification": "latest"
+		"ui5-task-zipper": "^0.3.1",
+		"@sap/ux-specification": "latest",
+		"@sap/ui5-builder-webide-extension": "1.0.x"
 	},
 	"ui5": {
 		"dependencies": [
-			"@sap/ux-ui5-tooling"
+			"@sap/ui5-builder-webide-extension",
+			"@sap/ux-ui5-tooling",
+			"ui5-task-zipper"
 		]
 	}
 }

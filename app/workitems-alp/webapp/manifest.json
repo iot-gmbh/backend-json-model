@@ -1,5 +1,9 @@
 {
     "_version": "1.28.0",
+    "sap.cloud": {
+        "public": true,
+        "service": "iot.project.planning"
+    },
     "sap.app": {
         "id": "iot.planner.workitemsalp",
         "type": "application",
@@ -29,6 +33,21 @@
                 "uri": "annotations/annotation.xml",
                 "settings": {
                     "localUri": "annotations/annotation.xml"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "iot-project-planning-workitems-alp": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Workitems",
+                    "action": "analyue",
+                    "title": "Analyze workitems",
+                    "subTitle": "",
+                    "icon": ""
                 }
             }
         },

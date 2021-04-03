@@ -22,6 +22,21 @@
                 }
             }
         },
+        "crossNavigation": {
+            "inbounds": {
+                "iot-project-planning-projects-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Projects",
+                    "action": "display",
+                    "title": "Find and display projects",
+                    "subTitle": "",
+                    "icon": ""
+                }
+            }
+        },
         "offline": false,
         "resources": "resources.json",
         "sourceTemplate": {
