@@ -1,6 +1,6 @@
 {
     "name": "azdev-workitems",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Find and display Azure DevOps Work-Items",
     "keywords": [
         "ui5",

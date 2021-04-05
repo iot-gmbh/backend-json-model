@@ -4,7 +4,7 @@
   "routes": [
     {
       "source": "^/admin/(.*)$",
-      "target": "/admin/$1",
+      "target": "$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false

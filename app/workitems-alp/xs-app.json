@@ -3,15 +3,15 @@
   "authenticationMethod": "none",
   "routes": [
     {
-      "source": "/v2/analytics/(.*)$",
-      "target": "/v2/analytics/$1",
+      "source": "^/v2/analytics/(.*)$",
+      "target": "$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },
     {
-      "source": "/analytics/(.*)$",
-      "target": "/analytics/$1",
+      "source": "^/analytics/(.*)$",
+      "target": "$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false

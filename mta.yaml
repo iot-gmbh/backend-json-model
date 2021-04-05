@@ -1,7 +1,7 @@
 _schema-version: "3.1"
 ID: project-planning
 description: A simple CAP project.
-version: 1.0.0
+version: 1.0.1
 modules:
   - name: project-planning-srv
     type: nodejs
@@ -42,12 +42,12 @@ modules:
             - Name: project-planning-repo-host
               ServiceInstanceName: project-planning-repo-host-service
               ServiceKeyName: project-planning-repo-host-key
-              sap.cloud.service: iot.project.planning
+              sap.cloud.service: iot.project.planner
             - Authentication: OAuth2UserTokenExchange
-              Name: iot.project.planning-uaa
+              Name: iot.project.planner-uaa
               ServiceInstanceName: project-planning-xsuaa-service
               ServiceKeyName: project-planning-uaa-key
-              sap.cloud.service: iot.project.planning
+              sap.cloud.service: iot.project.planner
           existing_destinations_policy: update
     build-parameters:
       no-source: true

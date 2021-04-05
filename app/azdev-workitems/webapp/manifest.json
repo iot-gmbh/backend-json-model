@@ -2,10 +2,10 @@
     "_version": "1.9.0",
     "sap.cloud": {
         "public": true,
-        "service": "iot.project.planning"
+        "service": "iot.project.planner"
     },
     "sap.app": {
-        "id": "iot.project.planning.azdevworkitems",
+        "id": "iot.project.planner.azdevworkitems",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
