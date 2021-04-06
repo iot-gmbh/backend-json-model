@@ -172,12 +172,15 @@ async function getEventsFromMSGraph({ req, MSGraphSrv }) {
         .filter(([key]) => !key.includes("$select"))
         .reduce(
           (str, [key, value]) => str.concat("&", key, "=", value),
-          // str.concat(index > 0 ? "&" : "", key, "=", value),
           "?$select=id,subject,start,end,categories,sensitivity"
         )
         // TODO: Replace with a better transformation
-        .replace("completedDate gt ", "end/dateTime gt '")
-        .replace("activatedDate le ", "start/dateTime le '")
+        .replace("completedDate", "end/dateTime")
+        .replace("activatedDate", "start/dateTime")
+        .replace(/\+01:00/g, "Z")
+        // Leading Apostrophe
+        .replace(/202/g, "'202")
+        // Closing Apostrophe
         .replace(/Z/g, "Z'");
     }
 
@@ -206,6 +209,7 @@ async function getEventsFromMSGraph({ req, MSGraphSrv }) {
       })
     );
   } catch (error) {
+    console.log("An error occured");
     // TODO: Implement error handling
   }
 

@@ -9,8 +9,8 @@ annotate my.WorkItems with @(UI : {
     Identification  : [
         {Value : title},
         {Value : workItemType},
-        {Value : createdDate},
-        {Value : changedDate},
+        {Value : activatedDate},
+        {Value : completedDate},
         {Value : originalEstimate},
         {Value : completedWork},
         {Value : reason},
@@ -18,7 +18,9 @@ annotate my.WorkItems with @(UI : {
     ],
     SelectionFields : [
         title,
-        assignedTo_userPrincipalName
+        assignedTo_userPrincipalName,
+        activatedDate,
+        completedDate
     ],
     LineItem        : [
         {
@@ -47,7 +49,7 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Value : createdDate
+            Value : activatedDate
         },
         {
             $Type : 'UI.DataField',
