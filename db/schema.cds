@@ -17,6 +17,11 @@ entity Users {
         officeLocation    : String                              @title : '{i18n>Users.officeLocation}';
         preferredLanguage : String                              @title : '{i18n>Users.preferredLanguage}';
         surname           : String                              @title : '{i18n>Users.surname}';
+        manager           : Association to Users                @title : '{i18n>Users.manager}';
+        projects          : Association to many Projects
+                                on projects.manager = $self     @title : '{i18n>Users.projects}';
+        team              : Association to many Users
+                                on team.manager = $self         @title : '{i18n>Users.team}';
         workItems         : Association to many WorkItems
                                 on workItems.assignedTo = $self @title : '{i18n>Users.workItems}';
 };
@@ -26,7 +31,7 @@ entity Customers : managed, cuid {
     friendlyID : String                           @mandatory : true
                                                   @title     : '{i18n>Customers.friendlyID}';
     name       : String                           @title     : '{i18n>Customers.name}';
-    projects   : Composition of many Projects
+    projects   : Association to many Projects
                      on projects.customer = $self @title     : '{i18n>Customers.projects}'
 }
 

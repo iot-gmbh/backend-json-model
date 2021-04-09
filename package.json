@@ -75,7 +75,7 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
+        "kind": "sql",
         "model": "*"
       },
       "uaa": {

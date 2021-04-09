@@ -59,21 +59,61 @@ annotate my.WorkItems with @(UI : {
 });
 
 @cds.odata.valuelist
-annotate my.Employees with @(UI : {
+annotate my.Users with @(UI : {
     HeaderInfo      : {
-        TypeName       : '{i18n>Employee}',
-        TypeNamePlural : '{i18n>Employees}',
-        Title          : {Value : name},
-
+        TypeName       : '{i18n>User}',
+        TypeNamePlural : '{i18n>Users}',
+        Title          : {Value : userPrincipalName},
     },
-    Identification  : [{Value : name}],
-    SelectionFields : [name, ],
-    LineItem        : [{
-        $Type : 'UI.DataField',
-        Value : name,
-    }, ]
+    Identification  : [
+        {Value : displayName},
+        {Value : jobTitle},
+        {Value : manager_userPrincipalName},
+    ],
+    SelectionFields : [
+        manager_userPrincipalName,
+        userPrincipalName,
+        displayName,
+    ],
+    Facets          : [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Identification}',
+            Target : '@UI.Identification'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Users.team}',
+            Target : 'team/@UI.LineItem'
+        },
+    ],
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : userPrincipalName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : displayName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : jobTitle,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : manager_userPrincipalName,
+        },
+    ]
 }) {
-    ID @UI.Hidden;
+    ID      @UI.Hidden;
+    manager @(Common : {
+        Text         : {
+            $value                 : manager.displayName,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
 };
 
 @cds.odata.valuelist
@@ -130,7 +170,10 @@ annotate my.Projects with @(UI : {
             Target : 'workItems/@UI.LineItem'
         },
     ],
-    Identification  : [{Value : friendlyID}, ],
+    Identification  : [
+        {Value : friendlyID},
+        {Value : customer_ID},
+    ],
     SelectionFields : [
         title,
         description,
