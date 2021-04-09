@@ -95,10 +95,10 @@ sap.ui.define(
             MessageBox.error(ErrorParser.parse(error));
           }
 
-          this.byId("createItemDialog").close();
+          this._closeDialog(this.byId("createItemDialog").close());
         },
 
-        // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert
+        // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert und per Object-Destructuring entfernt
         // eslint-disable-next-line no-unused-vars
         _submitEntry({ customer, ...appointment }) {
           const { ID } = appointment;
@@ -120,13 +120,21 @@ sap.ui.define(
         },
 
         onCloseDialog(event) {
-          event.getSource().getParent().close();
+          this._closeDialog(event.getSource().getParent().close());
+        },
+
+        _closeDialog(dialog) {
+          // eslint-disable-next-line no-undef
+          $(document).off("keydown", (evt) => this.registerCtrlEnterPress(evt));
+
+          dialog.close();
         },
 
         _bindAndOpenDialog(appointment = {}) {
           const model = this.getModel();
           const { customers } = model.getData();
           const bundle = this.getResourceBundle();
+          const dialog = this.byId("createItemDialog");
 
           Object.defineProperty(appointment, "customer", {
             get: () =>
@@ -144,7 +152,17 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          this.byId("createItemDialog").open();
+          // eslint-disable-next-line no-undef
+          $(document).keydown((evt) => this.registerCtrlEnterPress(evt));
+
+          dialog.open();
+        },
+
+        registerCtrlEnterPress(evt) {
+          if (evt.ctrlKey && evt.keyCode == 13) {
+            evt.preventDefault();
+            this.onSubmitEntry();
+          }
         },
 
         onChangeView: function () {
