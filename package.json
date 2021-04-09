@@ -1,0 +1,104 @@
+{
+  "name": "project-planning",
+  "version": "1.0.1",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@azure/msal-node": "^1.0.1",
+    "@microsoft/microsoft-graph-client": "^2.2.1",
+    "@sap/approuter": "^6",
+    "@sap/audit-logging": "^5.0.0",
+    "@sap/cds": "^4.6.5",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.5.10",
+    "@sap/hana-client": "^2.7.26",
+    "@sap/xsenv": "^3.1.0",
+    "@sap/xssec": "^3.1.2",
+    "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
+    "azure-devops-node-api": "^10.2.1",
+    "cdse": "^1.1.12",
+    "dotenv": "^8.2.0",
+    "express": "^4",
+    "isomorphic-fetch": "^3.0.0",
+    "msal": "^1.4.9",
+    "passport": "^0.4.1",
+    "sap-cf-axios": "^0.2.30",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@sap/ui5-builder-webide-extension": "1.0.x",
+    "@sap/ux-specification": "^1.84.7",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "npm-run-all": "^4.1.5",
+    "sqlite3": "^5.0.2",
+    "ui5-middleware-livereload": "^0.5.3",
+    "ui5-middleware-simpleproxy": "^0.7.1",
+    "ui5-task-zipper": "^0.4.2"
+  },
+  "ui5": {
+    "dependencies": [
+      "ui5-task-zipper",
+      "ui5-middleware-simpleproxy",
+      "ui5-middleware-livereload"
+    ]
+  },
+  "scripts": {
+    "start": "cds run",
+    "start:lcl": "run-p start:srv start:spc",
+    "start:srv": "cds run",
+    "start:approuter": "cd app/single-planning-calendar && node node_modules/@sap/approuter/approuter.js",
+    "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
+    "debug": "run-p start:srv start:spc",
+    "build": "cds build --production && mbt build",
+    "lint": "eslint srv && eslint app",
+    "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
+    "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
+    "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
+    "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
+    "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
+    "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db"
+  },
+  "files": [
+    "db",
+    "srv",
+    "app"
+  ],
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "model": "*"
+      },
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "auth": {
+        "passport": {
+          "strategy": "JWT"
+        }
+      },
+      "MicrosoftGraphIOTGmbH": {
+        "credentials": {
+          "destination": "MicrosoftGraphIOTGmbH"
+        }
+      }
+    }
+  },
+  "sapux": [
+    "app\\customers",
+    "app\\azdev-workitems",
+    "app\\single-planning-calendar",
+    "app\\workitems",
+    "app\\workitems-alp",
+    "app\\projects"
+  ]
+}

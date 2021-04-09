@@ -1,0 +1,60 @@
+<mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
+	xmlns="sap.m"
+	xmlns:unified="sap.ui.unified"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:smartfield="sap.ui.comp.smartfield"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
+	<Shell id="shell">
+		<App id="app" busy="{/busy}" busyIndicatorDelay="0">
+			<pages>
+				<Page showHeader="false">
+					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" cellPress="onCellPress" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+						<actions>
+							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
+						</actions>
+						<appointments>
+							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}"/>
+						</appointments>
+						<dependents>
+							<Dialog id="createItemDialog" title="{/createItemDialogTitle}" binding="{/appointment}">
+								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
+									<Label text="{i18n>WorkItems.title}" />
+									<Input value="{title}"/>
+									<Label text="{i18n>WorkItems.customer}"/>
+									<ComboBox selectedKey="{customer_friendlyID}" items="{/customers}" change="onChangeSelectedCustomer">
+										<items>
+											<core:Item text="{name}" key="{friendlyID}"/>
+										</items>
+									</ComboBox>
+									<Label text="{i18n>WorkItems.project}"/>
+									<Select selectedKey="{project_friendlyID}" items="{/appointment/customer/projects}" forceSelection="true" change="onChangeSelectedProject">
+										<items>
+											<core:Item text="{title}" key="{friendlyID}"/>
+										</items>
+									</Select>
+									<Label text="{i18n>WorkItems.ticket}"/>
+									<Input value="{ticket}"/>
+									<Label text="{i18n>WorkItems.activatedDate}"/>
+									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}" />
+									<Label text="{i18n>WorkItems.completedDate}"/>
+									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}"/>
+								</form:SimpleForm>
+								<buttons>
+									<Button text="{i18n>OK}" press="onSubmitEntry" type="Emphasized"/>
+									<Button text="{i18n>close}" press="onCloseDialog" />
+								</buttons>
+							</Dialog>
+						</dependents>
+						<views>
+							<SinglePlanningCalendarDayView id="dayView" key="DayView" title="Day" />
+							<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
+							<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
+							<SinglePlanningCalendarMonthView id="monthView" key="MonthView" title="Month" />
+						</views>
+					</SinglePlanningCalendar>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>

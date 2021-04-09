@@ -1,0 +1,30 @@
+{
+    "init_data": {
+        "subaccount": {
+            "existing_destinations_policy": "update",
+            "destinations": [
+                {
+                    "Name": "project-planning-dest",
+                    "Description": "Project Planning OData Services",
+                    "Type": "HTTP",
+                    "Authentication": "NoAuthentication",
+                    "ProxyType": "Internet",
+                    "URL": "~{srv-api/srv-url}",
+                    "HTML5.DynamicDestination": true,
+                    "ForwardAuthToken": true
+                },
+                {
+                    "Name": "MicrosoftGraphIOTGmbH",
+                    "Description": "MS Graph of IOT GmbH",
+                    "Type": "HTTP",
+                    "clientId": "55ee84c1-5b8e-4e38-81bb-271a1ecbc219",
+                    "Authentication": "OAuth2ClientCredentials",
+                    "ProxyType": "Internet",
+                    "tokenServiceURL": "https://login.microsoftonline.com/d439e362-ecdf-4d78-8fed-86c7c639b131/oauth2/v2.0/token",
+                    "URL": "https://graph.microsoft.com",
+                    "scope": "https://graph.microsoft.com/.default"
+                }
+            ]
+        }
+    }
+}
