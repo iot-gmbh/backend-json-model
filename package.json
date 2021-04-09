@@ -75,14 +75,15 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sql"
+        "kind": "sqlite",
+        "model": "*"
       },
       "uaa": {
         "kind": "xsuaa"
       },
-      "MicrosoftGraphBHOPersonalAD": {
-        "credentials": {
-          "destination": "MicrosoftGraphBHOPersonalAD"
+      "auth": {
+        "passport": {
+          "strategy": "JWT"
         }
       },
       "MicrosoftGraphIOTGmbH": {

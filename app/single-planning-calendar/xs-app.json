@@ -1,32 +1,20 @@
 {
   "welcomeFile": "/index.html",
-  "authenticationMethod": "none",
+  "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/v2/azure-devops/(.*)$",
-      "target": "$1",
+      "source": "/v2/azure-devops/(.*)$",
+      "target": "/v2/azure-devops/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },
     {
-      "source": "^/azure-devops/(.*)$",
-      "target": "$1",
+      "source": "/azure-devops/(.*)$",
+      "target": "/azure-devops/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
-    },
-    {
-      "source": "^/resources/(.*)$",
-      "target": "/resources/$1",
-      "authenticationType": "none",
-      "destination": "ui5"
-    },
-    {
-      "source": "^/test-resources/(.*)$",
-      "target": "/test-resources/$1",
-      "authenticationType": "none",
-      "destination": "ui5"
     },
     {
       "source": "^(.*)$",

@@ -138,7 +138,12 @@ resources:
       hdi-service-name: ${service-name}
   - name: project-planning-dest
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
+      service: destination
+      service-name: project-planning-dest-service
+      service-plan: lite
       config:
         HTML5Runtime_enabled: true
         init_data:
@@ -151,11 +156,6 @@ resources:
                 URL: https://ui5.sap.com
             existing_destinations_policy: update
         version: 1.0.0
-      service: destination
-      service-name: project-planning-dest-service
-      service-plan: lite
-    requires:
-      - name: srv-api
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
