@@ -85,6 +85,10 @@ sap.ui.define(
           let { appointment, appointments } = model.getData();
 
           try {
+            if (!appointment.project)
+              appointment.project_friendlyID =
+                appointment.customer.projects[0].friendlyID;
+
             const appointmentSync = await this._submitEntry(appointment);
 
             model.setProperty(
