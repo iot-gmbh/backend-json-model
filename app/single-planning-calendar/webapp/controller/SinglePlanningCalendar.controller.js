@@ -109,7 +109,7 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWork('${encodeURIComponent(ID)}')`;
+            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
 
             return this.update({
               path,
@@ -119,7 +119,7 @@ sap.ui.define(
 
           // Create
           else {
-            return this.create({ path: "/MyWork", data: appointment });
+            return this.create({ path: "/MyWorkItems", data: appointment });
           }
         },
 
@@ -198,7 +198,7 @@ sap.ui.define(
           const startDate = calendar.getStartDate();
           const oneWeekLater = addDays(startDate, 7);
           const { results: appointments } = await this.read({
-            path: "/MyWork",
+            path: "/MyWorkItems",
             urlParameters: { $top: 100 },
             filters: [
               new Filter({

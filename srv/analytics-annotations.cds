@@ -43,14 +43,3 @@ annotate my.WorkItems with @(UI : {
         },
     ]
 });
-
-//                            @(Common : {ValueList #WorkItems : {
-//     $Type                        : 'Common.ValueListType',
-//     CollectionPath               : 'WorkItems',
-//     PresentationVariantQualifier : 'PriorityTxt',
-//     Parameters                   : [{
-//         $Type             : 'Common.ValueListParameterInOut',
-//         LocalDataProperty : 'PriorityTxt',
-//         ValueListProperty : 'PriorityTxt'
-//     }]
-// }});

@@ -81,11 +81,6 @@
       "uaa": {
         "kind": "xsuaa"
       },
-      "auth": {
-        "passport": {
-          "strategy": "JWT"
-        }
-      },
       "MicrosoftGraphIOTGmbH": {
         "credentials": {
           "destination": "MicrosoftGraphIOTGmbH"

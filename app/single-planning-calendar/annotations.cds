@@ -1,1 +1,1 @@
-using AzureDevopsService as service from '../../srv/azure-devops';
+using AzureDevopsService as service from '../../srv/workitems-service';

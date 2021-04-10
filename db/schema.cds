@@ -28,23 +28,21 @@ entity Users {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-    friendlyID : String                           @mandatory : true
-                                                  @title     : '{i18n>Customers.friendlyID}';
-    name       : String                           @title     : '{i18n>Customers.name}';
+    friendlyID : String                           @title : '{i18n>Customers.friendlyID}'  @mandatory : true;
+    name       : String                           @title : '{i18n>Customers.name}';
     projects   : Association to many Projects
-                     on projects.customer = $self @title     : '{i18n>Customers.projects}'
+                     on projects.customer = $self @title : '{i18n>Customers.projects}'
 }
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Projects : managed, cuid {
-    friendlyID  : String                           @mandatory : true
-                                                   @title     : '{i18n>Projects.friendlyID}';
-    title       : String                           @title     : '{i18n>Projects.title}';
-    description : String                           @title     : '{i18n>Projects.description}';
-    customer    : Association to Customers         @title     : '{i18n>Projects.customer}';
-    manager     : Association to Users             @title     : '{i18n>Projects.manager}';
+    friendlyID  : String                           @title : '{i18n>Projects.friendlyID}'  @mandatory : true;
+    title       : String                           @title : '{i18n>Projects.title}';
+    description : String                           @title : '{i18n>Projects.description}';
+    customer    : Association to Customers         @title : '{i18n>Projects.customer}';
+    manager     : Association to Users             @title : '{i18n>Projects.manager}';
     workItems   : Association to many WorkItems
-                      on workItems.project = $self @title     : '{i18n>Projects.workItems}'
+                      on workItems.project = $self @title : '{i18n>Projects.workItems}'
 }
 
 entity WorkItems {

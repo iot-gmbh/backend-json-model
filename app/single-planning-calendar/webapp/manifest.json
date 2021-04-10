@@ -17,7 +17,7 @@
         "ach": "ach",
         "dataSources": {
             "mainService": {
-                "uri": "v2/azure-devops/",
+                "uri": "v2/work-items/",
                 "type": "OData"
             }
         },
