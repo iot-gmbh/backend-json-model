@@ -2,10 +2,73 @@ require("dotenv").config();
 const uuid = require("uuid");
 const cds = require("@sap/cds");
 
+function transformCQN(CQN) {
+  //typeof null is also object. But we cannot destructure it. So check that object is not null
+  const isValidObject = (obj) => typeof obj === "object" && obj !== null;
+
+  function changeValue(objFromProp) {
+    let obj = objFromProp;
+
+    if (isValidObject(objFromProp)) {
+      //desctructure the object to create new reference
+      obj = { ...objFromProp };
+      // iterating over the object using for..in
+      for (var key in obj) {
+        //checking if the current value is an object itself
+        if (isValidObject(obj[key])) {
+          // if so then again calling the same function
+          obj[key] = changeValue(obj[key]);
+        } else {
+          // else getting the value and replacing single { with {{ and so on
+          let keyValue = transformWIToMSGraphEvent(obj[key]);
+          obj[key] = keyValue;
+        }
+      }
+    }
+    return obj;
+  }
+
+  return changeValue(CQN);
+}
+
+function transformWIToMSGraphEvent(prop) {
+  // return mapWIToMSGraphEvent[prop] || prop;
+  return mapWIToMSGraphEvent[prop] || prop;
+}
+
+const mapWIToMSGraphEvent = {
+  ID: "id",
+  subject: "title",
+  activatedDate: "start/dateTime",
+  completedDate: "end/dateTime",
+  private: "sensitivity",
+};
+
+function transformEventToWorkItem({
+  id,
+  subject,
+  start,
+  end,
+  categories: [customer_friendlyID],
+  sensitivity,
+  user,
+}) {
+  return {
+    ID: id,
+    title: subject,
+    customer_friendlyID,
+    activatedDate: start.dateTime.substring(0, 19) + "Z",
+    completedDate: end.dateTime.substring(0, 19) + "Z",
+    assignedTo_userPrincipalName: user,
+    private: sensitivity === "private",
+    type: "Event",
+  };
+}
+
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
-  // const MSGraphSrv = await cds.connect.to("MSGraphService");
+  const MSGraphSrv = await cds.connect.to("MSGraphService");
 
   const { WorkItems } = db.entities("iot.planner");
 
@@ -43,28 +106,35 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("READ", "MyWorkItems", async (req) => {
-    const tx = db.tx(req);
     const {
       query: {
-        SELECT: { where, columns, orderBy },
+        SELECT: { where, columns, orderBy, limit },
       },
     } = req;
 
-    let results = [];
+    // const MSGraphQ = transformCQN(req.query.SELECT);
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
-    const [devOps, MSGraph, local] = await Promise.all([
-      AzDevOpsSrv.read("MyWorkItems")
+    const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
+      AzDevOpsSrv.tx(req)
+        .read("MyWorkItems", columns)
         .where(where)
-        .columns(columns)
-        .orderBy(orderBy),
-      // AzDevOpsSrv.read("MyWorkItems"),
-      // MSGraphTx.run(query),
-      tx.run(req.query),
+        .orderBy(orderBy)
+        .limit(limit),
+      MSGraphSrv.tx(req)
+        .read("Events", columns)
+        .where(where)
+        // .orderBy(MSGraphQ.orderBy)
+        .limit(limit),
+      db.tx(req).run(req.query),
     ]);
 
-    const map = [...devOps, MSGraph, local]
+    const MSGraphWorkItems = MSGraphEvents.map((event) =>
+      transformEventToWorkItem({ event, user: req.user })
+    );
+
+    const map = [...devOpsWorkItems, MSGraphWorkItems, localWorkItems]
       .reduce((acc, item) => acc.concat(item), [])
       /*
         Nur Items mit ID und AssignedTo übernehmen
@@ -72,30 +142,21 @@ module.exports = cds.service.impl(async function () {
         */
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((acc, curr) => {
-        acc[curr.ID] = {
-          ...acc[curr.ID],
+      .reduce((map, curr) => {
+        map[curr.ID] = {
+          ...map[curr.ID],
           ...curr,
         };
-        return acc;
+        return map;
       }, {});
 
-    results = Object.values(map);
+    let results = Object.values(map);
 
     results.$count = results.length;
     return results;
   });
 
   this.on("READ", "WorkItems", async (req) => {
-    // share request context with the external service
-    // inside a custom handler
-    const tx = AzDevOpsSrv.transaction(req);
-    const response = await tx.run(req.query);
-
-    return response;
-  });
-
-  this.on("READ", "MyWorkItems", async (req) => {
     // share request context with the external service
     // inside a custom handler
     const tx = AzDevOpsSrv.transaction(req);

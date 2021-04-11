@@ -1,65 +1,76 @@
 const cdsapi = require("@sapmentors/cds-scp-api");
 
+function parseQueryParams(select) {
+  const filter = {};
+
+  Object.assign(
+    filter,
+    parseExpression(select.from.ref[0].where),
+    parseExpression(select.where)
+  );
+
+  if (!Object.keys(filter).length) {
+    throw new Error("At least one filter is required");
+  }
+
+  const params = {};
+
+  for (const key of Object.keys(filter)) {
+    switch (key) {
+      case "end/dateTime":
+        params["end/dateTime"] = filter[key];
+        break;
+      case "start/dateTime":
+        params["start/dateTime"] = filter[key];
+        break;
+      default:
+        throw new Error(`Filter by '${key}' is not supported.`);
+    }
+  }
+
+  return params;
+}
+
+function parseExpression(expr) {
+  if (!expr) {
+    return {};
+  }
+  const [property, _, value] = expr;
+  // if (operator !== "=") {
+  //   throw new Error(`Expression with '${operator}' is not allowed.`);
+  // }
+  const parsed = {};
+  if (property && value) {
+    parsed[property.ref[0]] = value.val;
+  }
+  return parsed;
+}
+
 module.exports = async function (srv) {
   const MSGraphSrv = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
 
-  async function readEvents({ req, MSGraphSrv }) {
+  srv.before("READ", "*", async (req) => {
+    try {
+      const queryParams = parseQueryParams(req.query.SELECT);
+      const queryString = Object.keys(queryParams)
+        .map((key) => `${key}=${queryParams[key]}`)
+        .join("&");
+      req.query = `?${queryString}`;
+    } catch (error) {
+      req.reject(400, error.message);
+    }
+  });
+
+  srv.on("READ", "Events", async (req) => {
     const user = process.env.NODE_ENV
       ? req.user.id
       : "benedikt.hoelker@iot-online.de";
 
-    let events = [];
-    let queryString = "";
-
-    if (req.data.ID) queryString = `/${req.data.ID}`;
-    else {
-      queryString = Object.entries(req._query)
-        .filter(([key]) => !key.includes("$select"))
-        .reduce(
-          (str, [key, value]) => str.concat("&", key, "=", value),
-          "?$select=id,subject,start,end,categories,sensitivity"
-        )
-        // TODO: Replace with a better transformation
-        .replace("completedDate", "end/dateTime")
-        .replace("activatedDate", "start/dateTime")
-        .replace(/\+01:00/g, "Z")
-        // Leading Apostrophe
-        .replace(/202/g, "'202")
-        // Closing Apostrophe
-        .replace(/Z/g, "Z'");
-    }
-
     const { value } = await MSGraphSrv.run({
-      url: `/v1.0/users/${user}/events${queryString}`,
+      url: `/v1.0/users/${user}/events${req}`,
     });
 
-    events = value.map(
-      // Die Kategorie wird als Kunde ausgelesen
-      ({
-        id,
-        subject,
-        start,
-        end,
-        categories: [customer_friendlyID],
-        sensitivity,
-      }) => ({
-        ID: id,
-        title: subject,
-        customer_friendlyID,
-        activatedDate: start.dateTime.substring(0, 19) + "Z",
-        completedDate: end.dateTime.substring(0, 19) + "Z",
-        assignedTo_userPrincipalName: user,
-        private: sensitivity === "private",
-        type: "Event",
-      })
-    );
-
-    return events;
-  }
-
-  srv.on("READ", "Events", async (req) => {
-    const events = await readEvents({ req, MSGraphSrv });
-    return events;
+    return value;
   });
 
   srv.on("READ", "Users", async () => {
