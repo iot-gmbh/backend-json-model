@@ -2,48 +2,6 @@ require("dotenv").config();
 const uuid = require("uuid");
 const cds = require("@sap/cds");
 
-function transformCQN(CQN) {
-  //typeof null is also object. But we cannot destructure it. So check that object is not null
-  const isValidObject = (obj) => typeof obj === "object" && obj !== null;
-
-  function changeValue(objFromProp) {
-    let obj = objFromProp;
-
-    if (isValidObject(objFromProp)) {
-      //desctructure the object to create new reference
-      obj = { ...objFromProp };
-      // iterating over the object using for..in
-      for (var key in obj) {
-        //checking if the current value is an object itself
-        if (isValidObject(obj[key])) {
-          // if so then again calling the same function
-          obj[key] = changeValue(obj[key]);
-        } else {
-          // else getting the value and replacing single { with {{ and so on
-          let keyValue = transformWIToMSGraphEvent(obj[key]);
-          obj[key] = keyValue;
-        }
-      }
-    }
-    return obj;
-  }
-
-  return changeValue(CQN);
-}
-
-function transformWIToMSGraphEvent(prop) {
-  // return mapWIToMSGraphEvent[prop] || prop;
-  return mapWIToMSGraphEvent[prop] || prop;
-}
-
-const mapWIToMSGraphEvent = {
-  ID: "id",
-  subject: "title",
-  activatedDate: "start/dateTime",
-  completedDate: "end/dateTime",
-  private: "sensitivity",
-};
-
 function transformEventToWorkItem({
   id,
   subject,
@@ -112,8 +70,6 @@ module.exports = cds.service.impl(async function () {
       },
     } = req;
 
-    // const MSGraphQ = transformCQN(req.query.SELECT);
-
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
@@ -125,7 +81,7 @@ module.exports = cds.service.impl(async function () {
       MSGraphSrv.tx(req)
         .read("Events", columns)
         .where(where)
-        // .orderBy(MSGraphQ.orderBy)
+        .orderBy(orderBy)
         .limit(limit),
       db.tx(req).run(req.query),
     ]);
