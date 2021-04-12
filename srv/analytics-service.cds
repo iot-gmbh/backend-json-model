@@ -4,11 +4,11 @@ service AnalyticsService {
     @Aggregation.ApplySupported.PropertyRestrictions : true
     entity WorkItems as projection on my.WorkItems {
         @Analytics.Dimension : true
-        assignedTo,
+        key assignedTo,
         @Analytics.Dimension : true
-        customer_friendlyID,
+        key customer_friendlyID,
         @Analytics.Dimension : true
-        project_friendlyID,
+        key project_friendlyID,
 
         @Analytics.Dimension : true
         activatedDate,
