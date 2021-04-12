@@ -85,7 +85,7 @@ module.exports = cds.service.impl(async function () {
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({ event, user: req.user })
+      transformEventToWorkItem({ ...event, user: req.user.id })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)

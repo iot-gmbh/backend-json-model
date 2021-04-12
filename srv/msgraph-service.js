@@ -26,12 +26,12 @@ module.exports = async function (srv) {
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
 
-    // const { value } = await MSGraphSrv.run({
-    //   url: `/v1.0/users/${user}/calendarview?${queryString}`,
-    // });
+    const { value } = await MSGraphSrv.run({
+      url: `/v1.0/users/${user}/calendarview?${queryString}`,
+    });
 
-    // return value;
-    return [];
+    return value;
+    // return [];
   });
 
   srv.on("READ", "Users", async () => {
