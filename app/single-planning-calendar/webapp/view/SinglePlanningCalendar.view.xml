@@ -9,7 +9,7 @@
 		<App id="app" busy="{/busy}" busyIndicatorDelay="0">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" cellPress="onCellPress" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false">
+					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" cellPress="onCreateAppointment" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsDragAndDrop="true">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						</actions>
@@ -17,7 +17,7 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" title="{/createItemDialogTitle}" binding="{/appointment}">
+							<Dialog id="createItemDialog" title="{/createItemDialogTitle}">
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="{i18n>WorkItems.title}" />
 									<Input value="{title}"/>
@@ -28,7 +28,7 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}"/>
-									<Select selectedKey="{project_friendlyID}" items="{/appointment/customer/projects}" forceSelection="true" change="onChangeSelectedProject">
+									<Select selectedKey="{project_friendlyID}" items="{customer/projects}" forceSelection="true" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>

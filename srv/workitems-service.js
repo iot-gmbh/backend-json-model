@@ -70,26 +70,26 @@ module.exports = cds.service.impl(async function () {
       },
     } = req;
 
-    // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
-    // TODO: Durch explizite Sortierung absichern.
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       AzDevOpsSrv.tx(req)
         .read("MyWorkItems", columns)
         .where(where)
         .orderBy(orderBy)
         .limit(limit),
+      db.tx(req).run(req.query),
       MSGraphSrv.tx(req)
         .read("Events", columns)
         .where(where)
         .orderBy(orderBy)
         .limit(limit),
-      db.tx(req).run(req.query),
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
       transformEventToWorkItem({ event, user: req.user })
     );
 
+    // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
+    // TODO: Durch explizite Sortierung absichern.
     const map = [...devOpsWorkItems, MSGraphWorkItems, localWorkItems]
       .reduce((acc, item) => acc.concat(item), [])
       /*

@@ -41,8 +41,7 @@ sap.ui.define(
           const workWeekView = calendar.getViews()[1];
 
           const model = new JSONModel({
-            appointments: [],
-            appointment: {},
+            appointments: { NEW: {} },
             busy: false,
             customers: [],
           });
@@ -52,10 +51,9 @@ sap.ui.define(
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
+          model.setProperty("/busy", true);
 
           this.setModel(model);
-
-          model.setProperty("/busy", true);
 
           try {
             await Promise.all([
@@ -69,8 +67,56 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
-        onCreateAppointment() {
-          this._bindAndOpenDialog();
+        onPressAppointment(event) {
+          const { appointment } = event.getParameters();
+          const path = appointment
+            ? appointment.getBindingContext().getPath()
+            : "/appointments/NEW";
+
+          this._bindAndOpenDialog(path);
+        },
+
+        onCreateAppointment(event) {
+          const model = this.getModel();
+          const { customers } = model.getData();
+          const { startDate, endDate } = event.getParameters();
+          const appointment = {
+            activatedDate: startDate,
+            completedDate: endDate,
+          };
+
+          Object.defineProperty(appointment, "customer", {
+            get: () =>
+              customers.find(
+                ({ friendlyID }) =>
+                  friendlyID === appointment.customer_friendlyID
+              ),
+          });
+
+          model.setProperty("/appointments/NEW", appointment);
+
+          this._bindAndOpenDialog("/appointments/NEW");
+        },
+
+        _bindAndOpenDialog(path) {
+          const model = this.getModel();
+          const bundle = this.getResourceBundle();
+          const appointment = model.getProperty(path);
+          const dialog = this.byId("createItemDialog");
+
+          // model.setProperty(path, appointment);
+          model.setProperty(
+            "/createItemDialogTitle",
+            appointment.ID
+              ? bundle.getText("editAppointment")
+              : bundle.getText("createAppointment")
+          );
+
+          // eslint-disable-next-line no-undef
+          $(document).keydown((evt) => this._registerCtrlEnterPress(evt));
+
+          dialog.bindElement(path);
+          dialog.open();
         },
 
         onChangeSelectedProject(event) {
@@ -80,9 +126,10 @@ sap.ui.define(
           this.getModel().setProperty("/appointment/projectName", projectName);
         },
 
-        async onSubmitEntry() {
+        async onSubmitEntry(event) {
+          const appointment = event.getSource().getBindingContext().getObject();
           const model = this.getModel();
-          let { appointment, appointments } = model.getData();
+          let { appointments } = model.getData();
 
           try {
             if (!appointment.project)
@@ -91,10 +138,10 @@ sap.ui.define(
 
             const appointmentSync = await this._submitEntry(appointment);
 
-            model.setProperty(
-              "/appointments",
-              appointments.concat(appointmentSync)
-            );
+            appointments[appointmentSync.ID] = appointmentSync;
+            appointments["NEW"] = {};
+
+            model.setProperty("/appointments", appointments);
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
@@ -129,40 +176,14 @@ sap.ui.define(
 
         _closeDialog(dialog) {
           // eslint-disable-next-line no-undef
-          $(document).off("keydown", (evt) => this.registerCtrlEnterPress(evt));
+          $(document).off("keydown", (evt) =>
+            this._registerCtrlEnterPress(evt)
+          );
 
           dialog.close();
         },
 
-        _bindAndOpenDialog(appointment = {}) {
-          const model = this.getModel();
-          const { customers } = model.getData();
-          const bundle = this.getResourceBundle();
-          const dialog = this.byId("createItemDialog");
-
-          Object.defineProperty(appointment, "customer", {
-            get: () =>
-              customers.find(
-                ({ friendlyID }) =>
-                  friendlyID === appointment.customer_friendlyID
-              ),
-          });
-
-          model.setProperty("/appointment", appointment);
-          model.setProperty(
-            "/createItemDialogTitle",
-            appointment.ID
-              ? bundle.getText("editAppointment")
-              : bundle.getText("createAppointment")
-          );
-
-          // eslint-disable-next-line no-undef
-          $(document).keydown((evt) => this.registerCtrlEnterPress(evt));
-
-          dialog.open();
-        },
-
-        registerCtrlEnterPress(evt) {
+        _registerCtrlEnterPress(evt) {
           if (evt.ctrlKey && evt.keyCode == 13) {
             evt.preventDefault();
             this.onSubmitEntry();
@@ -177,23 +198,8 @@ sap.ui.define(
           this._loadAppointments();
         },
 
-        onPressAppointment(event) {
-          const { appointment } = event.getParameters();
-          if (!appointment) return;
-
-          this._bindAndOpenDialog(appointment.getBindingContext().getObject());
-        },
-
-        onCellPress(event) {
-          const { startDate, endDate } = event.getParameters();
-
-          this._bindAndOpenDialog({
-            activatedDate: startDate,
-            completedDate: endDate,
-          });
-        },
-
         async _loadAppointments() {
+          const model = this.getModel();
           const calendar = this.getView().byId("SPCalendar");
           const startDate = calendar.getStartDate();
           const oneWeekLater = addDays(startDate, 7);
@@ -219,7 +225,22 @@ sap.ui.define(
             ],
           });
 
-          this.getModel().setProperty("/appointments", appointments);
+          const appointmentsMap = appointments.reduce((map, appointment) => {
+            map[appointment.ID] = appointment;
+
+            Object.defineProperty(appointment, "customer", {
+              get: () =>
+                model
+                  .getProperty("/customers")
+                  .find(
+                    ({ friendlyID }) =>
+                      friendlyID === appointment.customer_friendlyID
+                  ),
+            });
+            return map;
+          }, {});
+
+          model.setProperty("/appointments", appointmentsMap);
         },
 
         async _loadCustomersAndProjects() {
