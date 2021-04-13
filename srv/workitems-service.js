@@ -23,6 +23,12 @@ function transformEventToWorkItem({
   };
 }
 
+function calcDurationInH({ start, end }) {
+  const durationInMS = new Date(end) - new Date(start);
+  const durationInH = durationInMS / 1000 / 60 / 60;
+  return durationInH;
+}
+
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
@@ -34,11 +40,12 @@ module.exports = cds.service.impl(async function () {
     const item = req.data;
     const entries = await this.read(WorkItems).where({ ID: item.ID });
 
-    const durationInMS =
-      new Date(item.completedDate) - new Date(item.activatedDate);
-    const durationInH = durationInMS / 1000 / 60 / 60;
+    item.duration = calcDurationInH({
+      start: item.activatedDate,
+      end: item.completedDate,
+    });
 
-    item.duration = durationInH;
+    if (!item.project_friendlyID) throw new Error("No project selected.");
 
     if (entries.length === 0) db.run(INSERT.into(WorkItems).entries(item));
     else UPDATE(WorkItems, item).with(item);
@@ -47,18 +54,19 @@ module.exports = cds.service.impl(async function () {
   this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
 
-    const durationInMS =
-      new Date(req.data.completedDate) - new Date(req.data.activatedDate);
-    const durationInH = durationInMS / 1000 / 60 / 60;
-
     const user = process.env.NODE_ENV
       ? req.user.id
       : "benedikt.hoelker@iot-online.de";
 
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
-    req.data.duration = durationInH;
+    req.data.duration = calcDurationInH({
+      start: req.data.activatedDate,
+      end: req.data.completedDate,
+    });
     req.data.assignedTo_userPrincipalName = user;
+
+    if (!req.data.project_friendlyID) throw new Error("No project selected.");
 
     return next();
   });

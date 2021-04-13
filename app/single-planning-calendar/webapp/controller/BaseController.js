@@ -53,15 +53,15 @@ sap.ui.define(
         //   }, {});
         // },
 
-        async read({ path, ...params }) {
-          return new Promise((resolve, reject) => {
-            this.getModel("OData").read(path, {
-              ...params,
-              success: resolve,
-              error: reject,
-            });
-          });
-        },
+async read({ path, ...params }) {
+  return new Promise((resolve, reject) => {
+    this.getModel("OData").read(path, {
+      ...params,
+      success: resolve,
+      error: reject,
+    });
+  });
+},
 
         async update({ path, data }) {
           return new Promise((resolve, reject) => {

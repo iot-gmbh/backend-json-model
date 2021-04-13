@@ -171,6 +171,11 @@ sap.ui.define(
         },
 
         onCloseDialog(event) {
+          const appointment = event.getSource().getBindingContext().getObject();
+
+          if (!appointment.ID)
+            this.getModel().setProperty("/appointments/NEW", {});
+
           this._closeDialog(event.getSource().getParent().close());
         },
 
