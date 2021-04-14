@@ -126,8 +126,10 @@ sap.ui.define(
           this.getModel().setProperty("/appointment/projectName", projectName);
         },
 
-        async onSubmitEntry(event) {
-          const appointment = event.getSource().getBindingContext().getObject();
+        async onSubmitEntry() {
+          const appointment = this.byId("createItemDialog")
+            .getBindingContext()
+            .getObject();
           const model = this.getModel();
           let { appointments } = model.getData();
 

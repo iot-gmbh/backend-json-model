@@ -7,18 +7,18 @@ modules:
     type: nodejs
     path: gen/srv
     requires:
-      - name: project-planning-db
+      - name: project-planning-hana-cloud-db
       - name: project-planning-uaa
       - name: project-planning-dest
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
-  - name: project-planning-db-deployer
+  - name: project-planning-hana-cloud-db-deployer
     type: hdb
     path: gen/db
     requires:
-      - name: project-planning-db
+      - name: project-planning-hana-cloud-db
     parameters:
       buildpack: nodejs_buildpack
   - name: project-planning-content
@@ -129,11 +129,8 @@ modules:
         - npm run build:cf
       supported-platforms: []
 resources:
-  - name: project-planning-db
+  - name: project-planning-hana-cloud-db
     type: com.sap.xs.hdi-container
-    parameters:
-      service: hanatrial
-      service-plan: hdi-shared
     properties:
       hdi-service-name: ${service-name}
   - name: project-planning-dest
