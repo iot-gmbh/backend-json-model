@@ -45,7 +45,7 @@ module.exports = cds.service.impl(async function () {
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
-      req.reply(item.type === "Manual" ? {} : reducedItem);
+      req.reply(item.type === "Manual" ? { ID: item.ID } : reducedItem);
       return;
     }
 

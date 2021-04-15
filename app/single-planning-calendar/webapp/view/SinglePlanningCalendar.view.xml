@@ -24,7 +24,7 @@
 											<Title text="{/createItemDialogTitle}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressDeleteEntry" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" />
+											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" />
 										</contentRight>
 									</Bar>
 								</customHeader>
@@ -38,7 +38,7 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}"/>
-									<Select selectedKey="{project_friendlyID}" items="{customer/projects}" forceSelection="true" change="onChangeSelectedProject">
+									<Select id="projecSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" forceSelection="true" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>

@@ -76,20 +76,26 @@ sap.ui.define(
           this._bindAndOpenDialog(path);
         },
 
-        async onPressDeleteEntry(event) {
+        async onPressDeleteAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const entry = event.getSource().getBindingContext().getObject();
+          const appointment = event.getSource().getBindingContext().getObject();
+          // Remove associations to prevent BE-errors
+          // eslint-disable-next-line no-unused-vars
+          const { customer, project, ...data } = appointment;
 
           model.setProperty("/dialogBusy", true);
 
           try {
             const appointmentSync = await this.remove({
-              path: `/MyWorkItems('${encodeURIComponent(entry.ID)}')`,
-              entry,
+              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+              data,
             });
 
-            appointments[appointmentSync.ID] = appointmentSync;
+            appointments[appointmentSync.ID] = {
+              ...appointment,
+              ...appointmentSync,
+            };
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -154,14 +160,14 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
           const model = this.getModel();
+          const project = this.byId("projecSelect").getSelectedKey();
+
           let { appointments } = model.getData();
 
           model.setProperty("/dialogBusy", true);
 
           try {
-            if (!appointment.project)
-              appointment.project_friendlyID =
-                appointment.customer.projects[0].friendlyID;
+            appointment.project_friendlyID = project;
 
             const appointmentSync = await this._submitEntry(appointment);
 

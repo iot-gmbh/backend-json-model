@@ -73,11 +73,11 @@ sap.ui.define(
           });
         },
 
-        async remove({ path, entry }) {
+        async remove({ path, data }) {
           return new Promise((resolve, reject) => {
             this.getModel("OData").update(
               path,
-              { ...entry, deleteEntry: true },
+              { ...data, deleteEntry: true },
               {
                 success: resolve,
                 error: reject,
