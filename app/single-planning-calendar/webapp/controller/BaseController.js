@@ -45,23 +45,15 @@ sap.ui.define(
           return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
 
-        // async readAsMapByID(params) {
-        //   const { results } = await this.read(params);
-
-        //   const map = results.reduce((acc, {ID, ...curr}) => {
-        //     acc[ID] = acc[ID]curr
-        //   }, {});
-        // },
-
-async read({ path, ...params }) {
-  return new Promise((resolve, reject) => {
-    this.getModel("OData").read(path, {
-      ...params,
-      success: resolve,
-      error: reject,
-    });
-  });
-},
+        async read({ path, ...params }) {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").read(path, {
+              ...params,
+              success: resolve,
+              error: reject,
+            });
+          });
+        },
 
         async update({ path, data }) {
           return new Promise((resolve, reject) => {
@@ -78,6 +70,19 @@ async read({ path, ...params }) {
               success: resolve,
               error: reject,
             });
+          });
+        },
+
+        async remove({ path, entry }) {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").update(
+              path,
+              { ...entry, deleteEntry: true },
+              {
+                success: resolve,
+                error: reject,
+              }
+            );
           });
         },
 

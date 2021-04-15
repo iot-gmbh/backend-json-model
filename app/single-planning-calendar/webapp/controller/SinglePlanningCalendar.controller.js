@@ -24,11 +24,11 @@ sap.ui.define(
       return result;
     }
 
-    function getMondayMorning(d) {
-      d = new Date(d.setHours(0, 0, 0, 1));
-      var day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
+    function getMondayMorning() {
+      const date = new Date(new Date().setHours(0, 0, 0, 1));
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+      return new Date(date.setDate(diff));
     }
 
     return BaseController.extend(
@@ -47,7 +47,7 @@ sap.ui.define(
           });
 
           calendar.setSelectedView(workWeekView);
-          calendar.setStartDate(getMondayMorning(new Date()));
+          calendar.setStartDate(getMondayMorning());
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
@@ -74,6 +74,29 @@ sap.ui.define(
             : "/appointments/NEW";
 
           this._bindAndOpenDialog(path);
+        },
+
+        async onPressDeleteEntry(event) {
+          const model = this.getModel();
+          const { appointments } = model.getData();
+          const entry = event.getSource().getBindingContext().getObject();
+
+          model.setProperty("/dialogBusy", true);
+
+          try {
+            const appointmentSync = await this.remove({
+              path: `/MyWorkItems('${encodeURIComponent(entry.ID)}')`,
+              entry,
+            });
+
+            appointments[appointmentSync.ID] = appointmentSync;
+
+            this._closeDialog("createItemDialog");
+          } catch (error) {
+            MessageBox.error(ErrorParser.parse(error));
+          }
+
+          model.setProperty("/dialogBusy", false);
         },
 
         onCreateAppointment(event) {
@@ -133,6 +156,8 @@ sap.ui.define(
           const model = this.getModel();
           let { appointments } = model.getData();
 
+          model.setProperty("/dialogBusy", true);
+
           try {
             if (!appointment.project)
               appointment.project_friendlyID =
@@ -148,7 +173,8 @@ sap.ui.define(
             MessageBox.error(ErrorParser.parse(error));
           }
 
-          this._closeDialog(this.byId("createItemDialog").close());
+          model.setProperty("/dialogBusy", false);
+          this._closeDialog("createItemDialog");
         },
 
         // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert und per Object-Destructuring entfernt
@@ -178,16 +204,16 @@ sap.ui.define(
           if (!appointment.ID)
             this.getModel().setProperty("/appointments/NEW", {});
 
-          this._closeDialog(event.getSource().getParent().close());
+          this._closeDialog("createItemDialog");
         },
 
-        _closeDialog(dialog) {
+        _closeDialog(dialogName) {
           // eslint-disable-next-line no-undef
           $(document).off("keydown", (evt) =>
             this._registerCtrlEnterPress(evt)
           );
 
-          dialog.close();
+          this.byId(dialogName).close();
         },
 
         _registerCtrlEnterPress(evt) {
@@ -205,11 +231,32 @@ sap.ui.define(
           this._loadAppointments();
         },
 
+        _getCalendarEndDate() {
+          const calendar = this.byId("SPCalendar");
+          const startDate = calendar.getStartDate();
+          const selectedView = calendar._getSelectedView().getKey();
+
+          const mapDaysToAdd = {
+            Day: 1,
+            WorkWeek: 5,
+            Week: 7,
+            // Sicher ist sicher, im Zweifel zu viele Daten laden => 31 Tage
+            Month: 31,
+          };
+
+          const daysToAdd = mapDaysToAdd[selectedView];
+          const endDate = addDays(startDate, daysToAdd);
+
+          return endDate;
+        },
+
         async _loadAppointments() {
           const model = this.getModel();
-          const calendar = this.getView().byId("SPCalendar");
+          const calendar = this.byId("SPCalendar");
+
           const startDate = calendar.getStartDate();
-          const oneWeekLater = addDays(startDate, 7);
+          const endDate = this._getCalendarEndDate();
+
           const { results: appointments } = await this.read({
             path: "/MyWorkItems",
             urlParameters: { $top: 100 },
@@ -224,7 +271,7 @@ sap.ui.define(
                   new Filter({
                     path: "activatedDate",
                     operator: "LE",
-                    value1: oneWeekLater,
+                    value1: endDate,
                   }),
                 ],
                 and: false,

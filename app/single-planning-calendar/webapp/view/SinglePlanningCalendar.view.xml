@@ -17,7 +17,17 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" title="{/createItemDialogTitle}">
+							<Dialog id="createItemDialog" busy="{/dialogBusy}">
+								<customHeader>
+									<Bar>
+										<contentLeft>
+											<Title text="{/createItemDialogTitle}"/>
+										</contentLeft>
+										<contentRight>
+											<Button press="onPressDeleteEntry" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" />
+										</contentRight>
+									</Bar>
+								</customHeader>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
 									<Label text="{i18n>WorkItems.title}" />
 									<Input value="{title}"/>
@@ -47,10 +57,10 @@
 							</Dialog>
 						</dependents>
 						<views>
-							<SinglePlanningCalendarDayView id="dayView" key="DayView" title="Day" />
-							<SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
-							<SinglePlanningCalendarWeekView key="WeekView" title="Week" />
-							<SinglePlanningCalendarMonthView id="monthView" key="MonthView" title="Month" />
+							<SinglePlanningCalendarDayView key="Day" id="dayView" title="Day" />
+							<SinglePlanningCalendarWorkWeekView key="WorkWeek" title="Work Week" />
+							<SinglePlanningCalendarWeekView key="Week" title="Week" />
+							<SinglePlanningCalendarMonthView key="Month" id="monthView" title="Month" />
 						</views>
 					</SinglePlanningCalendar>
 				</Page>

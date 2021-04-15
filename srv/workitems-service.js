@@ -38,6 +38,17 @@ module.exports = cds.service.impl(async function () {
 
   this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
+    const tx = this.transaction(req);
+
+    if (item.deleteEntry) {
+      // eslint-disable-next-line no-unused-vars
+      const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
+
+      await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+      req.reply(item.type === "Manual" ? {} : reducedItem);
+      return;
+    }
+
     const entries = await this.read(WorkItems).where({ ID: item.ID });
 
     item.duration = calcDurationInH({
