@@ -26,12 +26,22 @@ module.exports = async function (srv) {
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
 
+    const selectFields = [
+      "id",
+      "subject",
+      "start",
+      "end",
+      "categories",
+      "sensitivity",
+    ];
+
     const { value } = await MSGraphSrv.run({
-      url: `/v1.0/users/${user}/calendarview?${queryString}`,
+      url: `/v1.0/users/${user}/calendarview?${queryString}&$top=1000&$select=${selectFields.join(
+        ","
+      )}`,
     });
 
     return value;
-    // return [];
   });
 
   srv.on("READ", "Users", async () => {

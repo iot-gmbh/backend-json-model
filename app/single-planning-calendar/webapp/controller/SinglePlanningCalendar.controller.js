@@ -24,8 +24,8 @@ sap.ui.define(
       return result;
     }
 
-    function getMonday(d) {
-      d = new Date(d);
+    function getMondayMorning(d) {
+      d = new Date(d.setHours(0, 0, 0, 1));
       var day = d.getDay(),
         diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
       return new Date(d.setDate(diff));
@@ -47,7 +47,7 @@ sap.ui.define(
           });
 
           calendar.setSelectedView(workWeekView);
-          calendar.setStartDate(getMonday(new Date()));
+          calendar.setStartDate(getMondayMorning(new Date()));
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
