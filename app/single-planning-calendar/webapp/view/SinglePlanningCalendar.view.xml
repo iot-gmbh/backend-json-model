@@ -9,7 +9,7 @@
 		<App id="app" busy="{/busy}" busyIndicatorDelay="0">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onAppointmentResize" startDateChange="onStartDateChange" viewChange="onChangeView" cellPress="onCreateAppointment" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
+					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onAppointmentResize" appointmentDrop="onAppointmentResize" startDateChange="onStartDateChange" viewChange="onChangeView" cellPress="onCreateAppointment" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						</actions>

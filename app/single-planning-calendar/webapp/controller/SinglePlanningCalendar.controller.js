@@ -89,27 +89,28 @@ sap.ui.define(
             assignedTo,
             customer,
             project,
+            __metadata,
             ...data
           } = bindingContext.getObject();
           const path = bindingContext.getPath();
 
-          if (!data.customer_friendlyID || !data.project_friendlyID) {
-            MessageToast.show(bundle.getText("enterDetailsFirst"));
-            return;
-          }
-
           model.setProperty(path + "/activatedDate", startDate);
           model.setProperty(path + "/completedDate", endDate);
 
+          if (!data.customer_friendlyID || !data.project_friendlyID) {
+            this._bindAndOpenDialog(path);
+            return;
+          }
+
           try {
-            const appointmentSync = await this._submitEntry({
+            const { appointmentSync } = await this._submitEntry({
               ...data,
               activatedDate: startDate,
               completedDate: endDate,
             });
 
             appointments[appointmentSync.ID] = {
-              ...appointment,
+              ...data,
               ...appointmentSync,
             };
           } catch (error) {
@@ -123,7 +124,7 @@ sap.ui.define(
           const appointment = event.getSource().getBindingContext().getObject();
           // Remove associations to prevent BE-errors
           // eslint-disable-next-line no-unused-vars
-          const { customer, project, ...data } = appointment;
+          const { customer, project, __metadata, ...data } = appointment;
 
           model.setProperty("/dialogBusy", true);
 
@@ -134,7 +135,7 @@ sap.ui.define(
             });
 
             appointments[appointmentSync.ID] = {
-              ...appointment,
+              ...data,
               ...appointmentSync,
             };
 
@@ -229,7 +230,7 @@ sap.ui.define(
 
         // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert und per Object-Destructuring entfernt
         // eslint-disable-next-line no-unused-vars
-        _submitEntry({ customer, ...appointment }) {
+        _submitEntry({ customer, __metadata, ...appointment }) {
           const { ID } = appointment;
 
           // Update
