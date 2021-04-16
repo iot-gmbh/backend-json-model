@@ -78,7 +78,7 @@
     },
     "requires": {
       "db": {
-        "kind": "sqlite",
+        "kind": "hana",
         "model": "*"
       },
       "uaa": {

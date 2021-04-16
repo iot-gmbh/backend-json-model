@@ -1,0 +1,32 @@
+{
+    "ID": "AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2P4PFM8AAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA==",
+    "activatedDate": "\/Date(1618297200000)\/",
+    "completedDate": "\/Date(1618300800000)\/",
+    "changedDate": null,
+    "assignedToName": null,
+    "createdDate": null,
+    "reason": null,
+    "state": null,
+    "teamProject": null,
+    "title": "IOT Check-in Meeting",
+    "workItemType": null,
+    "completedWork": null,
+    "remainingWork": null,
+    "originalEstimate": null,
+    "resolvedDate": null,
+    "closedDate": null,
+    "customer_friendlyID": null,
+    "customerName": null,
+    "private": false,
+    "project_friendlyID": null,
+    "projectName": null,
+    "ticket": null,
+    "type": "Event",
+    "duration": null,
+    "deleteEntry": null,
+    "assignedTo_userPrincipalName": "benedikt.hoelker@iot-online.de",
+    "__metadata": {
+        "type": "WorkItemsService.MyWorkItems",
+        "uri": "http://localhost:4004/v2/work-items/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2P4PFM8AAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA%3D%3D')"
+    }
+}

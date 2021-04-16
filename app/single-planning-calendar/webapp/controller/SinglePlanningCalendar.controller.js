@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 sap.ui.define(
   [
@@ -7,6 +8,7 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
   ],
   function (
     BaseController,
@@ -14,7 +16,8 @@ sap.ui.define(
     Filter,
     formatter,
     JSONModel,
-    MessageBox
+    MessageBox,
+    MessageToast
   ) {
     "use strict";
 
@@ -74,6 +77,44 @@ sap.ui.define(
             : "/appointments/NEW";
 
           this._bindAndOpenDialog(path);
+        },
+
+        async onAppointmentResize(event) {
+          const model = this.getModel();
+          const bundle = this.getResourceBundle();
+          const { appointments } = model.getData();
+          const { startDate, endDate, appointment } = event.getParameters();
+          const bindingContext = appointment.getBindingContext();
+          const {
+            assignedTo,
+            customer,
+            project,
+            ...data
+          } = bindingContext.getObject();
+          const path = bindingContext.getPath();
+
+          if (!data.customer_friendlyID || !data.project_friendlyID) {
+            MessageToast.show(bundle.getText("enterDetailsFirst"));
+            return;
+          }
+
+          model.setProperty(path + "/activatedDate", startDate);
+          model.setProperty(path + "/completedDate", endDate);
+
+          try {
+            const appointmentSync = await this._submitEntry({
+              ...data,
+              activatedDate: startDate,
+              completedDate: endDate,
+            });
+
+            appointments[appointmentSync.ID] = {
+              ...appointment,
+              ...appointmentSync,
+            };
+          } catch (error) {
+            MessageBox.error(ErrorParser.parse(error));
+          }
         },
 
         async onPressDeleteAppointment(event) {
@@ -171,7 +212,10 @@ sap.ui.define(
 
             const appointmentSync = await this._submitEntry(appointment);
 
-            appointments[appointmentSync.ID] = appointmentSync;
+            appointments[appointmentSync.ID] = {
+              ...appointment,
+              ...appointmentSync,
+            };
             appointments["NEW"] = {};
 
             model.setProperty("/appointments", appointments);
@@ -204,12 +248,16 @@ sap.ui.define(
           }
         },
 
-        onCloseDialog(event) {
-          const appointment = event.getSource().getBindingContext().getObject();
+        onAfterCloseDialog() {
+          const appointment = this.byId("createItemDialog")
+            .getBindingContext()
+            .getObject();
 
           if (!appointment.ID)
             this.getModel().setProperty("/appointments/NEW", {});
+        },
 
+        onCloseDialog() {
           this._closeDialog("createItemDialog");
         },
 

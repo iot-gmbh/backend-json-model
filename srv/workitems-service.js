@@ -45,8 +45,7 @@ module.exports = cds.service.impl(async function () {
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
-      req.reply(item.type === "Manual" ? { ID: item.ID } : reducedItem);
-      return;
+      return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
     const entries = await this.read(WorkItems).where({ ID: item.ID });
@@ -58,8 +57,14 @@ module.exports = cds.service.impl(async function () {
 
     if (!item.project_friendlyID) throw new Error("No project selected.");
 
-    if (entries.length === 0) db.run(INSERT.into(WorkItems).entries(item));
-    else UPDATE(WorkItems, item).with(item);
+    let itm = item;
+    if (entries.length === 0) {
+      itm = await tx.run(INSERT.into(WorkItems).entries(item));
+    } else {
+      itm = await tx.run(UPDATE(WorkItems, item.ID).with(item));
+    }
+
+    return itm;
   });
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
