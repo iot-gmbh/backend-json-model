@@ -24,7 +24,7 @@
 											<Title text="{/createItemDialogTitle}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" />
+											<Button press="onPressDeleteAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" />
 										</contentRight>
 									</Bar>
 								</customHeader>

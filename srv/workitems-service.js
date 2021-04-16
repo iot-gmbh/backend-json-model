@@ -40,7 +40,7 @@ module.exports = cds.service.impl(async function () {
     const item = req.data;
     const tx = this.transaction(req);
 
-    if (item.deleteEntry) {
+    if (item.resetEntry) {
       // eslint-disable-next-line no-unused-vars
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 

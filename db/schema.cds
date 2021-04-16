@@ -78,5 +78,5 @@ entity WorkItems {
         ticket              : String                                           @title : '{i18n>WorkItems.ticket}';
         type                : String                                           @title : '{i18n>WorkItems.type}';
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
-        deleteEntry         : Boolean;
+        resetEntry         : Boolean;
 };
