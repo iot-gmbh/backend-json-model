@@ -1,6 +1,7 @@
 require("dotenv").config();
 const uuid = require("uuid");
 const cds = require("@sap/cds");
+const moment = require("moment");
 
 function transformEventToWorkItem({
   id,
@@ -55,8 +56,6 @@ module.exports = cds.service.impl(async function () {
       end: item.completedDate,
     });
 
-    if (!item.project_friendlyID) throw new Error("No project selected.");
-
     let itm = item;
     if (entries.length === 0) {
       itm = await tx.run(INSERT.into(WorkItems).entries(item));
@@ -81,8 +80,6 @@ module.exports = cds.service.impl(async function () {
       end: req.data.completedDate,
     });
     req.data.assignedTo_userPrincipalName = user;
-
-    if (!req.data.project_friendlyID) throw new Error("No project selected.");
 
     return next();
   });
@@ -136,12 +133,28 @@ module.exports = cds.service.impl(async function () {
     return results;
   });
 
-  this.on("READ", "WorkItems", async (req) => {
-    // share request context with the external service
-    // inside a custom handler
-    const tx = AzDevOpsSrv.transaction(req);
-    const response = await tx.run(req.query);
+  this.on("READ", "IOTWorkItems", async (req) => {
+    let query = req.query;
 
-    return response;
+    // Hidden in UI, thus add it manually
+    query.SELECT.columns.push({ ref: ["DatumBis"] });
+
+    const items = await cds.tx(req).run(query);
+
+    const IOTWorkItems = items.map((itm) => ({
+      Datum: moment(itm.Datum).format("DD.MM.yyyy"),
+      Von: moment(itm.Datum).format("hh:mm"),
+      Bis: moment(itm.DatumBis).format("hh:mm"),
+      P1: itm.P1,
+      Projekt: itm.Projekt,
+      Teilprojekt: itm.Teilprojekt,
+      Arbeitspaket: itm.Arbeitspaket,
+      Taetigkeit: itm.Taetigkeit,
+      Einsatzort: itm.Einsatzort,
+      P2: itm.P2,
+      Bemerkung: itm.Bemerkung,
+    }));
+
+    return IOTWorkItems;
   });
 });

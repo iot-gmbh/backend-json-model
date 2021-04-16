@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "express": "^4",
     "isomorphic-fetch": "^3.0.0",
+    "moment": "^2.29.1",
     "msal": "^1.4.9",
     "passport": "^0.4.1",
     "sap-cf-axios": "^0.2.30",

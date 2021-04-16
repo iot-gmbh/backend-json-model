@@ -36,14 +36,23 @@ entity Customers : managed, cuid {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Projects : managed, cuid {
-    friendlyID  : String                           @title : '{i18n>Projects.friendlyID}'  @mandatory : true;
-    title       : String                           @title : '{i18n>Projects.title}';
-    description : String                           @title : '{i18n>Projects.description}';
-    customer    : Association to Customers         @title : '{i18n>Projects.customer}';
-    manager     : Association to Users             @title : '{i18n>Projects.manager}';
-    workItems   : Association to many WorkItems
-                      on workItems.project = $self @title : '{i18n>Projects.workItems}'
+    friendlyID   : String                   @title : '{i18n>Projects.friendlyID}'  @mandatory : true;
+    title        : String                   @title : '{i18n>Projects.title}';
+    description  : String                   @title : '{i18n>Projects.description}';
+    customer     : Association to Customers @title : '{i18n>Projects.customer}';
+    manager      : Association to Users     @title : '{i18n>Projects.manager}';
+    IOTProjectID : String                   @title : '{i18n>Projects.IOTProjectID}';
+    workItems    : Association to many WorkItems
+                       on workItems.project = $self
+                                            @title : '{i18n>Projects.workItems}'
 }
+
+/*
+IOT Projektaufschreibung
+
+Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | P2 | Bemerkung
+ */
+
 
 entity WorkItems {
     key ID                  : String                                           @title : '{i18n>WorkItems.ID}';
@@ -78,5 +87,5 @@ entity WorkItems {
         ticket              : String                                           @title : '{i18n>WorkItems.ticket}';
         type                : String                                           @title : '{i18n>WorkItems.type}';
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
-        resetEntry         : Boolean;
+        resetEntry          : Boolean;
 };
