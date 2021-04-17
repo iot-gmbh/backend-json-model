@@ -146,7 +146,6 @@ module.exports = cds.service.impl(async function () {
 
         if (customer.length > 0) {
           item.customer_friendlyID = customer[0].friendlyID;
-          // item.customer = customer;
         }
       }
     }
