@@ -9,7 +9,10 @@ function parseQueryParams(select) {
   // 0:'2021-05-02T22:00:00Z'
   // 1:'2021-05-09T22:00:00Z'
 
-  const [startdatetime, enddatetime] = values;
+  const [
+    startdatetime = new Date().toISOString(),
+    enddatetime = new Date().toISOString(),
+  ] = values;
   return { startdatetime, enddatetime };
 }
 

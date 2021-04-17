@@ -35,7 +35,7 @@ module.exports = cds.service.impl(async function () {
   const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
 
-  const { WorkItems } = db.entities("iot.planner");
+  const { WorkItems, Customers } = db.entities("iot.planner");
 
   this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
@@ -87,7 +87,7 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
-        SELECT: { where, columns, orderBy, limit },
+        SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
 
@@ -128,6 +128,30 @@ module.exports = cds.service.impl(async function () {
       }, {});
 
     let results = Object.values(map);
+
+    const srv = this;
+
+    // TODO: SQL-Abfragen in Schleifen ersetzen
+    async function addExtraInfosTo(workItems) {
+      for (const item of workItems) {
+        if (item.customer_friendlyID) continue;
+
+        const titleStrings = item.title.split(" ");
+
+        if (!titleStrings || titleStrings.length === 0) continue;
+
+        const customer = await srv.read(Customers).where({
+          friendlyID: titleStrings[0],
+        });
+
+        if (customer.length > 0) {
+          item.customer_friendlyID = customer[0].friendlyID;
+          // item.customer = customer;
+        }
+      }
+    }
+
+    await addExtraInfosTo(results);
 
     results.$count = results.length;
     return results;

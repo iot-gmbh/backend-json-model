@@ -5,11 +5,17 @@ using {MSGraphService as MSGraph} from './msgraph-service';
 service WorkItemsService @(requires : 'authenticated-user') {
     entity AzDevWorkItems as projection on AzDevOps.WorkItems;
     entity MSGraphEvents  as projection on MSGraph.Events;
-    entity WorkItems      as projection on my.WorkItems;
-    entity MyWorkItems    as projection on my.WorkItems;
+
+    entity WorkItems      as
+        select from my.WorkItems {
+            *,
+            current_date as currentDate : Date
+        };
+
+    entity MyWorkItems    as projection on WorkItems;
 
     entity IOTWorkItems   as
-        select from my.WorkItems {
+        select from WorkItems {
             activatedDate        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
             completedDate        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
             ''                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Von}'),

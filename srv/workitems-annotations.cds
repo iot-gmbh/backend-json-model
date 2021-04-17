@@ -1,5 +1,57 @@
 using WorkItemsService as my from './workitems-service';
 
+@Capabilities.FilterRestrictions : {
+    RequiresFilter     : true,
+    RequiredProperties : [
+        activatedDate,
+        completedDate
+    ],
+} annotate my.MyWorkItems with  @(UI : {
+    Identification  : [
+        {Value : title},
+        {Value : assignedTo.displayName, },
+        {Value : customer.name, },
+        {Value : project.title, },
+        {Value : activatedDate},
+        {Value : completedDate, },
+    ],
+    SelectionFields : [
+        title,
+        assignedTo_userPrincipalName,
+        customer_friendlyID,
+        project_friendlyID,
+        activatedDate,
+        completedDate
+    ],
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : assignedTo.displayName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : customer_friendlyID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : project_friendlyID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : activatedDate
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : completedDate,
+        },
+    ]
+});
+
+
 annotate my.IOTWorkItems with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>IOTWorkItem}',
@@ -19,7 +71,6 @@ annotate my.IOTWorkItems with @(UI : {
         P2,
         Bemerkung
     ],
-
     LineItem        : [
         {
             $Type : 'UI.DataField',
