@@ -51,7 +51,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button text="{i18n>OK}" press="onSubmitEntry" type="Emphasized"/>
+									<Button text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

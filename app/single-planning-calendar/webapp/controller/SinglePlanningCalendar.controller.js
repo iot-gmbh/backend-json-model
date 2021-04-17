@@ -81,7 +81,6 @@ sap.ui.define(
 
         async onAppointmentResize(event) {
           const model = this.getModel();
-          const bundle = this.getResourceBundle();
           const { appointments } = model.getData();
           const { startDate, endDate, appointment } = event.getParameters();
           const bindingContext = appointment.getBindingContext();
@@ -103,7 +102,7 @@ sap.ui.define(
           }
 
           try {
-            const { appointmentSync } = await this._submitEntry({
+            const appointmentSync = await this._submitEntry({
               ...data,
               activatedDate: startDate,
               completedDate: endDate,
@@ -113,6 +112,8 @@ sap.ui.define(
               ...data,
               ...appointmentSync,
             };
+
+            model.setProperty("/appointments", appointments);
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
