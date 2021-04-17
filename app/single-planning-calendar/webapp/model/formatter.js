@@ -2,7 +2,7 @@ const types = {
   Manual: {
     Allocated: {
       Billed: 1,
-      NotBilled: 2,
+      NotBilled: 8,
     },
     NotAllocated: {
       Billed: 3,

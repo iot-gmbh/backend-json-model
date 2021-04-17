@@ -35,7 +35,7 @@ module.exports = cds.service.impl(async function () {
   const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
 
-  const { WorkItems, Customers } = db.entities("iot.planner");
+  const { WorkItems, Customers, Projects } = db.entities("iot.planner");
 
   this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
@@ -131,21 +131,41 @@ module.exports = cds.service.impl(async function () {
 
     const srv = this;
 
-    // TODO: SQL-Abfragen in Schleifen ersetzen
+    // TODO: Schleifen-basierte SQL-Abfragen ersetzen
     async function addExtraInfosTo(workItems) {
       for (const item of workItems) {
-        if (item.customer_friendlyID) continue;
+        const titleSubstrings = item.title.split(" ");
 
-        const titleStrings = item.title.split(" ");
+        if (!item.customer_friendlyID) {
+          const query = titleSubstrings
+            .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
+            .join(" OR ");
 
-        if (!titleStrings || titleStrings.length === 0) continue;
+          const [customer] = await srv.read(Customers).where(query);
 
-        const customer = await srv.read(Customers).where({
-          friendlyID: titleStrings[0],
-        });
+          if (item.private) {
+            item.customer_friendlyID = "Privat";
+          }
 
-        if (customer.length > 0) {
-          item.customer_friendlyID = customer[0].friendlyID;
+          if (customer) {
+            item.customer_friendlyID = customer.friendlyID;
+          }
+        }
+
+        if (!item.project_friendlyID) {
+          const query = titleSubstrings
+            .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
+            .join(" OR ");
+
+          const [project] = await srv.read(Projects).where(query);
+
+          if (item.private) {
+            item.project_friendlyID = "Privat";
+          }
+
+          if (project) {
+            item.project_friendlyID = project.friendlyID;
+          }
         }
       }
     }
