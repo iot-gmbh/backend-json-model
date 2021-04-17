@@ -12,16 +12,16 @@ service WorkItemsService @(requires : 'authenticated-user') {
         select from my.WorkItems {
             activatedDate        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
             completedDate        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-            ''                   as Von          : String @(title : '{i18n>IOTWorkItems.Von}'),
-            ''                   as Bis          : String @(title : '{i18n>IOTWorkItems.Bis}'),
+            ''                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Von}'),
+            ''                   as Ende         : String @(title : '{i18n>IOTWorkItems.Bis}'),
             ''                   as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
             project.IOTProjectID as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
             ''                   as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
             ''                   as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
-            title                as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
+            'Durchführung'       as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
             'GE'                 as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
             ''                   as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
-            ''                   as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}')
+            title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}')
 
         /*
         IOT Projektaufschreibung

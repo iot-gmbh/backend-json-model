@@ -8,8 +8,8 @@ annotate my.IOTWorkItems with @(UI : {
     },
     SelectionFields : [
         Datum,
-        Von,
-        Bis,
+        Beginn,
+        Ende,
         P1,
         Projekt,
         Teilprojekt,
@@ -27,11 +27,11 @@ annotate my.IOTWorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Value : Von,
+            Value : Beginn,
         },
         {
             $Type : 'UI.DataField',
-            Value : Bis,
+            Value : Ende,
         },
         {
             $Type : 'UI.DataField',
