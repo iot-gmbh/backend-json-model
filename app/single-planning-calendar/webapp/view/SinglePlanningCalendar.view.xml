@@ -24,7 +24,8 @@
 											<Title text="{/createItemDialogTitle}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressDeleteAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" />
+											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}"/>
+											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}"/>
 										</contentRight>
 									</Bar>
 								</customHeader>
@@ -46,12 +47,12 @@
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>
-									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}" />
+									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" />
 									<Label text="{i18n>WorkItems.completedDate}"/>
-									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'medium'}}"/>
+									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

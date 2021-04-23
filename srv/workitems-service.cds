@@ -5,13 +5,7 @@ using {MSGraphService as MSGraph} from './msgraph-service';
 service WorkItemsService @(requires : 'authenticated-user') {
     entity AzDevWorkItems as projection on AzDevOps.WorkItems;
     entity MSGraphEvents  as projection on MSGraph.Events;
-
-    entity WorkItems      as
-        select from my.WorkItems {
-            *,
-            current_date as currentDate : Date
-        };
-
+    entity WorkItems      as projection on my.WorkItems;
     entity MyWorkItems    as projection on WorkItems;
 
     entity IOTWorkItems   as

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
+/* globals $ */
 sap.ui.define(
   [
     "./BaseController",
@@ -68,6 +69,22 @@ sap.ui.define(
           }
 
           model.setProperty("/busy", false);
+
+          $(document).keydown((evt) => {
+            const activeElementID =
+              $(document.activeElement) &&
+              $(document.activeElement).control()[0] &&
+              $(document.activeElement).control()[0].getId();
+
+            if (
+              evt.ctrlKey &&
+              evt.keyCode == 13 &&
+              !activeElementID.includes("submitButton")
+            ) {
+              evt.preventDefault();
+              this.onSubmitEntry();
+            }
+          });
         },
 
         onPressAppointment(event) {
@@ -120,6 +137,28 @@ sap.ui.define(
         },
 
         async onPressDeleteAppointment(event) {
+          const model = this.getModel();
+          const { appointments } = model.getData();
+          const appointment = event.getSource().getBindingContext().getObject();
+
+          model.setProperty("/dialogBusy", true);
+
+          try {
+            await this.remove({
+              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+            });
+
+            delete appointments[appointment.ID];
+
+            this._closeDialog("createItemDialog");
+          } catch (error) {
+            MessageBox.error(ErrorParser.parse(error));
+          }
+
+          model.setProperty("/dialogBusy", false);
+        },
+
+        async onPressResetAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
           const appointment = event.getSource().getBindingContext().getObject();
@@ -183,9 +222,6 @@ sap.ui.define(
               ? bundle.getText("editAppointment")
               : bundle.getText("createAppointment")
           );
-
-          // eslint-disable-next-line no-undef
-          $(document).keydown((evt) => this._registerCtrlEnterPress(evt));
 
           dialog.bindElement(path);
           dialog.open();
@@ -255,7 +291,7 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
 
-          if (!appointment.ID)
+          if (!appointment || !appointment.ID)
             this.getModel().setProperty("/appointments/NEW", {});
         },
 
@@ -264,19 +300,7 @@ sap.ui.define(
         },
 
         _closeDialog(dialogName) {
-          // eslint-disable-next-line no-undef
-          $(document).off("keydown", (evt) =>
-            this._registerCtrlEnterPress(evt)
-          );
-
           this.byId(dialogName).close();
-        },
-
-        _registerCtrlEnterPress(evt) {
-          if (evt.ctrlKey && evt.keyCode == 13) {
-            evt.preventDefault();
-            this.onSubmitEntry();
-          }
         },
 
         onChangeView: function () {

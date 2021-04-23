@@ -86,6 +86,15 @@ sap.ui.define(
           });
         },
 
+        async remove({ path }) {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").remove(path, {
+              success: resolve,
+              error: reject,
+            });
+          });
+        },
+
         /**
          * Event handler for navigating back.
          * It there is a history entry we go one step back in the browser history

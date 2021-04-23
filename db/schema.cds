@@ -88,4 +88,5 @@ entity WorkItems {
         type                : String                                           @title : '{i18n>WorkItems.type}';
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
         resetEntry          : Boolean;
+        deleted             : Boolean;
 };

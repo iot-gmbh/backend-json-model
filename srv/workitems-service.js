@@ -37,6 +37,25 @@ module.exports = cds.service.impl(async function () {
 
   const { WorkItems, Customers, Projects } = db.entities("iot.planner");
 
+  this.on("DELETE", "MyWorkItems", async (req) => {
+    const item = req.data;
+    const tx = this.transaction(req);
+    const entries = await this.read(WorkItems).where({ ID: item.ID });
+
+    if (entries.length > 0)
+      await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+
+    await tx.run(
+      INSERT.into(WorkItems).entries({
+        ID: item.ID,
+        deleted: true,
+        assignedTo_userPrincipalName: "DELETED",
+        customer_friendlyID: "DELETED",
+        project_friendlyID: "DELETED",
+      })
+    );
+  });
+
   this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
@@ -127,13 +146,13 @@ module.exports = cds.service.impl(async function () {
         return map;
       }, {});
 
-    let results = Object.values(map);
+    let results = Object.values(map).filter(({ deleted }) => !deleted);
 
     const srv = this;
 
     // TODO: Schleifen-basierte SQL-Abfragen ersetzen
     async function addExtraInfosTo(workItems) {
-      for (const item of workItems) {
+      for (const item of workItems.filter(({ title }) => !!title)) {
         const titleSubstrings = item.title.split(" ");
 
         if (!item.customer_friendlyID) {
@@ -192,8 +211,8 @@ module.exports = cds.service.impl(async function () {
 
     const IOTWorkItems = items.map((itm) => ({
       Datum: moment(itm.Datum).format("DD.MM.yyyy"),
-      Von: moment(itm.Datum).format("HH:mm"),
-      Bis: moment(itm.DatumBis).format("HH:mm"),
+      Beginn: moment(itm.Datum).format("HH:mm"),
+      Ende: moment(itm.DatumBis).format("HH:mm"),
       P1: itm.P1,
       Projekt: itm.Projekt,
       Teilprojekt: itm.Teilprojekt,
