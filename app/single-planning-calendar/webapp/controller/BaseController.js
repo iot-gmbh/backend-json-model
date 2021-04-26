@@ -86,12 +86,20 @@ sap.ui.define(
           });
         },
 
-        async remove({ path }) {
+        async remove({ path, data: { activatedDate, completedDate } }) {
           return new Promise((resolve, reject) => {
-            this.getModel("OData").remove(path, {
-              success: resolve,
-              error: reject,
-            });
+            this.getModel("OData").update(
+              path,
+              {
+                activatedDate,
+                completedDate,
+                deleted: true,
+              },
+              {
+                success: resolve,
+                error: reject,
+              }
+            );
           });
         },
 

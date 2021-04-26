@@ -119,15 +119,18 @@ sap.ui.define(
           }
 
           try {
-            const appointmentSync = await this._submitEntry({
+            const { ...appointmentSync } = await this._submitEntry({
               ...data,
               activatedDate: startDate,
               completedDate: endDate,
             });
 
             appointments[appointmentSync.ID] = {
+              assignedTo,
               ...data,
               ...appointmentSync,
+              customer,
+              project,
             };
 
             model.setProperty("/appointments", appointments);
@@ -146,6 +149,7 @@ sap.ui.define(
           try {
             await this.remove({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+              data: appointment,
             });
 
             delete appointments[appointment.ID];
@@ -169,7 +173,7 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this.reset({
+            const { appointmentSync } = await this.reset({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               data,
             });
@@ -177,6 +181,8 @@ sap.ui.define(
             appointments[appointmentSync.ID] = {
               ...data,
               ...appointmentSync,
+              customer,
+              project,
             };
 
             this._closeDialog("createItemDialog");
@@ -224,6 +230,7 @@ sap.ui.define(
           );
 
           dialog.bindElement(path);
+          dialog.getElementBinding().refresh(true);
           dialog.open();
         },
 
@@ -235,25 +242,27 @@ sap.ui.define(
         },
 
         async onSubmitEntry() {
-          const appointment = this.byId("createItemDialog")
+          const model = this.getModel();
+          const { project, customer, ...appointment } = this.byId(
+            "createItemDialog"
+          )
             .getBindingContext()
             .getObject();
-          const model = this.getModel();
-          const project = this.byId("projecSelect").getSelectedKey();
 
           let { appointments } = model.getData();
 
           model.setProperty("/dialogBusy", true);
 
           try {
-            appointment.project_friendlyID = project;
-
             const appointmentSync = await this._submitEntry(appointment);
 
             appointments[appointmentSync.ID] = {
               ...appointment,
               ...appointmentSync,
+              project,
+              customer,
             };
+
             appointments["NEW"] = {};
 
             model.setProperty("/appointments", appointments);

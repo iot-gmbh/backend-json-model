@@ -1,0 +1,166 @@
+{
+    "ID": "AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2PiO6_rAAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA==",
+    "activatedDate": "\/Date(1617692400000)\/",
+    "completedDate": "\/Date(1617693300000)\/",
+    "changedDate": null,
+    "assignedToName": null,
+    "createdDate": null,
+    "reason": null,
+    "state": null,
+    "teamProject": null,
+    "title": "IOT Check-in Meeting",
+    "workItemType": null,
+    "completedWork": null,
+    "remainingWork": null,
+    "originalEstimate": null,
+    "resolvedDate": null,
+    "closedDate": null,
+    "customer_friendlyID": "IOT",
+    "customerName": null,
+    "private": false,
+    "project_friendlyID": "IOT Check-in Meeting",
+    "projectName": null,
+    "ticket": null,
+    "type": "Event",
+    "duration": null,
+    "resetEntry": null,
+    "deleted": true,
+    "assignedTo_userPrincipalName": "benedikt.hoelker@iot-online.de",
+    "assignedTo": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/work-items/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2PiO6_rAAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA%3D%3D')/assignedTo"
+        }
+    },
+    "customer": {
+        "createdAt": "\/Date(1618814828677)\/",
+        "createdBy": "anonymous",
+        "modifiedAt": "\/Date(1618814828677)\/",
+        "modifiedBy": "anonymous",
+        "ID": "51112c9f-28a8-4f27-834e-db850cb8218a",
+        "friendlyID": "IOT",
+        "name": "IOT GmbH",
+        "projects": [
+            {
+                "createdAt": "\/Date(1618814828677)\/",
+                "createdBy": "anonymous",
+                "modifiedAt": "\/Date(1618814828677)\/",
+                "modifiedBy": "anonymous",
+                "ID": "964dda6e-d9d9-4c22-be14-6fb2cda9e350",
+                "friendlyID": "IOT Check-in Meeting",
+                "title": "IOT Check-in Meeting",
+                "description": null,
+                "IOTProjectID": "835-IOT2101-Interne-Aufschreibung",
+                "customer_ID": "51112c9f-28a8-4f27-834e-db850cb8218a",
+                "manager_userPrincipalName": null,
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'964dda6e-d9d9-4c22-be14-6fb2cda9e350')/manager"
+                    }
+                },
+                "workItems": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'964dda6e-d9d9-4c22-be14-6fb2cda9e350')/workItems"
+                    }
+                },
+                "__metadata": {
+                    "type": "WorkItemsService.Projects",
+                    "uri": "http://localhost:4004/v2/work-items/Projects(guid'964dda6e-d9d9-4c22-be14-6fb2cda9e350')"
+                }
+            },
+            {
+                "createdAt": "\/Date(1618814828677)\/",
+                "createdBy": "anonymous",
+                "modifiedAt": "\/Date(1618814828677)\/",
+                "modifiedBy": "anonymous",
+                "ID": "cb1cfc22-a33f-4c2e-b2d4-465755b00353",
+                "friendlyID": "Wochenplanung",
+                "title": "IOT Wochenplanung",
+                "description": null,
+                "IOTProjectID": "835-IOT2101-Interne-Aufschreibung",
+                "customer_ID": "51112c9f-28a8-4f27-834e-db850cb8218a",
+                "manager_userPrincipalName": null,
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'cb1cfc22-a33f-4c2e-b2d4-465755b00353')/manager"
+                    }
+                },
+                "workItems": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'cb1cfc22-a33f-4c2e-b2d4-465755b00353')/workItems"
+                    }
+                },
+                "__metadata": {
+                    "type": "WorkItemsService.Projects",
+                    "uri": "http://localhost:4004/v2/work-items/Projects(guid'cb1cfc22-a33f-4c2e-b2d4-465755b00353')"
+                }
+            },
+            {
+                "createdAt": "\/Date(1618814828677)\/",
+                "createdBy": "anonymous",
+                "modifiedAt": "\/Date(1618814828677)\/",
+                "modifiedBy": "anonymous",
+                "ID": "da46c750-02d0-4939-959c-cd4237ffe9a8",
+                "friendlyID": "Vertrieb",
+                "title": "Vertrieb",
+                "description": null,
+                "IOTProjectID": "815-IOT2002-Vertrieb",
+                "customer_ID": "51112c9f-28a8-4f27-834e-db850cb8218a",
+                "manager_userPrincipalName": null,
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'da46c750-02d0-4939-959c-cd4237ffe9a8')/manager"
+                    }
+                },
+                "workItems": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'da46c750-02d0-4939-959c-cd4237ffe9a8')/workItems"
+                    }
+                },
+                "__metadata": {
+                    "type": "WorkItemsService.Projects",
+                    "uri": "http://localhost:4004/v2/work-items/Projects(guid'da46c750-02d0-4939-959c-cd4237ffe9a8')"
+                }
+            },
+            {
+                "createdAt": "\/Date(1618814828677)\/",
+                "createdBy": "anonymous",
+                "modifiedAt": "\/Date(1618814828677)\/",
+                "modifiedBy": "anonymous",
+                "ID": "ddf29771-86bb-48d5-adac-962f6d3a75b8",
+                "friendlyID": "Intern",
+                "title": "Interne Aufschreibung",
+                "description": null,
+                "IOTProjectID": "835-IOT2101-Interne-Aufschreibung",
+                "customer_ID": "51112c9f-28a8-4f27-834e-db850cb8218a",
+                "manager_userPrincipalName": null,
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'ddf29771-86bb-48d5-adac-962f6d3a75b8')/manager"
+                    }
+                },
+                "workItems": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/work-items/Projects(guid'ddf29771-86bb-48d5-adac-962f6d3a75b8')/workItems"
+                    }
+                },
+                "__metadata": {
+                    "type": "WorkItemsService.Projects",
+                    "uri": "http://localhost:4004/v2/work-items/Projects(guid'ddf29771-86bb-48d5-adac-962f6d3a75b8')"
+                }
+            }
+        ],
+        "__metadata": {
+            "type": "WorkItemsService.Customers",
+            "uri": "http://localhost:4004/v2/work-items/Customers(guid'51112c9f-28a8-4f27-834e-db850cb8218a')"
+        }
+    },
+    "project": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/work-items/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2PiO6_rAAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA%3D%3D')/project"
+        }
+    },
+    "__metadata": {
+        "type": "WorkItemsService.MyWorkItems",
+        "uri": "http://localhost:4004/v2/work-items/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOAFRAAgI2PiO6_rAAEYAAAAAeS1gfw4mGE_-OrcJV6X0NgcAtUg72arJAEG2BXaPfBHXigAAAAABDQAAtUg72arJAEG2BXaPfBHXigACg-cDewAAEA%3D%3D')"
+    }
+}

@@ -61,6 +61,7 @@ module.exports = cds.service.impl(async function () {
     const tx = this.transaction(req);
 
     if (item.resetEntry) {
+      // RESET
       // eslint-disable-next-line no-unused-vars
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 
@@ -70,19 +71,39 @@ module.exports = cds.service.impl(async function () {
 
     const entries = await this.read(WorkItems).where({ ID: item.ID });
 
-    item.duration = calcDurationInH({
-      start: item.activatedDate,
-      end: item.completedDate,
-    });
+    if (item.deleted) {
+      // DELETE
+      if (entries.length > 0)
+        return await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
 
-    let itm = item;
-    if (entries.length === 0) {
-      itm = await tx.run(INSERT.into(WorkItems).entries(item));
+      return await tx.run(
+        INSERT.into(WorkItems).entries({
+          ID: item.ID,
+          activatedDate: item.activatedDate,
+          completedDate: item.completedDate,
+          deleted: true,
+          assignedTo_userPrincipalName: "DELETED",
+          customer_friendlyID: "DELETED",
+          project_friendlyID: "DELETED",
+        })
+      );
     } else {
-      itm = await tx.run(UPDATE(WorkItems, item.ID).with(item));
-    }
+      // UPDATE
+      item.duration = calcDurationInH({
+        start: item.activatedDate,
+        end: item.completedDate,
+      });
 
-    return itm;
+      let itm = item;
+
+      if (entries.length === 0) {
+        itm = await tx.run(INSERT.into(WorkItems).entries(item));
+      } else {
+        itm = await tx.run(UPDATE(WorkItems, item.ID).with(item));
+      }
+
+      return itm;
+    }
   });
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
