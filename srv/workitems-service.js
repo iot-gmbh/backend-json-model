@@ -93,6 +93,7 @@ module.exports = cds.service.impl(async function () {
         start: item.activatedDate,
         end: item.completedDate,
       });
+      item.confirmed = true;
 
       let itm = item;
 
@@ -115,6 +116,7 @@ module.exports = cds.service.impl(async function () {
 
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
+    req.data.confirmed = true;
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
       end: req.data.completedDate,
@@ -151,7 +153,11 @@ module.exports = cds.service.impl(async function () {
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
-    const map = [...devOpsWorkItems, MSGraphWorkItems, localWorkItems]
+    const map = [
+      ...devOpsWorkItems,
+      MSGraphWorkItems,
+      localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
+    ]
       .reduce((acc, item) => acc.concat(item), [])
       /*
         Nur Items mit ID und AssignedTo übernehmen

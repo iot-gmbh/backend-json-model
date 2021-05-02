@@ -85,8 +85,13 @@ entity WorkItems {
                                   on project.friendlyID = project_friendlyID   @title : '{i18n>WorkItems.project}';
         projectName         : String                                           @title : '{i18n>WorkItems.projectName}';
         ticket              : String                                           @title : '{i18n>WorkItems.ticket}';
-        type                : String                                           @title : '{i18n>WorkItems.type}';
+        type                : String                                           @title : '{i18n>WorkItems.type}' enum {
+            Manual;
+            Event;
+            WorkItem
+        };
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
         resetEntry          : Boolean;
         deleted             : Boolean;
+        confirmed           : Boolean;
 };

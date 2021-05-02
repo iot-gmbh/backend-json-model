@@ -12,8 +12,8 @@ service WorkItemsService @(requires : 'authenticated-user') {
         select from WorkItems {
             activatedDate        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
             completedDate        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-            ''                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Von}'),
-            ''                   as Ende         : String @(title : '{i18n>IOTWorkItems.Bis}'),
+            ''                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Beginn}'),
+            ''                   as Ende         : String @(title : '{i18n>IOTWorkItems.Ende}'),
             ''                   as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
             project.IOTProjectID as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
             ''                   as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),

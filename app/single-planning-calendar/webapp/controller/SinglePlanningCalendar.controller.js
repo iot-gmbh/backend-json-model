@@ -173,7 +173,7 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            const { appointmentSync } = await this.reset({
+            const appointmentSync = await this.reset({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               data,
             });
@@ -363,7 +363,7 @@ sap.ui.define(
                     value1: endDate,
                   }),
                 ],
-                and: false,
+                and: true,
               }),
             ],
           });
