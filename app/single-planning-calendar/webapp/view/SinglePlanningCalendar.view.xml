@@ -3,6 +3,7 @@
 	xmlns:unified="sap.ui.unified"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
 	xmlns:smartfield="sap.ui.comp.smartfield"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
 	<Shell id="shell">
@@ -39,7 +40,7 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}"/>
-									<Select id="projecSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" forceSelection="true" change="onChangeSelectedProject">
+									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>
@@ -47,9 +48,9 @@
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>
-									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" />
+									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 									<Label text="{i18n>WorkItems.completedDate}"/>
-									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}"/>
+									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
 									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
@@ -64,6 +65,11 @@
 							<SinglePlanningCalendarMonthView key="Month" id="monthView" title="Month" />
 						</views>
 					</SinglePlanningCalendar>
+					<PlanningCalendarLegend id="singlePlanningCalendarLegend" items="{path : '/legendItems', templateShareable: true}" class="sapUiSmallMarginTop">
+						<items>
+							<unified:CalendarLegendItem text="{key}" type="{type}" />
+						</items>
+					</PlanningCalendarLegend>
 				</Page>
 			</pages>
 		</App>

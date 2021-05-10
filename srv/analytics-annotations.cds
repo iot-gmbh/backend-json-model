@@ -1,9 +1,16 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
-    Chart           : {
+    PresentationVariant : {
+        $Type     : 'UI.PresentationVariantType',
+        SortOrder : [{
+            Descending : true,
+            Property   : duration,
+        }]
+    },
+    Chart               : {
         $Type               : 'UI.ChartDefinitionType',
-        ChartType           : #Donut,
+        ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
             Dimension : customer_friendlyID,
@@ -17,14 +24,14 @@ annotate my.WorkItems with @(UI : {
         Dimensions          : [customer_friendlyID],
         Measures            : [duration],
     },
-    SelectionFields : [
+    SelectionFields     : [
         activatedDate,
         completedDate,
         assignedTo_userPrincipalName,
         customer_friendlyID,
         project_friendlyID
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : assignedTo_userPrincipalName,

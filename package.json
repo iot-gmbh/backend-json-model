@@ -59,7 +59,7 @@
     "start:approuter": "cd app/single-planning-calendar && node node_modules/@sap/approuter/approuter.js",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
     "debug": "run-p start:srv start:spc",
-    "build": "cds build --production && mbt build",
+    "build": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
     "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
@@ -79,7 +79,7 @@
     },
     "requires": {
       "db": {
-        "kind": "sqlite",
+        "kind": "sql",
         "model": "*"
       },
       "uaa": {

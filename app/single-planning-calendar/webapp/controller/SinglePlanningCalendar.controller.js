@@ -48,6 +48,20 @@ sap.ui.define(
             appointments: { NEW: {} },
             busy: false,
             customers: [],
+            legendItems: [
+              { key: "Manual_Allocated_Billed", type: "Type01" },
+              { key: "Manual_Allocated_NotBilled", type: "Type02" },
+              { key: "Manual_NotAllocated_Billed", type: "Type03" },
+              { key: "Manual_NotAllocated_NotBilled", type: "Type04" },
+              { key: "WorkItem_Allocated_Billed", type: "Type05" },
+              { key: "WorkItem_Allocated_NotBilled", type: "Type06" },
+              { key: "WorkItem_NotAllocated_Billed", type: "Type07" },
+              { key: "WorkItem_NotAllocated_NotBilled", type: "Type08" },
+              { key: "Event_Allocated_Billed", type: "Type09" },
+              { key: "Event_Allocated_NotBilled", type: "Type10" },
+              { key: "Event_NotAllocated_Billed", type: "Type11" },
+              { key: "Event_NotAllocated_NotBilled", type: "Type12" },
+            ],
           });
 
           calendar.setSelectedView(workWeekView);
@@ -220,6 +234,15 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const appointment = model.getProperty(path);
           const dialog = this.byId("createItemDialog");
+
+          const { customer } = appointment;
+
+          if (customer && customer.projects.length === 1) {
+            model.setProperty(
+              path + "/project_friendlyID",
+              customer.projects[0].friendly_ID
+            );
+          }
 
           // model.setProperty(path, appointment);
           model.setProperty(

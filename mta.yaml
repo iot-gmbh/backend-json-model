@@ -9,11 +9,12 @@ modules:
     requires:
       - name: project-planning-hana-cloud-db
       - name: project-planning-uaa
-      - name: project-planning-dest
+      - name: project-planning-dest-service
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
+
   - name: project-planning-hana-cloud-db-deployer
     type: hdb
     path: gen/db
@@ -21,6 +22,7 @@ modules:
       - name: project-planning-hana-cloud-db
     parameters:
       buildpack: nodejs_buildpack
+
   - name: project-planning-content
     type: com.sap.application.content
     requires:
@@ -32,7 +34,7 @@ modules:
         parameters:
           service-key:
             name: project-planning-repo-host-key
-      - name: project-planning-dest
+      - name: project-planning-dest-service
         parameters:
           content-target: true
     parameters:
@@ -43,8 +45,8 @@ modules:
               ServiceInstanceName: project-planning-repo-host-service
               ServiceKeyName: project-planning-repo-host-key
               sap.cloud.service: iot.project.planner
-            - Authentication: OAuth2UserTokenExchange
-              Name: iot.project.planner-uaa
+            - Name: iot.project.planner-uaa
+              Authentication: OAuth2UserTokenExchange
               ServiceInstanceName: project-planning-xsuaa-service
               ServiceKeyName: project-planning-uaa-key
               sap.cloud.service: iot.project.planner
@@ -133,7 +135,8 @@ resources:
     type: com.sap.xs.hdi-container
     properties:
       hdi-service-name: ${service-name}
-  - name: project-planning-dest
+
+  - name: project-planning-dest-service
     type: org.cloudfoundry.managed-service
     requires:
       - name: srv-api
@@ -142,17 +145,28 @@ resources:
       service-name: project-planning-dest-service
       service-plan: lite
       config:
+        version: 1.0.0
         HTML5Runtime_enabled: true
         init_data:
           instance:
+            existing_destinations_policy: update
             destinations:
               - Authentication: NoAuthentication
                 Name: ui5
                 ProxyType: Internet
                 Type: HTTP
                 URL: https://ui5.sap.com
+          subaccount:
             existing_destinations_policy: update
-        version: 1.0.0
+            destinations:
+              - Name: project-planning-dest
+                Description: Project Planning OData Services
+                Type: HTTP
+                Authentication: NoAuthentication
+                ProxyType: Internet
+                URL: ~{srv-api/srv-url}
+                HTML5.DynamicDestination: true
+                ForwardAuthToken: true
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
