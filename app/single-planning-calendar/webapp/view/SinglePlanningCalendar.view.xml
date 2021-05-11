@@ -70,10 +70,10 @@
 							</Dialog>
 						</dependents>
 						<views>
-							<SinglePlanningCalendarDayView key="Day" id="dayView" title="Day" />
-							<SinglePlanningCalendarWorkWeekView key="WorkWeek" title="Work Week" />
-							<SinglePlanningCalendarWeekView key="Week" title="Week" />
-							<SinglePlanningCalendarMonthView key="Month" id="monthView" title="Month" />
+							<SinglePlanningCalendarDayView key="Day" id="dayView" title="{i18n>calendar.dayView}" />
+							<SinglePlanningCalendarWorkWeekView key="WorkWeek" title="{i18n>calendar.workWeekView}" />
+							<SinglePlanningCalendarWeekView key="Week" title="{i18n>calendar.weekView}"/>
+							<SinglePlanningCalendarMonthView key="Month" id="monthView" title="{i18n>calendar.monthView}" />
 						</views>
 					</SinglePlanningCalendar>
 				</Page>
