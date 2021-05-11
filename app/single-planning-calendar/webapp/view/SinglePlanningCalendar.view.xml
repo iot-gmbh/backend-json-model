@@ -13,6 +13,7 @@
 					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onAppointmentResize" appointmentDrop="onAppointmentResize" startDateChange="onStartDateChange" viewChange="onChangeView" cellPress="onCreateAppointment" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
+							<Button id="displayLegend" text="{i18n>displayLegend.button.text}" press="onDisplayLegend" tooltip="{i18n>displayLegend.button.tooltip}" />
 						</actions>
 						<appointments>
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
@@ -57,6 +58,16 @@
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>
+							<Dialog id="legendDialog" title="{i18n>legend.title}">
+								<PlanningCalendarLegend id="singlePlanningCalendarLegend" items="{path : '/legendItems', templateShareable: true}" class="sapUiSmallMarginTop">
+									<items>
+										<unified:CalendarLegendItem text="{text}" type="{type}" />
+									</items>
+								</PlanningCalendarLegend>
+								<buttons>
+									<Button text="{i18n>close}" press="onCloseDialog" />
+								</buttons>
+							</Dialog>
 						</dependents>
 						<views>
 							<SinglePlanningCalendarDayView key="Day" id="dayView" title="Day" />
@@ -65,11 +76,6 @@
 							<SinglePlanningCalendarMonthView key="Month" id="monthView" title="Month" />
 						</views>
 					</SinglePlanningCalendar>
-					<PlanningCalendarLegend id="singlePlanningCalendarLegend" items="{path : '/legendItems', templateShareable: true}" class="sapUiSmallMarginTop">
-						<items>
-							<unified:CalendarLegendItem text="{key}" type="{type}" />
-						</items>
-					</PlanningCalendarLegend>
 				</Page>
 			</pages>
 		</App>

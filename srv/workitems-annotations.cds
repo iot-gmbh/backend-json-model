@@ -62,13 +62,10 @@ annotate my.IOTWorkItems with @(UI : {
         Datum,
         Beginn,
         Ende,
-        P1,
         Projekt,
         Teilprojekt,
         Arbeitspaket,
         Taetigkeit,
-        Einsatzort,
-        P2,
         Bemerkung
     ],
     LineItem        : [

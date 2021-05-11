@@ -49,18 +49,66 @@ sap.ui.define(
             busy: false,
             customers: [],
             legendItems: [
-              { key: "Manual_Allocated_Billed", type: "Type01" },
-              { key: "Manual_Allocated_NotBilled", type: "Type02" },
-              { key: "Manual_NotAllocated_Billed", type: "Type03" },
-              { key: "Manual_NotAllocated_NotBilled", type: "Type04" },
-              { key: "WorkItem_Allocated_Billed", type: "Type05" },
-              { key: "WorkItem_Allocated_NotBilled", type: "Type06" },
-              { key: "WorkItem_NotAllocated_Billed", type: "Type07" },
-              { key: "WorkItem_NotAllocated_NotBilled", type: "Type08" },
-              { key: "Event_Allocated_Billed", type: "Type09" },
-              { key: "Event_Allocated_NotBilled", type: "Type10" },
-              { key: "Event_NotAllocated_Billed", type: "Type11" },
-              { key: "Event_NotAllocated_NotBilled", type: "Type12" },
+              {
+                key: "Manual_Allocated_Billed",
+                text: "Manual, Allocated, Billed",
+                type: "Type01",
+              },
+              {
+                key: "Manual_Allocated_NotBilled",
+                text: "Manual, Allocated, Not Billed",
+                type: "Type02",
+              },
+              {
+                key: "Manual_NotAllocated_Billed",
+                text: "Manual, Not Allocated, Billed",
+                type: "Type03",
+              },
+              {
+                key: "Manual_NotAllocated_NotBilled",
+                text: "Manual, Not Allocated, Not Billed",
+                type: "Type04",
+              },
+              {
+                key: "WorkItem_Allocated_Billed",
+                text: "WorkItem, Allocated, Billed",
+                type: "Type05",
+              },
+              {
+                key: "WorkItem_Allocated_NotBilled",
+                text: "WorkItem, Allocated, Not Billed",
+                type: "Type06",
+              },
+              {
+                key: "WorkItem_NotAllocated_Billed",
+                text: "WorkItem, Not Allocated, Billed",
+                type: "Type07",
+              },
+              {
+                key: "WorkItem_NotAllocated_NotBilled",
+                text: "WorkItem, Not Allocated, Not Billed",
+                type: "Type08",
+              },
+              {
+                key: "Event_Allocated_Billed",
+                text: "Event, Allocated, Billed",
+                type: "Type09",
+              },
+              {
+                key: "Event_Allocated_NotBilled",
+                text: "Event, Allocated, Not Billed",
+                type: "Type10",
+              },
+              {
+                key: "Event_NotAllocated_Billed",
+                text: "Event, Not Allocated, Billed",
+                type: "Type11",
+              },
+              {
+                key: "Event_NotAllocated_NotBilled",
+                text: "Event, Not Allocated, Not Billed",
+                type: "Type12",
+              },
             ],
           });
 
@@ -101,6 +149,10 @@ sap.ui.define(
           });
         },
 
+        onDisplayLegend() {
+          this.byId("legendDialog").open();
+        },
+
         onPressAppointment(event) {
           const { appointment } = event.getParameters();
           const path = appointment
@@ -115,13 +167,8 @@ sap.ui.define(
           const { appointments } = model.getData();
           const { startDate, endDate, appointment } = event.getParameters();
           const bindingContext = appointment.getBindingContext();
-          const {
-            assignedTo,
-            customer,
-            project,
-            __metadata,
-            ...data
-          } = bindingContext.getObject();
+          const { assignedTo, customer, project, __metadata, ...data } =
+            bindingContext.getObject();
           const path = bindingContext.getPath();
 
           model.setProperty(path + "/activatedDate", startDate);
@@ -327,8 +374,8 @@ sap.ui.define(
             this.getModel().setProperty("/appointments/NEW", {});
         },
 
-        onCloseDialog() {
-          this._closeDialog("createItemDialog");
+        onCloseDialog(event) {
+          event.getSource().getParent().close();
         },
 
         _closeDialog(dialogName) {
