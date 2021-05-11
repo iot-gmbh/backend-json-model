@@ -284,12 +284,14 @@ sap.ui.define(
 
           const { customer } = appointment;
 
-          if (customer && customer.projects.length === 1) {
-            model.setProperty(
-              path + "/project_friendlyID",
-              customer.projects[0].friendly_ID
-            );
-          }
+          if (customer) {
+            if (customer.projects.length === 1) {
+              model.setProperty(
+                path + "/project_friendlyID",
+                customer.projects[0].friendlyID
+              );
+            }
+          } else model.setProperty(path + "/customer_friendlyID", undefined);
 
           // model.setProperty(path, appointment);
           model.setProperty(
@@ -300,7 +302,6 @@ sap.ui.define(
           );
 
           dialog.bindElement(path);
-          dialog.getElementBinding().refresh(true);
           dialog.open();
         },
 

@@ -32,8 +32,8 @@ function calcDurationInH({ start, end }) {
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
+  const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
   const { WorkItems, Customers, Projects } = db.entities("iot.planner");
 
@@ -62,10 +62,14 @@ module.exports = cds.service.impl(async function () {
 
     if (item.resetEntry) {
       // RESET
+      if (item.type !== "Manual")
+        throw Error("Reset is only allowed for entries of type 'Manual'");
+
       // eslint-disable-next-line no-unused-vars
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+
       return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
@@ -73,20 +77,23 @@ module.exports = cds.service.impl(async function () {
 
     if (item.deleted) {
       // DELETE
-      if (entries.length > 0)
-        return await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+      if (entries.length > 0) {
+        await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+      } else {
+        await tx.run(
+          INSERT.into(WorkItems).entries({
+            ID: item.ID,
+            activatedDate: item.activatedDate,
+            completedDate: item.completedDate,
+            deleted: true,
+            assignedTo_userPrincipalName: req.user.id,
+            customer_friendlyID: "DELETED",
+            project_friendlyID: "DELETED",
+          })
+        );
+      }
 
-      return await tx.run(
-        INSERT.into(WorkItems).entries({
-          ID: item.ID,
-          activatedDate: item.activatedDate,
-          completedDate: item.completedDate,
-          deleted: true,
-          assignedTo_userPrincipalName: "DELETED",
-          customer_friendlyID: "DELETED",
-          project_friendlyID: "DELETED",
-        })
-      );
+      return item;
     } else {
       // UPDATE
       item.duration = calcDurationInH({
@@ -154,11 +161,11 @@ module.exports = cds.service.impl(async function () {
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
     const map = [
-      ...devOpsWorkItems,
-      MSGraphWorkItems,
-      localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
+      ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
+      ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
+      ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
-      .reduce((acc, item) => acc.concat(item), [])
+      // .reduce((acc, item) => acc.concat(item), [])
       /*
         Nur Items mit ID und AssignedTo übernehmen
         => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden

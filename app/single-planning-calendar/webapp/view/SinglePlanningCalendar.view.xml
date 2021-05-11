@@ -26,21 +26,21 @@
 											<Title text="{/createItemDialogTitle} {= !${confirmed} ? ' - Draft' : ''}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}"/>
+											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${confirmed}}"/>
 											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}"/>
 										</contentRight>
 									</Bar>
 								</customHeader>
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
-									<Label text="{i18n>WorkItems.title}" />
+									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
-									<Label text="{i18n>WorkItems.customer}"/>
+									<Label text="{i18n>WorkItems.customer}" required="true"/>
 									<ComboBox selectedKey="{customer_friendlyID}" items="{/customers}" change="onChangeSelectedCustomer">
 										<items>
 											<core:Item text="{name}" key="{friendlyID}"/>
 										</items>
 									</ComboBox>
-									<Label text="{i18n>WorkItems.project}"/>
+									<Label text="{i18n>WorkItems.project}" required="true"/>
 									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" change="onChangeSelectedProject">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
@@ -54,7 +54,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

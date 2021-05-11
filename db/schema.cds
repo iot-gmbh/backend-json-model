@@ -91,7 +91,8 @@ entity WorkItems {
             WorkItem
         };
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
-        resetEntry          : Boolean;
-        deleted             : Boolean;
-        confirmed           : Boolean;
+        
+        resetEntry          : Boolean                                          @title : '{i18n>WorkItems.resetEntry}';
+        deleted             : Boolean                                          @title : '{i18n>WorkItems.deleted}';
+        confirmed           : Boolean                                          @title : '{i18n>WorkItems.confirmed}';
 };
