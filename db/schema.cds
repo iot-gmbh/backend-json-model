@@ -34,7 +34,10 @@ entity Customers : managed, cuid {
                      on projects.customer = $self @title : '{i18n>Customers.projects}'
 }
 
-@assert.unique : {friendlyID : [friendlyID]}
+@assert.unique : {friendlyID : [
+    customer,
+    friendlyID
+]}
 entity Projects : managed, cuid {
     friendlyID   : String                   @title : '{i18n>Projects.friendlyID}'  @mandatory : true;
     title        : String                   @title : '{i18n>Projects.title}';
@@ -91,7 +94,6 @@ entity WorkItems {
             WorkItem
         };
         duration            : Decimal                                          @title : '{i18n>WorkItems.duration}';
-        
         resetEntry          : Boolean                                          @title : '{i18n>WorkItems.resetEntry}';
         deleted             : Boolean                                          @title : '{i18n>WorkItems.deleted}';
         confirmed           : Boolean                                          @title : '{i18n>WorkItems.confirmed}';

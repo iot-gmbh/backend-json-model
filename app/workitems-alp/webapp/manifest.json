@@ -129,7 +129,13 @@
             }
         },
         "extends": {
-            "extensions": {}
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage": {
+                        "controllerName": "iot.planner.workitemsalp.ext.AnalyticalListPageExt"
+                    }
+                }
+            }
         },
         "contentDensities": {
             "compact": true,
