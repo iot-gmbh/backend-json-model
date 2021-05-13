@@ -41,7 +41,7 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{customer/projects}">
+									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" visible="{= ${customer/projects}.length > 1}">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>
