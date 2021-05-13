@@ -106,7 +106,8 @@ function getDevOpsFieldName(CDSName) {
 
 function isISODate(str) {
   // Regex-Source: https://stackoverflow.com/questions/3143070/javascript-regex-iso-datetime
-  const dateRegexp = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+  const dateRegexp =
+    /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
 
   return dateRegexp.test(str);
 }
@@ -173,7 +174,7 @@ module.exports = cds.service.impl(async function () {
     readWorkItems({ req, restrictToOwnUser: false })
   );
 
-  this.on("READ", "MyWorkItems", (req) =>
+  this.on("READ", "MyWork", (req) =>
     readWorkItems({ req, restrictToOwnUser: true })
   );
 });

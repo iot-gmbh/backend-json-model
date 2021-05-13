@@ -156,17 +156,17 @@ resources:
                 ProxyType: Internet
                 Type: HTTP
                 URL: https://ui5.sap.com
-          subaccount:
-            existing_destinations_policy: update
-            destinations:
-              - Name: project-planning-dest
-                Description: Project Planning OData Services
-                Type: HTTP
-                Authentication: NoAuthentication
-                ProxyType: Internet
-                URL: ~{srv-api/srv-url}
-                HTML5.DynamicDestination: true
-                ForwardAuthToken: true
+          # subaccount:
+          #   existing_destinations_policy: update
+          #   destinations:
+          #     - Name: project-planning-dest
+          #       Description: Project Planning OData Services
+          #       Type: HTTP
+          #       Authentication: NoAuthentication
+          #       ProxyType: Internet
+          #       URL: ~{srv-api/srv-url}
+          #       HTML5.DynamicDestination: true
+          #       ForwardAuthToken: true
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service
     parameters:

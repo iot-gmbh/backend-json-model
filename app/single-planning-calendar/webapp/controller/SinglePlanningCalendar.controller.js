@@ -8,8 +8,8 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "../model/formatter",
     "sap/ui/model/json/JSONModel",
+    "../model/legendItems",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
   ],
   function (
     BaseController,
@@ -17,11 +17,9 @@ sap.ui.define(
     Filter,
     formatter,
     JSONModel,
-    MessageBox,
-    MessageToast
+    legendItems,
+    MessageBox
   ) {
-    "use strict";
-
     function addDays(date, days) {
       const result = new Date(date);
       result.setDate(result.getDate() + days);
@@ -41,6 +39,7 @@ sap.ui.define(
         formatter,
 
         onInit: async function () {
+          const bundle = this.getResourceBundle();
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
 
@@ -48,68 +47,12 @@ sap.ui.define(
             appointments: { NEW: {} },
             busy: false,
             customers: [],
-            legendItems: [
-              {
-                key: "Manual_Allocated_Billed",
-                text: "Manual, Allocated, Billed",
-                type: "Type01",
-              },
-              {
-                key: "Manual_Allocated_NotBilled",
-                text: "Manual, Allocated, Not Billed",
-                type: "Type02",
-              },
-              {
-                key: "Manual_NotAllocated_Billed",
-                text: "Manual, Not Allocated, Billed",
-                type: "Type03",
-              },
-              {
-                key: "Manual_NotAllocated_NotBilled",
-                text: "Manual, Not Allocated, Not Billed",
-                type: "Type04",
-              },
-              {
-                key: "WorkItem_Allocated_Billed",
-                text: "WorkItem, Allocated, Billed",
-                type: "Type05",
-              },
-              {
-                key: "WorkItem_Allocated_NotBilled",
-                text: "WorkItem, Allocated, Not Billed",
-                type: "Type06",
-              },
-              {
-                key: "WorkItem_NotAllocated_Billed",
-                text: "WorkItem, Not Allocated, Billed",
-                type: "Type07",
-              },
-              {
-                key: "WorkItem_NotAllocated_NotBilled",
-                text: "WorkItem, Not Allocated, Not Billed",
-                type: "Type08",
-              },
-              {
-                key: "Event_Allocated_Billed",
-                text: "Event, Allocated, Billed",
-                type: "Type09",
-              },
-              {
-                key: "Event_Allocated_NotBilled",
-                text: "Event, Allocated, Not Billed",
-                type: "Type10",
-              },
-              {
-                key: "Event_NotAllocated_Billed",
-                text: "Event, Not Allocated, Billed",
-                type: "Type11",
-              },
-              {
-                key: "Event_NotAllocated_NotBilled",
-                text: "Event, Not Allocated, Not Billed",
-                type: "Type12",
-              },
-            ],
+            legendItems: Object.entries(legendItems.getItems()).map(
+              ([key, { type }]) => ({
+                text: bundle.getText(`legendItems.${key}`),
+                type,
+              })
+            ),
           });
 
           calendar.setSelectedView(workWeekView);
@@ -209,7 +152,7 @@ sap.ui.define(
 
           try {
             await this.remove({
-              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWork('${encodeURIComponent(appointment.ID)}')`,
               data: appointment,
             });
 
@@ -235,7 +178,7 @@ sap.ui.define(
 
           try {
             const appointmentSync = await this.reset({
-              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWork('${encodeURIComponent(appointment.ID)}')`,
               data,
             });
 
@@ -345,7 +288,7 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
+            const path = `/MyWork('${encodeURIComponent(ID)}')`;
 
             return this.update({
               path,
@@ -355,7 +298,7 @@ sap.ui.define(
 
           // Create
           else {
-            return this.create({ path: "/MyWorkItems", data: appointment });
+            return this.create({ path: "/MyWork", data: appointment });
           }
         },
 
@@ -411,7 +354,7 @@ sap.ui.define(
           const endDate = this._getCalendarEndDate();
 
           const { results: appointments } = await this.read({
-            path: "/MyWorkItems",
+            path: "/MyWork",
             urlParameters: { $top: 100 },
             filters: [
               new Filter({
