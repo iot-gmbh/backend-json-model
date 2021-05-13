@@ -305,13 +305,6 @@ sap.ui.define(
           dialog.open();
         },
 
-        onChangeSelectedProject(event) {
-          const selectCtrl = event.getSource();
-          const projectName = selectCtrl.getSelectedItem().getText();
-
-          this.getModel().setProperty("/appointment/projectName", projectName);
-        },
-
         async onSubmitEntry() {
           const model = this.getModel();
           const { project, customer, ...appointment } = this.byId(
