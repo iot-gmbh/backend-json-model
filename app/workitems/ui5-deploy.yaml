@@ -1,17 +1,14 @@
 # yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
-specVersion: "2.2"
+specVersion: "2.1"
 metadata:
-  name: iot.singleplanningcalendar
+  name: iot.workitems
 type: application
 framework:
   name: SAPUI5
-  version: 1.89.0
+  version: "1.88.1"
   libraries:
-    - name: sap.m
     - name: sap.ui.core
-    - name: sap.ui.comp
-    - name: sap.ui.layout
-    - name: themelib_sap_fiori_3
+    - name: sap.fe.templates
 builder:
   resources:
     excludes:
@@ -21,7 +18,7 @@ builder:
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
       configuration:
-        archiveName: fiori-single-planning-calendar
+        archiveName: fiori-workitems
         additionalFiles:
           - xs-app.json
     - name: webide-extension-task-updateManifestJson

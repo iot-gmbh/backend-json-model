@@ -3,15 +3,8 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "/v2/timetracking/(.*)$",
-      "target": "/v2/timetracking/$1",
-      "destination": "project-planning-dest",
-      "authenticationType": "xsuaa",
-      "csrfProtection": false
-    },
-    {
-      "source": "/timetracking/(.*)$",
-      "target": "/timetracking/$1",
+      "source": "/work-items/(.*)$",
+      "target": "/work-items/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false

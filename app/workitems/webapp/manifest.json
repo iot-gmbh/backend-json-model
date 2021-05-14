@@ -1,5 +1,9 @@
 {
-    "_version": "1.32.0",
+    "_version": "1.29.0",
+    "sap.cloud": {
+        "public": true,
+        "service": "iot.project.planner"
+    },
     "sap.app": {
         "id": "iot.planner.workitems",
         "type": "application",
@@ -11,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/work-items/",
+                "uri": "work-items/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"
@@ -23,6 +27,21 @@
         "sourceTemplate": {
             "id": "ui5template.fiorielements.v4.lrop",
             "version": "1.0.0"
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "iot-workitems-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "WorkItems",
+                    "action": "display",
+                    "title": "Display Workitems",
+                    "subTitle": "Find & Display",
+                    "icon": "sap-icon://work-history"
+                }
+            }
         }
     },
     "sap.ui": {

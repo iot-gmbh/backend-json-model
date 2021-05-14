@@ -25,7 +25,7 @@ builder:
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
       configuration:
-        archiveName: selected-apps-graph
+        archiveName: fiori-workitems-alp
         additionalFiles:
           - xs-app.json
     - name: webide-extension-task-updateManifestJson

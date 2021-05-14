@@ -47,7 +47,7 @@
                     "action": "analyue",
                     "title": "Analyze workitems",
                     "subTitle": "",
-                    "icon": ""
+                    "icon": "sap-icon://donut-chart"
                 }
             }
         },

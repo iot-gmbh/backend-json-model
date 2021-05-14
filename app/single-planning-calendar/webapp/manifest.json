@@ -32,7 +32,7 @@
                     "action": "manage",
                     "title": "My Calendar",
                     "subTitle": "Track & Plan",
-                    "icon": ""
+                    "icon": "sap-icon://calendar"
                 }
             }
         }
