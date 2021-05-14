@@ -119,10 +119,6 @@ module.exports = cds.service.impl(async function () {
   async function readWorkItems({ req, restrictToOwnUser }) {
     const workItemAPI = await connection.getWorkItemTrackingApi();
 
-    const user = process.env.NODE_ENV
-      ? req.user.id
-      : "benedikt.hoelker@iot-online.de";
-
     let SQLString = "";
     try {
       const { SelectBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
@@ -135,7 +131,7 @@ module.exports = cds.service.impl(async function () {
 
     const whereClause = getWhereClause(SQLString);
     const whereClauseFilterByAssignedTo = restrictToOwnUser
-      ? `${whereClause} AND assignedTo = '${user}'`
+      ? `${whereClause} AND assignedTo = '${req.user.id}'`
       : whereClause;
     const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
