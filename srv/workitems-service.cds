@@ -5,7 +5,25 @@ using {MSGraphService as MSGraph} from './msgraph-service';
 service WorkItemsService @(requires : 'authenticated-user') {
     entity AzDevWorkItems as projection on AzDevOps.WorkItems;
     entity MSGraphEvents  as projection on MSGraph.Events;
-    entity WorkItems      as projection on my.WorkItems;
+
+    entity WorkItems @(restrict : [
+        {
+            grant : 'READ',
+            to    : 'team-lead',
+            // Association paths are currently supported on SAP HANA only
+            // https://cap.cloud.sap/docs/guides/authorization#association-paths
+            where : 'assignedTo.manager_userPrincipalName = $user'
+        },
+        {
+            grant : 'READ',
+            to    : 'admin',
+        },
+        {
+            grant : 'READ',
+            to    : 'authenticated-user',
+            where : 'assignedTo_userPrincipalName = $user'
+        }
+    ])                    as projection on my.WorkItems;
 
     entity IOTWorkItems   as
         select from WorkItems {

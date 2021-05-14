@@ -114,12 +114,8 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.on("CREATE", "MyWorkItems", async (req) => {
+  this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-
-    const user = process.env.NODE_ENV
-      ? req.user.id
-      : "benedikt.hoelker@iot-online.de";
 
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
@@ -128,7 +124,9 @@ module.exports = cds.service.impl(async function () {
       start: req.data.activatedDate,
       end: req.data.completedDate,
     });
-    req.data.assignedTo_userPrincipalName = user;
+    req.data.assignedTo_userPrincipalName = req.user.id;
+
+    return next();
   });
 
   this.on("READ", "MyWorkItems", async (req) => {
@@ -140,7 +138,7 @@ module.exports = cds.service.impl(async function () {
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       AzDevOpsSrv.tx(req)
-        .read("MyWorkItems", columns)
+        .read("WorkItems", columns)
         .where(where)
         .orderBy(orderBy)
         .limit(limit),

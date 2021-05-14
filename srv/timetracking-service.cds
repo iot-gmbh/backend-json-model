@@ -3,7 +3,17 @@ using {AzureDevopsService as AzDevOps} from './azure-devops';
 using {MSGraphService as MSGraph} from './msgraph-service';
 
 service TimetrackingService @(requires : 'authenticated-user') {
-    entity MyWorkItems as projection on my.WorkItems;
-    entity Customers   as projection on my.Customers;
-    entity Projects    as projection on my.Projects;
+    entity MyWorkItems @(restrict : [
+        {
+            grant : 'READ',
+            where : 'assignedTo_userPrincipalName = $user'
+        },
+        {
+            grant : 'WRITE',
+            to    : 'authenticated-user'
+        }
+    ])               as projection on my.WorkItems;
+
+    entity Customers as projection on my.Customers;
+    entity Projects  as projection on my.Projects;
 }

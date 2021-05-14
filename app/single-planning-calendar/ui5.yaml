@@ -23,8 +23,8 @@ server:
       configuration:
         removeETag: true
         baseUri: http://localhost:4004/v2/timetracking/
-    - name: ui5-middleware-livereload
-      afterMiddleware: compression
-      configuration:
-        port: 35730
-        path: app/single-planning-calendar/webapp
+    # - name: ui5-middleware-livereload
+    #   afterMiddleware: compression
+    #   configuration:
+    #     port: 35730
+    #     path: app/single-planning-calendar/webapp
