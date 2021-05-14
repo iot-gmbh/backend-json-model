@@ -6,7 +6,7 @@ using WorkItemsService as my from './workitems-service';
         activatedDate,
         completedDate
     ],
-} annotate my.MyWork with  @(UI : {
+} annotate my.MyWorkItems with  @(UI : {
     Identification  : [
         {Value : title},
         {Value : assignedTo.displayName, },

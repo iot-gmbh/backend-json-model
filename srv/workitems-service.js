@@ -37,7 +37,7 @@ module.exports = cds.service.impl(async function () {
 
   const { WorkItems, Customers, Projects } = db.entities("iot.planner");
 
-  this.on("DELETE", "MyWork", async (req) => {
+  this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
     const entries = await this.read(WorkItems).where({ ID: item.ID });
@@ -56,7 +56,7 @@ module.exports = cds.service.impl(async function () {
     );
   });
 
-  this.on("UPDATE", "MyWork", async (req) => {
+  this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
 
@@ -114,7 +114,7 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.on("CREATE", "MyWork", async (req, next) => {
+  this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
 
     const user = process.env.NODE_ENV
@@ -133,7 +133,7 @@ module.exports = cds.service.impl(async function () {
     return next();
   });
 
-  this.on("READ", "MyWork", async (req) => {
+  this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
         SELECT: { where = "ID != null", columns, orderBy, limit },
@@ -142,7 +142,7 @@ module.exports = cds.service.impl(async function () {
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       AzDevOpsSrv.tx(req)
-        .read("MyWork", columns)
+        .read("MyWorkItems", columns)
         .where(where)
         .orderBy(orderBy)
         .limit(limit),

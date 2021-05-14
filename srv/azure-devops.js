@@ -3,6 +3,7 @@ const orgUrl = "https://dev.azure.com/iot-gmbh";
 const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const connection = new azdev.WebApi(orgUrl, authHandler);
+const AzDevProject = "IOT Projekte";
 
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
@@ -139,11 +140,11 @@ module.exports = cds.service.impl(async function () {
     const WIQLWhereClause = transformToWIQL(whereClauseFilterByAssignedTo);
 
     const workItemsByWIQL = await workItemAPI.queryByWiql({
-      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = 'IOT Projekte' AND [System.WorkItemType] <> '' ${WIQLWhereClause}`,
+      query: `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = '${AzDevProject}' AND [System.WorkItemType] <> '' ${WIQLWhereClause}`,
     });
 
-    const ids = workItemsByWIQL.workItems.map(({ id }) => id);
-    const wiDetails = (await workItemAPI.getWorkItems(ids)) || [];
+    const IDs = workItemsByWIQL.workItems.map(({ id }) => id);
+    const wiDetails = (await workItemAPI.getWorkItems(IDs)) || [];
     const results = wiDetails
       // Using map + reduce because flatMap is not supported by the NodeJS-version on BTP
       .map((item) => ({ id: item.id.toString(), ...item.fields }))
@@ -174,7 +175,7 @@ module.exports = cds.service.impl(async function () {
     readWorkItems({ req, restrictToOwnUser: false })
   );
 
-  this.on("READ", "MyWork", (req) =>
+  this.on("READ", "MyWorkItems", (req) =>
     readWorkItems({ req, restrictToOwnUser: true })
   );
 });

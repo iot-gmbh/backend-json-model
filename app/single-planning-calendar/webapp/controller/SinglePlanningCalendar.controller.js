@@ -152,7 +152,7 @@ sap.ui.define(
 
           try {
             await this.remove({
-              path: `/MyWork('${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               data: appointment,
             });
 
@@ -178,7 +178,7 @@ sap.ui.define(
 
           try {
             const appointmentSync = await this.reset({
-              path: `/MyWork('${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               data,
             });
 
@@ -288,7 +288,7 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWork('${encodeURIComponent(ID)}')`;
+            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
 
             return this.update({
               path,
@@ -298,7 +298,7 @@ sap.ui.define(
 
           // Create
           else {
-            return this.create({ path: "/MyWork", data: appointment });
+            return this.create({ path: "/MyWorkItems", data: appointment });
           }
         },
 
@@ -354,7 +354,7 @@ sap.ui.define(
           const endDate = this._getCalendarEndDate();
 
           const { results: appointments } = await this.read({
-            path: "/MyWork",
+            path: "/MyWorkItems",
             urlParameters: { $top: 100 },
             filters: [
               new Filter({

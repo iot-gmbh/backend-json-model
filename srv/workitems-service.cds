@@ -6,7 +6,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     entity AzDevWorkItems as projection on AzDevOps.WorkItems;
     entity MSGraphEvents  as projection on MSGraph.Events;
     entity WorkItems      as projection on my.WorkItems;
-    entity MyWork    as projection on WorkItems;
+    entity MyWorkItems    as projection on WorkItems;
 
     entity IOTWorkItems   as
         select from WorkItems {
