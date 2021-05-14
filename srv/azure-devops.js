@@ -5,6 +5,8 @@ const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const connection = new azdev.WebApi(orgUrl, authHandler);
 const AzDevProject = "IOT Projekte";
 
+require("dotenv").config();
+
 const MAP_DEVOPS_TO_CDS_NAMES = {
   ID: "id",
   assignedTo: "[System.AssignedTo]",
@@ -113,8 +115,6 @@ function isISODate(str) {
   return dateRegexp.test(str);
 }
 
-require("dotenv").config();
-
 module.exports = cds.service.impl(async function () {
   async function readWorkItems({ req, restrictToOwnUser }) {
     const workItemAPI = await connection.getWorkItemTrackingApi();
@@ -175,7 +175,7 @@ module.exports = cds.service.impl(async function () {
     readWorkItems({ req, restrictToOwnUser: false })
   );
 
-  this.on("READ", "MyWorkItems", (req) =>
-    readWorkItems({ req, restrictToOwnUser: true })
-  );
+  // this.on("READ", "MyWorkItems", (req) =>
+  //   readWorkItems({ req, restrictToOwnUser: true })
+  // );
 });

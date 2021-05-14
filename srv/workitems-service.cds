@@ -6,7 +6,6 @@ service WorkItemsService @(requires : 'authenticated-user') {
     entity AzDevWorkItems as projection on AzDevOps.WorkItems;
     entity MSGraphEvents  as projection on MSGraph.Events;
     entity WorkItems      as projection on my.WorkItems;
-    entity MyWorkItems    as projection on WorkItems;
 
     entity IOTWorkItems   as
         select from WorkItems {
@@ -30,13 +29,13 @@ service WorkItemsService @(requires : 'authenticated-user') {
          */
         };
 
-    entity Projects       as projection on my.Projects {
-        * , workItems : redirected to AzDevWorkItems
+    entity Users          as projection on my.Users {
+        * , workItems : redirected to WorkItems
     };
 
-    entity Users          as projection on my.Users {
-        * , workItems : redirected to AzDevWorkItems
-    };
+    entity Projects       as projection on my.Projects {
+        * , workItems : redirected to WorkItems
+    }
 
     entity Customers      as projection on my.Customers;
 };
