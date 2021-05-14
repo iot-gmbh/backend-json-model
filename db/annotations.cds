@@ -1,51 +1,47 @@
 using {iot.planner as my} from './schema';
 
 annotate my.WorkItems with @(UI : {
-    HeaderInfo      : {
-        TypeName       : '{i18n>WorkItem}',
-        TypeNamePlural : '{i18n>WorkItems}',
-        Title          : {Value : title},
+    // The Sort order is not evaluated by responsive tables (by design)
+    // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
+    PresentationVariant : {
+        $Type     : 'UI.PresentationVariantType',
+        SortOrder : [{
+            Descending : true,
+            Property   : completedDate,
+        }]
     },
-    Identification  : [
+    Identification      : [
         {Value : title},
-        {Value : workItemType},
+        {Value : assignedTo.displayName, },
+        {Value : customer.name, },
+        {Value : project.title, },
         {Value : activatedDate},
-        {Value : completedDate},
-        {Value : originalEstimate},
-        {Value : completedWork},
-        {Value : reason},
-        {Value : state},
+        {Value : completedDate, },
     ],
-    SelectionFields : [
+    SelectionFields     : [
         title,
         assignedTo_userPrincipalName,
+        customer_friendlyID,
+        project_friendlyID,
         activatedDate,
         completedDate
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : title,
         },
         {
             $Type : 'UI.DataField',
-            Value : workItemType,
+            Value : assignedTo.displayName,
         },
         {
             $Type : 'UI.DataField',
-            Value : originalEstimate,
+            Value : customer_friendlyID,
         },
         {
             $Type : 'UI.DataField',
-            Value : completedWork,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : reason
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : state
+            Value : project_friendlyID,
         },
         {
             $Type : 'UI.DataField',

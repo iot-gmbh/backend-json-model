@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@sap/ui5-builder-webide-extension": "1.0.x",
-    "@sap/ux-specification": "^1.84.7",
+    "@sap/ux-specification": "^1.84.10",
     "eslint": "^7.23.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -98,6 +98,7 @@
     "app\\single-planning-calendar",
     "app\\workitems",
     "app\\workitems-alp",
-    "app\\projects"
+    "app\\projects",
+    "app\\workitems"
   ]
 }
