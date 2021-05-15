@@ -99,6 +99,7 @@
     "app\\workitems",
     "app\\workitems-alp",
     "app\\projects",
-    "app\\workitems"
+    "app\\workitems",
+    "app\\users"
   ]
 }
