@@ -395,14 +395,24 @@ sap.ui.define(
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
+          const user = await this._getUserInfoService();
+          const email = user.getEmail();
+
           const { results: allProjects } = await this.read({
-            path: "/Projects",
-            urlParameters: { $expand: "customer" },
+            path: "/Users2Projects",
+            filters: [
+              new Filter({
+                path: "user_userPrincipalName",
+                operator: "EQ",
+                value1: email,
+              }),
+            ],
+            urlParameters: { $expand: "project/customer" },
           });
 
           // Aus der Gesamtheit der Projekte werden die Kunden vereinzelt und Referenzen zu den jeweils zugeordneten Projekten abgegriffen => Ziel: dynamische Auswahl des Projekts abhängig vom gewählten Kunden
           const customers = Object.values(
-            allProjects.reduce((map, { customer, ...project }) => {
+            allProjects.reduce((map, { project: { customer, ...project } }) => {
               const mergeCustomer = map[customer.ID] || customer;
 
               if (Array.isArray(mergeCustomer.projects))
@@ -416,6 +426,16 @@ sap.ui.define(
           );
 
           model.setProperty("/customers", customers);
+        },
+
+        _getUserInfoService: function () {
+          return new Promise((resolve) =>
+            sap.ui.require(["sap/ushell/library"], (oSapUshellLib) => {
+              const oContainer = oSapUshellLib.Container;
+              const pService = oContainer.getServiceAsync("UserInfo"); // .getService is deprecated!
+              resolve(pService);
+            })
+          );
         },
       }
     );

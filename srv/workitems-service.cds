@@ -16,13 +16,13 @@ service WorkItemsService @(requires : 'authenticated-user') {
         },
         {
             grant : 'READ',
-            to    : 'admin',
+            to    : 'authenticated-user',
+            where : 'assignedTo_userPrincipalName = $user'
         },
         {
             grant : 'READ',
-            to    : 'authenticated-user',
-            where : 'assignedTo_userPrincipalName = $user'
-        }
+            to    : 'admin',
+        },
     ])                    as projection on my.WorkItems;
 
     entity IOTWorkItems   as

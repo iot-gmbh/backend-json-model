@@ -1,5 +1,9 @@
 {
     "_version": "1.32.0",
+    "sap.cloud": {
+        "public": true,
+        "service": "iot.project.planner"
+    },
     "sap.app": {
         "id": "iot.project.planner.users",
         "type": "application",
@@ -11,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/admin/",
+                "uri": "admin/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"
@@ -23,6 +27,26 @@
         "sourceTemplate": {
             "id": "ui5template.fiorielements.v4.lrop",
             "version": "1.0.0"
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "iot-project-planning-users-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Users",
+                    "action": "display",
+                    "title": "Users",
+                    "subTitle": "Find & Manage",
+                    "icon": "sap-icon://account",
+                    "indicatorDataSource": {
+                        "dataSource": "project-planning-dest",
+                        "path": "/iotprojectplanner.iotprojectplannerusers/admin/Users/$count",
+                        "refresh": 120
+                    }
+                }
+            }
         }
     },
     "sap.ui": {

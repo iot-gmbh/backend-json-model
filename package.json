@@ -56,7 +56,7 @@
     "start": "cds run",
     "start:lcl": "run-p start:srv start:spc",
     "start:srv": "cds run",
-    "start:approuter": "cd app/single-planning-calendar && node node_modules/@sap/approuter/approuter.js",
+    "start:approuter": "cd app/single-planning-calendar && npm run start",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
     "debug": "run-p start:srv start:spc",
     "build": "mbt build",

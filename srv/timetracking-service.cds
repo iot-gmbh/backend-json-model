@@ -12,8 +12,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
             grant : 'WRITE',
             to    : 'authenticated-user'
         }
-    ])               as projection on my.WorkItems;
+    ])                    as projection on my.WorkItems;
 
-    entity Customers as projection on my.Customers;
-    entity Projects  as projection on my.Projects;
+    entity Customers      as projection on my.Customers;
+    entity Projects       as projection on my.Projects;
+    entity Users2Projects as projection on my.Users2Projects;
 }

@@ -15,8 +15,6 @@ function extractErrorMsgFromJSON(error) {
 }
 
 function parseError(error) {
-  const bundle = sap.ui.getCore().getLibraryResourceBundle("barcodescanner");
-
   try {
     if (!error.responseText && error.message) return error.message;
     return extractErrorMsgFromJSON(error);
@@ -24,7 +22,7 @@ function parseError(error) {
     try {
       return extractErrorMsgFromXML(error);
     } catch (errXML) {
-      return bundle.getText("errorMessageCouldNotBeParsed");
+      return "The error message could not be parsed.";
     }
   }
 }

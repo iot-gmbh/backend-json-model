@@ -69,8 +69,6 @@ IOT Projektaufschreibung
 
 Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | P2 | Bemerkung
  */
-
-
 entity WorkItems {
     key ID                  : String                                           @title : '{i18n>WorkItems.ID}';
         activatedDate       : DateTime                                         @title : '{i18n>WorkItems.activatedDate}';
