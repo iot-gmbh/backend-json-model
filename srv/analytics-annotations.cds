@@ -6,7 +6,8 @@ annotate my.WorkItems with @(UI : {
         SortOrder : [{
             Descending : true,
             Property   : duration,
-        }]
+        }],
+    // Visualizations : [{$value : ![@UI.Chart]}]
     },
     Chart               : {
         $Type               : 'UI.ChartDefinitionType',
@@ -50,3 +51,26 @@ annotate my.WorkItems with @(UI : {
         },
     ]
 });
+
+// annotate my.Projects with @(UI : {
+//     PresentationVariant : {
+//         $Type          : 'UI.PresentationVariantType',
+//         Visualizations : [{$value : ![@UI.Chart]}]
+//     },
+//     Chart                    : {
+//         $Type               : 'UI.ChartDefinitionType',
+//         ChartType           : #Column,
+//         DimensionAttributes : [{
+//             $Type     : 'UI.ChartDimensionAttributeType',
+//             Dimension : customer_ID,
+//             Role      : #Category
+//         }, ],
+//         MeasureAttributes   : [{
+//             $Type   : 'UI.ChartMeasureAttributeType',
+//             Measure : friendlyID,
+//             Role    : #Axis1
+//         }],
+//         Dimensions          : [customer_ID],
+//         Measures            : [friendlyID],
+//     },
+// });
