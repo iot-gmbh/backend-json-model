@@ -79,8 +79,18 @@ annotate my.Users with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Users.team}',
-            Target : 'team/@UI.LineItem'
+            Label  : '{i18n>Users.teamMembers}',
+            Target : 'teamMembers/@UI.LineItem'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Users.projects}',
+            Target : 'projects/@UI.LineItem'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Users.managedProjects}',
+            Target : 'managedProjects/@UI.LineItem'
         },
     ],
     LineItem        : [
@@ -147,6 +157,7 @@ annotate my.Customers with @(UI : {
     ID @UI.Hidden;
 }
 
+@cds.odata.valuelist
 annotate my.Projects with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>Project}',
@@ -194,12 +205,60 @@ annotate my.Projects with @(UI : {
             Value : customer.name,
         },
     ]
-})
-                          @cds.odata.valuelist {
+}) {
     ID       @UI.Hidden;
     customer @(Common : {
         Text         : {
             $value                 : customer.name,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+};
+
+@cds.odata.valuelist
+annotate my.Users2Projects with @(UI : {
+    HeaderInfo      : {
+        TypeName       : '{i18n>Project}',
+        TypeNamePlural : '{i18n>Projects}',
+        Title          : {Value : user.displayName},
+        Description    : {Value : project.title},
+    },
+    Facets          : [{
+        $Type  : 'UI.ReferenceFacet',
+        Label  : '{i18n>General}',
+        Target : '@UI.Identification'
+    }, ],
+    Identification  : [
+        {Value : user_userPrincipalName},
+        {Value : project_ID},
+    ],
+    SelectionFields : [
+        user_userPrincipalName,
+        project_ID,
+    ],
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : user_userPrincipalName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : project_ID,
+        },
+    ]
+}) {
+    ID      @UI.Hidden;
+    project @(Common : {
+        Text         : {
+            $value                 : project.title,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+    user    @(Common : {
+        Text         : {
+            $value                 : user.displayName,
             ![@UI.TextArrangement] : #TextOnly
         },
         FieldControl : #Mandatory

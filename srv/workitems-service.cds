@@ -9,7 +9,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     entity WorkItems @(restrict : [
         {
             grant : 'READ',
-            to    : 'team-lead',
+            to    : 'teamMembers-lead',
             // Association paths are currently supported on SAP HANA only
             // https://cap.cloud.sap/docs/guides/authorization#association-paths
             where : 'assignedTo.manager_userPrincipalName = $user'

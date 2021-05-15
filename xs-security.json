@@ -3,8 +3,8 @@
   "tenant-mode": "dedicated",
   "scopes": [
     {
-      "name": "$XSAPPNAME.team-lead",
-      "description": "team-lead"
+      "name": "$XSAPPNAME.teamMembers-lead",
+      "description": "teamMembers-lead"
     },
     {
       "name": "$XSAPPNAME.admin",
@@ -14,10 +14,10 @@
   "attributes": [],
   "role-templates": [
     {
-      "name": "team-lead",
+      "name": "teamMembers-lead",
       "description": "generated",
       "scope-references": [
-        "$XSAPPNAME.team-lead"
+        "$XSAPPNAME.teamMembers-lead"
       ],
       "attribute-references": []
     },
@@ -31,4 +31,3 @@
     }
   ]
 }
-
