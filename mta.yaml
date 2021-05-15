@@ -68,6 +68,10 @@ modules:
           name: fiori-customers
           target-path: resources/
         - artifacts:
+            - fiori-users.zip
+          name: fiori-users
+          target-path: resources/
+        - artifacts:
             - fiori-workitems.zip
           name: fiori-workitems
           target-path: resources/
@@ -95,6 +99,15 @@ modules:
       builder: custom
       commands:
         - npm run build
+      supported-platforms: []
+  - name: fiori-users
+    type: html5
+    path: app/users
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build:cf
       supported-platforms: []
   - name: fiori-projects
     type: html5

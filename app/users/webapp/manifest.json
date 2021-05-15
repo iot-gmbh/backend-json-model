@@ -80,12 +80,7 @@
                     "pattern": "Users({key}):?query:",
                     "name": "UsersObjectPage",
                     "target": "UsersObjectPage"
-                },
-                    {
-                        "pattern": "Users({key})/team({key2}):?query:",
-                        "name": "UsersObjectPage",
-                        "target": "UsersObjectPage"
-                    }
+                }
             ],
             "targets": {
                 "UsersList": {
@@ -112,27 +107,10 @@
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
-                            "entitySet": "Users",
-                                "navigation": {
-                                    "team": {
-                                        "detail": {
-                                            "route": "UsersObjectPage"
-                                        }
-                                    }
-                                }
+                            "entitySet": "Users"
                         }
                     }
-                },
-                    "UsersObjectPage": {
-                        "type": "Component",
-                        "id": "UsersObjectPage",
-                        "name": "sap.fe.templates.ObjectPage",
-                        "options": {
-                            "settings": {
-                                "entitySet": "Users"
-                            }
-                        }
-                    }
+                }
             }
         },
         "contentDensities": {
