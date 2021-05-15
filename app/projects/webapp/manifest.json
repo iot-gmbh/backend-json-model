@@ -31,9 +31,14 @@
                     },
                     "semanticObject": "Projects",
                     "action": "display",
-                    "title": "Find and display projects",
-                    "subTitle": "",
-                    "icon": ""
+                    "title": "Projects",
+                    "subTitle": "Find & Manage",
+                    "icon": "sap-icon://workflow-tasks",
+                    "indicatorDataSource": {
+                        "dataSource": "project-planning-dest",
+                        "path": "/iotprojectplanner.iotplannerprojects/admin/Projects/$count",
+                        "refresh": 120
+                    }
                 }
             }
         },

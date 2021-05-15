@@ -37,9 +37,9 @@
                     },
                     "semanticObject": "AzDevOpsWorkItem",
                     "action": "display",
-                    "title": "Find and display Azure Devops Work-Items",
-                    "subTitle": "",
-                    "icon": ""
+                    "title": "Azure Devops Work-Items",
+                    "subTitle": "Find & Display",
+                    "icon": "sap-icon://developer-settings"
                 }
             }
         }

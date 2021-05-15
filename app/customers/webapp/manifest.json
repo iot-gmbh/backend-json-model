@@ -37,9 +37,14 @@
                     },
                     "semanticObject": "Customer",
                     "action": "display",
-                    "title": "Kunden anzeigen",
-                    "subTitle": "",
-                    "icon": ""
+                    "title": "Customers",
+                    "subTitle": "Find & Manage",
+                    "icon": "sap-icon://customer",
+                    "indicatorDataSource": {
+                        "dataSource": "project-planning-dest",
+                        "path": "/iotprojectplanner.iotcustomers/admin/Customers/$count",
+                        "refresh": 120
+                    }
                 }
             }
         }

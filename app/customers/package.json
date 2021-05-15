@@ -1,7 +1,7 @@
 {
     "name": "customers",
     "version": "0.0.2",
-    "description": "Kunden anzeigen",
+    "description": "Display customers",
     "keywords": [
         "ui5",
         "openui5",
