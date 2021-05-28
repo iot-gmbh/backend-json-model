@@ -5,7 +5,7 @@ service AnalyticsService {
     entity WorkItems @(restrict : [
         {
             grant : 'READ',
-            to    : 'teamMembers-lead',
+            to    : 'team-lead',
             // Association paths are currently supported on SAP HANA only
             // https://cap.cloud.sap/docs/guides/authorization#association-paths
             where : 'assignedTo.manager_userPrincipalName = $user'

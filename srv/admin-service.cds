@@ -5,7 +5,7 @@ service AdminService @(requires : 'authenticated-user') {
     entity Users @(restrict : [
         {
             grant : 'READ',
-            to    : 'teamMembers-lead',
+            to    : 'team-lead',
             // Association paths are currently supported on SAP HANA only
             // https://cap.cloud.sap/docs/guides/authorization#association-paths
             where : 'userPrincipalName = $user'
@@ -25,12 +25,13 @@ service AdminService @(requires : 'authenticated-user') {
     entity Customers as projection on my.Customers;
 
     // @odata.draft.enabled
+
     entity Projects  as projection on my.Projects;
 
     entity WorkItems @(restrict : [
         {
             grant : 'READ',
-            to    : 'teamMembers-lead',
+            to    : 'team-lead',
             where : 'manager_userPrincipalName = $user'
         },
         {

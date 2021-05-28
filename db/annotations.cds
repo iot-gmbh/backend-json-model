@@ -180,11 +180,14 @@ annotate my.Projects with @(UI : {
     Identification  : [
         {Value : friendlyID},
         {Value : customer_ID},
+        {Value : manager_userPrincipalName},
+        {Value : IOTProjectID},
     ],
     SelectionFields : [
         title,
         description,
-        customer_ID
+        customer_ID,
+        manager_userPrincipalName
     ],
     LineItem        : [
         {
@@ -204,6 +207,15 @@ annotate my.Projects with @(UI : {
             Label : '{i18n>Projects.customer}',
             Value : customer.name,
         },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>Projects.manager}',
+            Value : manager.displayName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : IOTProjectID,
+        },
     ]
 }) {
     ID       @UI.Hidden;
@@ -219,8 +231,8 @@ annotate my.Projects with @(UI : {
 @cds.odata.valuelist
 annotate my.Users2Projects with @(UI : {
     HeaderInfo      : {
-        TypeName       : '{i18n>Project}',
-        TypeNamePlural : '{i18n>Projects}',
+        TypeName       : '{i18n>User2Project}',
+        TypeNamePlural : '{i18n>Users2Projects}',
         Title          : {Value : user.displayName},
         Description    : {Value : project.title},
     },
