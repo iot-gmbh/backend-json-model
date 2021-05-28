@@ -19,8 +19,9 @@ entity Users {
         preferredLanguage : String                                 @title : '{i18n>Users.preferredLanguage}';
         surname           : String                                 @title : '{i18n>Users.surname}';
         manager           : Association to Users                   @title : '{i18n>Users.manager}';
-        projects          : Composition of many Users2Projects
-                                on projects.user = $self           @title : '{i18n>Users.projects}';
+        projects          : Association to many Users2Projects
+                                on projects.user = $self
+                                                                   @title : '{i18n>Users.projects}';
         managedProjects   : Association to many Projects
                                 on managedProjects.manager = $self @title : '{i18n>Users.managedProjects}';
         teamMembers       : Association to many Users
@@ -42,7 +43,7 @@ entity Users2Projects : cuid, managed {
 entity Customers : managed, cuid {
     friendlyID : String                           @title : '{i18n>Customers.friendlyID}'  @mandatory : true;
     name       : String                           @title : '{i18n>Customers.name}';
-    projects   : Association to many Projects
+    projects   : Composition of many Projects
                      on projects.customer = $self @title : '{i18n>Customers.projects}'
 }
 

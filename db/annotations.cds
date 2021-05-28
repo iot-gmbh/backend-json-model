@@ -173,8 +173,8 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Projects.workItems}',
-            Target : 'workItems/@UI.LineItem'
+            Label  : '{i18n>Projects.teamMembers}',
+            Target : 'teamMembers/@UI.LineItem'
         },
     ],
     Identification  : [

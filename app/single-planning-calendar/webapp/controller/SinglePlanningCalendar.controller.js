@@ -396,7 +396,10 @@ sap.ui.define(
         async _loadCustomersAndProjects() {
           const model = this.getModel();
           const user = await this._getUserInfoService();
-          const email = user.getEmail();
+          // TODO: Mailadresse entfernen
+          const email = user
+            ? user.getEmail()
+            : "benedikt.hoelker@iot-online.de";
 
           const { results: allProjects } = await this.read({
             path: "/Users2Projects",
@@ -430,10 +433,12 @@ sap.ui.define(
 
         _getUserInfoService: function () {
           return new Promise((resolve) =>
-            sap.ui.require(["sap/ushell/library"], (oSapUshellLib) => {
-              const oContainer = oSapUshellLib.Container;
-              const pService = oContainer.getServiceAsync("UserInfo"); // .getService is deprecated!
-              resolve(pService);
+            sap.ui.require(["sap/ushell/library"], (ushellLib) => {
+              const container = ushellLib.Container;
+              if (!container) return resolve();
+
+              const service = container.getServiceAsync("UserInfo"); // .getService is deprecated!
+              return resolve(service);
             })
           );
         },

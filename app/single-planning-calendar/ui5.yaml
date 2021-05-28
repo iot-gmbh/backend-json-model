@@ -11,6 +11,7 @@ framework:
   version: 1.87.0
   libraries:
     - name: sap.ui.core
+    - name: sap.ushell
     - name: sap.ui.comp
     - name: sap.m
     - name: sap.ui.layout

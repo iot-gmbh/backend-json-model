@@ -38,7 +38,9 @@ service WorkItemsService @(requires : 'authenticated-user') {
             'Durchführung'       as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
             'GE'                 as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
             ''                   as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
-            title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}')
+            title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
+            @UI.Hidden
+            assignedTo
 
         /*
         IOT Projektaufschreibung
