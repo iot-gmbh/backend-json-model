@@ -26,7 +26,7 @@ sap.ui.define([], function () {
                 value1: firstDay,
               },
             ],
-            value: firstDay,
+            // value: firstDay,
           },
           completedDate: {
             ranges: [
@@ -37,7 +37,7 @@ sap.ui.define([], function () {
                 value1: lastDay,
               },
             ],
-            value: lastDay,
+            // value: lastDay,
           },
         };
 

@@ -55,7 +55,42 @@ annotate my.WorkItems with @(UI : {
             Value : completedDate,
         },
     ]
-});
+}) {
+    ID       @UI.Hidden;
+    customer @(Common : {
+        ValueList    : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'Projects',
+            Parameters     : [{
+                $Type             : 'Common.ValueListParameterInOut',
+                LocalDataProperty : 'customer_friendlyID',
+                ValueListProperty : 'friendlyID',
+            }, ],
+        },
+        Text         : {
+            $value                 : customer.name,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+    project  @(Common : {
+        ValueList    : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'Projects',
+            Parameters     : [{
+                $Type             : 'Common.ValueListParameterInOut',
+                LocalDataProperty : 'project_friendlyID',
+                ValueListProperty : 'friendlyID',
+            }, ],
+        },
+        Text         : {
+            $value                 : project.title,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+};
+
 
 @cds.odata.valuelist
 annotate my.Users with @(UI : {
