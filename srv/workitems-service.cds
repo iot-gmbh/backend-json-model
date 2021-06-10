@@ -23,7 +23,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])                    as projection on my.WorkItems;
+    ])                    as projection on my.WorkItems where deleted != true;
 
     entity IOTWorkItems   as
         select from WorkItems {
