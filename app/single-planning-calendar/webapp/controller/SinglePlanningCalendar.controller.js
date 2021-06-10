@@ -81,13 +81,23 @@ sap.ui.define(
               $(document.activeElement).control()[0] &&
               $(document.activeElement).control()[0].getId();
 
-            if (
-              evt.ctrlKey &&
-              evt.keyCode == 13 &&
-              !activeElementID.includes("submitButton")
-            ) {
-              evt.preventDefault();
-              this.onSubmitEntry();
+            if (evt.ctrlKey) {
+              if (
+                evt.keyCode == 13 &&
+                // Check the active element in order to prevent double-submit
+                !activeElementID.includes("submitButton")
+              ) {
+                evt.preventDefault();
+                this.onSubmitEntry();
+              } else if (evt.keyCode === 46) {
+                evt.preventDefault();
+
+                const appointment = this.byId("createItemDialog")
+                  .getBindingContext()
+                  .getObject();
+
+                this._deleteAppointment(appointment);
+              }
             }
           });
         },
@@ -110,8 +120,7 @@ sap.ui.define(
           const { appointments } = model.getData();
           const { startDate, endDate, appointment } = event.getParameters();
           const bindingContext = appointment.getBindingContext();
-          const { assignedTo, customer, project, __metadata, ...data } =
-            bindingContext.getObject();
+          const data = bindingContext.getObject();
           const path = bindingContext.getPath();
 
           model.setProperty(path + "/activatedDate", startDate);
@@ -123,19 +132,17 @@ sap.ui.define(
           }
 
           try {
-            const { ...appointmentSync } = await this._submitEntry({
-              ...data,
-              activatedDate: startDate,
-              completedDate: endDate,
-            });
+            const { customer, project, ...appointmentSync } =
+              await this._submitEntry({
+                ...data,
+                activatedDate: startDate,
+                completedDate: endDate,
+              });
 
-            appointments[appointmentSync.ID] = {
-              assignedTo,
-              ...data,
-              ...appointmentSync,
-              customer,
-              project,
-            };
+            appointments[appointmentSync.ID] = Object.assign(
+              data,
+              appointmentSync
+            );
 
             model.setProperty("/appointments", appointments);
           } catch (error) {
@@ -143,10 +150,9 @@ sap.ui.define(
           }
         },
 
-        async onPressDeleteAppointment(event) {
+        async _deleteAppointment(appointment) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const appointment = event.getSource().getBindingContext().getObject();
 
           model.setProperty("/dialogBusy", true);
 
@@ -166,28 +172,32 @@ sap.ui.define(
           model.setProperty("/dialogBusy", false);
         },
 
+        onPressDeleteAppointment(event) {
+          const appointment = event.getSource().getBindingContext().getObject();
+
+          this._deleteAppointment(appointment);
+        },
+
         async onPressResetAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
           const appointment = event.getSource().getBindingContext().getObject();
           // Remove associations to prevent BE-errors
           // eslint-disable-next-line no-unused-vars
-          const { customer, project, __metadata, ...data } = appointment;
+          // const { customer, project, __metadata, ...data } = appointment;
 
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this.reset({
+            const { customer, project, ...appointmentSync } = await this.reset({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
-              data,
+              appointment,
             });
 
-            appointments[appointmentSync.ID] = {
-              ...data,
-              ...appointmentSync,
-              customer,
-              project,
-            };
+            appointments[appointmentSync.ID] = Object.define(
+              appointment,
+              appointmentSync
+            );
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -248,11 +258,37 @@ sap.ui.define(
           dialog.open();
         },
 
+        onSelectCustomer(event) {
+          const model = this.getModel();
+          const selectControl = event.getSource();
+          const selectedItem = event.getParameter("selectedItem");
+
+          if (!selectedItem) return;
+
+          const appointmentPath = selectControl
+            .getParent()
+            .getBindingContext()
+            .getPath();
+
+          const customer = selectedItem.getBindingContext().getObject();
+          const projects = customer.projects;
+
+          model.setProperty(
+            appointmentPath + "/customer_friendlyID",
+            customer.friendlyID
+          );
+
+          if (projects.length >= 1) {
+            model.setProperty(
+              appointmentPath + "/project_friendlyID",
+              projects[0].friendlyID
+            );
+          }
+        },
+
         async onSubmitEntry() {
           const model = this.getModel();
-          const { project, customer, ...appointment } = this.byId(
-            "createItemDialog"
-          )
+          const appointment = this.byId("createItemDialog")
             .getBindingContext()
             .getObject();
 
@@ -261,14 +297,13 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this._submitEntry(appointment);
+            const { customer, project, ...appointmentSync } =
+              await this._submitEntry(appointment);
 
-            appointments[appointmentSync.ID] = {
-              ...appointment,
-              ...appointmentSync,
-              project,
-              customer,
-            };
+            appointments[appointmentSync.ID] = Object.assign(
+              appointment,
+              appointmentSync
+            );
 
             appointments["NEW"] = {};
 

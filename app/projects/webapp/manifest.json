@@ -15,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/admin/",
+                "uri": "admin/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"
@@ -35,8 +35,8 @@
                     "subTitle": "Find & Manage",
                     "icon": "sap-icon://workflow-tasks",
                     "indicatorDataSource": {
-                        "dataSource": "project-planning-dest",
-                        "path": "/iotprojectplanner.iotplannerprojects/admin/Projects/$count",
+                        "dataSource": "mainService",
+                        "path": "admin/Projects/$count",
                         "refresh": 120
                     }
                 }

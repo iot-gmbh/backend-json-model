@@ -33,15 +33,18 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
+            Label : '{i18n>WorkItems.assignedToName}',
             Value : assignedTo.displayName,
         },
         {
             $Type : 'UI.DataField',
-            Value : customer_friendlyID,
+            Label : '{i18n>WorkItems.customerName}',
+            Value : customer.name,
         },
         {
             $Type : 'UI.DataField',
-            Value : project_friendlyID,
+            Label : '{i18n>WorkItems.projectTitle}',
+            Value : project.title,
         },
         {
             $Type : 'UI.DataField',

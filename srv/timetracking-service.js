@@ -63,7 +63,7 @@ module.exports = cds.service.impl(async function () {
     if (item.resetEntry) {
       // RESET
       if (item.type !== "Manual")
-        throw Error("Reset is only allowed for entries of type 'Manual'");
+        throw Error("Reset is not allowed for entries of type 'Manual'");
 
       // eslint-disable-next-line no-unused-vars
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;

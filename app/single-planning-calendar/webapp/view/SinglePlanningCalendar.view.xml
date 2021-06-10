@@ -35,13 +35,13 @@
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox selectedKey="{customer_friendlyID}" items="{/customers}">
+									<ComboBox selectedKey="{customer_friendlyID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
 										<items>
 											<core:Item text="{name}" key="{friendlyID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{customer/projects}" enabled="{= (${customer/projects}.length > 1) &amp;&amp; !!${customer_friendlyID}}">
+									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{path: 'customer/projects', sorter: {path: 'title'}}" enabled="{= (${customer/projects}.length > 1) &amp;&amp; !!${customer_friendlyID}}">
 										<items>
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>
