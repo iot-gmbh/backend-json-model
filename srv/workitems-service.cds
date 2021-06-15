@@ -23,7 +23,10 @@ service WorkItemsService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])                    as projection on my.WorkItems where deleted != true;
+    ])                    as
+        select from my.WorkItems
+        where
+            customer_friendlyID != 'DELETED';
 
     entity IOTWorkItems   as
         select from WorkItems {

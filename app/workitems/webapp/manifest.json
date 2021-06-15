@@ -41,8 +41,8 @@
                     "subTitle": "Find & Display",
                     "icon": "sap-icon://work-history",
                     "indicatorDataSource": {
-                        "dataSource": "project-planning-dest",
-                        "path": "iotprojectplanner.iotplannerworkitems/work-items/WorkItems/$count",
+                        "dataSource": "mainService",
+                        "path": "WorkItems/$count",
                         "refresh": 120
                     }
                 }

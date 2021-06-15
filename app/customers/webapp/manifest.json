@@ -41,8 +41,8 @@
                     "subTitle": "Find & Manage",
                     "icon": "sap-icon://customer",
                     "indicatorDataSource": {
-                        "dataSource": "project-planning-dest",
-                        "path": "/iotprojectplanner.iotcustomers/admin/Customers/$count",
+                        "dataSource": "mainService",
+                        "path": "Customers/$count",
                         "refresh": 120
                     }
                 }

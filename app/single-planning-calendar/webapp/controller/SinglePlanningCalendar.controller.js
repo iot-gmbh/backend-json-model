@@ -132,6 +132,7 @@ sap.ui.define(
           }
 
           try {
+            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
             const { customer, project, ...appointmentSync } =
               await this._submitEntry({
                 ...data,
@@ -182,13 +183,11 @@ sap.ui.define(
           const model = this.getModel();
           const { appointments } = model.getData();
           const appointment = event.getSource().getBindingContext().getObject();
-          // Remove associations to prevent BE-errors
-          // eslint-disable-next-line no-unused-vars
-          // const { customer, project, __metadata, ...data } = appointment;
 
           model.setProperty("/dialogBusy", true);
 
           try {
+            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
             const { customer, project, ...appointmentSync } = await this.reset({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               appointment,
@@ -297,6 +296,7 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
+            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
             const { customer, project, ...appointmentSync } =
               await this._submitEntry(appointment);
 

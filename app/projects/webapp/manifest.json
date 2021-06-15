@@ -36,7 +36,7 @@
                     "icon": "sap-icon://workflow-tasks",
                     "indicatorDataSource": {
                         "dataSource": "mainService",
-                        "path": "admin/Projects/$count",
+                        "path": "Projects/$count",
                         "refresh": 120
                     }
                 }
