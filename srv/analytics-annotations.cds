@@ -1,15 +1,45 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
-    PresentationVariant : {
+    PresentationVariant                     : {
         $Type     : 'UI.PresentationVariantType',
         SortOrder : [{
             Descending : true,
             Property   : duration,
         }],
-    // Visualizations : [{$value : ![@UI.Chart]}]
     },
-    Chart               : {
+    Chart                                   : {
+        $Type               : 'UI.ChartDefinitionType',
+        ChartType           : #Column,
+        DimensionAttributes : [{
+            $Type     : 'UI.ChartDimensionAttributeType',
+            Dimension : customer_friendlyID,
+            Role      : #Category
+        }, ],
+        MeasureAttributes   : [{
+            $Type   : 'UI.ChartMeasureAttributeType',
+            Measure : duration,
+            Role    : #Axis1
+        }],
+        Dimensions          : [
+            customer_friendlyID,
+            project_friendlyID
+        ],
+        Measures            : [duration],
+    },
+
+    // -----------------------------------------------------
+    // Items by Customer
+    // -----------------------------------------------------
+    PresentationVariant #DurationByCustomer : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{
+            Descending : true,
+            Property   : duration,
+        }],
+        Visualizations : ['@UI.Chart#DurationByCustomer', ],
+    },
+    Chart #DurationByCustomer               : {
         $Type               : 'UI.ChartDefinitionType',
         ChartType           : #Column,
         DimensionAttributes : [{
@@ -25,14 +55,42 @@ annotate my.WorkItems with @(UI : {
         Dimensions          : [customer_friendlyID],
         Measures            : [duration],
     },
-    SelectionFields     : [
+
+    // -----------------------------------------------------
+    // Items by Date
+    // -----------------------------------------------------
+    // PresentationVariant #DurationByCustomer : {
+    //     $Type          : 'UI.PresentationVariantType',
+    //     SortOrder      : [{
+    //         Descending : true,
+    //         Property   : duration,
+    //     }],
+    //     Visualizations : ['@UI.Chart#DurationByCustomer', ],
+    // },
+    // Chart #DurationByCustomer               : {
+    //     $Type               : 'UI.ChartDefinitionType',
+    //     ChartType           : #Column,
+    //     DimensionAttributes : [{
+    //         $Type     : 'UI.ChartDimensionAttributeType',
+    //         Dimension : customer_friendlyID,
+    //         Role      : #Category
+    //     }, ],
+    //     MeasureAttributes   : [{
+    //         $Type   : 'UI.ChartMeasureAttributeType',
+    //         Measure : duration,
+    //         Role    : #Axis1
+    //     }],
+    //     Dimensions          : [customer_friendlyID],
+    //     Measures            : [duration],
+    // },
+    SelectionFields                         : [
         activatedDate,
         completedDate,
         assignedTo_userPrincipalName,
         customer_friendlyID,
         project_friendlyID
     ],
-    LineItem            : [
+    LineItem                                : [
         {
             $Type : 'UI.DataField',
             Value : assignedTo_userPrincipalName,
@@ -50,27 +108,14 @@ annotate my.WorkItems with @(UI : {
             Value : duration,
         },
     ]
-});
-
-// annotate my.Projects with @(UI : {
-//     PresentationVariant : {
-//         $Type          : 'UI.PresentationVariantType',
-//         Visualizations : [{$value : ![@UI.Chart]}]
-//     },
-//     Chart                    : {
-//         $Type               : 'UI.ChartDefinitionType',
-//         ChartType           : #Column,
-//         DimensionAttributes : [{
-//             $Type     : 'UI.ChartDimensionAttributeType',
-//             Dimension : customer_ID,
-//             Role      : #Category
-//         }, ],
-//         MeasureAttributes   : [{
-//             $Type   : 'UI.ChartMeasureAttributeType',
-//             Measure : friendlyID,
-//             Role    : #Axis1
-//         }],
-//         Dimensions          : [customer_ID],
-//         Measures            : [friendlyID],
-//     },
-// });
+}) {
+    customer_friendlyID @Common.ValueList : {
+        CollectionPath               : 'WorkItems',
+        Parameters                   : [{
+            $Type             : 'Common.ValueListParameterInOut',
+            LocalDataProperty : 'customer_friendlyID',
+            ValueListProperty : 'customer_friendlyID'
+        }],
+        PresentationVariantQualifier : 'DurationByCustomer'
+    }
+};

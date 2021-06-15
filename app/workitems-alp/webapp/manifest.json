@@ -157,12 +157,12 @@
                     "list": true,
                     "settings": {
                         "condensedTableLayout": true,
-                        "showGoButtonOnFilterBar": true,
+                        "showGoButtonOnFilterBar": false,
                         "tableType": "AnalyticalTable",
                         "multiSelect": false,
                         "qualifier": "",
                         "autoHide": true,
-                        "defaultFilterMode": "compact",
+                        "defaultFilterMode": "visual",
                         "smartVariantManagement": false,
                         "keyPerformanceIndicators": {}
                     }
