@@ -43,7 +43,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
             ''                   as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
             title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
             @UI.Hidden
-            assignedTo
+            assignedTo_userPrincipalName
 
         /*
         IOT Projektaufschreibung
@@ -58,7 +58,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
 
     entity Projects       as projection on my.Projects {
         * , workItems : redirected to WorkItems
-    }
+    } where friendlyID != 'DELETED';
 
-    entity Customers      as projection on my.Customers;
+    entity Customers      as projection on my.Customers where friendlyID != 'DELETED';
 };

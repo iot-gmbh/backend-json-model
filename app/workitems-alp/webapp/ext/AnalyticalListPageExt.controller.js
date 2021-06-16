@@ -40,7 +40,7 @@ sap.ui.define([], function () {
         };
 
         //Default the Global filter values
-        setTimeout(() => smartFilterBar.setFilterData(defaultFilter), 20);
+        // setTimeout(() => smartFilterBar.setFilterData(defaultFilter), 20);
       },
     }
   );

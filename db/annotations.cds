@@ -48,6 +48,10 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
+            Value : duration
+        },
+        {
+            $Type : 'UI.DataField',
             Value : activatedDate
         },
         {

@@ -27,7 +27,19 @@ function transformEventToWorkItem({
 function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
   const durationInH = durationInMS / 1000 / 60 / 60;
-  return durationInH;
+  const durationInHRounded = durationInH.toFixed(2);
+  return durationInHRounded;
+}
+
+function calcDates({ activatedDate, completedDate }) {
+  return {
+    activatedDateMonth: activatedDate.getUTCMonth() + 1,
+    activatedDateYear: activatedDate.getUTCFullYear(),
+    activatedDateDay: activatedDate.getUTCDate(),
+    completedDateMonth: completedDate.getUTCMonth() + 1,
+    completedDateYear: completedDate.getUTCFullYear(),
+    completedDateDay: completedDate.getUTCDate(),
+  };
 }
 
 module.exports = cds.service.impl(async function () {
@@ -102,6 +114,9 @@ module.exports = cds.service.impl(async function () {
       });
       item.confirmed = true;
 
+      const dates = calcDates(item);
+      Object.assign(item, dates);
+
       let itm = item;
 
       if (entries.length === 0) {
@@ -125,6 +140,9 @@ module.exports = cds.service.impl(async function () {
       end: req.data.completedDate,
     });
     req.data.assignedTo_userPrincipalName = req.user.id;
+
+    const dates = calcDates(req.data);
+    Object.assign(req.data, dates);
 
     return next();
   });
