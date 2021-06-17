@@ -133,7 +133,7 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, package, ...appointmentSync } =
+            const { customer, project, workPackage, ...appointmentSync } =
               await this._submitEntry({
                 ...data,
                 activatedDate: startDate,
@@ -188,7 +188,7 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, package, ...appointmentSync } =
+            const { customer, project, workPackage, ...appointmentSync } =
               await this.reset({
                 path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
                 appointment,
@@ -264,10 +264,10 @@ sap.ui.define(
               customer.projects[0].friendlyID
             );
 
-            if (customer.projects[0].packages.length === 1) {
+            if (customer.projects[0].workPackages.length === 1) {
               model.setProperty(
                 path + "/package_ID",
-                customer.projects[0].packages[0].ID
+                customer.projects[0].workPackages[0].ID
               );
             } else model.setProperty(path + "/package_ID", undefined);
           } else {
@@ -311,10 +311,10 @@ sap.ui.define(
               appointmentPath + "/project_friendlyID",
               projects[0].friendlyID
             );
-            if (projects[0].packages.length >= 1) {
+            if (projects[0].workPackages.length >= 1) {
               model.setProperty(
                 appointmentPath + "/package_ID",
-                projects[0].packages[0].ID
+                projects[0].workPackages[0].ID
               );
             } else
               model.setProperty(appointmentPath + "/package_ID", undefined);
@@ -338,15 +338,18 @@ sap.ui.define(
             .getPath();
 
           const project = selectedItem.getBindingContext().getObject();
-          const packages = project.packages;
+          const workPackages = project.workPackages;
 
           model.setProperty(
             appointmentPath + "/project_friendlyID",
             project.friendlyID
           );
 
-          if (packages.length >= 1) {
-            model.setProperty(appointmentPath + "/package_ID", packages[0].ID);
+          if (workPackages.length >= 1) {
+            model.setProperty(
+              appointmentPath + "/package_ID",
+              workPackages[0].ID
+            );
           } else model.setProperty(appointmentPath + "/package_ID", undefined);
         },
 
@@ -362,7 +365,7 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, package, ...appointmentSync } =
+            const { customer, project, workPackage, ...appointmentSync } =
               await this._submitEntry(appointment);
 
             appointments[appointmentSync.ID] = Object.assign(
@@ -386,7 +389,7 @@ sap.ui.define(
         _submitEntry({
           customer,
           project,
-          package,
+          workPackage,
           __metadata,
           ...appointment
         }) {
@@ -509,16 +512,16 @@ sap.ui.define(
                 value1: email,
               }),
             ],
-            urlParameters: { $expand: "project/customer,project/packages" },
+            urlParameters: { $expand: "project/customer,project/workPackages" },
           });
 
           // Aus der Gesamtheit der Projekte werden die Kunden vereinzelt und Referenzen zu den jeweils zugeordneten Projekten abgegriffen => Ziel: dynamische Auswahl des Projekts abhängig vom gewählten Kunden
           const customers = Object.values(
             allProjects.reduce(
-              (map, { project: { customer, packages, ...project } }) => {
+              (map, { project: { customer, workPackages, ...project } }) => {
                 const mergeCustomer = map[customer.ID] || customer;
 
-                project.packages = packages.results;
+                project.workPackages = workPackages.results;
 
                 if (Array.isArray(mergeCustomer.projects))
                   mergeCustomer.projects.push(project);

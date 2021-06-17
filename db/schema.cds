@@ -58,8 +58,8 @@ entity Projects : managed, cuid {
     manager             : Association to Users;
     customer_friendlyID : String;
     customer            : Association to Customers;
-    packages            : Composition of many Packages
-                              on packages.project = $self;
+    workPackages        : Composition of many Packages
+                              on workPackages.project = $self;
     teamMembers         : Composition of many Users2Projects
                               on teamMembers.project = $self;
     workItems           : Association to many WorkItems
@@ -112,7 +112,7 @@ entity WorkItems {
                                            on  project.friendlyID          = project_friendlyID
                                            and project.customer_friendlyID = customer_friendlyID;
         projectTitle                 : String;
-        package                      : Association to Packages;
+        workPackage                  : Association to Packages;
         ticket                       : String;
         type                         : String enum {
             Manual;

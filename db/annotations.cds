@@ -226,7 +226,7 @@ annotate my.Projects with @(UI : {
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.children}',
-            Target : 'packages/@UI.LineItem'
+            Target : 'workPackages/@UI.LineItem'
         },
         {
             $Type  : 'UI.ReferenceFacet',
