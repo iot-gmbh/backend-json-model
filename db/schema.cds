@@ -9,25 +9,25 @@ namespace iot.planner;
 
 @assert.unique : {friendlyID : [userPrincipalName, ]}
 entity Users {
-    key userPrincipalName : String                                 @title : '{i18n>Users.principalName}';
-        displayName       : String                                 @title : '{i18n>Users.displayName}';
-        givenName         : String                                 @title : '{i18n>Users.givenName}';
-        jobTitle          : String                                 @title : '{i18n>Users.jobTitle}';
-        mail              : String                                 @title : '{i18n>Users.mail}';
-        mobilePhone       : String                                 @title : '{i18n>Users.mobilePhone}';
-        officeLocation    : String                                 @title : '{i18n>Users.officeLocation}';
-        preferredLanguage : String                                 @title : '{i18n>Users.preferredLanguage}';
-        surname           : String                                 @title : '{i18n>Users.surname}';
-        manager           : Association to Users                   @title : '{i18n>Users.manager}';
+    key userPrincipalName : String                                                            @title : '{i18n>Users.principalName}';
+        displayName       : String                                                            @title : '{i18n>Users.displayName}';
+        givenName         : String                                                            @title : '{i18n>Users.givenName}';
+        jobTitle          : String                                                            @title : '{i18n>Users.jobTitle}';
+        mail              : String                                                            @title : '{i18n>Users.mail}';
+        mobilePhone       : String                                                            @title : '{i18n>Users.mobilePhone}';
+        officeLocation    : String                                                            @title : '{i18n>Users.officeLocation}';
+        preferredLanguage : String                                                            @title : '{i18n>Users.preferredLanguage}';
+        surname           : String                                                            @title : '{i18n>Users.surname}';
+        manager           : Association to Users                                              @title : '{i18n>Users.manager}';
         projects          : Association to many Users2Projects
                                 on projects.user = $self
-                                                                   @title : '{i18n>Users.projects}';
+                                                                                              @title : '{i18n>Users.projects}';
         managedProjects   : Association to many Projects
-                                on managedProjects.manager = $self @title : '{i18n>Users.managedProjects}';
+                                on managedProjects.manager = $self                            @title : '{i18n>Users.managedProjects}';
         teamMembers       : Association to many Users
-                                on teamMembers.manager = $self     @title : '{i18n>Users.teamMembers}';
+                                on teamMembers.manager = $self                                @title : '{i18n>Users.teamMembers}';
         workItems         : Association to many WorkItems
-                                on workItems.assignedTo = $self    @title : '{i18n>Users.workItems}';
+                                on workItems.assignedTo_userPrincipalName = userPrincipalName @title : '{i18n>Users.workItems}';
 };
 
 @assert.unique : {friendlyID : [
@@ -55,10 +55,10 @@ entity Projects : managed, cuid {
     friendlyID          : String                   @title : '{i18n>Projects.friendlyID}'  @mandatory;
     title               : String                   @title : '{i18n>Projects.title}';
     description         : String                   @title : '{i18n>Projects.description}';
-    customer_friendlyID : String                   @title : '{i18n>Projects.customerFriendlyID}'  @mandatory;
-    customer            : Association to Customers @title : '{i18n>Projects.customer}';
-    manager             : Association to Users     @title : '{i18n>Projects.manager}';
     IOTProjectID        : String                   @title : '{i18n>Projects.IOTProjectID}';
+    manager             : Association to Users     @title : '{i18n>Projects.manager}';
+    customer_friendlyID : String                   @title : '{i18n>Projects.customerFriendlyID}';
+    customer            : Association to Customers @title : '{i18n>Projects.customer}';
     teamMembers         : Composition of many Users2Projects
                               on teamMembers.project = $self
                                                    @title : '{i18n>Projects.teamMembers}';
