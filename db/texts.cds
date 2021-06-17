@@ -28,6 +28,11 @@ annotate my.Customers {
     projects   @title : '{i18n>Customers.projects}';
 }
 
+annotate my.Packages {
+    title       @title : '{i18n>Packages.title}';
+    description @title : '{i18n>Packages.description}';
+}
+
 annotate my.Projects {
     friendlyID          @title : '{i18n>Projects.friendlyID}';
     title               @title : '{i18n>Projects.title}';

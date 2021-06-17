@@ -1,7 +1,7 @@
 using {
     Currency,
-    managed,
     cuid,
+    managed,
     sap
 } from '@sap/cds/common';
 
@@ -58,14 +58,19 @@ entity Projects : managed, cuid {
     manager             : Association to Users;
     customer_friendlyID : String;
     customer            : Association to Customers;
-    parent              : Association to Projects;
-    children            : Association to many Projects
-                              on children.parent = $self;
+    packages            : Composition of many Packages
+                              on packages.project = $self;
     teamMembers         : Composition of many Users2Projects
                               on teamMembers.project = $self;
     workItems           : Association to many WorkItems
                               on  workItems.project_friendlyID  = friendlyID
                               and workItems.customer_friendlyID = customer_friendlyID;
+}
+
+entity Packages : managed, cuid {
+    project     : Association to Projects;
+    title       : String @mandatory;
+    description : String;
 }
 
 entity WorkItems {

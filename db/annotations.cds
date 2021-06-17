@@ -168,6 +168,48 @@ annotate my.Customers with @(UI : {
 }
 
 @cds.odata.valuelist
+annotate my.Packages with @(UI : {
+    HeaderInfo      : {
+        TypeName       : '{i18n>Package}',
+        TypeNamePlural : '{i18n>Packages}',
+        Title          : {Value : title},
+        Description    : {Value : description},
+    },
+    Facets          : [{
+        $Type  : 'UI.ReferenceFacet',
+        Label  : '{i18n>General}',
+        Target : '@UI.Identification'
+    }, ],
+    Identification  : [
+        {Value : title},
+        {Value : description},
+    ],
+    SelectionFields : [
+        title,
+        description
+    ],
+    LineItem        : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+    ]
+}) {
+    ID @UI.Hidden;
+// customer @(Common : {
+//     Text         : {
+//         $value                 : customer.name,
+//         ![@UI.TextArrangement] : #TextOnly
+//     },
+//     FieldControl : #Mandatory
+// });
+};
+
+@cds.odata.valuelist
 annotate my.Projects with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>Project}',
@@ -184,7 +226,7 @@ annotate my.Projects with @(UI : {
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.children}',
-            Target : 'children/@UI.LineItem'
+            Target : 'packages/@UI.LineItem'
         },
         {
             $Type  : 'UI.ReferenceFacet',
