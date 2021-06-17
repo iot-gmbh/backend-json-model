@@ -63,8 +63,7 @@ entity Projects : managed, cuid {
     teamMembers         : Composition of many Users2Projects
                               on teamMembers.project = $self;
     workItems           : Association to many WorkItems
-                              on  workItems.project_friendlyID  = friendlyID
-                              and workItems.customer_friendlyID = customer_friendlyID;
+                              on workItems.project = $self;
 }
 
 entity Packages : managed, cuid {
@@ -74,53 +73,48 @@ entity Packages : managed, cuid {
 }
 
 entity WorkItems {
-    key ID                           : String;
-        activatedDate                : DateTime;
-        activatedDateMonth           : Integer;
-        activatedDateYear            : Integer;
-        activatedDateDay             : Integer;
-        completedDate                : DateTime;
-        completedDateMonth           : Integer;
-        completedDateYear            : Integer;
-        completedDateDay             : Integer;
-        assignedTo_userPrincipalName : String;
-        assignedTo                   : Association to Users
-                                           on assignedTo.userPrincipalName = assignedTo_userPrincipalName;
-        changedDate                  : DateTime;
-        assignedToName               : String;
-        createdDate                  : DateTime;
-        reason                       : String;
-        state                        : String;
-        teamProject                  : String;
-        title                        : String;
-        workItemType                 : String;
+    key ID                  : String;
+        activatedDate       : DateTime;
+        activatedDateMonth  : Integer;
+        activatedDateYear   : Integer;
+        activatedDateDay    : Integer;
+        completedDate       : DateTime;
+        completedDateMonth  : Integer;
+        completedDateYear   : Integer;
+        completedDateDay    : Integer;
+        assignedTo          : Association to Users;
+        changedDate         : DateTime;
+        assignedToName      : String;
+        createdDate         : DateTime;
+        reason              : String;
+        state               : String;
+        teamProject         : String;
+        title               : String;
+        workItemType        : String;
         // Scheduling
-        completedWork                : Decimal;
-        remainingWork                : Decimal;
-        originalEstimate             : Decimal;
+        completedWork       : Decimal;
+        remainingWork       : Decimal;
+        originalEstimate    : Decimal;
         // Documentation
-        resolvedDate                 : DateTime;
-        closedDate                   : DateTime;
-        customer_friendlyID          : String;
-        customer                     : Association to Customers
-                                           on customer.friendlyID = customer_friendlyID;
-        customerName                 : String;
-        private                      : Boolean;
+        resolvedDate        : DateTime;
+        closedDate          : DateTime;
+        customer_friendlyID : String;
+        customer            : Association to Customers;
+        customerName        : String;
+        private             : Boolean;
         // Custom
-        project_friendlyID           : String;
-        project                      : Association to Projects
-                                           on  project.friendlyID          = project_friendlyID
-                                           and project.customer_friendlyID = customer_friendlyID;
-        projectTitle                 : String;
-        workPackage                  : Association to Packages;
-        ticket                       : String;
-        type                         : String enum {
+        project_friendlyID  : String;
+        project             : Association to Projects;
+        projectTitle        : String;
+        workPackage         : Association to Packages;
+        ticket              : String;
+        type                : String enum {
             Manual;
             Event;
             WorkItem
         };
-        duration                     : Decimal;
-        resetEntry                   : Boolean;
-        deleted                      : Boolean;
-        confirmed                    : Boolean;
+        duration            : Decimal;
+        resetEntry          : Boolean;
+        deleted             : Boolean;
+        confirmed           : Boolean;
 };
