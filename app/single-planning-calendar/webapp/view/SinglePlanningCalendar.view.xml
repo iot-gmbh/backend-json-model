@@ -35,19 +35,19 @@
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox selectedKey="{customer_friendlyID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
+									<ComboBox id="customerSelect" selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
 										<items>
-											<core:Item text="{name}" key="{friendlyID}"/>
+											<core:Item text="{name}" key="{ID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_friendlyID}" items="{path: 'customer/projects', sorter: {path: 'title'}}" enabled="{= (${customer/projects}.length > 1) &amp;&amp; !!${customer_friendlyID}}">
+									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" enabled="{= (${/projectsFiltered}.length > 1)}">
 										<items>
-											<core:Item text="{title}" key="{friendlyID}"/>
+											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="packageSelect" selectedKey="{package_ID}" items="{path: 'project/workPackages', sorter: {path: 'title'}}" visible="{= (${project/workPackages}.length > 1) &amp;&amp; !!${project_friendlyID}}">
+									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}" enabled="{= ${/workPackagesFiltered}.length > 1}">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
@@ -60,7 +60,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_friendlyID} &amp;&amp; !!${project_friendlyID}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_ID} &amp;&amp; !!${project_ID}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>
