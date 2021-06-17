@@ -21,11 +21,11 @@ service AnalyticsService {
         },
     ])        as projection on my.WorkItems {
         @Analytics.Dimension : true
-        key assignedTo_userPrincipalName,
+        key assignedTo.userPrincipalName,
         @Analytics.Dimension : true
-        key customer_friendlyID,
+        key customer.name,
         @Analytics.Dimension : true
-        key project_friendlyID,
+        key project.title,
 
         @Analytics.Dimension : true
         activatedDate,
@@ -35,7 +35,8 @@ service AnalyticsService {
         activatedDateMonth,
         @Analytics.Dimension : true
         activatedDateYear,
-
+        
+        assignedTo,
         @Analytics.Measure   : true
         @Aggregation.default : #SUM
         round(duration, 2) as duration: Decimal(9, 2), customer, project

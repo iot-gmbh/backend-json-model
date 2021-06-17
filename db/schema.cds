@@ -26,7 +26,7 @@ entity Users {
         teamMembers       : Association to many Users
                                 on teamMembers.manager = $self;
         workItems         : Association to many WorkItems
-                                on workItems.assignedTo_userPrincipalName = userPrincipalName
+                                on workItems.assignedTo = $self;
 };
 
 @assert.unique : {friendlyID : [

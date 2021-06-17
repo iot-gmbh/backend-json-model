@@ -17,7 +17,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : project_friendlyID,
+            Dimension : project_ID,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -26,8 +26,8 @@ annotate my.WorkItems with @(UI : {
             Role    : #Axis1
         }],
         Dimensions          : [
-            customer_friendlyID,
-            project_friendlyID
+            customer.name,
+            project.title
         ],
         Measures            : [duration],
     },
@@ -48,7 +48,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : customer_friendlyID,
+            Dimension : customer.name,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -56,7 +56,7 @@ annotate my.WorkItems with @(UI : {
             Measure : duration,
             Role    : #Axis1
         }],
-        Dimensions          : [customer_friendlyID],
+        Dimensions          : [customer.name],
         Measures            : [duration],
     },
 
@@ -104,7 +104,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : assignedTo_userPrincipalName,
+            Dimension : assignedTo.displayName,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -120,21 +120,21 @@ annotate my.WorkItems with @(UI : {
         completedDate,
         activatedDateMonth,
         assignedTo_userPrincipalName,
-        customer_friendlyID,
-        project_friendlyID,
+        customer.name,
+        project.title,
     ],
     LineItem                                  : [
         {
             $Type : 'UI.DataField',
-            Value : assignedTo_userPrincipalName,
+            Value : assignedTo.displayName,
         },
         {
             $Type : 'UI.DataField',
-            Value : customer_friendlyID,
+            Value : customer.name,
         },
         {
             $Type : 'UI.DataField',
-            Value : project_friendlyID,
+            Value : project.title,
         },
         {
             $Type : 'UI.DataField',

@@ -43,7 +43,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
             ''                   as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
             title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
             @UI.Hidden
-            assignedTo_userPrincipalName
+            assignedTo.userPrincipalName
 
         /*
         IOT Projektaufschreibung
