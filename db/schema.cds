@@ -9,25 +9,24 @@ namespace iot.planner;
 
 @assert.unique : {friendlyID : [userPrincipalName, ]}
 entity Users {
-    key userPrincipalName : String                                                            @title : '{i18n>Users.principalName}';
-        displayName       : String                                                            @title : '{i18n>Users.displayName}';
-        givenName         : String                                                            @title : '{i18n>Users.givenName}';
-        jobTitle          : String                                                            @title : '{i18n>Users.jobTitle}';
-        mail              : String                                                            @title : '{i18n>Users.mail}';
-        mobilePhone       : String                                                            @title : '{i18n>Users.mobilePhone}';
-        officeLocation    : String                                                            @title : '{i18n>Users.officeLocation}';
-        preferredLanguage : String                                                            @title : '{i18n>Users.preferredLanguage}';
-        surname           : String                                                            @title : '{i18n>Users.surname}';
-        manager           : Association to Users                                              @title : '{i18n>Users.manager}';
+    key userPrincipalName : String;
+        displayName       : String;
+        givenName         : String;
+        jobTitle          : String;
+        mail              : String;
+        mobilePhone       : String;
+        officeLocation    : String;
+        preferredLanguage : String;
+        surname           : String;
+        manager           : Association to Users;
         projects          : Association to many Users2Projects
-                                on projects.user = $self
-                                                                                              @title : '{i18n>Users.projects}';
+                                on projects.user = $self;
         managedProjects   : Association to many Projects
-                                on managedProjects.manager = $self                            @title : '{i18n>Users.managedProjects}';
+                                on managedProjects.manager = $self;
         teamMembers       : Association to many Users
-                                on teamMembers.manager = $self                                @title : '{i18n>Users.teamMembers}';
+                                on teamMembers.manager = $self;
         workItems         : Association to many WorkItems
-                                on workItems.assignedTo_userPrincipalName = userPrincipalName @title : '{i18n>Users.workItems}';
+                                on workItems.assignedTo_userPrincipalName = userPrincipalName
 };
 
 @assert.unique : {friendlyID : [
@@ -35,16 +34,16 @@ entity Users {
     project
 ]}
 entity Users2Projects : cuid, managed {
-    user    : Association to Users    @title : '{i18n>Users2Projects.user}';
-    project : Association to Projects @title : '{i18n>Users2Projects.project}'
+    user    : Association to Users;
+    project : Association to Projects;
 };
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-    friendlyID : String                           @title : '{i18n>Customers.friendlyID}'  @mandatory;
-    name       : String                           @title : '{i18n>Customers.name}';
-    projects   : Composition of many Projects
-                     on projects.customer = $self @title : '{i18n>Customers.projects}'
+    friendlyID : String @mandatory;
+    name       : String;
+    projects   : Association to many Projects
+                     on projects.customer = $self;
 }
 
 @assert.unique : {friendlyID : [
@@ -52,77 +51,70 @@ entity Customers : managed, cuid {
     friendlyID
 ]}
 entity Projects : managed, cuid {
-    friendlyID          : String                   @title : '{i18n>Projects.friendlyID}'  @mandatory;
-    title               : String                   @title : '{i18n>Projects.title}';
-    description         : String                   @title : '{i18n>Projects.description}';
-    IOTProjectID        : String                   @title : '{i18n>Projects.IOTProjectID}';
-    manager             : Association to Users     @title : '{i18n>Projects.manager}';
-    customer_friendlyID : String                   @title : '{i18n>Projects.customerFriendlyID}';
-    customer            : Association to Customers @title : '{i18n>Projects.customer}';
+    friendlyID          : String @mandatory;
+    title               : String @mandatory;
+    description         : String;
+    IOTProjectID        : String;
+    manager             : Association to Users;
+    customer_friendlyID : String;
+    customer            : Association to Customers;
+    parent              : Association to Projects;
+    children            : Association to many Projects
+                              on children.parent = $self;
     teamMembers         : Composition of many Users2Projects
-                              on teamMembers.project = $self
-                                                   @title : '{i18n>Projects.teamMembers}';
+                              on teamMembers.project = $self;
     workItems           : Association to many WorkItems
                               on  workItems.project_friendlyID  = friendlyID
-                              and workItems.customer_friendlyID = customer_friendlyID
-                                                   @title : '{i18n>Projects.workItems}'
+                              and workItems.customer_friendlyID = customer_friendlyID;
 }
 
-/*
-IOT Projektaufschreibung
-
-Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | P2 | Bemerkung
- */
 entity WorkItems {
-    key ID                           : String   @title : '{i18n>WorkItems.ID}';
-        activatedDate                : DateTime @title : '{i18n>WorkItems.activatedDate}';
-        activatedDateMonth           : Integer  @title : '{i18n>WorkItems.activatedDateMonth}';
-        activatedDateYear            : Integer  @title : '{i18n>WorkItems.activatedDateYear}';
-        activatedDateDay             : Integer  @title : '{i18n>WorkItems.activatedDateDay}';
-        completedDate                : DateTime @title : '{i18n>WorkItems.completedDate}';
-        completedDateMonth           : Integer  @title : '{i18n>WorkItems.completedDateMonth}';
-        completedDateYear            : Integer  @title : '{i18n>WorkItems.completedDateYear}';
-        completedDateDay             : Integer  @title : '{i18n>WorkItems.completedDateDay}';
-        assignedTo_userPrincipalName : String   @title : '{i18n>WorkItems.assignedTo}';
+    key ID                           : String;
+        activatedDate                : DateTime;
+        activatedDateMonth           : Integer;
+        activatedDateYear            : Integer;
+        activatedDateDay             : Integer;
+        completedDate                : DateTime;
+        completedDateMonth           : Integer;
+        completedDateYear            : Integer;
+        completedDateDay             : Integer;
+        assignedTo_userPrincipalName : String;
         assignedTo                   : Association to Users
-                                           on assignedTo.userPrincipalName = assignedTo_userPrincipalName
-                                                @title : '{i18n>WorkItems.assignedTo}';
-        changedDate                  : DateTime @title : '{i18n>WorkItems.changedDate}';
-        assignedToName               : String   @title : '{i18n>WorkItems.assignedToName}';
-        createdDate                  : DateTime @title : '{i18n>WorkItems.createdDate}';
-        reason                       : String   @title : '{i18n>WorkItems.reason}';
-        state                        : String   @title : '{i18n>WorkItems.state}';
-        teamProject                  : String   @title : '{i18n>WorkItems.teamProject}';
-        title                        : String   @title : '{i18n>WorkItems.title}';
-        workItemType                 : String   @title : '{i18n>WorkItems.workItemType}';
+                                           on assignedTo.userPrincipalName = assignedTo_userPrincipalName;
+        changedDate                  : DateTime;
+        assignedToName               : String;
+        createdDate                  : DateTime;
+        reason                       : String;
+        state                        : String;
+        teamProject                  : String;
+        title                        : String;
+        workItemType                 : String;
         // Scheduling
-        completedWork                : Decimal  @title : '{i18n>WorkItems.completedWork}';
-        remainingWork                : Decimal  @title : '{i18n>WorkItems.remainingWork}';
-        originalEstimate             : Decimal  @title : '{i18n>WorkItems.originalEstimate}';
+        completedWork                : Decimal;
+        remainingWork                : Decimal;
+        originalEstimate             : Decimal;
         // Documentation
-        resolvedDate                 : DateTime @title : '{i18n>WorkItems.resolvedDate}';
-        closedDate                   : DateTime @title : '{i18n>WorkItems.closedDate}';
-        customer_friendlyID          : String   @title : '{i18n>WorkItems.customer}'  @mandatory;
+        resolvedDate                 : DateTime;
+        closedDate                   : DateTime;
+        customer_friendlyID          : String;
         customer                     : Association to Customers
-                                           on customer.friendlyID = customer_friendlyID
-                                                @title : '{i18n>WorkItems.customer}';
-        customerName                 : String   @title : '{i18n>WorkItems.customerName}';
-        private                      : Boolean  @title : '{i18n>WorkItems.private}';
+                                           on customer.friendlyID = customer_friendlyID;
+        customerName                 : String;
+        private                      : Boolean;
         // Custom
-        project_friendlyID           : String   @title : '{i18n>WorkItems.project}'  @mandatory;
+        project_friendlyID           : String;
         project                      : Association to Projects
                                            on  project.friendlyID          = project_friendlyID
-                                           and project.customer_friendlyID = customer_friendlyID
-                                                @title : '{i18n>WorkItems.project}';
-        projectName                  : String   @title : '{i18n>WorkItems.projectName}';
-        ticket                       : String   @title : '{i18n>WorkItems.ticket}';
-        type                         : String   @title : '{i18n>WorkItems.type}' enum {
+                                           and project.customer_friendlyID = customer_friendlyID;
+        projectName                  : String;
+        ticket                       : String;
+        type                         : String enum {
             Manual;
             Event;
             WorkItem
         };
-        duration                     : Decimal  @title : '{i18n>WorkItems.duration}';
-        resetEntry                   : Boolean  @title : '{i18n>WorkItems.resetEntry}';
-        deleted                      : Boolean  @title : '{i18n>WorkItems.deleted}';
-        confirmed                    : Boolean  @title : '{i18n>WorkItems.confirmed}';
+        duration                     : Decimal;
+        resetEntry                   : Boolean;
+        deleted                      : Boolean;
+        confirmed                    : Boolean;
 };

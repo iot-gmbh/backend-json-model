@@ -26,6 +26,7 @@ service AdminService @(requires : 'authenticated-user') {
 
     // @odata.draft.enabled
 
+    @odata.draft.enabled
     entity Projects  as projection on my.Projects;
 
     entity WorkItems @(restrict : [

@@ -183,6 +183,11 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Projects.children}',
+            Target : 'children/@UI.LineItem'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.teamMembers}',
             Target : 'teamMembers/@UI.LineItem'
         },
@@ -215,12 +220,12 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Label : '{i18n>Projects.customer}',
-            Value : customer.name,
+            Value : customer_ID,
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>Projects.manager}',
-            Value : manager.displayName,
+            Value : manager_userPrincipalName,
         },
         {
             $Type : 'UI.DataField',
