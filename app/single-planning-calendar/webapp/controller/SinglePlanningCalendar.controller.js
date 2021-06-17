@@ -133,7 +133,7 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, ...appointmentSync } =
+            const { customer, project, package, ...appointmentSync } =
               await this._submitEntry({
                 ...data,
                 activatedDate: startDate,
@@ -188,10 +188,11 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, ...appointmentSync } = await this.reset({
-              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
-              appointment,
-            });
+            const { customer, project, package, ...appointmentSync } =
+              await this.reset({
+                path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+                appointment,
+              });
 
             appointments[appointmentSync.ID] = Object.define(
               appointment,
@@ -208,24 +209,45 @@ sap.ui.define(
 
         onCreateAppointment(event) {
           const model = this.getModel();
-          const { customers } = model.getData();
           const { startDate, endDate } = event.getParameters();
           const appointment = {
             activatedDate: startDate,
             completedDate: endDate,
           };
 
-          Object.defineProperty(appointment, "customer", {
-            get: () =>
-              customers.find(
-                ({ friendlyID }) =>
-                  friendlyID === appointment.customer_friendlyID
-              ),
-          });
-
           model.setProperty("/appointments/NEW", appointment);
 
+          this._defineNavProps(appointment);
           this._bindAndOpenDialog("/appointments/NEW");
+        },
+
+        _defineNavProps({ appointment }) {
+          const model = this.getModel();
+
+          Object.defineProperty(appointment, "customer", {
+            get: () =>
+              model
+                .getProperty("/customers")
+                .find(
+                  ({ friendlyID }) =>
+                    friendlyID === appointment.customer_friendlyID
+                ),
+          });
+
+          Object.defineProperty(appointment, "project", {
+            get: () =>
+              model
+                .getProperty("/customers")
+                .filter(
+                  ({ friendlyID }) =>
+                    friendlyID === appointment.customer_friendlyID
+                )
+                .flatMap((cstmer) => cstmer.projects)
+                .find(
+                  ({ friendlyID }) =>
+                    friendlyID === appointment.project_friendlyID
+                ),
+          });
         },
 
         _bindAndOpenDialog(path) {
@@ -236,16 +258,23 @@ sap.ui.define(
 
           const { customer } = appointment;
 
-          if (customer) {
-            if (customer.projects.length === 1) {
-              model.setProperty(
-                path + "/project_friendlyID",
-                customer.projects[0].friendlyID
-              );
-            }
-          } else model.setProperty(path + "/customer_friendlyID", undefined);
+          if (customer && customer.projects.length === 1) {
+            model.setProperty(
+              path + "/project_friendlyID",
+              customer.projects[0].friendlyID
+            );
 
-          // model.setProperty(path, appointment);
+            if (customer.projects[0].packages.length === 1) {
+              model.setProperty(
+                path + "/package_ID",
+                customer.projects[0].packages[0].ID
+              );
+            } else model.setProperty(path + "/package_ID", undefined);
+          } else {
+            model.setProperty(path + "/customer_friendlyID", undefined);
+            model.setProperty(path + "/package_ID", undefined);
+          }
+
           model.setProperty(
             "/createItemDialogTitle",
             appointment.ID
@@ -282,7 +311,43 @@ sap.ui.define(
               appointmentPath + "/project_friendlyID",
               projects[0].friendlyID
             );
-          }
+            if (projects[0].packages.length >= 1) {
+              model.setProperty(
+                appointmentPath + "/package_ID",
+                projects[0].packages[0].ID
+              );
+            } else
+              model.setProperty(appointmentPath + "/package_ID", undefined);
+          } else
+            model.setProperty(
+              appointmentPath + "/project_friendlyID",
+              undefined
+            );
+        },
+
+        onSelectProject(event) {
+          const model = this.getModel();
+          const selectControl = event.getSource();
+          const selectedItem = event.getParameter("selectedItem");
+
+          if (!selectedItem) return;
+
+          const appointmentPath = selectControl
+            .getParent()
+            .getBindingContext()
+            .getPath();
+
+          const project = selectedItem.getBindingContext().getObject();
+          const packages = project.packages;
+
+          model.setProperty(
+            appointmentPath + "/project_friendlyID",
+            project.friendlyID
+          );
+
+          if (packages.length >= 1) {
+            model.setProperty(appointmentPath + "/package_ID", packages[0].ID);
+          } else model.setProperty(appointmentPath + "/package_ID", undefined);
         },
 
         async onSubmitEntry() {
@@ -297,7 +362,7 @@ sap.ui.define(
 
           try {
             // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const { customer, project, ...appointmentSync } =
+            const { customer, project, package, ...appointmentSync } =
               await this._submitEntry(appointment);
 
             appointments[appointmentSync.ID] = Object.assign(
@@ -318,7 +383,13 @@ sap.ui.define(
 
         // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert und per Object-Destructuring entfernt
         // eslint-disable-next-line no-unused-vars
-        _submitEntry({ customer, __metadata, ...appointment }) {
+        _submitEntry({
+          customer,
+          project,
+          package,
+          __metadata,
+          ...appointment
+        }) {
           const { ID } = appointment;
 
           // Update
@@ -413,15 +484,8 @@ sap.ui.define(
           const appointmentsMap = appointments.reduce((map, appointment) => {
             map[appointment.ID] = appointment;
 
-            Object.defineProperty(appointment, "customer", {
-              get: () =>
-                model
-                  .getProperty("/customers")
-                  .find(
-                    ({ friendlyID }) =>
-                      friendlyID === appointment.customer_friendlyID
-                  ),
-            });
+            this._defineNavProps({ appointment });
+
             return map;
           }, {});
 
@@ -445,22 +509,27 @@ sap.ui.define(
                 value1: email,
               }),
             ],
-            urlParameters: { $expand: "project/customer" },
+            urlParameters: { $expand: "project/customer,project/packages" },
           });
 
           // Aus der Gesamtheit der Projekte werden die Kunden vereinzelt und Referenzen zu den jeweils zugeordneten Projekten abgegriffen => Ziel: dynamische Auswahl des Projekts abhängig vom gewählten Kunden
           const customers = Object.values(
-            allProjects.reduce((map, { project: { customer, ...project } }) => {
-              const mergeCustomer = map[customer.ID] || customer;
+            allProjects.reduce(
+              (map, { project: { customer, packages, ...project } }) => {
+                const mergeCustomer = map[customer.ID] || customer;
 
-              if (Array.isArray(mergeCustomer.projects))
-                mergeCustomer.projects.push(project);
-              else mergeCustomer.projects = [project];
+                project.packages = packages.results;
 
-              map[customer.ID] = mergeCustomer;
+                if (Array.isArray(mergeCustomer.projects))
+                  mergeCustomer.projects.push(project);
+                else mergeCustomer.projects = [project];
 
-              return map;
-            }, {})
+                map[customer.ID] = mergeCustomer;
+
+                return map;
+              },
+              {}
+            )
           );
 
           model.setProperty("/customers", customers);

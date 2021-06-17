@@ -81,7 +81,8 @@ annotate my.WorkItems {
     // Custom
     project_friendlyID           @title : '{i18n>WorkItems.project}';
     project                      @title : '{i18n>WorkItems.project}';
-    projectName                  @title : '{i18n>WorkItems.projectName}';
+    projectTitle                 @title : '{i18n>WorkItems.projectTitle}';
+    package                      @title : '{i18n>WorkItems.package}';
     ticket                       @title : '{i18n>WorkItems.ticket}';
     type                         @title : '{i18n>WorkItems.type}';
     duration                     @title : '{i18n>WorkItems.duration}';

@@ -32,13 +32,15 @@ function calcDurationInH({ start, end }) {
 }
 
 function calcDates({ activatedDate, completedDate }) {
+  const aDate = new Date(activatedDate);
+  const cDate = new Date(completedDate);
   return {
-    activatedDateMonth: activatedDate.getUTCMonth() + 1,
-    activatedDateYear: activatedDate.getUTCFullYear(),
-    activatedDateDay: activatedDate.getUTCDate(),
-    completedDateMonth: completedDate.getUTCMonth() + 1,
-    completedDateYear: completedDate.getUTCFullYear(),
-    completedDateDay: completedDate.getUTCDate(),
+    activatedDateMonth: aDate.getUTCMonth() + 1,
+    activatedDateYear: aDate.getUTCFullYear(),
+    activatedDateDay: aDate.getUTCDate(),
+    completedDateMonth: cDate.getUTCMonth() + 1,
+    completedDateYear: cDate.getUTCFullYear(),
+    completedDateDay: cDate.getUTCDate(),
   };
 }
 
@@ -85,7 +87,7 @@ module.exports = cds.service.impl(async function () {
       return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
-    const entries = await this.read(WorkItems).where({ ID: item.ID });
+    const entries = await tx.run(SELECT.from(WorkItems).where({ ID: item.ID }));
 
     if (item.deleted) {
       // DELETE

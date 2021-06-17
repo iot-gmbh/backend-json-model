@@ -46,6 +46,12 @@
 											<core:Item text="{title}" key="{friendlyID}"/>
 										</items>
 									</Select>
+									<Label text="{i18n>WorkItems.package}"/>
+									<Select id="packageSelect" selectedKey="{package_ID}" items="{path: 'project/packages', sorter: {path: 'title'}}" visible="{= (${project/packages}.length > 1) &amp;&amp; !!${project_friendlyID}}">
+										<items>
+											<core:Item text="{title}" key="{ID}"/>
+										</items>
+									</Select>
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>

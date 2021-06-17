@@ -111,7 +111,8 @@ entity WorkItems {
         project                      : Association to Projects
                                            on  project.friendlyID          = project_friendlyID
                                            and project.customer_friendlyID = customer_friendlyID;
-        projectName                  : String;
+        projectTitle                 : String;
+        package                      : Association to Packages;
         ticket                       : String;
         type                         : String enum {
             Manual;
