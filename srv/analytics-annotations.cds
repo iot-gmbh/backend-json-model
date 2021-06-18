@@ -17,7 +17,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : project_ID,
+            Dimension : projectTitle,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -26,8 +26,8 @@ annotate my.WorkItems with @(UI : {
             Role    : #Axis1
         }],
         Dimensions          : [
-            customer.name,
-            project.title
+            customerName,
+            projectTitle
         ],
         Measures            : [duration],
     },
@@ -48,7 +48,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : customer.name,
+            Dimension : customerName,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -56,7 +56,7 @@ annotate my.WorkItems with @(UI : {
             Measure : duration,
             Role    : #Axis1
         }],
-        Dimensions          : [customer.name],
+        Dimensions          : [customerName],
         Measures            : [duration],
     },
 
@@ -104,7 +104,7 @@ annotate my.WorkItems with @(UI : {
         ChartType           : #Column,
         DimensionAttributes : [{
             $Type     : 'UI.ChartDimensionAttributeType',
-            Dimension : assignedTo.displayName,
+            Dimension : assignedToName,
             Role      : #Category
         }, ],
         MeasureAttributes   : [{
@@ -112,29 +112,29 @@ annotate my.WorkItems with @(UI : {
             Measure : duration,
             Role    : #Axis1
         }],
-        Dimensions          : [assignedTo_userPrincipalName],
+        Dimensions          : [assignedToName],
         Measures            : [duration],
     },
     SelectionFields                           : [
         activatedDate,
         completedDate,
         activatedDateMonth,
-        assignedTo_userPrincipalName,
-        customer.name,
-        project.title,
+        assignedToName,
+        customerName,
+        projectTitle,
     ],
     LineItem                                  : [
         {
             $Type : 'UI.DataField',
-            Value : assignedTo.displayName,
+            Value : assignedToName,
         },
         {
             $Type : 'UI.DataField',
-            Value : customer.name,
+            Value : customerName,
         },
         {
             $Type : 'UI.DataField',
-            Value : project.title,
+            Value : projectTitle,
         },
         {
             $Type : 'UI.DataField',
@@ -142,25 +142,34 @@ annotate my.WorkItems with @(UI : {
         },
     ]
 }) {
-    customer_friendlyID          @Common.ValueList : {
+    // customer_ID                  @Common.ValueList : {
+    //     CollectionPath               : 'WorkItems',
+    //     Parameters                   : [{
+    //         $Type             : 'Common.ValueListParameterInOut',
+    //         LocalDataProperty : 'customer_ID',
+    //         ValueListProperty : 'customer_ID'
+    //     }],
+    //     PresentationVariantQualifier : 'DurationByCustomer'
+    // };
+    customerName       @Common.ValueList : {
         CollectionPath               : 'WorkItems',
         Parameters                   : [{
             $Type             : 'Common.ValueListParameterInOut',
-            LocalDataProperty : 'customer_friendlyID',
-            ValueListProperty : 'customer_friendlyID'
+            LocalDataProperty : 'customerName',
+            ValueListProperty : 'customerName'
         }],
         PresentationVariantQualifier : 'DurationByCustomer'
     };
-    project_friendlyID           @Common.ValueList : {
+    projectTitle       @Common.ValueList : {
         CollectionPath : 'WorkItems',
         Parameters     : [{
             $Type             : 'Common.ValueListParameterInOut',
-            LocalDataProperty : 'project_friendlyID',
-            ValueListProperty : 'project_friendlyID'
+            LocalDataProperty : 'projectTitle',
+            ValueListProperty : 'projectTitle'
         }],
     // PresentationVariantQualifier : 'Default'
     };
-    activatedDateMonth           @Common.ValueList : {
+    activatedDateMonth @Common.ValueList : {
         CollectionPath               : 'WorkItems',
         Parameters                   : [{
             $Type             : 'Common.ValueListParameterInOut',
@@ -169,12 +178,12 @@ annotate my.WorkItems with @(UI : {
         }],
         PresentationVariantQualifier : 'DurationByMonth'
     };
-    assignedTo_userPrincipalName @Common.ValueList : {
+    assignedToName     @Common.ValueList : {
         CollectionPath               : 'WorkItems',
         Parameters                   : [{
             $Type             : 'Common.ValueListParameterInOut',
-            LocalDataProperty : 'assignedTo_userPrincipalName',
-            ValueListProperty : 'assignedTo_userPrincipalName'
+            LocalDataProperty : 'assignedToName',
+            ValueListProperty : 'assignedToName'
         }],
         PresentationVariantQualifier : 'DurationByAssignedTo'
     }

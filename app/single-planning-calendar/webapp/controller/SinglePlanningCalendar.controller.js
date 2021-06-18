@@ -42,8 +42,6 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
-          const customerSelect = this.byId("customerSelect");
-          const projectSelect = this.byId("projectSelect");
           const dialog = this.byId("createItemDialog");
 
           const model = new JSONModel({

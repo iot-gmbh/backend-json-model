@@ -21,11 +21,11 @@ service AnalyticsService {
         },
     ])        as projection on my.WorkItems {
         @Analytics.Dimension : true
-        key assignedTo.userPrincipalName,
+        key assignedTo.displayName as assignedToName @(title: '{i18n>WorkItemAggr.assignedTo}'),
         @Analytics.Dimension : true
-        key customer.name,
+        key customer.name as customerName @(title: '{i18n>WorkItemAggr.customer}'),
         @Analytics.Dimension : true
-        key project.title,
+        key project.title as projectTitle  @(title: '{i18n>WorkItemAggr.project}'),
 
         @Analytics.Dimension : true
         activatedDate,
@@ -36,10 +36,15 @@ service AnalyticsService {
         @Analytics.Dimension : true
         activatedDateYear,
         
-        assignedTo,
         @Analytics.Measure   : true
         @Aggregation.default : #SUM
-        round(duration, 2) as duration: Decimal(9, 2), customer, project
+        round(duration, 2) as duration: Decimal(9, 2),
+        @Analytics.Dimension : true
+        customer,
+        @Analytics.Dimension : true
+        project,
+        @Analytics.Dimension : true
+        assignedTo,
     };
 
     entity Customers as projection on my.Customers;
