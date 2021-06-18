@@ -44,6 +44,7 @@ sap.ui.define(
           const workWeekView = calendar.getViews()[1];
           const customerSelect = this.byId("customerSelect");
           const projectSelect = this.byId("projectSelect");
+          const dialog = this.byId("createItemDialog");
 
           const model = new JSONModel({
             appointments: { NEW: {} },
@@ -51,7 +52,9 @@ sap.ui.define(
             customers: [],
             projects: [],
             get projectsFiltered() {
-              const selected = customerSelect.getSelectedKey();
+              const bc = dialog.getBindingContext();
+              if (!bc) return [];
+              const selected = bc.getProperty("customer_ID");
 
               return this.projects.filter(
                 ({ customer_ID }) => customer_ID === selected
@@ -59,7 +62,9 @@ sap.ui.define(
             },
             workPackages: [],
             get workPackagesFiltered() {
-              const selected = projectSelect.getSelectedKey();
+              const bc = dialog.getBindingContext();
+              if (!bc) return [];
+              const selected = bc.getProperty("project_ID");
 
               return this.workPackages.filter(
                 ({ project_ID }) => project_ID === selected
@@ -201,7 +206,6 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
             const appointmentSync = await this.reset({
               path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               appointment,
@@ -229,6 +233,7 @@ sap.ui.define(
 
           this._bindAndOpenDialog("/appointments/NEW");
         },
+
         _bindAndOpenDialog(path) {
           const model = this.getModel();
           const bundle = this.getResourceBundle();
@@ -243,6 +248,10 @@ sap.ui.define(
           );
 
           dialog.bindElement(path);
+
+          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
+          model.refresh(true);
+
           dialog.open();
         },
 
@@ -257,7 +266,6 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
             const appointmentSync = await this._submitEntry(appointment);
 
             appointments[appointmentSync.ID] = appointmentSync;
@@ -272,15 +280,7 @@ sap.ui.define(
           this._closeDialog("createItemDialog");
         },
 
-        // Weil das Feld 'customer' im FE zur Feldvalidierung manipuliert wurde, wird er nicht weggespeichert und per Object-Destructuring entfernt
-        // eslint-disable-next-line no-unused-vars
-        _submitEntry({
-          customer,
-          project,
-          workPackage,
-          __metadata,
-          ...appointment
-        }) {
+        _submitEntry(appointment) {
           const { ID } = appointment;
 
           // Update
