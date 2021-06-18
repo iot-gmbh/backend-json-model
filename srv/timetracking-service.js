@@ -54,7 +54,14 @@ module.exports = cds.service.impl(async function () {
   this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
-    const entries = await this.read(WorkItems).where({ ID: item.ID });
+    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+      this.read(WorkItems).where({ ID: item.ID }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
+    ]);
+
+    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
     if (entries.length > 0)
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
@@ -64,8 +71,8 @@ module.exports = cds.service.impl(async function () {
         ID: item.ID,
         deleted: true,
         assignedTo_userPrincipalName: "DELETED",
-        customer_friendlyID: "DELETED",
-        project_friendlyID: "DELETED",
+        customer_ID: dltDummyCstmer[0].ID,
+        project_ID: dltDummyProj[0].ID,
       })
     );
   });
@@ -87,7 +94,14 @@ module.exports = cds.service.impl(async function () {
       return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
-    const entries = await tx.run(SELECT.from(WorkItems).where({ ID: item.ID }));
+    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+      this.read(WorkItems).where({ ID: item.ID }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
+    ]);
+
+    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
     if (item.deleted) {
       // DELETE
@@ -101,8 +115,8 @@ module.exports = cds.service.impl(async function () {
             completedDate: item.completedDate,
             deleted: true,
             assignedTo_userPrincipalName: req.user.id,
-            customer_friendlyID: "DELETED",
-            project_friendlyID: "DELETED",
+            customer_ID: dltDummyCstmer[0].ID,
+            project_ID: dltDummyProj[0].ID,
           })
         );
       }
