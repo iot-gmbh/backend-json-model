@@ -23,11 +23,9 @@ service WorkItemsService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])                    as
-        select from my.WorkItems
-        where
-                project.friendlyID  != 'DELETED'
-            and customer.friendlyID != 'DELETED';
+    ])                    as projection on my.WorkItems {
+        * , workPackage : redirected to Packages
+    } where customer_friendlyID != 'DELETED';
 
     entity IOTWorkItems   as
         select from WorkItems {
@@ -58,8 +56,10 @@ service WorkItemsService @(requires : 'authenticated-user') {
     };
 
     entity Projects       as projection on my.Projects {
-        * , workItems : redirected to WorkItems
+        * , workItems : redirected to WorkItems, workPackages : redirected to Packages
     } where friendlyID != 'DELETED';
 
     entity Customers      as projection on my.Customers where friendlyID != 'DELETED';
+    entity Packages       as projection on my.Packages;
+    entity AzDevPackages  as projection on AzDevOps.Packages;
 };

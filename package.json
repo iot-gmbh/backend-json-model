@@ -17,6 +17,7 @@
     "@sap/xssec": "^3.1.2",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
     "azure-devops-node-api": "^10.2.1",
+    "cds-pg": "^0.1.5",
     "cdse": "^1.1.12",
     "dotenv": "^8.2.0",
     "express": "^4",
@@ -74,10 +75,21 @@
     "app"
   ],
   "cds": {
-    "hana": {
+    "requires": {
+      "db": {
+        "kind": "postgres"
+      },
+      "postgres": {
+        "impl": "cds-pg",
+        "model": [
+          "srv"
+        ]
+      }
+    },
+    "--hana": {
       "deploy-format": "hdbtable"
     },
-    "requires": {
+    "--requires": {
       "db": {
         "kind": "sqlite",
         "model": "*"

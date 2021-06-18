@@ -1,13 +1,5 @@
 using WorkItemsService as my from './workitems-service';
 
-annotate my.MyWorkItems with @(Capabilities.FilterRestrictions : {
-    RequiresFilter     : true,
-    RequiredProperties : [
-        activatedDate,
-        completedDate
-    ],
-});
-
 annotate my.IOTWorkItems with @(UI : {
     HeaderInfo      : {
         TypeName       : '{i18n>IOTWorkItem}',
