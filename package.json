@@ -17,6 +17,7 @@
     "@sap/xssec": "^3.1.2",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
     "azure-devops-node-api": "^10.2.1",
+    "cds-dbm": "0.0.26",
     "cds-pg": "^0.1.5",
     "cdse": "^1.1.12",
     "dotenv": "^8.2.0",
@@ -57,6 +58,7 @@
     "start": "cds run",
     "start:lcl": "run-p start:srv start:spc",
     "start:srv": "cds run",
+    "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "start:approuter": "cd app/single-planning-calendar && npm run start",
     "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
     "debug": "run-p start:srv start:spc",
@@ -67,7 +69,8 @@
     "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
-    "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db"
+    "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
+    "deploy:pg": "npx cds-dbm deploy --create-db --load-via delta"
   },
   "files": [
     "db",
@@ -77,22 +80,7 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "postgres"
-      },
-      "postgres": {
-        "impl": "cds-pg",
-        "model": [
-          "srv"
-        ]
-      }
-    },
-    "--hana": {
-      "deploy-format": "hdbtable"
-    },
-    "--requires": {
-      "db": {
-        "kind": "sqlite",
-        "model": "*"
+        "kind": "database"
       },
       "uaa": {
         "kind": "xsuaa"
@@ -100,6 +88,27 @@
       "MicrosoftGraphIOTGmbH": {
         "credentials": {
           "destination": "MicrosoftGraphIOTGmbH"
+        }
+      },
+      "database": {
+        "impl": "cds-pg",
+        "model": [
+          "db",
+          "srv",
+          "app"
+        ]
+      }
+    },
+    "migrations": {
+      "db": {
+        "schema": {
+          "default": "public",
+          "clone": "_cdsdbm_clone",
+          "reference": "_cdsdbm_ref"
+        },
+        "deploy": {
+          "tmpFile": "tmp/_autodeploy.json",
+          "undeployFile": "db/undeploy.json"
         }
       }
     }
