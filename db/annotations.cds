@@ -13,16 +13,16 @@ annotate my.WorkItems with @(UI : {
     Identification      : [
         {Value : title},
         {Value : assignedTo.displayName, },
-        {Value : customer.name, },
-        {Value : project.title, },
+        {Value : customer_ID, },
+        {Value : project_ID, },
         {Value : activatedDate},
         {Value : completedDate, },
     ],
     SelectionFields     : [
         title,
         assignedTo_userPrincipalName,
-        customer_friendlyID,
-        project_friendlyID,
+        customer_ID,
+        project_ID,
         activatedDate,
         completedDate
     ],
@@ -33,18 +33,15 @@ annotate my.WorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>WorkItems.assignedToName}',
-            Value : assignedTo.displayName,
+            Value : assignedTo_userPrincipalName,
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>WorkItems.customerName}',
-            Value : customer.name,
+            Value : customer_ID,
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>WorkItems.projectTitle}',
-            Value : project.title,
+            Value : project_ID,
         },
         {
             $Type : 'UI.DataField',
@@ -77,9 +74,9 @@ annotate my.Users with @(UI : {
         {Value : manager_userPrincipalName},
     ],
     SelectionFields : [
-        manager_userPrincipalName,
-        userPrincipalName,
         displayName,
+        userPrincipalName,
+        manager_userPrincipalName,
     ],
     Facets          : [
         {
@@ -139,7 +136,12 @@ annotate my.Customers with @(UI : {
         TypeNamePlural : '{i18n>Customers}',
         Title          : {Value : name},
     },
-    Identification  : [{Value : friendlyID}],
+    Identification  : [{Value : name}],
+    FieldGroup      : {
+        $Type : 'UI.FieldGroupType',
+        Label : '{i18n>Classification}',
+        Data  : [{Value : friendlyID}],
+    },
     SelectionFields : [name, ],
     LineItem        : [
         {
@@ -156,6 +158,11 @@ annotate my.Customers with @(UI : {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Identification}',
             Target : '@UI.Identification'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Identification}',
+            Target : '@UI.FieldGroup'
         },
         {
             $Type  : 'UI.ReferenceFacet',
@@ -205,13 +212,6 @@ annotate my.Packages with @(UI : {
     ]
 }) {
     ID @UI.Hidden;
-// customer @(Common : {
-//     Text         : {
-//         $value                 : customer.name,
-//         ![@UI.TextArrangement] : #TextOnly
-//     },
-//     FieldControl : #Mandatory
-// });
 };
 
 @cds.odata.valuelist
@@ -239,11 +239,17 @@ annotate my.Projects with @(UI : {
             Target : 'teamMembers/@UI.LineItem'
         },
     ],
+    FieldGroup      : {
+        $Type : 'UI.FieldGroupType',
+        Label : '{i18n>Classification}',
+        Data  : [
+            {Value : friendlyID},
+            {Value : IOTProjectID},
+        ],
+    },
     Identification  : [
-        {Value : friendlyID},
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
-        {Value : IOTProjectID},
     ],
     SelectionFields : [
         title,

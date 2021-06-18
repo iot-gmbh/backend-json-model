@@ -26,7 +26,8 @@ service WorkItemsService @(requires : 'authenticated-user') {
     ])                    as
         select from my.WorkItems
         where
-            customer_friendlyID != 'DELETED';
+                project.friendlyID  != 'DELETED'
+            and customer.friendlyID != 'DELETED';
 
     entity IOTWorkItems   as
         select from WorkItems {
