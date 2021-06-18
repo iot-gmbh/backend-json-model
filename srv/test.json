@@ -1,0 +1,63 @@
+{
+    "ID": "AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA=",
+    "activatedDate": "\/Date(1624020300000)\/",
+    "activatedDateMonth": null,
+    "activatedDateYear": null,
+    "activatedDateDay": null,
+    "completedDate": "\/Date(1624023900000)\/",
+    "completedDateMonth": null,
+    "completedDateYear": null,
+    "completedDateDay": null,
+    "changedDate": null,
+    "assignedToName": null,
+    "createdDate": null,
+    "reason": null,
+    "state": null,
+    "teamProject": null,
+    "title": "Haus Frau Klug",
+    "workItemType": null,
+    "completedWork": null,
+    "remainingWork": null,
+    "originalEstimate": null,
+    "resolvedDate": null,
+    "closedDate": null,
+    "customer_friendlyID": "Privat",
+    "customerName": null,
+    "private": true,
+    "project_friendlyID": null,
+    "projectTitle": null,
+    "ticket": null,
+    "type": "Event",
+    "duration": null,
+    "resetEntry": null,
+    "deleted": null,
+    "confirmed": false,
+    "assignedTo_userPrincipalName": "benedikt.hoelker@iot-online.de",
+    "customer_ID": "1ec5e099-2373-45a1-b937-aa81a0afd060",
+    "project_ID": "020db38e-6449-4f97-a9ff-176e962966e4",
+    "workPackage_ID": null,
+    "assignedTo": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA%3D')/assignedTo"
+        }
+    },
+    "customer": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA%3D')/customer"
+        }
+    },
+    "project": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA%3D')/project"
+        }
+    },
+    "workPackage": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA%3D')/workPackage"
+        }
+    },
+    "__metadata": {
+        "type": "TimetrackingService.MyWorkItems",
+        "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAAKD92uDAAA%3D')"
+    }
+}

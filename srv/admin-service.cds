@@ -42,5 +42,8 @@ service AdminService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])               as projection on my.WorkItems;
+    ])               as projection on my.WorkItems {
+        // expand for authorization checks (see above)
+        * , assignedTo.userPrincipalName
+    };
 };

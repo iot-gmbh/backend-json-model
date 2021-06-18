@@ -31,18 +31,18 @@ service WorkItemsService @(requires : 'authenticated-user') {
 
     entity IOTWorkItems   as
         select from WorkItems {
-            activatedDate        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
-            completedDate        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-            ''                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Beginn}'),
-            ''                   as Ende         : String @(title : '{i18n>IOTWorkItems.Ende}'),
-            ''                   as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
-            project.IOTProjectID as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
-            ''                   as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
-            ''                   as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
-            'Durchführung'       as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
-            'GE'                 as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
-            ''                   as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
-            title                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
+            activatedDate            as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
+            completedDate            as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
+            ''                       as Beginn       : String @(title : '{i18n>IOTWorkItems.Beginn}'),
+            ''                       as Ende         : String @(title : '{i18n>IOTWorkItems.Ende}'),
+            ''                       as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
+            project.IOTProjectID     as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
+            ''                       as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
+            workPackage.IOTPackageID as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
+            'Durchführung'           as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
+            'GE'                     as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
+            ''                       as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
+            title                    as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
             @UI.Hidden
             assignedTo.userPrincipalName
 
