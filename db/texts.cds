@@ -29,8 +29,9 @@ annotate my.Customers {
 }
 
 annotate my.Packages {
-    title       @title : '{i18n>Packages.title}';
-    description @title : '{i18n>Packages.description}';
+    title        @title : '{i18n>Packages.title}';
+    description  @title : '{i18n>Packages.description}';
+    IOTPackageID @title : '{i18n>Packages.IOTPackageID}';
 }
 
 annotate my.Projects {
@@ -41,8 +42,7 @@ annotate my.Projects {
     manager             @title : '{i18n>Projects.manager}';
     customer_friendlyID @title : '{i18n>Projects.customerFriendlyID}';
     customer            @title : '{i18n>Projects.customer}';
-    parent              @title : '{i18n>Projects.parent}';
-    children            @title : '{i18n>Projects.children}';
+    workPackages        @title : '{i18n>Projects.workPackages}';
     teamMembers         @title : '{i18n>Projects.teamMembers}';
     workItems           @title : '{i18n>Projects.workItems}'
 }

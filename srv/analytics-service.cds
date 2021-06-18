@@ -21,11 +21,11 @@ service AnalyticsService {
         },
     ])        as projection on my.WorkItems {
         @Analytics.Dimension : true
-        key assignedTo.displayName as assignedToName @(title: '{i18n>WorkItemAggr.assignedTo}'),
+        key assignedTo.displayName as assignedToName @(title: '{i18n>WorkItemsAggr.assignedTo}'),
         @Analytics.Dimension : true
-        key customer.name as customerName @(title: '{i18n>WorkItemAggr.customer}'),
+        key customer.name as customerName @(title: '{i18n>WorkItemsAggr.customer}'),
         @Analytics.Dimension : true
-        key project.title as projectTitle  @(title: '{i18n>WorkItemAggr.project}'),
+        key project.title as projectTitle  @(title: '{i18n>WorkItemsAggr.project}'),
 
         @Analytics.Dimension : true
         activatedDate,
@@ -38,7 +38,7 @@ service AnalyticsService {
         
         @Analytics.Measure   : true
         @Aggregation.default : #SUM
-        round(duration, 2) as duration: Decimal(9, 2),
+        round(duration, 2) as duration: Decimal(9, 2) @(title: '{i18n>WorkItemsAggr.duration}'),
         @Analytics.Dimension : true
         customer,
         @Analytics.Dimension : true

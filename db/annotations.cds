@@ -183,6 +183,7 @@ annotate my.Packages with @(UI : {
     Identification  : [
         {Value : title},
         {Value : description},
+        {Value : IOTPackageID},
     ],
     SelectionFields : [
         title,
@@ -196,6 +197,10 @@ annotate my.Packages with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : description,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : IOTPackageID,
         },
     ]
 }) {
@@ -225,7 +230,7 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Projects.children}',
+            Label  : '{i18n>Projects.workPackages}',
             Target : 'workPackages/@UI.LineItem'
         },
         {
