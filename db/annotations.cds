@@ -255,10 +255,7 @@ annotate my.Packages with @(UI : {
 annotate my.Projects with @(UI : {
     PresentationVariant : {
         $Type          : 'UI.PresentationVariantType',
-        SortOrder      : [
-                          // {Property : customer_ID},
-                         {Property : title}],
-        // GroupBy        : [customer_ID],
+        SortOrder      : [{Property : title}],
         Visualizations : ['@UI.LineItem'],
         RequestAtLeast : [
             'title',
@@ -304,6 +301,7 @@ annotate my.Projects with @(UI : {
     Identification      : [
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
+        {Value : IOTProjectID},
     ],
     SelectionFields     : [
         title,

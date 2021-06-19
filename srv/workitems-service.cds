@@ -12,22 +12,21 @@ service WorkItemsService @(requires : 'authenticated-user') {
             to    : 'team-lead',
             // Association paths are currently supported on SAP HANA only
             // https://cap.cloud.sap/docs/guides/authorization#association-paths
-            where : 'assignedTo.manager_userPrincipalName = $user'
+            where : 'managerUserPrincipalName = $user'
         },
         {
             grant : 'READ',
             to    : 'authenticated-user',
-            where : 'assignedTo_userPrincipalName = $user'
+            where : 'assignedToUserPrincipalName = $user'
         },
         {
             grant : 'READ',
             to    : 'admin',
         },
-    ])                    as
-        select from my.WorkItems
-        where
-                project.friendlyID  != 'DELETED'
-            and customer.friendlyID != 'DELETED';
+    ])                    as projection on my.WorkItems {
+        * , assignedTo.userPrincipalName as assignedToUserPrincipalName, assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+    } where project.friendlyID  != 'DELETED'
+    and     customer.friendlyID != 'DELETED';
 
     entity IOTWorkItems   as
         select from WorkItems {
@@ -37,21 +36,24 @@ service WorkItemsService @(requires : 'authenticated-user') {
             ''                       as Ende         : String @(title : '{i18n>IOTWorkItems.Ende}'),
             ''                       as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
             project.IOTProjectID     as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
-            ''                       as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
-            workPackage.IOTPackageID as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
+            workPackage.IOTPackageID as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
+            ''                       as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
             'Durchführung'           as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
             'GE'                     as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
-            ''                       as P2           : String @(title : '{i18n>IOTWorkItems.P2}'),
             title                    as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
             @UI.Hidden
-            assignedTo.userPrincipalName
+            assignedToUserPrincipalName,
+            @UI.Hidden
+            managerUserPrincipalName
 
         /*
         IOT Projektaufschreibung
 
-        Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | P2 | Bemerkung
+        Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | Bemerkung
          */
-        };
+        }
+        where
+            project.friendlyID != 'Privat';
 
     entity Users          as projection on my.Users {
         * , workItems : redirected to WorkItems

@@ -124,11 +124,11 @@ module.exports = cds.service.impl(async function () {
       return item;
     } else {
       // UPDATE
+      item.confirmed = true;
       item.duration = calcDurationInH({
         start: item.activatedDate,
         end: item.completedDate,
       });
-      item.confirmed = true;
 
       const dates = calcDates(item);
       Object.assign(item, dates);
@@ -147,7 +147,6 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
     req.data.confirmed = true;
@@ -169,6 +168,7 @@ module.exports = cds.service.impl(async function () {
         SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
+    const customers = SELECT.from(Customers);
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       AzDevOpsSrv.tx(req)
@@ -185,7 +185,7 @@ module.exports = cds.service.impl(async function () {
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({ ...event, user: req.user.id })
+      transformEventToWorkItem({ ...event, user: req.user.id, customers })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
@@ -219,24 +219,19 @@ module.exports = cds.service.impl(async function () {
       for (const item of workItems.filter(({ title }) => !!title)) {
         const titleSubstrings = item.title.split(" ");
 
-        if (item.private) {
-          // TODO: Dynamischer Schlüssel für privates Projekt
-          item.customer_friendlyID = "Privat";
-        }
-
-        if (!item.customer_friendlyID) {
-          const query = titleSubstrings
+        if (!item.customer_ID) {
+          const query = [titleSubstrings, item.customer_friendlyID]
             .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
             .join(" OR ");
 
           const [customer] = await srv.read(Customers).where(query);
 
           if (customer) {
-            item.customer_friendlyID = customer.friendlyID;
+            item.customer_ID = customer.ID;
           }
         }
 
-        if (!item.project_friendlyID) {
+        if (!item.project_ID) {
           const query = titleSubstrings
             .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
             .join(" OR ");
@@ -244,7 +239,7 @@ module.exports = cds.service.impl(async function () {
           const [project] = await srv.read(Projects).where(query);
 
           if (project) {
-            item.project_friendlyID = project.friendlyID;
+            item.project_ID = project.ID;
           }
         }
       }

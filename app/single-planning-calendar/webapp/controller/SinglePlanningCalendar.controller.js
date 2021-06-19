@@ -123,6 +123,20 @@ sap.ui.define(
           });
         },
 
+        onSelectCustomer(event) {
+          const selectedCustomerFriendly = event
+            .getParameter("selectedItem")
+            .getBindingContext()
+            .getProperty("friendlyID");
+
+          const path = event.getSource().getBindingContext().getPath();
+
+          this.getModel().setProperty(
+            path + "/customer_friendlyID",
+            selectedCustomerFriendly
+          );
+        },
+
         onDisplayLegend() {
           this.byId("legendDialog").open();
         },
