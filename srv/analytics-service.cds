@@ -20,8 +20,6 @@ service AnalyticsService {
             to    : 'admin',
         },
     ])        as projection on my.WorkItems {
-        // TODO: ID benutzen
-        // Aktuell Nicht benutzt, da es zu Einrückungs-Fehlern führt. 
         key ID,
         @Analytics.Dimension : true
         assignedTo.displayName as assignedToName @(title: '{i18n>WorkItemsAggr.assignedTo}'),
@@ -29,8 +27,8 @@ service AnalyticsService {
         customer.name as customerName @(title: '{i18n>WorkItemsAggr.customer}'),
         @Analytics.Dimension : true
         project.title as projectTitle  @(title: '{i18n>WorkItemsAggr.project}'),
-        // @Analytics.Dimension : true
-        // key workPackage.title as packageTitle  @(title: '{i18n>WorkItemsAggr.package}'),
+        @Analytics.Dimension : true
+        key workPackage.title as packageTitle  @(title: '{i18n>WorkItemsAggr.package}'),
 
         @Analytics.Dimension : true
         activatedDate,
