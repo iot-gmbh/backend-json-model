@@ -5,12 +5,12 @@ annotate my.WorkItems with @(UI : {
     // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
     PresentationVariant : {
         $Type          : 'UI.PresentationVariantType',
-        SortOrder      : [{
-            Descending : true,
-            Property   : completedDate,
-        }],
+        // SortOrder      : [{
+        //     Descending : true,
+        //     Property   : completedDate,
+        // }],
         Visualizations : ['@UI.LineItem'],
-        RequestAtLeast : [completedDate]
+    // RequestAtLeast : [completedDate]
     },
     Identification      : [
         {Value : title},
