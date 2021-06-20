@@ -37,8 +37,8 @@
                     },
                     "semanticObject": "Customer",
                     "action": "display",
-                    "title": "Customers",
-                    "subTitle": "Find & Manage",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://customer",
                     "indicatorDataSource": {
                         "dataSource": "mainService",

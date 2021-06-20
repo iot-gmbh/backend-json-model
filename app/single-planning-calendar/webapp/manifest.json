@@ -30,8 +30,8 @@
                     },
                     "semanticObject": "SinglePlanningCalendar",
                     "action": "manage",
-                    "title": "My Calendar",
-                    "subTitle": "Track & Plan",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://calendar"
                 }
             }

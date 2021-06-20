@@ -31,8 +31,8 @@
                     },
                     "semanticObject": "Projects",
                     "action": "display",
-                    "title": "Projects",
-                    "subTitle": "Find & Manage",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://workflow-tasks",
                     "indicatorDataSource": {
                         "dataSource": "mainService",

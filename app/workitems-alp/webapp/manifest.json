@@ -43,11 +43,11 @@
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
-                    "semanticObject": "Workitems",
-                    "action": "analyue",
-                    "title": "Analyze workitems",
-                    "subTitle": "",
-                    "icon": "sap-icon://donut-chart"
+                    "semanticObject": "WorkItems",
+                    "action": "analyze",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
+                    "icon": "sap-icon://bar-chart"
                 }
             }
         },

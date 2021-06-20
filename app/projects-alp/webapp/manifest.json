@@ -44,9 +44,9 @@
                         "additionalParameters": "allowed"
                     },
                     "semanticObject": "Projects",
-                    "action": "analyue",
-                    "title": "Analyze projects",
-                    "subTitle": "",
+                    "action": "analyze",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://donut-chart"
                 }
             }
