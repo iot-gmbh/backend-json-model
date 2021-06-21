@@ -5,21 +5,23 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": "^12 || ^14"
+  },
   "dependencies": {
     "@azure/msal-node": "^1.1.0",
     "@microsoft/microsoft-graph-client": "^2.2.1",
     "@sap/audit-logging": "^5.0.0",
-    "@sap/cds": "^4.6.6",
+    "@sap/cds": "^5.1.5",
     "@sap/cds-odata-v2-adapter-proxy": "^1.7.4",
-    "@sap/hana-client": "^2.8.22",
     "@sap/xsenv": "^3.1.0",
     "@sap/xssec": "^3.2.2",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
-    "azure-devops-node-api": "^10.2.2",
+    "azure-devops-node-api": "^11.0.0",
     "cds-dbm": "0.0.26",
     "cds-pg": "^0.1.5",
     "cdse": "^1.1.12",
-    "dotenv": "^8.6.0",
+    "dotenv": "^10.0.0",
     "express": "^4",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",
@@ -29,7 +31,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@sap/ui5-builder-webide-extension": "1.0.x",
+    "@sap/ui5-builder-webide-extension": "1.1.x",
     "@sap/ux-specification": "^1.90.1",
     "eslint": "^7.29.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -69,7 +71,7 @@
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
-    "deploy:pgm": "npx cds-dbm deploy --create-db planning --load-via delta",
+    "deploy:pgm": "npx cds-dbm deploy --create-db --load-via delta",
     "deploy:pg": "cds-pg deploy srv --to db"
   },
   "files": [
@@ -109,9 +111,15 @@
         "impl": "cds-pg",
         "model": [
           "db",
-          "srv",
-          "app"
-        ]
+          "srv"
+        ],
+        "credentials": {
+          "host": "localhost",
+          "port": "5432",
+          "database": "test1",
+          "user": "postgres",
+          "password": "postgres"
+        }
       }
     },
     "migrations": {

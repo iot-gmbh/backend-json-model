@@ -68,7 +68,7 @@ entity Projects : managed, cuid {
 
 entity Packages : managed, cuid {
     project      : Association to Projects;
-    title        : String @mandatory;
+    title        : String;
     IOTPackageID : String;
     description  : String;
 }

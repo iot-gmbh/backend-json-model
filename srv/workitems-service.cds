@@ -24,7 +24,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
             to    : 'admin',
         },
     ])                    as projection on my.WorkItems {
-        * , workPackage : redirected to Packages
+        * , workPackage : redirected to MyPackages
     } where customer_friendlyID != 'DELETED';
 
     entity IOTWorkItems   as
@@ -56,10 +56,10 @@ service WorkItemsService @(requires : 'authenticated-user') {
     };
 
     entity Projects       as projection on my.Projects {
-        * , workItems : redirected to WorkItems, workPackages : redirected to Packages
+        * , workItems : redirected to WorkItems, workPackages : redirected to MyPackages
     } where friendlyID != 'DELETED';
 
     entity Customers      as projection on my.Customers where friendlyID != 'DELETED';
-    entity Packages       as projection on my.Packages;
-    entity AzDevPackages  as projection on AzDevOps.Packages;
+    entity MyPackages     as projection on my.Packages;
+// entity AzDevPackages  as projection on AzDevOps.Packages;
 };
