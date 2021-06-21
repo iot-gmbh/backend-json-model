@@ -2,26 +2,49 @@ _schema-version: "3.1"
 ID: project-planning
 description: A simple CAP project.
 version: 1.0.1
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install --production
+        # use cds-dbm for building, not cds
+        - npx cds-dbm build --production
+
 modules:
+  - name: project-planning-pg-db-deployer
+    type: custom
+    path: gen/db
+    parameters:
+      buildpacks:
+        [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
+      no-route: true
+      no-start: true
+      disk-quota: 2GB
+      memory: 2GB
+      tasks:
+        - name: deploy_to_postgresql
+          command: chmod 755 deploy.sh && ./deploy.sh
+          disk-quota: 2GB
+          memory: 2GB
+    build-parameters:
+      ignore: ["node_modules/"]
+    requires:
+      - name: project-planning-pg-db
+
   - name: project-planning-srv
     type: nodejs
     path: gen/srv
     requires:
-      - name: project-planning-hana-cloud-db
       - name: project-planning-uaa
       - name: project-planning-dest-service
+      - name: project-planning-pg-db
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
-
-  - name: project-planning-hana-cloud-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: project-planning-hana-cloud-db
-    parameters:
-      buildpack: nodejs_buildpack
 
   - name: project-planning-content
     type: com.sap.application.content
@@ -53,6 +76,7 @@ modules:
           existing_destinations_policy: update
     build-parameters:
       no-source: true
+
   - name: project-planning-ui-deployer
     type: com.sap.application.content
     path: .
@@ -91,6 +115,7 @@ modules:
             - fiori-single-planning-calendar.zip
           name: fiori-single-planning-calendar
           target-path: resources/
+
   - name: fiori-customers
     type: html5
     path: app/customers
@@ -156,11 +181,16 @@ modules:
         - npm install
         - npm run build:cf
       supported-platforms: []
+
 resources:
-  - name: project-planning-hana-cloud-db
-    type: com.sap.xs.hdi-container
-    properties:
-      hdi-service-name: ${service-name}
+  - name: project-planning-pg-db
+    parameters:
+      path: ./pg-options.json
+      service: postgresql-db
+      service-plan: trial
+      skip-service-updates:
+        parameters: true
+    type: org.cloudfoundry.managed-service
 
   - name: project-planning-dest-service
     type: org.cloudfoundry.managed-service
@@ -182,23 +212,14 @@ resources:
                 ProxyType: Internet
                 Type: HTTP
                 URL: https://ui5.sap.com
-          # subaccount:
-          #   existing_destinations_policy: update
-          #   destinations:
-          #     - Name: project-planning-dest
-          #       Description: Project Planning OData Services
-          #       Type: HTTP
-          #       Authentication: NoAuthentication
-          #       ProxyType: Internet
-          #       URL: ~{srv-api/srv-url}
-          #       HTML5.DynamicDestination: true
-          #       ForwardAuthToken: true
+
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
       service-name: project-planning-repo-host-service
       service-plan: app-host
+
   - name: project-planning-uaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -206,11 +227,3 @@ resources:
       service: xsuaa
       service-name: project-planning-xsuaa-service
       service-plan: application
-parameters:
-  deploy_mode: html5-repo
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
