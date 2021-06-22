@@ -54,7 +54,14 @@ module.exports = cds.service.impl(async function () {
   this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
-    const entries = await this.read(WorkItems).where({ ID: item.ID });
+    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+      this.read(WorkItems).where({ ID: item.ID }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
+    ]);
+
+    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
     if (entries.length > 0)
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
@@ -64,8 +71,8 @@ module.exports = cds.service.impl(async function () {
         ID: item.ID,
         deleted: true,
         assignedTo_userPrincipalName: "DELETED",
-        customer_friendlyID: "DELETED",
-        project_friendlyID: "DELETED",
+        customer_ID: dltDummyCstmer[0].ID,
+        project_ID: dltDummyProj[0].ID,
       })
     );
   });
@@ -87,7 +94,14 @@ module.exports = cds.service.impl(async function () {
       return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
-    const entries = await tx.run(SELECT.from(WorkItems).where({ ID: item.ID }));
+    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+      this.read(WorkItems).where({ ID: item.ID }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
+    ]);
+
+    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
     if (item.deleted) {
       // DELETE
@@ -101,8 +115,8 @@ module.exports = cds.service.impl(async function () {
             completedDate: item.completedDate,
             deleted: true,
             assignedTo_userPrincipalName: req.user.id,
-            customer_friendlyID: "DELETED",
-            project_friendlyID: "DELETED",
+            customer_ID: dltDummyCstmer[0].ID,
+            project_ID: dltDummyProj[0].ID,
           })
         );
       }
@@ -110,11 +124,11 @@ module.exports = cds.service.impl(async function () {
       return item;
     } else {
       // UPDATE
+      item.confirmed = true;
       item.duration = calcDurationInH({
         start: item.activatedDate,
         end: item.completedDate,
       });
-      item.confirmed = true;
 
       const dates = calcDates(item);
       Object.assign(item, dates);
@@ -133,7 +147,6 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-
     req.data.ID = uuid.v4();
     req.data.type = "Manual";
     req.data.confirmed = true;
@@ -155,6 +168,7 @@ module.exports = cds.service.impl(async function () {
         SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
+    const customers = SELECT.from(Customers);
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       AzDevOpsSrv.tx(req)
@@ -171,7 +185,7 @@ module.exports = cds.service.impl(async function () {
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({ ...event, user: req.user.id })
+      transformEventToWorkItem({ ...event, user: req.user.id, customers })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
@@ -205,24 +219,19 @@ module.exports = cds.service.impl(async function () {
       for (const item of workItems.filter(({ title }) => !!title)) {
         const titleSubstrings = item.title.split(" ");
 
-        if (item.private) {
-          // TODO: Dynamischer Schlüssel für privates Projekt
-          item.customer_friendlyID = "Privat";
-        }
-
-        if (!item.customer_friendlyID) {
-          const query = titleSubstrings
+        if (!item.customer_ID) {
+          const query = [titleSubstrings, item.customer_friendlyID]
             .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
             .join(" OR ");
 
           const [customer] = await srv.read(Customers).where(query);
 
           if (customer) {
-            item.customer_friendlyID = customer.friendlyID;
+            item.customer_ID = customer.ID;
           }
         }
 
-        if (!item.project_friendlyID) {
+        if (!item.project_ID) {
           const query = titleSubstrings
             .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
             .join(" OR ");
@@ -230,7 +239,7 @@ module.exports = cds.service.impl(async function () {
           const [project] = await srv.read(Projects).where(query);
 
           if (project) {
-            item.project_friendlyID = project.friendlyID;
+            item.project_ID = project.ID;
           }
         }
       }

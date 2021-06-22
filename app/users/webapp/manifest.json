@@ -37,8 +37,8 @@
                     },
                     "semanticObject": "Users",
                     "action": "display",
-                    "title": "Users",
-                    "subTitle": "Find & Manage",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://account",
                     "indicatorDataSource": {
                         "dataSource": "mainService",

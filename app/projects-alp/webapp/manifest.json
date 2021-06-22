@@ -5,7 +5,7 @@
         "service": "iot.project.planner"
     },
     "sap.app": {
-        "id": "iot.planner.workitemsalp",
+        "id": "iot.planner.projectsalp",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -38,16 +38,16 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "iot-project-planning-workitems-alp": {
+                "iot-project-planning-projects-alp": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
-                    "semanticObject": "WorkItems",
+                    "semanticObject": "Projects",
                     "action": "analyze",
                     "title": "{{appTitle}}",
                     "subTitle": "{{appSubtitle}}",
-                    "icon": "sap-icon://bar-chart"
+                    "icon": "sap-icon://donut-chart"
                 }
             }
         },
@@ -107,13 +107,13 @@
                 "type": "sap.ui.model.resource.ResourceModel",
                 "uri": "i18n/i18n.properties"
             },
-            "i18n|sap.suite.ui.generic.template.ListReport|WorkItems": {
+            "i18n|sap.suite.ui.generic.template.ListReport|Projects": {
                 "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/ListReport/WorkItems/i18n.properties"
+                "uri": "i18n/ListReport/Projects/i18n.properties"
             },
-            "i18n|sap.suite.ui.generic.template.ObjectPage|WorkItems": {
+            "i18n|sap.suite.ui.generic.template.ObjectPage|Projects": {
                 "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/ObjectPage/WorkItems/i18n.properties"
+                "uri": "i18n/ObjectPage/Projects/i18n.properties"
             },
             "": {
                 "dataSource": "mainService",
@@ -124,15 +124,6 @@
                     "refreshAfterChange": false,
                     "metadataUrlParams": {
                         "sap-value-list": "none"
-                    }
-                }
-            }
-        },
-        "extends": {
-            "extensions": {
-                "sap.ui.controllerExtensions": {
-                    "sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage": {
-                        "controllerName": "iot.planner.workitemsalp.ext.AnalyticalListPageExt"
                     }
                 }
             }
@@ -150,8 +141,8 @@
             "showDraftToggle": false
         },
         "pages": {
-            "AnalyticalListPage|WorkItems": {
-                "entitySet": "WorkItems",
+            "AnalyticalListPage|Projects": {
+                "entitySet": "ProjectsAggr",
                 "component": {
                     "name": "sap.suite.ui.generic.template.AnalyticalListPage",
                     "list": true,
@@ -168,8 +159,8 @@
                     }
                 },
                 "pages": {
-                    "ObjectPage|WorkItems": {
-                        "entitySet": "WorkItems",
+                    "ObjectPage|Projects": {
+                        "entitySet": "ProjectsAggr",
                         "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
                         "component": {
                             "name": "sap.suite.ui.generic.template.ObjectPage"

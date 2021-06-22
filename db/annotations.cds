@@ -4,11 +4,13 @@ annotate my.WorkItems with @(UI : {
     // The Sort order is not evaluated by responsive tables (by design)
     // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
     PresentationVariant : {
-        $Type     : 'UI.PresentationVariantType',
-        SortOrder : [{
-            Descending : true,
-            Property   : completedDate,
-        }]
+        $Type          : 'UI.PresentationVariantType',
+        // SortOrder      : [{
+        //     Descending : true,
+        //     Property   : completedDate,
+        // }],
+        Visualizations : ['@UI.LineItem'],
+    // RequestAtLeast : [completedDate]
     },
     Identification      : [
         {Value : title},
@@ -57,28 +59,51 @@ annotate my.WorkItems with @(UI : {
         },
     ]
 }) {
-    ID @UI.Hidden;
+    ID       @UI.Hidden;
+    customer @(Common : {
+        Text         : {
+            $value                 : customer.name,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+    project  @(Common : {
+        Text         : {
+            $value                 : project.title,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
 };
 
 
 @cds.odata.valuelist
 annotate my.Users with @(UI : {
-    HeaderInfo      : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{
+            Descending : true,
+            Property   : displayName,
+        }],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [displayName]
+    },
+    HeaderInfo          : {
         TypeName       : '{i18n>User}',
         TypeNamePlural : '{i18n>Users}',
         Title          : {Value : userPrincipalName},
     },
-    Identification  : [
+    Identification      : [
         {Value : displayName},
         {Value : jobTitle},
         {Value : manager_userPrincipalName},
     ],
-    SelectionFields : [
+    SelectionFields     : [
         displayName,
         userPrincipalName,
         manager_userPrincipalName,
     ],
-    Facets          : [
+    Facets              : [
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Identification}',
@@ -100,7 +125,7 @@ annotate my.Users with @(UI : {
             Target : 'managedProjects/@UI.LineItem'
         },
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : userPrincipalName,
@@ -131,19 +156,25 @@ annotate my.Users with @(UI : {
 
 @cds.odata.valuelist
 annotate my.Customers with @(UI : {
-    HeaderInfo      : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{Property : name}],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [name]
+    },
+    HeaderInfo          : {
         TypeName       : '{i18n>Customer}',
         TypeNamePlural : '{i18n>Customers}',
         Title          : {Value : name},
     },
-    Identification  : [{Value : name}],
-    FieldGroup      : {
+    Identification      : [{Value : name}],
+    FieldGroup          : {
         $Type : 'UI.FieldGroupType',
         Label : '{i18n>Classification}',
         Data  : [{Value : friendlyID}],
     },
-    SelectionFields : [name, ],
-    LineItem        : [
+    SelectionFields     : [name, ],
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : name,
@@ -153,7 +184,7 @@ annotate my.Customers with @(UI : {
             Value : friendlyID,
         },
     ],
-    Facets          : [
+    Facets              : [
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Identification}',
@@ -176,27 +207,33 @@ annotate my.Customers with @(UI : {
 
 @cds.odata.valuelist
 annotate my.Packages with @(UI : {
-    HeaderInfo      : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{Property : title}],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [title]
+    },
+    HeaderInfo          : {
         TypeName       : '{i18n>Package}',
         TypeNamePlural : '{i18n>Packages}',
         Title          : {Value : title},
         Description    : {Value : description},
     },
-    Facets          : [{
+    Facets              : [{
         $Type  : 'UI.ReferenceFacet',
         Label  : '{i18n>General}',
         Target : '@UI.Identification'
     }, ],
-    Identification  : [
+    Identification      : [
         {Value : title},
         {Value : description},
         {Value : IOTPackageID},
     ],
-    SelectionFields : [
+    SelectionFields     : [
         title,
         description
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : title,
@@ -216,17 +253,31 @@ annotate my.Packages with @(UI : {
 
 @cds.odata.valuelist
 annotate my.Projects with @(UI : {
-    HeaderInfo      : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{Property : title}],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [
+            'title',
+            'customer_ID'
+        ]
+    },
+    HeaderInfo          : {
         TypeName       : '{i18n>Project}',
         TypeNamePlural : '{i18n>Projects}',
         Title          : {Value : title},
         Description    : {Value : description},
     },
-    Facets          : [
+    Facets              : [
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>General}',
             Target : '@UI.Identification'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Projects.teamMembers}',
+            Target : 'teamMembers/@UI.LineItem'
         },
         {
             $Type  : 'UI.ReferenceFacet',
@@ -235,11 +286,11 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Projects.teamMembers}',
-            Target : 'teamMembers/@UI.LineItem'
+            Label  : '{i18n>Projects.workItems}',
+            Target : 'workItems/@UI.LineItem'
         },
     ],
-    FieldGroup      : {
+    FieldGroup          : {
         $Type : 'UI.FieldGroupType',
         Label : '{i18n>Classification}',
         Data  : [
@@ -247,20 +298,26 @@ annotate my.Projects with @(UI : {
             {Value : IOTProjectID},
         ],
     },
-    Identification  : [
+    Identification      : [
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
+        {Value : IOTProjectID},
     ],
-    SelectionFields : [
+    SelectionFields     : [
         title,
         description,
         customer_ID,
         manager_userPrincipalName
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>Projects.customer}',
+            Value : customer_ID,
         },
         {
             $Type : 'UI.DataField',
@@ -269,11 +326,6 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : friendlyID,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : '{i18n>Projects.customer}',
-            Value : customer_ID,
         },
         {
             $Type : 'UI.DataField',
@@ -298,26 +350,32 @@ annotate my.Projects with @(UI : {
 
 @cds.odata.valuelist
 annotate my.Users2Projects with @(UI : {
-    HeaderInfo      : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{Property : user.displayName}],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [user.displayName]
+    },
+    HeaderInfo          : {
         TypeName       : '{i18n>User2Project}',
         TypeNamePlural : '{i18n>Users2Projects}',
         Title          : {Value : user.displayName},
         Description    : {Value : project.title},
     },
-    Facets          : [{
+    Facets              : [{
         $Type  : 'UI.ReferenceFacet',
         Label  : '{i18n>General}',
         Target : '@UI.Identification'
     }, ],
-    Identification  : [
+    Identification      : [
         {Value : user_userPrincipalName},
         {Value : project_ID},
     ],
-    SelectionFields : [
+    SelectionFields     : [
         user_userPrincipalName,
         project_ID,
     ],
-    LineItem        : [
+    LineItem            : [
         {
             $Type : 'UI.DataField',
             Value : user_userPrincipalName,
