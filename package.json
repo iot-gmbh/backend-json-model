@@ -71,7 +71,7 @@
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
-    "deploy:pgm": "npx cds-dbm deploy --create-db --load-via delta",
+    "deploy:pgm": "npx cds-dbm deploy --create-db --load-via full",
     "deploy:pg": "cds-pg deploy srv --to db"
   },
   "files": [
@@ -116,7 +116,7 @@
         "credentials": {
           "host": "localhost",
           "port": "5432",
-          "database": "test1",
+          "database": "projplanning",
           "user": "postgres",
           "password": "postgres"
         }
