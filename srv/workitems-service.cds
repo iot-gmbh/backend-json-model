@@ -1,10 +1,10 @@
 using {iot.planner as my} from '../db/schema';
-using {AzureDevopsService as AzDevOps} from './azure-devops';
-using {MSGraphService as MSGraph} from './msgraph-service';
+// using {AzureDevopsService as AzDevOps} from './azure-devops';
+// using {MSGraphService as MSGraph} from './msgraph-service';
 
 service WorkItemsService @(requires : 'authenticated-user') {
-    entity AzDevWorkItems as projection on AzDevOps.WorkItems;
-    entity MSGraphEvents  as projection on MSGraph.Events;
+    // entity AzDevWorkItems as projection on AzDevOps.WorkItems;
+    // entity MSGraphEvents  as projection on MSGraph.Events;
 
     entity WorkItems @(restrict : [
         {
@@ -23,11 +23,11 @@ service WorkItemsService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])                    as projection on my.WorkItems {
+    ])                  as projection on my.WorkItems {
         * , workPackage : redirected to MyPackages
     } where customer_friendlyID != 'DELETED';
 
-    entity IOTWorkItems   as
+    entity IOTWorkItems as
         select from WorkItems {
             activatedDate        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
             completedDate        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
@@ -51,15 +51,15 @@ service WorkItemsService @(requires : 'authenticated-user') {
          */
         };
 
-    entity Users          as projection on my.Users {
+    entity Users        as projection on my.Users {
         * , workItems : redirected to WorkItems
     };
 
-    entity Projects       as projection on my.Projects {
+    entity Projects     as projection on my.Projects {
         * , workItems : redirected to WorkItems, workPackages : redirected to MyPackages
     } where friendlyID != 'DELETED';
 
-    entity Customers      as projection on my.Customers where friendlyID != 'DELETED';
-    entity MyPackages     as projection on my.Packages;
+    entity Customers    as projection on my.Customers where friendlyID != 'DELETED';
+    entity MyPackages   as projection on my.Packages;
 // entity AzDevPackages  as projection on AzDevOps.Packages;
 };
