@@ -336,6 +336,21 @@ sap.ui.define(
           this._loadAppointments();
         },
 
+        onProjectChange: function () {
+          // Reset if the project has no packages
+          const model = this.getModel();
+          const workPackagesFiltered = model.getProperty(
+            "/workPackagesFiltered"
+          );
+
+          if (workPackagesFiltered.length === 0) {
+            const path = this.byId("createItemDialog")
+              .getBindingContext()
+              .getPath();
+            model.setProperty(path + "/workPackage_ID", undefined);
+          }
+        },
+
         _getCalendarEndDate() {
           const calendar = this.byId("SPCalendar");
           const startDate = calendar.getStartDate();

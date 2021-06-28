@@ -16,7 +16,10 @@ service AdminService @(requires : 'authenticated-user') {
             where : 'userPrincipalName = $user'
         },
         {
-            grant : 'READ',
+            grant : [
+                'READ',
+                'CREATE'
+            ],
             to    : 'admin',
         },
     ])               as projection on my.Users;
