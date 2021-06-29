@@ -76,7 +76,6 @@ annotate my.WorkItems with @(UI : {
     });
 };
 
-
 @cds.odata.valuelist
 annotate my.Users with @(UI : {
     PresentationVariant : {
@@ -276,6 +275,11 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Classification}',
+            Target : '@UI.FieldGroup'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.teamMembers}',
             Target : 'teamMembers/@UI.LineItem'
         },
@@ -301,7 +305,6 @@ annotate my.Projects with @(UI : {
     Identification      : [
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
-        {Value : IOTProjectID},
     ],
     SelectionFields     : [
         title,
@@ -349,56 +352,57 @@ annotate my.Projects with @(UI : {
 };
 
 @cds.odata.valuelist
-annotate my.Users2Projects with @(UI : {
-    PresentationVariant : {
-        $Type          : 'UI.PresentationVariantType',
-        SortOrder      : [{Property : user.displayName}],
-        Visualizations : ['@UI.LineItem'],
-        RequestAtLeast : [user.displayName]
-    },
-    HeaderInfo          : {
-        TypeName       : '{i18n>User2Project}',
-        TypeNamePlural : '{i18n>Users2Projects}',
-        Title          : {Value : user.displayName},
-        Description    : {Value : project.title},
-    },
-    Facets              : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>General}',
-        Target : '@UI.Identification'
-    }, ],
-    Identification      : [
-        {Value : user_userPrincipalName},
-        {Value : project_ID},
-    ],
-    SelectionFields     : [
-        user_userPrincipalName,
-        project_ID,
-    ],
-    LineItem            : [
-        {
-            $Type : 'UI.DataField',
-            Value : user_userPrincipalName,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : project_ID,
-        },
-    ]
-}) {
-    ID      @UI.Hidden;
-    project @(Common : {
-        Text         : {
-            $value                 : project.title,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-    user    @(Common : {
-        Text         : {
-            $value                 : user.displayName,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-};
+annotate my.Users2Projects;
+//  with @(UI : {
+//     PresentationVariant : {
+//         $Type          : 'UI.PresentationVariantType',
+//         SortOrder      : [{Property : user.displayName}],
+//         Visualizations : ['@UI.LineItem'],
+//         RequestAtLeast : [user.displayName]
+//     },
+//     HeaderInfo          : {
+//         TypeName       : '{i18n>User2Project}',
+//         TypeNamePlural : '{i18n>Users2Projects}',
+//         Title          : {Value : user.displayName},
+//         Description    : {Value : project.title},
+//     },
+//     Facets              : [{
+//         $Type  : 'UI.ReferenceFacet',
+//         Label  : '{i18n>General}',
+//         Target : '@UI.Identification'
+//     }, ],
+//     Identification      : [
+//         {Value : user_userPrincipalName},
+//         {Value : project_ID},
+//     ],
+//     SelectionFields     : [
+//         user_userPrincipalName,
+//         project_ID,
+//     ],
+//     LineItem            : [
+//         {
+//             $Type : 'UI.DataField',
+//             Value : user_userPrincipalName,
+//         },
+//         {
+//             $Type : 'UI.DataField',
+//             Value : project_ID,
+//         },
+//     ]
+// }) {
+//     ID      @UI.Hidden;
+//     project @(Common : {
+//         Text         : {
+//             $value                 : project.title,
+//             ![@UI.TextArrangement] : #TextOnly
+//         },
+//         FieldControl : #Mandatory
+//     });
+//     user    @(Common : {
+//         Text         : {
+//             $value                 : user.displayName,
+//             ![@UI.TextArrangement] : #TextOnly
+//         },
+//         FieldControl : #Mandatory
+//     });
+// };

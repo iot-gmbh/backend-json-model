@@ -18,17 +18,24 @@ service AdminService @(requires : 'authenticated-user') {
         {
             grant : [
                 'READ',
-                'CREATE'
+                'WRITE'
             ],
             to    : 'admin',
         },
-    ])               as projection on my.Users;
+    ])                     as projection on my.Users {
+        * , projects : redirected to ProjectsPerUser
+    };
+
+    entity ProjectsPerUser as projection on my.Users2Projects;
+    entity UsersPerProject as projection on my.Users2Projects;
 
     @odata.draft.enabled
-    entity Customers as projection on my.Customers;
+    entity Customers       as projection on my.Customers;
 
     @odata.draft.enabled
-    entity Projects  as projection on my.Projects;
+    entity Projects        as projection on my.Projects {
+        * , teamMembers : redirected to UsersPerProject
+    };
 
     entity WorkItems @(restrict : [
         {
@@ -45,7 +52,7 @@ service AdminService @(requires : 'authenticated-user') {
             grant : 'READ',
             to    : 'admin',
         },
-    ])               as projection on my.WorkItems {
+    ])                     as projection on my.WorkItems {
         // expand for authorization checks (see above)
         * , assignedTo.userPrincipalName
     };

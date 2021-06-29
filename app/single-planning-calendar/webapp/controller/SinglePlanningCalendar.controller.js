@@ -10,6 +10,7 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "../model/legendItems",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
   ],
   function (
     BaseController,
@@ -18,7 +19,8 @@ sap.ui.define(
     formatter,
     JSONModel,
     legendItems,
-    MessageBox
+    MessageBox,
+    MessageToast
   ) {
     function addDays(date, days) {
       const result = new Date(date);
@@ -104,7 +106,17 @@ sap.ui.define(
 
             if (evt.ctrlKey) {
               if (
-                evt.keyCode == 13 &&
+                evt.keyCode === 13 &&
+                !this.byId("submitButton").getEnabled()
+              ) {
+                MessageToast.show(
+                  bundle.getText("appointmentDialog.invalidInput")
+                );
+                return;
+              }
+              if (
+                evt.keyCode === 13 &&
+                activeElementID &&
                 // Check the active element in order to prevent double-submit
                 !activeElementID.includes("submitButton")
               ) {
@@ -124,8 +136,10 @@ sap.ui.define(
         },
 
         onSelectCustomer(event) {
-          const selectedCustomerFriendly = event
-            .getParameter("selectedItem")
+          const selectedItem = event.getParameter("selectedItem");
+          if (!selectedItem) return;
+
+          const selectedCustomerFriendly = selectedItem
             .getBindingContext()
             .getProperty("friendlyID");
 
@@ -135,6 +149,21 @@ sap.ui.define(
             path + "/customer_friendlyID",
             selectedCustomerFriendly
           );
+        },
+
+        onProjectChange: function () {
+          // Reset if the project has no packages
+          const model = this.getModel();
+          const workPackagesFiltered = model.getProperty(
+            "/workPackagesFiltered"
+          );
+
+          if (workPackagesFiltered.length === 0) {
+            const path = this.byId("createItemDialog")
+              .getBindingContext()
+              .getPath();
+            model.setProperty(path + "/workPackage_ID", undefined);
+          }
         },
 
         onDisplayLegend() {
@@ -334,21 +363,6 @@ sap.ui.define(
 
         onStartDateChange: function () {
           this._loadAppointments();
-        },
-
-        onProjectChange: function () {
-          // Reset if the project has no packages
-          const model = this.getModel();
-          const workPackagesFiltered = model.getProperty(
-            "/workPackagesFiltered"
-          );
-
-          if (workPackagesFiltered.length === 0) {
-            const path = this.byId("createItemDialog")
-              .getBindingContext()
-              .getPath();
-            model.setProperty(path + "/workPackage_ID", undefined);
-          }
         },
 
         _getCalendarEndDate() {
