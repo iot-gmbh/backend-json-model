@@ -7,7 +7,22 @@ annotate my.ProjectsPerUser with @(UI : {LineItem : [{
     ID @UI.Hidden;
 };
 
-annotate my.UsersPerProject with @(UI : {LineItem : [{
+annotate my.UsersPerProject with @(UI : 
+    {
+    HeaderInfo          : {
+        TypeName       : '{i18n>UsersPerProject}',
+        TypeNamePlural : '{i18n>UsersPerProjects}',
+        Title          : {Value : user_userPrincipalName}
+    },
+    Facets              : [{
+        $Type  : 'UI.ReferenceFacet',
+        Label  : '{i18n>General}',
+        Target : '@UI.Identification'
+    }, ],
+    Identification      : [
+        {Value : user_userPrincipalName},
+    ],
+        LineItem : [{
     $Type : 'UI.DataField',
     Value : user_userPrincipalName,
 }]}) {
