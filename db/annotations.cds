@@ -113,11 +113,11 @@ annotate my.Users with @(UI : {
             Label  : '{i18n>Users.teamMembers}',
             Target : 'teamMembers/@UI.LineItem'
         },
-        {
-            $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Users.projects}',
-            Target : 'projects/@UI.LineItem'
-        },
+        // {
+        //     $Type  : 'UI.ReferenceFacet',
+        //     Label  : '{i18n>Users.projects}',
+        //     Target : 'projects/@UI.LineItem'
+        // },
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Users.managedProjects}',
@@ -278,11 +278,11 @@ annotate my.Projects with @(UI : {
             Label  : '{i18n>Classification}',
             Target : '@UI.FieldGroup'
         },
-        {
-            $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Projects.teamMembers}',
-            Target : 'teamMembers/@UI.LineItem'
-        },
+        // {
+        //     $Type  : 'UI.ReferenceFacet',
+        //     Label  : '{i18n>Projects.teamMembers}',
+        //     Target : 'teamMembers/@UI.LineItem'
+        // },
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.workPackages}',
