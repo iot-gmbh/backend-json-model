@@ -1,5 +1,9 @@
 {
     "_version": "1.32.0",
+    "sap.cloud": {
+        "public": true,
+        "service": "iot.project.planner"
+    },
     "sap.app": {
         "id": "iot.planner.projectsodatav2",
         "type": "application",
@@ -63,6 +67,26 @@
         "resources": {
             "js": [],
             "css": []
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "projects-v2": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "ProjectsV2",
+                    "action": "display",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
+                    "icon": "sap-icon://task",
+                    "--indicatorDataSource": {
+                        "dataSource": "mainService",
+                        "path": "Projects/$count",
+                        "refresh": 120
+                    }
+                }
+            }
         },
         "dependencies": {
             "minUI5Version": "1.65.0",

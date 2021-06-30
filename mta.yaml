@@ -100,8 +100,16 @@ modules:
           name: fiori-workitems
           target-path: resources/
         - artifacts:
+            - fiori-workitems-iot.zip
+          name: fiori-workitems-iot
+          target-path: resources/
+        - artifacts:
             - fiori-projects.zip
           name: fiori-projects
+          target-path: resources/
+        - artifacts:
+            - fiori-projects-v2.zip
+          name: fiori-projects-v2
           target-path: resources/
         - artifacts:
             - fiori-workitems-alp.zip
@@ -143,6 +151,15 @@ modules:
       commands:
         - npm run build
       supported-platforms: []
+  - name: fiori-projects-v2
+    type: html5
+    path: app/projects-odata-v2
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms: []
   - name: fiori-workitems-alp
     type: html5
     path: app/workitems-alp
@@ -155,6 +172,15 @@ modules:
   - name: fiori-workitems
     type: html5
     path: app/workitems
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build:cf
+      supported-platforms: []
+  - name: fiori-workitems-iot
+    type: html5
+    path: app/workitems-iot
     build-parameters:
       build-result: dist
       builder: custom
