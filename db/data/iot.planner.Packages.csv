@@ -1,4 +1,4 @@
-﻿createdat,createdby,modifiedat,modifiedby,id,project_id,title,iotpackageid,description
+﻿createdAt,createdBy,modifiedAt,modifiedBy,ID,title,IOTPackageID,description,project_ID
 2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,2505675e-77ee-43f8-ab5d-54626891f35c,151d0142-afae-4dd8-bcc7-9402677c84fa,FRC @ Klingele,,Fiori Readiness Check (Klingele)
 2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,ee64a87a-dd29-4a38-8b75-1caad0d89d0a,151d0142-afae-4dd8-bcc7-9402677c84fa,FRC @ Doduco,,Fiori Readiness Check @ Doduco
 2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,2021-06-18 06:58:12.849,benedikt.hoelker@iot-online.de,7798251e-ff2e-4558-aca0-e03b7e495964,151d0142-afae-4dd8-bcc7-9402677c84fa,FRC @ Hauff,,Fiori Readiness Check @ Hauff

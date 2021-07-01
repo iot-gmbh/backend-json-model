@@ -34,6 +34,7 @@ service AdminService @(requires : 'authenticated-user') {
 
     // @odata.draft.enabled
     @odata.create.enabled
+    @odata.update.enabled
     entity Projects        as projection on my.Projects {
         * , teamMembers : redirected to UsersPerProject
     };

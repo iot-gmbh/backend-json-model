@@ -1,4 +1,4 @@
-﻿createdat,createdby,modifiedat,modifiedby,id,friendlyid,title,description,iotprojectid,manager_userprincipalname,customer_friendlyid,customer_id
+﻿createdAt,createdBy,modifiedAt,modifiedBy,ID,friendlyID,title,description,IOTProjectID,customer_friendlyID,manager_userPrincipalName,customer_ID
 2021-05-02 16:55:08.091,anonymous,2021-05-02 16:55:08.091,anonymous,020db38e-6449-4f97-a9ff-176e962966e4,Kommicockpit,Intorq Kommissioniercockpit,Fiori Entwicklung Kommi-Cockpit,749-INQ1601-Einführung-SAP-EWM,,,1ec5e099-2373-45a1-b937-aa81a0afd060
 2021-05-02 16:55:08.091,anonymous,2021-05-02 16:55:08.091,anonymous,b5cfe8cd-174f-4491-9e99-d81742725825,Versandcockpit,Versandcockpit,Intorq Versandcockpit,800-INQ1901-FIORI,,,1ec5e099-2373-45a1-b937-aa81a0afd060
 2021-05-02 16:55:08.091,anonymous,2021-05-02 16:55:08.091,anonymous,9f6c35c0-8b2e-46f8-832b-857e84c59240,Wartung,Intorq Wartung,Wartung EWM & Kommi-Cockpit,812-INQ2001-Wartung-&-Support,,,1ec5e099-2373-45a1-b937-aa81a0afd060
