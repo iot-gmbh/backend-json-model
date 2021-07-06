@@ -97,7 +97,7 @@
     },
     "requires": {
       "db": {
-        "kind": "sqlite"
+        "kind": "database"
       },
       "uaa": {
         "kind": "xsuaa"
