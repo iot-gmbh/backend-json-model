@@ -26,7 +26,13 @@ service AdminService @(requires : 'authenticated-user') {
         * , projects : redirected to ProjectsPerUser
     };
 
+    @odata.create.enabled
+    @odata.update.enabled
     entity ProjectsPerUser as projection on my.Users2Projects;
+
+    @odata.create.enabled
+    @odata.update.enabled
+    entity Packages        as projection on my.Packages;
     entity UsersPerProject as projection on my.Users2Projects;
 
     @odata.draft.enabled

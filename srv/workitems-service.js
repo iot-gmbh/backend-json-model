@@ -17,9 +17,9 @@ module.exports = cds.service.impl(async function () {
     const items = await cds.tx(req).run(query);
 
     const IOTWorkItems = items.map((itm) => ({
-      Datum: itm.Datum,
-      Beginn: moment(itm.Datum).format("HH:mm"),
-      Ende: moment(itm.DatumBis).format("HH:mm"),
+      Datum: moment(itm.Datum).format("DD.MM.yyyy"),
+      Beginn: moment(itm.Datum).add(2, "hours").format("HH:mm"),
+      Ende: moment(itm.DatumBis).add(2, "hours").format("HH:mm"),
       P1: itm.P1,
       Projekt: itm.Projekt,
       Teilprojekt: itm.Teilprojekt,

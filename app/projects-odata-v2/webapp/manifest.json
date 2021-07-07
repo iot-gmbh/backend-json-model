@@ -40,6 +40,26 @@
         "sourceTemplate": {
             "id": "ui5template.smartTemplate",
             "version": "1.40.12"
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "projects-v2": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "ProjectsV2",
+                    "action": "display",
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubtitle}}",
+                    "icon": "sap-icon://task",
+                    "--indicatorDataSource": {
+                        "dataSource": "mainService",
+                        "path": "Projects/$count",
+                        "refresh": 120
+                    }
+                }
+            }
         }
     },
     "sap.ui": {
@@ -67,26 +87,6 @@
         "resources": {
             "js": [],
             "css": []
-        },
-        "crossNavigation": {
-            "inbounds": {
-                "projects-v2": {
-                    "signature": {
-                        "parameters": {},
-                        "additionalParameters": "allowed"
-                    },
-                    "semanticObject": "ProjectsV2",
-                    "action": "display",
-                    "title": "{{appTitle}}",
-                    "subTitle": "{{appSubtitle}}",
-                    "icon": "sap-icon://task",
-                    "--indicatorDataSource": {
-                        "dataSource": "mainService",
-                        "path": "Projects/$count",
-                        "refresh": 120
-                    }
-                }
-            }
         },
         "dependencies": {
             "minUI5Version": "1.65.0",

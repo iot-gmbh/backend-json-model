@@ -158,7 +158,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm run build
+        - npm run build:cf
       supported-platforms: []
   - name: fiori-workitems-alp
     type: html5

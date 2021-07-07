@@ -25,7 +25,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
         },
     ])                as projection on my.WorkItems {
         * , assignedTo.userPrincipalName as assignedToUserPrincipalName, assignedTo.manager.userPrincipalName as managerUserPrincipalName,
-    }  where deleted is null
+    } where deleted is null
 
     entity IOTWorkItems                                  @(restrict : [
         {
@@ -45,7 +45,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
             to    : 'admin',
         },
     ])                as projection on my.WorkItems {
-        activatedDate as Datum                  : Date   @(title : '{i18n>IOTWorkItems.Datum}'),
+        activatedDate as Datum                  : String @(title : '{i18n>IOTWorkItems.Datum}'),
         completedDate as DatumBis               : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
         // Casting findet in workitems-service.js statt (mittels moment.js)
         '' as Beginn                            : String @(title : '{i18n>IOTWorkItems.Beginn}'),
