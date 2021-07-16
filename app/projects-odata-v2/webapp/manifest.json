@@ -182,6 +182,14 @@
                                 "component": {
                                     "name": "sap.suite.ui.generic.template.ObjectPage"
                                 }
+                            },
+                            "ObjectPage|packages": {
+                                "navigationProperty": "workPackages",
+                                "entitySet": "Packages",
+                                "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
+                                "component": {
+                                    "name": "sap.suite.ui.generic.template.ObjectPage"
+                                }
                             }
                         }
                     }
