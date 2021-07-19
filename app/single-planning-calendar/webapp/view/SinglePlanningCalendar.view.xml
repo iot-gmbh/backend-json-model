@@ -19,7 +19,7 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog">
+							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog">
 								<customHeader>
 									<Bar>
 										<contentLeft>
@@ -41,7 +41,7 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" enabled="{= (${/projectsFiltered}.length > 1)}" change="onProjectChange">
+									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" enabled="{= ${/projectsFiltered}.length > 1}" change="onProjectChange">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

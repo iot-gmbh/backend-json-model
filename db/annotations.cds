@@ -303,6 +303,10 @@ annotate my.Projects with @(UI : {
         ],
     },
     Identification      : [
+        // title and description are only necessary for ODataV2 Elements
+        // => in V4 they are editable within the ObjectHeader
+        {Value : title},
+        {Value : description},
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
     ],

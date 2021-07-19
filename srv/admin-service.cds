@@ -33,17 +33,18 @@ service AdminService @(requires : 'authenticated-user') {
     @odata.create.enabled
     @odata.update.enabled
     entity Packages        as projection on my.Packages;
+
     entity UsersPerProject as projection on my.Users2Projects;
 
     @odata.draft.enabled
-    entity Customers       as projection on my.Customers;
+    entity Customers       as projection on my.Customers where friendlyID != 'DELETED';
 
     // @odata.draft.enabled
     @odata.create.enabled
     @odata.update.enabled
     entity Projects        as projection on my.Projects {
         * , teamMembers : redirected to UsersPerProject
-    };
+    } where friendlyID != 'DELETED';
 
     entity WorkItems @(restrict : [
         {
@@ -63,5 +64,5 @@ service AdminService @(requires : 'authenticated-user') {
     ])                     as projection on my.WorkItems {
         // expand for authorization checks (see above)
         * , assignedTo.userPrincipalName
-    };
+    } where deleted is null;
 };
