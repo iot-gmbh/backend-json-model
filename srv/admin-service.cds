@@ -42,6 +42,7 @@ service AdminService @(requires : 'authenticated-user') {
     // @odata.draft.enabled
     @odata.create.enabled
     @odata.update.enabled
+    @cds.search
     entity Projects        as projection on my.Projects {
         * , teamMembers : redirected to UsersPerProject
     } where friendlyID != 'DELETED';

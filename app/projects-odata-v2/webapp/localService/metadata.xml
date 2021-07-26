@@ -1,4 +1,6 @@
-<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
     <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
         <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
     </edmx:Reference>
@@ -11,7 +13,7 @@
     <edmx:DataServices m:DataServiceVersion="2.0">
         <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="AdminService">
             <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
-                <EntitySet Name="Customers" EntityType="AdminService.Customers"/>
+                <EntitySet Name="Customers" EntityType="AdminService.Customers" />
                 <FunctionImport Name="Customers_draftPrepare" EntitySet="Customers" ReturnType="AdminService.Customers" m:HttpMethod="POST" sap:action-for="AdminService.Customers">
                     <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
                     <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" Mode="In"/>

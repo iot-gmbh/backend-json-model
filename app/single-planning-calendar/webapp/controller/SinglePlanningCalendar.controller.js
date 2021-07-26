@@ -295,7 +295,7 @@ sap.ui.define(
         },
 
         onAfterOpenDialog() {
-          // Update all bindings (otherwisy there is outdated data in the dependent Select-controls)
+          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
           this._refreshSelectControls();
         },
 
