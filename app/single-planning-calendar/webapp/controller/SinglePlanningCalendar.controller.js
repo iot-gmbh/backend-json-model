@@ -144,8 +144,6 @@ sap.ui.define(
             .getBindingContext()
             .getProperty("friendlyID");
 
-          const projectsFiltered = model.getProperty("/projectsFiltered");
-
           const path = event.getSource().getBindingContext().getPath();
 
           model.setProperty(
@@ -153,23 +151,23 @@ sap.ui.define(
             selectedCustomerFriendly
           );
 
-          if (projectsFiltered.length === 0) {
-            model.setProperty(path + "/project_ID", undefined);
+          if (model.getProperty("/projectsFiltered").length === 1) {
+            model.setProperty(
+              path + "/project_ID",
+              model.getProperty("/projectsFiltered")[0]
+            );
           }
         },
 
         onProjectChange: function () {
-          // Reset if the project has no packages
           const model = this.getModel();
-          const workPackagesFiltered = model.getProperty(
-            "/workPackagesFiltered"
-          );
 
-          if (workPackagesFiltered.length === 0) {
-            const path = this.byId("createItemDialog")
-              .getBindingContext()
-              .getPath();
-            model.setProperty(path + "/workPackage_ID", undefined);
+          if (model.getProperty("/workPackagesFiltered").length === 1) {
+            model.setProperty(
+              this.byId("createItemDialog").getBindingContext().getPath() +
+                "/workPackage_ID",
+              model.getProperty("/workPackagesFiltered")[0]
+            );
           }
         },
 
@@ -307,11 +305,11 @@ sap.ui.define(
         },
 
         _refreshSelectControls() {
-          [
-            this.byId("customerSelect"),
-            this.byId("projectSelect"),
-            this.byId("packageSelect"),
-          ].forEach((select) => select.getBinding("items").refresh());
+          // [
+          //   this.byId("customersSelect"),
+          //   this.byId("projectsSelect"),
+          //   this.byId("packagesSelect"),
+          // ].forEach((select) => select.getBinding("items").refresh());
         },
 
         async onSubmitEntry() {
