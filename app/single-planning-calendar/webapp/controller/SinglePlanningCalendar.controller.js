@@ -294,22 +294,7 @@ sap.ui.define(
           );
 
           dialog.bindElement(path);
-
-          this._refreshSelectControls();
           dialog.open();
-        },
-
-        onAfterOpenDialog() {
-          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
-          this._refreshSelectControls();
-        },
-
-        _refreshSelectControls() {
-          // [
-          //   this.byId("customersSelect"),
-          //   this.byId("projectsSelect"),
-          //   this.byId("packagesSelect"),
-          // ].forEach((select) => select.getBinding("items").refresh());
         },
 
         async onSubmitEntry() {
