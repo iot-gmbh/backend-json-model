@@ -136,6 +136,7 @@ sap.ui.define(
         },
 
         onSelectCustomer(event) {
+          const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
           if (!selectedItem) return;
 
@@ -143,12 +144,18 @@ sap.ui.define(
             .getBindingContext()
             .getProperty("friendlyID");
 
+          const projectsFiltered = model.getProperty("/projectsFiltered");
+
           const path = event.getSource().getBindingContext().getPath();
 
-          this.getModel().setProperty(
+          model.setProperty(
             path + "/customer_friendlyID",
             selectedCustomerFriendly
           );
+
+          if (projectsFiltered.length === 0) {
+            model.setProperty(path + "/project_ID", undefined);
+          }
         },
 
         onProjectChange: function () {
