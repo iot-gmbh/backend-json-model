@@ -125,7 +125,10 @@ sap.ui.define(
               } else if (evt.keyCode === 46) {
                 evt.preventDefault();
 
-                const appointment = this.byId("createItemDialog")
+                const appointmentControl = sap.ui
+                  .getCore()
+                  .byId(activeElementID);
+                const appointment = appointmentControl
                   .getBindingContext()
                   .getObject();
 
