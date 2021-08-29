@@ -35,19 +35,19 @@
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox id="customersSelect" selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
+									<ComboBox id="customerSelect" selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
 										<items>
 											<core:Item text="{name}" key="{ID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectsSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" enabled="{= ${/projectsFiltered}.length > 1}" change="onProjectChange">
+									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="packagesSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}" enabled="{= ${/workPackagesFiltered}.length > 1}">
+									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

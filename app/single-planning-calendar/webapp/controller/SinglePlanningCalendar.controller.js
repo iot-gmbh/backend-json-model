@@ -35,6 +35,12 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
+    const selectControlIDs = [
+      "customerSelect",
+      "projectSelect",
+      "packageSelect",
+    ];
+
     return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
@@ -55,6 +61,7 @@ sap.ui.define(
               const bc = dialog.getBindingContext();
               if (!bc) return [];
               const selected = bc.getProperty("customer_ID");
+              if (!selected) return [];
 
               return this.projects.filter(
                 ({ customer_ID }) => customer_ID === selected
@@ -65,6 +72,7 @@ sap.ui.define(
               const bc = dialog.getBindingContext();
               if (!bc) return [];
               const selected = bc.getProperty("project_ID");
+              if (!selected) return [];
 
               return this.workPackages.filter(
                 ({ project_ID }) => project_ID === selected
@@ -138,6 +146,29 @@ sap.ui.define(
           });
         },
 
+        onAfterOpenDialog() {
+          // Update all bindings (otherwisy there is outdated data in the dependent Select-controls)
+          this._refreshSelectControls();
+        },
+
+        _getSelectControls() {
+          return selectControlIDs.map((ID) => this.byId(ID));
+        },
+
+        _resetSelectControls() {
+          this._getSelectControls().forEach((select) =>
+            select.setSelectedKey(undefined)
+          );
+        },
+
+        _refreshSelectControls() {
+          this._getSelectControls().forEach((select) =>
+            setTimeout(() => {
+              select.getBinding("items").refresh();
+            })
+          );
+        },
+
         onSelectCustomer(event) {
           const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
@@ -146,6 +177,7 @@ sap.ui.define(
           const selectedCustomerFriendly = selectedItem
             .getBindingContext()
             .getProperty("friendlyID");
+          const customerProjects = model.getProperty("/projectsFiltered");
 
           const path = event.getSource().getBindingContext().getPath();
 
@@ -154,23 +186,22 @@ sap.ui.define(
             selectedCustomerFriendly
           );
 
-          if (model.getProperty("/projectsFiltered").length === 1) {
-            model.setProperty(
-              path + "/project_ID",
-              model.getProperty("/projectsFiltered")[0]
-            );
+          if (customerProjects.length === 1) {
+            model.setProperty(path + "/project_ID", customerProjects[0]);
           }
         },
 
         onProjectChange: function () {
           const model = this.getModel();
+          const path = this.byId("createItemDialog")
+            .getBindingContext()
+            .getPath();
+          const projectPackages = model.getProperty("/workPackagesFiltered");
 
-          if (model.getProperty("/workPackagesFiltered").length === 1) {
-            model.setProperty(
-              this.byId("createItemDialog").getBindingContext().getPath() +
-                "/workPackage_ID",
-              model.getProperty("/workPackagesFiltered")[0]
-            );
+          if (projectPackages.length === 1) {
+            model.setProperty(path + "/workPackage_ID", projectPackages[0]);
+          } else if (projectPackages.length === 0) {
+            model.setProperty(path + "/workPackage_ID", undefined);
           }
         },
 
@@ -310,6 +341,19 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
+          const projectSelect = this.byId("projectSelect");
+          const packageSelect = this.byId("packageSelect");
+
+          appointment.project_ID =
+            projectSelect.getItems().length > 0
+              ? projectSelect.getSelectedKey()
+              : undefined;
+
+          appointment.workPackage_ID =
+            packageSelect.getItems().length > 0
+              ? packageSelect.getSelectedKey()
+              : undefined;
+
           try {
             const appointmentSync = await this._submitEntry(appointment);
 
@@ -351,6 +395,8 @@ sap.ui.define(
 
           if (!appointment || !appointment.ID)
             this.getModel().setProperty("/appointments/NEW", {});
+
+          this.byId("createItemDialog").unbindElement();
         },
 
         onCloseDialog(event) {
