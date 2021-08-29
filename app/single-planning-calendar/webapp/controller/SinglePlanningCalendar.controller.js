@@ -147,7 +147,7 @@ sap.ui.define(
         },
 
         onAfterOpenDialog() {
-          // Update all bindings (otherwisy there is outdated data in the dependent Select-controls)
+          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
           this._refreshSelectControls();
         },
 
@@ -155,17 +155,9 @@ sap.ui.define(
           return selectControlIDs.map((ID) => this.byId(ID));
         },
 
-        _resetSelectControls() {
-          this._getSelectControls().forEach((select) =>
-            select.setSelectedKey(undefined)
-          );
-        },
-
         _refreshSelectControls() {
           this._getSelectControls().forEach((select) =>
-            setTimeout(() => {
-              select.getBinding("items").refresh();
-            })
+            select.getBinding("items").refresh()
           );
         },
 
@@ -177,7 +169,6 @@ sap.ui.define(
           const selectedCustomerFriendly = selectedItem
             .getBindingContext()
             .getProperty("friendlyID");
-          const customerProjects = model.getProperty("/projectsFiltered");
 
           const path = event.getSource().getBindingContext().getPath();
 
@@ -185,24 +176,6 @@ sap.ui.define(
             path + "/customer_friendlyID",
             selectedCustomerFriendly
           );
-
-          if (customerProjects.length === 1) {
-            model.setProperty(path + "/project_ID", customerProjects[0]);
-          }
-        },
-
-        onProjectChange: function () {
-          const model = this.getModel();
-          const path = this.byId("createItemDialog")
-            .getBindingContext()
-            .getPath();
-          const projectPackages = model.getProperty("/workPackagesFiltered");
-
-          if (projectPackages.length === 1) {
-            model.setProperty(path + "/workPackage_ID", projectPackages[0]);
-          } else if (projectPackages.length === 0) {
-            model.setProperty(path + "/workPackage_ID", undefined);
-          }
         },
 
         onDisplayLegend() {
