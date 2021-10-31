@@ -320,12 +320,12 @@ sap.ui.define(
           appointment.project_ID =
             projectSelect.getItems().length > 0
               ? projectSelect.getSelectedKey()
-              : undefined;
+              : null;
 
           appointment.workPackage_ID =
             packageSelect.getItems().length > 0
               ? packageSelect.getSelectedKey()
-              : undefined;
+              : null;
 
           try {
             const appointmentSync = await this._submitEntry(appointment);
