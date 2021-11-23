@@ -40,10 +40,6 @@ annotate my.IOTWorkItems with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Value : P1,
-        },
-        {
-            $Type : 'UI.DataField',
             Value : Projekt,
         },
         {
