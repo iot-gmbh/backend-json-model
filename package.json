@@ -9,44 +9,43 @@
     "node": "^12 || ^14"
   },
   "dependencies": {
-    "@azure/msal-node": "^1.1.0",
-    "@microsoft/microsoft-graph-client": "^2.2.1",
-    "@sap/audit-logging": "^5.0.0",
-    "@sap/cds": "^5.1.5",
-    "@sap/cds-odata-v2-adapter-proxy": "^1.7.4",
-    "@sap/xsenv": "^3.1.0",
-    "@sap/xssec": "^3.2.2",
+    "@sap/cds": "5.1.5",
+    "@sap/cds-odata-v2-adapter-proxy": "1.7.1",
+    "@sap/xsenv": "3.1.1",
+    "@sap/xssec": "3.2.9",
+    "cds-pg": "0.1.6",
+    "cds-dbm": "0.0.27",
+    "@azure/msal-node": "^1.3.3",
+    "@microsoft/microsoft-graph-client": "^3.0.1",
+    "@sap/audit-logging": "^5.3.0",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
-    "azure-devops-node-api": "^11.0.0",
-    "cds-dbm": "0.0.26",
-    "cds-pg": "^0.1.5",
+    "azure-devops-node-api": "^11.1.0",
     "cdse": "^1.1.12",
     "dotenv": "^10.0.0",
     "express": "^4",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",
-    "msal": "^1.4.11",
-    "passport": "^0.4.1",
-    "sap-cf-axios": "^0.2.30",
+    "msal": "^1.4.15",
+    "passport": "^0.5.0",
+    "sap-cf-axios": "^0.2.35",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@sap/ui5-builder-webide-extension": "1.1.x",
-    "@sap/ux-specification": "^1.90.1",
-    "eslint": "^7.29.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "@sap/ux-specification": "^1.90.15",
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb": "^19.0.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "npm-run-all": "^4.1.5",
     "sqlite3": "^5.0.2",
-    "ui5-middleware-livereload": "^0.5.4",
-    "ui5-middleware-simpleproxy": "^0.7.2",
-    "ui5-task-zipper": "^0.4.3"
+    "ui5-middleware-livereload": "^0.5.8",
+    "ui5-middleware-simpleproxy": "^0.7.5",
+    "ui5-task-zipper": "^0.4.7"
   },
   "ui5": {
     "dependencies": [
@@ -71,7 +70,8 @@
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
-    "deploy:pgm": "npx cds-dbm deploy --create-db --load-via full",
+    "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
+    "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
     "deploy:pg": "cds-pg deploy srv --to db"
   },
   "files": [
@@ -97,17 +97,10 @@
     },
     "requires": {
       "db": {
-        "kind": "database"
+        "kind": "postgres"
       },
-      "uaa": {
-        "kind": "xsuaa"
-      },
-      "MicrosoftGraphIOTGmbH": {
-        "credentials": {
-          "destination": "MicrosoftGraphIOTGmbH"
-        }
-      },
-      "database": {
+      "postgres": {
+        "dialect": "plain",
         "impl": "cds-pg",
         "model": [
           "db",
@@ -118,7 +111,16 @@
           "port": "5432",
           "database": "projplanning2",
           "user": "postgres",
-          "password": "postgres"
+          "password": "postgres",
+          "schema": "public"
+        }
+      },
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "MicrosoftGraphIOTGmbH": {
+        "credentials": {
+          "destination": "MicrosoftGraphIOTGmbH"
         }
       }
     },

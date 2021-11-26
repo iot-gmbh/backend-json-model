@@ -74,7 +74,7 @@ entity Packages : managed, cuid {
 }
 
 entity WorkItems {
-    key ID                  : String;
+    key ID                  : String @odata.Type : 'Edm.String';
         activatedDate       : DateTime;
         activatedDateMonth  : Integer;
         activatedDateYear   : Integer;

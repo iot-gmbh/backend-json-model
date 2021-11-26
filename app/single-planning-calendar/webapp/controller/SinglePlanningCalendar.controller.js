@@ -191,13 +191,20 @@ sap.ui.define(
           this._bindAndOpenDialog(path);
         },
 
-        async onAppointmentResize(event) {
+        async onEditAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const { startDate, endDate, appointment } = event.getParameters();
+          const { startDate, endDate, appointment, copy } =
+            event.getParameters();
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
-          const path = bindingContext.getPath();
+
+          let path = bindingContext.getPath();
+
+          if (copy) {
+            path = "/appointments/NEW";
+            model.setProperty("/appointments/NEW", appointment);
+          }
 
           model.setProperty(path + "/activatedDate", startDate);
           model.setProperty(path + "/completedDate", endDate);
@@ -347,7 +354,8 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
+            // const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
+            const path = this.getModel().createKey("/MyWorkItems", appointment);
 
             return this.update({
               path,
