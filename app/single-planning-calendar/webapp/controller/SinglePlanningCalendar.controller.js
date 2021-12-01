@@ -184,11 +184,10 @@ sap.ui.define(
 
         onPressAppointment(event) {
           const { appointment } = event.getParameters();
-          const path = appointment
-            ? appointment.getBindingContext().getPath()
-            : "/appointments/NEW";
 
-          this._bindAndOpenDialog(path);
+          if (appointment) {
+            this._bindAndOpenDialog(appointment.getBindingContext().getPath());
+          }
         },
 
         async onEditAppointment(event) {
@@ -282,6 +281,11 @@ sap.ui.define(
         },
 
         onCreateAppointment(event) {
+          this._createAppointment(event);
+          this._bindAndOpenDialog("/appointments/NEW");
+        },
+
+        _createAppointment(event) {
           const model = this.getModel();
           const { startDate, endDate } = event.getParameters();
           const appointment = {
@@ -290,8 +294,6 @@ sap.ui.define(
           };
 
           model.setProperty("/appointments/NEW", appointment);
-
-          this._bindAndOpenDialog("/appointments/NEW");
         },
 
         _bindAndOpenDialog(path) {
@@ -355,7 +357,10 @@ sap.ui.define(
           // Update
           if (ID) {
             // const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
-            const path = this.getModel().createKey("/MyWorkItems", appointment);
+            const path = this.getModel("OData").createKey(
+              "/MyWorkItems",
+              appointment
+            );
 
             return this.update({
               path,
@@ -418,6 +423,7 @@ sap.ui.define(
         async _loadAppointments() {
           const model = this.getModel();
           const calendar = this.byId("SPCalendar");
+          const appointmentsOld = model.getProperty("/appointments");
 
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
@@ -450,7 +456,10 @@ sap.ui.define(
             return map;
           }, {});
 
-          model.setProperty("/appointments", appointmentsMap);
+          model.setProperty("/appointments", {
+            ...appointmentsOld,
+            ...appointmentsMap,
+          });
         },
 
         async _loadCustomersAndProjects() {
