@@ -33,6 +33,7 @@
   "devDependencies": {
     "@sap/ui5-builder-webide-extension": "1.1.x",
     "@sap/ux-specification": "^1.90.15",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.3.0",
     "eslint-config-airbnb": "^19.0.1",
     "eslint-config-prettier": "^8.3.0",
@@ -72,7 +73,8 @@
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
     "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
     "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
-    "deploy:pg": "cds-pg deploy srv --to db"
+    "deploy:pg": "cds-pg deploy srv --to db",
+    "copy:db:template": "copyfiles -u 1 -a ./db-deployer-apt/* ./db-deployer-apt/**/* gen/db"
   },
   "files": [
     "db",

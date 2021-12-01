@@ -12,6 +12,8 @@ build-parameters:
         - npm install --production
         # use cds-dbm for building, not cds
         - npx cds-dbm build --production
+        # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
+        - npm run copy:db:template
 
 modules:
   - name: project-planning-pg-db-deployer
