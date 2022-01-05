@@ -1,5 +1,6 @@
 const cdsapi = require("@sapmentors/cds-scp-api");
-const { ExpressionBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
+// const { ExpressionBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
+const ExpressionBuilder = require("@sap/cds/libx/_runtime/db/sql-builder/ExpressionBuilder");
 
 function parseQueryParams(select) {
   const { values } = new ExpressionBuilder(select.where).build();

@@ -1,153 +1,157 @@
 {
-  "name": "project-planning",
-  "version": "1.0.1",
-  "description": "Plan & Track projects",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "engines": {
-    "node": "^12 || ^14"
-  },
-  "dependencies": {
-    "@sap/cds": "5.7.4",
-    "@sap/cds-odata-v2-adapter-proxy": "1.8.4",
-    "@sap/xsenv": "3.1.1",
-    "@sap/xssec": "3.2.11",
-    "cds-pg": "0.1.20",
-    "cds-dbm": "0.0.27",
-    "@azure/msal-node": "^1.5.0",
-    "@microsoft/microsoft-graph-client": "^3.0.1",
-    "@sap/audit-logging": "^5.3.0",
-    "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
-    "azure-devops-node-api": "^11.1.0",
-    "cdse": "^1.1.12",
-    "dotenv": "^10.0.0",
-    "express": "^4",
-    "isomorphic-fetch": "^3.0.0",
-    "moment": "^2.29.1",
-    "msal": "^1.4.15",
-    "passport": "^0.5.2",
-    "sap-cf-axios": "^0.2.35",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "@sap/ui5-builder-webide-extension": "1.1.x",
-    "@sap/ux-specification": "^1.96.0",
-    "copyfiles": "^2.4.1",
-    "eslint": "^8.6.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "npm-run-all": "^4.1.5",
-    "sqlite3": "^5.0.2",
-    "ui5-middleware-livereload": "^0.5.8",
-    "ui5-middleware-simpleproxy": "^0.7.6",
-    "ui5-task-zipper": "^0.4.7"
-  },
-  "ui5": {
-    "dependencies": [
-      "ui5-task-zipper",
-      "ui5-middleware-simpleproxy",
-      "ui5-middleware-livereload"
+    "name": "project-planning",
+    "version": "1.0.1",
+    "description": "Plan & Track projects",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "engines": {
+        "node": "^12 || ^14"
+    },
+    "dependencies": {
+        "@sap/cds": "5.7.4",
+        "@sap/cds-odata-v2-adapter-proxy": "1.8.4",
+        "@sap/xsenv": "3.1.1",
+        "@sap/xssec": "3.2.11",
+        "cds-pg": "0.1.20",
+        "cds-dbm": "0.0.27",
+        "@azure/msal-node": "^1.5.0",
+        "@microsoft/microsoft-graph-client": "^3.0.1",
+        "@sap/audit-logging": "^5.3.0",
+        "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
+        "azure-devops-node-api": "^11.1.0",
+        "cdse": "^1.1.12",
+        "dotenv": "^10.0.0",
+        "express": "^4",
+        "isomorphic-fetch": "^3.0.0",
+        "moment": "^2.29.1",
+        "msal": "^1.4.15",
+        "passport": "^0.5.2",
+        "sap-cf-axios": "^0.2.35",
+        "uuid": "^8.3.2",
+        "hdb": "^0.18.3"
+    },
+    "devDependencies": {
+        "@sap/ui5-builder-webide-extension": "1.1.x",
+        "@sap/ux-specification": "^1.96.0",
+        "copyfiles": "^2.4.1",
+        "eslint": "^8.6.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-jsx-a11y": "^6.5.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.28.0",
+        "eslint-plugin-react-hooks": "^4.3.0",
+        "npm-run-all": "^4.1.5",
+        "sqlite3": "^5.0.2",
+        "ui5-middleware-livereload": "^0.5.8",
+        "ui5-middleware-simpleproxy": "^0.7.6",
+        "ui5-task-zipper": "^0.4.7"
+    },
+    "ui5": {
+        "dependencies": [
+            "ui5-task-zipper",
+            "ui5-middleware-simpleproxy",
+            "ui5-middleware-livereload"
+        ]
+    },
+    "scripts": {
+        "start": "cds run",
+        "start:lcl": "run-p start:srv start:spc",
+        "start:srv": "cds run",
+        "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
+        "start:approuter": "cd app/single-planning-calendar && npm run start",
+        "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
+        "debug": "run-p start:srv start:spc",
+        "build": "mbt build",
+        "lint": "eslint srv && eslint app",
+        "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
+        "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
+        "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
+        "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
+        "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
+        "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
+        "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
+        "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
+        "deploy:pg": "cds-pg deploy srv --to db",
+        "copy:db:template": "copyfiles -u 1 -a ./db-deployer-apt/* ./db-deployer-apt/**/* gen/db"
+    },
+    "files": [
+        "db",
+        "srv",
+        "app"
+    ],
+    "cds": {
+        "build": {
+            "tasks": [
+                {
+                    "use": "node-cf",
+                    "src": "srv"
+                },
+                {
+                    "use": "postgres-cf",
+                    "src": "db",
+                    "options": {
+                        "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
+                    }
+                }
+            ]
+        },
+        "requires": {
+            "db": {
+                "kind": "sql"
+            },
+            "postgres": {
+                "dialect": "plain",
+                "impl": "cds-pg",
+                "model": [
+                    "db",
+                    "srv"
+                ],
+                "credentials": {
+                    "host": "localhost",
+                    "port": "5432",
+                    "database": "projplanning2",
+                    "user": "postgres",
+                    "password": "postgres",
+                    "schema": "public"
+                }
+            },
+            "uaa": {
+                "kind": "xsuaa"
+            },
+            "MicrosoftGraphIOTGmbH": {
+                "credentials": {
+                    "destination": "MicrosoftGraphIOTGmbH"
+                }
+            }
+        },
+        "migrations": {
+            "db": {
+                "schema": {
+                    "default": "public",
+                    "clone": "_cdsdbm_clone",
+                    "reference": "_cdsdbm_ref"
+                },
+                "deploy": {
+                    "tmpFile": "tmp/_autodeploy.json",
+                    "undeployFile": "db/undeploy.json"
+                }
+            }
+        },
+        "hana": {
+            "deploy-format": "hdbtable"
+        }
+    },
+    "sapux": [
+        "app\\customers",
+        "app\\azdev-workitems",
+        "app\\single-planning-calendar",
+        "app\\workitems",
+        "app\\workitems-alp",
+        "app\\projects",
+        "app\\workitems",
+        "app\\users"
     ]
-  },
-  "scripts": {
-    "start": "cds run",
-    "start:lcl": "run-p start:srv start:spc",
-    "start:srv": "cds run",
-    "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
-    "start:approuter": "cd app/single-planning-calendar && npm run start",
-    "start:spc": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
-    "debug": "run-p start:srv start:spc",
-    "build": "mbt build",
-    "lint": "eslint srv && eslint app",
-    "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
-    "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
-    "deploy": "npm run build && cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
-    "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
-    "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
-    "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
-    "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
-    "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
-    "deploy:pg": "cds-pg deploy srv --to db",
-    "copy:db:template": "copyfiles -u 1 -a ./db-deployer-apt/* ./db-deployer-apt/**/* gen/db"
-  },
-  "files": [
-    "db",
-    "srv",
-    "app"
-  ],
-  "cds": {
-    "build": {
-      "tasks": [
-        {
-          "use": "node-cf",
-          "src": "srv"
-        },
-        {
-          "use": "postgres-cf",
-          "src": "db",
-          "options": {
-            "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
-          }
-        }
-      ]
-    },
-    "requires": {
-      "db": {
-        "kind": "postgres"
-      },
-      "postgres": {
-        "dialect": "plain",
-        "impl": "cds-pg",
-        "model": [
-          "db",
-          "srv"
-        ],
-        "credentials": {
-          "host": "localhost",
-          "port": "5432",
-          "database": "projplanning2",
-          "user": "postgres",
-          "password": "postgres",
-          "schema": "public"
-        }
-      },
-      "uaa": {
-        "kind": "xsuaa"
-      },
-      "MicrosoftGraphIOTGmbH": {
-        "credentials": {
-          "destination": "MicrosoftGraphIOTGmbH"
-        }
-      }
-    },
-    "migrations": {
-      "db": {
-        "schema": {
-          "default": "public",
-          "clone": "_cdsdbm_clone",
-          "reference": "_cdsdbm_ref"
-        },
-        "deploy": {
-          "tmpFile": "tmp/_autodeploy.json",
-          "undeployFile": "db/undeploy.json"
-        }
-      }
-    }
-  },
-  "sapux": [
-    "app\\customers",
-    "app\\azdev-workitems",
-    "app\\single-planning-calendar",
-    "app\\workitems",
-    "app\\workitems-alp",
-    "app\\projects",
-    "app\\workitems",
-    "app\\users"
-  ]
 }
