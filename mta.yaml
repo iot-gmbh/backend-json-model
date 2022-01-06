@@ -224,7 +224,7 @@ resources:
   - name: project-planning-db
     type: com.sap.xs.hdi-container
     properties:
-      hdi-container-name: ${service-name}
+      hdi-container-name: ${service-name}-TEST
     parameters:
       service: hana
 
