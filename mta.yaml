@@ -10,31 +10,41 @@ build-parameters:
     - builder: custom
       commands:
         - npm install --production
-        # use cds-dbm for building, not cds
-        - npx cds-dbm build --production
+        - npx -p @sap/cds-dk cds build --production
+        # - npm install --production
+        # # use cds-dbm for building, not cds
+        # - npx cds-dbm build --production
         # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
-        - npm run copy:db:template
+        # - npm run copy:db:template
 
 modules:
-  - name: project-planning-pg-db-deployer
-    type: custom
+  - name: project-planning-db-deployer
+    type: hdb
     path: gen/db
-    parameters:
-      buildpacks:
-        [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
-      no-route: true
-      no-start: true
-      disk-quota: 2048MB
-      memory: 2048MB
-      tasks:
-        - name: deploy_to_postgresql
-          command: chmod 755 deploy.sh && ./deploy.sh
-          disk-quota: 2048MB
-          memory: 2048MB
     build-parameters:
       ignore: ["node_modules/"]
     requires:
-      - name: project-planning-pg-db
+      - name: project-planning-db
+
+  # - name: project-planning-pg-db-deployer
+  #   type: hdb
+  #   path: gen/db
+  #   parameters:
+  #     buildpacks:
+  #       [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
+  #     no-route: true
+  #     no-start: true
+  #     disk-quota: 2048MB
+  #     memory: 2048MB
+  #     tasks:
+  #       - name: deploy_to_postgresql
+  #         command: chmod 755 deploy.sh && ./deploy.sh
+  #         disk-quota: 2048MB
+  #         memory: 2048MB
+  #   build-parameters:
+  #     ignore: ["node_modules/"]
+  #   requires:
+  #     - name: project-planning-pg-db
 
   - name: project-planning-srv
     type: nodejs
@@ -42,7 +52,7 @@ modules:
     requires:
       - name: project-planning-uaa
       - name: project-planning-dest-service
-      - name: project-planning-pg-db
+      - name: project-planning-db
     provides:
       - name: srv-api
         properties:
@@ -65,6 +75,7 @@ modules:
     parameters:
       content:
         subaccount:
+          existing_destinations_policy: update
           destinations:
             - Name: project-planning-repo-host
               ServiceInstanceName: project-planning-repo-host-service
@@ -75,7 +86,6 @@ modules:
               ServiceInstanceName: project-planning-xsuaa-service
               ServiceKeyName: project-planning-uaa-key
               sap.cloud.service: iot.project.planner
-          existing_destinations_policy: update
     build-parameters:
       no-source: true
 
@@ -211,14 +221,12 @@ modules:
       supported-platforms: []
 
 resources:
-  - name: project-planning-pg-db
+  - name: project-planning-db
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: ${service-name}
     parameters:
-      path: ./pg-options.json
-      service: postgresql-db
-      service-plan: trial
-      skip-service-updates:
-        parameters: true
-    type: org.cloudfoundry.managed-service
+      service: hana
 
   - name: project-planning-dest-service
     type: org.cloudfoundry.managed-service
@@ -235,11 +243,23 @@ resources:
           instance:
             existing_destinations_policy: update
             destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
+              - Name: project-planning-dest
+                Description: Project Planning OData Service
+                Authentication: NoAuthentication
                 ProxyType: Internet
                 Type: HTTP
-                URL: https://ui5.sap.com
+                URL: ~{srv-api/srv-url}
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+              - Name: MicrosoftGraphIOTGmbH
+                URL: https://graph.microsoft.com
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: OAuth2ClientCredentials
+                clientId: 9f12ec96-3b66-47e5-a010-d9cf0b09a8f9
+                tokenServiceURL: https://login.microsoftonline.com/d439e362-ecdf-4d78-8fed-86c7c639b131/oauth2/v2.0/token
+                scope: https://graph.microsoft.com/.default
+                clientSecret: # Enter client secret in BTP
 
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service

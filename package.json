@@ -32,6 +32,7 @@
         "hdb": "^0.18.3"
     },
     "devDependencies": {
+        "@sap/hdi-deploy": "^4.2.3",
         "@sap/ui5-builder-webide-extension": "1.1.x",
         "@sap/ux-specification": "^1.96.0",
         "copyfiles": "^2.4.1",
@@ -83,24 +84,9 @@
         "app"
     ],
     "cds": {
-        "build": {
-            "tasks": [
-                {
-                    "use": "node-cf",
-                    "src": "srv"
-                },
-                {
-                    "use": "postgres-cf",
-                    "src": "db",
-                    "options": {
-                        "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
-                    }
-                }
-            ]
-        },
         "requires": {
             "db": {
-                "kind": "sql"
+                "kind": "hana"
             },
             "postgres": {
                 "dialect": "plain",
