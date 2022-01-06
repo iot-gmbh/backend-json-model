@@ -240,7 +240,7 @@ resources:
         version: 1.0.0
         HTML5Runtime_enabled: true
         init_data:
-          instance:
+          subaccount:
             existing_destinations_policy: update
             destinations:
               - Name: project-planning-dest
