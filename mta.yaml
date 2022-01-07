@@ -6,16 +6,16 @@ parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
-    # - npm install --production
-    # # use cds-dbm for building, not cds
-    # - npx cds-dbm build --production
-    # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
-    # - npm run copy:db:template
+  # before-all:
+  #   - builder: custom
+  #     commands:
+  #       - npm install --production
+  #       - npx -p @sap/cds-dk cds build --production
+  # - npm install --production
+  # # use cds-dbm for building, not cds
+  # - npx cds-dbm build --production
+  # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
+  # - npm run copy:db:template
 
 modules:
   - name: project-planning-ui-deployer
@@ -72,6 +72,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-users
@@ -81,6 +82,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-projects
@@ -90,6 +92,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-projects-v2
@@ -99,6 +102,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-workitems-alp
@@ -108,6 +112,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-workitems
@@ -117,6 +122,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-workitems-iot
@@ -126,6 +132,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-azdev-workitems
@@ -135,6 +142,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
   - name: fiori-single-planning-calendar
@@ -144,6 +152,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm i
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
 
