@@ -143,6 +143,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build
       supported-platforms: []
   - name: fiori-users
@@ -152,6 +153,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build:cf
       supported-platforms: []
   - name: fiori-projects
@@ -161,6 +163,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build
       supported-platforms: []
   - name: fiori-projects-v2
@@ -170,6 +173,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build:cf
       supported-platforms: []
   - name: fiori-workitems-alp
@@ -179,6 +183,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build:cf
       supported-platforms: []
   - name: fiori-workitems
@@ -188,6 +193,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build:cf
       supported-platforms: []
   - name: fiori-workitems-iot
@@ -197,6 +203,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
+        - npm install
         - npm run build:cf
       supported-platforms: []
   - name: fiori-azdev-workitems
