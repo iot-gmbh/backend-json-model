@@ -18,7 +18,7 @@ steps:
     - task: CmdLine@2
       displayName: Build
       inputs:
-        script: npm run build -s=$(Agent.BuildDirectory)/s
+        script: mbt build -p=cf -s=$(Agent.BuildDirectory)/s
 
     - task: PublishPipelineArtifact@1
       displayName: Publish Pipeline Artifact
