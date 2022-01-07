@@ -8,12 +8,12 @@ annotate my.Users2Projects with @(UI : {
         Value : user_userPrincipalName,
     }, ]
 }) {
-    ID                     @UI.Hidden;
-    user_userPrincipalName @(Common : {
-        Text         : {
-            $value                 : user.displayName,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
+    ID @UI.Hidden;
+// user_userPrincipalName @(Common : {
+//     Text         : {
+//         $value                 : user.displayName,
+//         ![@UI.TextArrangement] : #TextOnly
+//     },
+//     FieldControl : #Mandatory
+// });
 };

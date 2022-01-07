@@ -1,0 +1,13 @@
+# Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
+---
+keys:
+  - https://dist.sapmachine.io/debian/sapmachine.old.key
+  - https://dist.sapmachine.io/debian/sapmachine.key
+repos:
+  - deb http://dist.sapmachine.io/debian/amd64/ ./
+packages:
+  #  - openjdk-8-jre-headless
+  #  - openjdk-11-jdk-headless
+  #  - openjdk-15-jdk-headless
+  - sapmachine-11-jdk
+#  - sapmachine-11-jre

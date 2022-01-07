@@ -30,7 +30,7 @@ function parseError(error) {
 sap.ui.define([], () => ({
   parse(error) {
     const message = parseError(error);
-    const formattedMessage = message.replace(/(\d+)/gi, "<strong>$1</strong>");
-    return formattedMessage;
+    // const formattedMessage = message.replace(/(\d+)/gi, "<strong>$1</strong>");
+    return message;
   },
 }));

@@ -1,0 +1,62 @@
+{
+    "ID": "27b66eca-8c86-41b5-a10e-0e7c0b2823ca",
+    "activatedDate": "\/Date(1634223600000)\/",
+    "activatedDateMonth": 10,
+    "activatedDateYear": 2021,
+    "activatedDateDay": 14,
+    "completedDate": "\/Date(1634227200000)\/",
+    "completedDateMonth": 10,
+    "completedDateYear": 2021,
+    "completedDateDay": 14,
+    "assignedTo_userPrincipalName": "benedikt.hoelker@iot-online.de",
+    "changedDate": null,
+    "assignedToName": null,
+    "createdDate": null,
+    "reason": null,
+    "state": null,
+    "teamProject": null,
+    "title": "Test",
+    "workItemType": null,
+    "completedWork": null,
+    "remainingWork": null,
+    "originalEstimate": null,
+    "resolvedDate": null,
+    "closedDate": null,
+    "customer_friendlyID": "Mennekes",
+    "customer_ID": "3a479c15-7bb1-4380-aaf2-89200c6e389b",
+    "customerName": null,
+    "private": null,
+    "project_friendlyID": null,
+    "project_ID": "2b644adc-a980-4cb4-8c1a-ff3d6899a81c",
+    "projectTitle": null,
+    "ticket": null,
+    "type": "Manual",
+    "duration": "1",
+    "resetEntry": null,
+    "deleted": null,
+    "confirmed": true,
+    "assignedTo": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('27b66eca-8c86-41b5-a10e-0e7c0b2823ca')/assignedTo"
+        }
+    },
+    "customer": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('27b66eca-8c86-41b5-a10e-0e7c0b2823ca')/customer"
+        }
+    },
+    "project": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('27b66eca-8c86-41b5-a10e-0e7c0b2823ca')/project"
+        }
+    },
+    "workPackage": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('27b66eca-8c86-41b5-a10e-0e7c0b2823ca')/workPackage"
+        }
+    },
+    "__metadata": {
+        "type": "TimetrackingService.MyWorkItems",
+        "uri": "http://localhost:4004/v2/timetracking/MyWorkItems('27b66eca-8c86-41b5-a10e-0e7c0b2823ca')"
+    }
+}

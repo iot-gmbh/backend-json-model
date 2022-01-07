@@ -40,7 +40,7 @@
                     "title": "{{appTitle}}",
                     "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://account",
-                    "indicatorDataSource": {
+                    "--indicatorDataSource": {
                         "dataSource": "mainService",
                         "path": "Users/$count",
                         "refresh": 120
