@@ -29,7 +29,7 @@
         "passport": "^0.5.2",
         "sap-cf-axios": "^0.2.35",
         "uuid": "^8.3.2",
-        "hdb": "^0.18.3"
+        "hdb": "^0.19.1"
     },
     "devDependencies": {
         "@sap/hdi-deploy": "^4.2.3",

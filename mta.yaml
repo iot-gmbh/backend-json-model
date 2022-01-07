@@ -7,17 +7,146 @@ parameters:
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
-        # - npm install --production
-        # # use cds-dbm for building, not cds
-        # - npx cds-dbm build --production
-        # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
-        # - npm run copy:db:template
+    # - builder: custom
+    #   commands:
+    # - npm install --production
+    # - npx -p @sap/cds-dk cds build --production
+    # - npm install --production
+    # # use cds-dbm for building, not cds
+    # - npx cds-dbm build --production
+    # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
+    # - npm run copy:db:template
 
 modules:
+  - name: project-planning-ui-deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: project-planning-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - fiori-customers.zip
+          name: fiori-customers
+          target-path: resources/
+        - artifacts:
+            - fiori-users.zip
+          name: fiori-users
+          target-path: resources/
+        - artifacts:
+            - fiori-workitems.zip
+          name: fiori-workitems
+          target-path: resources/
+        - artifacts:
+            - fiori-workitems-iot.zip
+          name: fiori-workitems-iot
+          target-path: resources/
+        - artifacts:
+            - fiori-projects.zip
+          name: fiori-projects
+          target-path: resources/
+        - artifacts:
+            - fiori-projects-v2.zip
+          name: fiori-projects-v2
+          target-path: resources/
+        - artifacts:
+            - fiori-workitems-alp.zip
+          name: fiori-workitems-alp
+          target-path: resources/
+        - artifacts:
+            - fiori-azdev-workitems.zip
+          name: fiori-azdev-workitems
+          target-path: resources/
+        - artifacts:
+            - fiori-single-planning-calendar.zip
+          name: fiori-single-planning-calendar
+          target-path: resources/
+
+  - name: fiori-customers
+    type: html5
+    path: app/customers
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-users
+    type: html5
+    path: app/users
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-projects
+    type: html5
+    path: app/projects
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-projects-v2
+    type: html5
+    path: app/projects-odata-v2
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-workitems-alp
+    type: html5
+    path: app/workitems-alp
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-workitems
+    type: html5
+    path: app/workitems
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-workitems-iot
+    type: html5
+    path: app/workitems-iot
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-azdev-workitems
+    type: html5
+    path: app/azdev-workitems
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+  - name: fiori-single-planning-calendar
+    type: html5
+    path: app/single-planning-calendar
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - ui5 build --config ui5-deploy.yaml
+      supported-platforms: []
+
   - name: project-planning-db-deployer
     type: hdb
     path: gen/db
@@ -88,144 +217,6 @@ modules:
               sap.cloud.service: iot.project.planner
     build-parameters:
       no-source: true
-
-  - name: project-planning-ui-deployer
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: project-planning-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - fiori-customers.zip
-          name: fiori-customers
-          target-path: resources/
-        - artifacts:
-            - fiori-users.zip
-          name: fiori-users
-          target-path: resources/
-        - artifacts:
-            - fiori-workitems.zip
-          name: fiori-workitems
-          target-path: resources/
-        - artifacts:
-            - fiori-workitems-iot.zip
-          name: fiori-workitems-iot
-          target-path: resources/
-        - artifacts:
-            - fiori-projects.zip
-          name: fiori-projects
-          target-path: resources/
-        - artifacts:
-            - fiori-projects-v2.zip
-          name: fiori-projects-v2
-          target-path: resources/
-        - artifacts:
-            - fiori-workitems-alp.zip
-          name: fiori-workitems-alp
-          target-path: resources/
-        - artifacts:
-            - fiori-azdev-workitems.zip
-          name: fiori-azdev-workitems
-          target-path: resources/
-        - artifacts:
-            - fiori-single-planning-calendar.zip
-          name: fiori-single-planning-calendar
-          target-path: resources/
-
-  - name: fiori-customers
-    type: html5
-    path: app/customers
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build
-      supported-platforms: []
-  - name: fiori-users
-    type: html5
-    path: app/users
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-projects
-    type: html5
-    path: app/projects
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build
-      supported-platforms: []
-  - name: fiori-projects-v2
-    type: html5
-    path: app/projects-odata-v2
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-workitems-alp
-    type: html5
-    path: app/workitems-alp
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-workitems
-    type: html5
-    path: app/workitems
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-workitems-iot
-    type: html5
-    path: app/workitems-iot
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-azdev-workitems
-    type: html5
-    path: app/azdev-workitems
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-  - name: fiori-single-planning-calendar
-    type: html5
-    path: app/single-planning-calendar
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
 
 resources:
   - name: project-planning-db
