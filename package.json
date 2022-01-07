@@ -58,7 +58,8 @@
         ]
     },
     "scripts": {
-        "start": "run-p start:srv start:app",
+        "start": "cds run",
+        "start:local": "run-p start:srv start:app",
         "start:srv": "cds run",
         "start:app": "ui5 serve --config=app/single-planning-calendar/ui5.yaml -p 8082",
         "start:approuter": "cd app/single-planning-calendar && npm run start",
