@@ -10,6 +10,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+    - task: NodeTool@0
+      displayName: Install Node.js 14.18.1
+      inputs:
+        versionSpec: 14.18.1
+
     - task: CmdLine@2
       displayName: Install Dependencies
       inputs:
