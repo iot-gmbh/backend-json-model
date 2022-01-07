@@ -6,11 +6,11 @@ parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
-  # before-all:
-  #   - builder: custom
-  #     commands:
-  #       - npm install --production
-  #       - npx -p @sap/cds-dk cds build --production
+  before-all:
+    - builder: custom
+      commands:
+        - npm install --production
+        - npx -p @sap/cds-dk cds build --production
   # - npm install --production
   # # use cds-dbm for building, not cds
   # - npx cds-dbm build --production
