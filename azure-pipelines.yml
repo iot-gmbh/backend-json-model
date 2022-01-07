@@ -18,7 +18,7 @@ steps:
     - task: CmdLine@2
       displayName: Install Dependencies
       inputs:
-        script: npm install -g mbt @ui5/cli
+        script: npm install -g mbt @ui5/cli ui5-task-zipper
 
     - task: CmdLine@2
       displayName: Build
