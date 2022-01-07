@@ -11,7 +11,7 @@
 	],
 	"main": "webapp/index.html",
 	"scripts": {
-		"start": "echo \"\\033[33mThis application was generated with a local metadata file and does not reference a live server. Please add the required server configuration or start this application with mock data using the target: npm run start-mock\"",
+		"start": "echo \" /033[33mThis application was generated with a local metadata file and does not reference a live server. Please add the required server configuration or start this application with mock data using the target: npm run start-mock\"",
 		"start-local": "fiori run --config ./ui5-local.yaml --open 'test/flpSandboxMockServer.html#projectsodatav2-tile'",
 		"start-noflp": "fiori run --open 'index.html'",
 		"build": "ui5 build -a --clean-dest --include-task=generateManifestBundle generateCachebusterInfo",

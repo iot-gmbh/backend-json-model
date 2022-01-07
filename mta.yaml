@@ -201,7 +201,7 @@ modules:
       supported-platforms: []
   - name: fiori-azdev-workitems
     type: html5
-    path: app\azdev-workitems
+    path: /azdev-workitems
     build-parameters:
       build-result: dist
       builder: custom
@@ -211,7 +211,7 @@ modules:
       supported-platforms: []
   - name: fiori-single-planning-calendar
     type: html5
-    path: app\single-planning-calendar
+    path: /single-planning-calendar
     build-parameters:
       build-result: dist
       builder: custom
