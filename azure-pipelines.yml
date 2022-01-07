@@ -28,5 +28,5 @@ steps:
     - task: PublishPipelineArtifact@1
       displayName: Publish Pipeline Artifact
       inputs:
-        path: $(Agent.BuildDirectory)/s/mta_archives/project_planning_1.0.1.mtar
+        path: $(Agent.BuildDirectory)/s/mta_archives/project-planning_1.0.1.mtar
         artifactName: ProjectPlanningMTA
