@@ -16,7 +16,6 @@
     },
     "devDependencies": {
         "@sap/approuter": "^9.1.0",
-        "@sap/ui5-builder-webide-extension": "1.0.x",
         "@sap/ux-ui5-tooling": "1",
         "@ui5/cli": "^2.10.1",
         "@ui5/fs": "^2.0.6",
@@ -26,7 +25,6 @@
     },
     "ui5": {
         "dependencies": [
-            "@sap/ui5-builder-webide-extension",
             "ui5-task-zipper",
             "mbt"
         ]

@@ -20,15 +20,11 @@
         "@sap/ux-ui5-tooling": "1",
         "rimraf": "3.0.2",
         "@sap/ux-specification": "latest",
-        "@sap/ui5-builder-webide-extension": "1.0.x",
-        "ui5-task-zipper": "^0.3.1",
-        "mbt": "^1.0.15"
+        "ui5-task-zipper": "^0.3.1"
     },
     "ui5": {
         "dependencies": [
-            "@sap/ui5-builder-webide-extension",
-            "ui5-task-zipper",
-            "mbt"
+            "ui5-task-zipper"
         ]
     }
 }

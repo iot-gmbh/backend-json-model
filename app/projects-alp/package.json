@@ -26,11 +26,9 @@
 		"@sap/ux-ui5-tooling": "1",
 		"ui5-task-zipper": "^0.3.1",
 		"@sap/ux-specification": "latest",
-		"@sap/ui5-builder-webide-extension": "1.0.x"
 	},
 	"ui5": {
 		"dependencies": [
-			"@sap/ui5-builder-webide-extension",
 			"@sap/ux-ui5-tooling",
 			"ui5-task-zipper"
 		]
