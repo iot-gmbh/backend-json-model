@@ -29,6 +29,7 @@
 	},
 	"ui5": {
 		"dependencies": [
+			"ui5-task-zipper",
 			"@sap/ux-ui5-tooling"
 		]
 	}
