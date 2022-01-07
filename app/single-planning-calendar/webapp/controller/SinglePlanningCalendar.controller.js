@@ -237,7 +237,7 @@ sap.ui.define(
 
           try {
             await this.remove({
-              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
               data: appointment,
             });
 
@@ -356,7 +356,7 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
+            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
             // const path = this.getModel("OData").createKey(
             //   "/MyWorkItems",
             //   appointment

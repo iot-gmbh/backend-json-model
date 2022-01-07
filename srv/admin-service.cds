@@ -37,7 +37,7 @@ service AdminService @(requires : 'authenticated-user') {
     entity UsersPerProject as projection on my.Users2Projects;
 
     @odata.draft.enabled
-    entity Customers       as projection on my.Customers where friendlyID != 'DELETED';
+    entity Customers       as projection on my.Customers;
 
     // @odata.draft.enabled
     @odata.create.enabled
