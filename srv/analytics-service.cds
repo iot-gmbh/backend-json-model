@@ -50,7 +50,7 @@ service AnalyticsService {
         workPackage,
         @Analytics.Dimension : true
         assignedTo,
-    };
+    } where deleted is null;
 
     entity Customers as projection on my.Customers;
     entity Projects  as projection on my.Projects;

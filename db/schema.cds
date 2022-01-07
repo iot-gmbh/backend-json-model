@@ -68,13 +68,13 @@ entity Projects : managed, cuid {
 
 entity Packages : managed, cuid {
     project      : Association to Projects;
-    title        : String @mandatory;
+    title        : String;
     IOTPackageID : String;
     description  : String;
 }
 
 entity WorkItems {
-    key ID                  : String;
+    key ID                  : String @odata.Type : 'Edm.String';
         activatedDate       : DateTime;
         activatedDateMonth  : Integer;
         activatedDateYear   : Integer;

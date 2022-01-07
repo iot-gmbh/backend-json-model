@@ -1,13 +1,5 @@
 using WorkItemsService as my from './workitems-service';
 
-annotate my.MyWorkItems with @(Capabilities.FilterRestrictions : {
-    RequiresFilter     : true,
-    RequiredProperties : [
-        activatedDate,
-        completedDate
-    ],
-});
-
 annotate my.IOTWorkItems with @(UI : {
     HeaderInfo          : {
         TypeName       : '{i18n>IOTWorkItem}',
@@ -45,10 +37,6 @@ annotate my.IOTWorkItems with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : Ende,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : P1,
         },
         {
             $Type : 'UI.DataField',

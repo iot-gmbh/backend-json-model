@@ -76,7 +76,6 @@ annotate my.WorkItems with @(UI : {
     });
 };
 
-
 @cds.odata.valuelist
 annotate my.Users with @(UI : {
     PresentationVariant : {
@@ -114,11 +113,11 @@ annotate my.Users with @(UI : {
             Label  : '{i18n>Users.teamMembers}',
             Target : 'teamMembers/@UI.LineItem'
         },
-        {
-            $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Users.projects}',
-            Target : 'projects/@UI.LineItem'
-        },
+        // {
+        //     $Type  : 'UI.ReferenceFacet',
+        //     Label  : '{i18n>Users.projects}',
+        //     Target : 'projects/@UI.LineItem'
+        // },
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Users.managedProjects}',
@@ -276,6 +275,11 @@ annotate my.Projects with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Classification}',
+            Target : '@UI.FieldGroup'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Projects.teamMembers}',
             Target : 'teamMembers/@UI.LineItem'
         },
@@ -299,9 +303,12 @@ annotate my.Projects with @(UI : {
         ],
     },
     Identification      : [
+        // title and description are only necessary for ODataV2 Elements
+        // => in V4 they are editable within the ObjectHeader
+        {Value : title},
+        {Value : description},
         {Value : customer_ID},
         {Value : manager_userPrincipalName},
-        {Value : IOTProjectID},
     ],
     SelectionFields     : [
         title,
@@ -349,56 +356,57 @@ annotate my.Projects with @(UI : {
 };
 
 @cds.odata.valuelist
-annotate my.Users2Projects with @(UI : {
-    PresentationVariant : {
-        $Type          : 'UI.PresentationVariantType',
-        SortOrder      : [{Property : user.displayName}],
-        Visualizations : ['@UI.LineItem'],
-        RequestAtLeast : [user.displayName]
-    },
-    HeaderInfo          : {
-        TypeName       : '{i18n>User2Project}',
-        TypeNamePlural : '{i18n>Users2Projects}',
-        Title          : {Value : user.displayName},
-        Description    : {Value : project.title},
-    },
-    Facets              : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>General}',
-        Target : '@UI.Identification'
-    }, ],
-    Identification      : [
-        {Value : user_userPrincipalName},
-        {Value : project_ID},
-    ],
-    SelectionFields     : [
-        user_userPrincipalName,
-        project_ID,
-    ],
-    LineItem            : [
-        {
-            $Type : 'UI.DataField',
-            Value : user_userPrincipalName,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : project_ID,
-        },
-    ]
-}) {
-    ID      @UI.Hidden;
-    project @(Common : {
-        Text         : {
-            $value                 : project.title,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-    user    @(Common : {
-        Text         : {
-            $value                 : user.displayName,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-};
+annotate my.Users2Projects;
+//  with @(UI : {
+//     PresentationVariant : {
+//         $Type          : 'UI.PresentationVariantType',
+//         SortOrder      : [{Property : user.displayName}],
+//         Visualizations : ['@UI.LineItem'],
+//         RequestAtLeast : [user.displayName]
+//     },
+//     HeaderInfo          : {
+//         TypeName       : '{i18n>User2Project}',
+//         TypeNamePlural : '{i18n>Users2Projects}',
+//         Title          : {Value : user.displayName},
+//         Description    : {Value : project.title},
+//     },
+//     Facets              : [{
+//         $Type  : 'UI.ReferenceFacet',
+//         Label  : '{i18n>General}',
+//         Target : '@UI.Identification'
+//     }, ],
+//     Identification      : [
+//         {Value : user_userPrincipalName},
+//         {Value : project_ID},
+//     ],
+//     SelectionFields     : [
+//         user_userPrincipalName,
+//         project_ID,
+//     ],
+//     LineItem            : [
+//         {
+//             $Type : 'UI.DataField',
+//             Value : user_userPrincipalName,
+//         },
+//         {
+//             $Type : 'UI.DataField',
+//             Value : project_ID,
+//         },
+//     ]
+// }) {
+//     ID      @UI.Hidden;
+//     project @(Common : {
+//         Text         : {
+//             $value                 : project.title,
+//             ![@UI.TextArrangement] : #TextOnly
+//         },
+//         FieldControl : #Mandatory
+//     });
+//     user    @(Common : {
+//         Text         : {
+//             $value                 : user.displayName,
+//             ![@UI.TextArrangement] : #TextOnly
+//         },
+//         FieldControl : #Mandatory
+//     });
+// };

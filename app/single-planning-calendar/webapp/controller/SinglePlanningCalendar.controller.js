@@ -10,6 +10,7 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "../model/legendItems",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
   ],
   function (
     BaseController,
@@ -18,7 +19,8 @@ sap.ui.define(
     formatter,
     JSONModel,
     legendItems,
-    MessageBox
+    MessageBox,
+    MessageToast
   ) {
     function addDays(date, days) {
       const result = new Date(date);
@@ -32,6 +34,12 @@ sap.ui.define(
       const diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
       return new Date(date.setDate(diff));
     }
+
+    const selectControlIDs = [
+      "customerSelect",
+      "projectSelect",
+      "packageSelect",
+    ];
 
     return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
@@ -53,6 +61,7 @@ sap.ui.define(
               const bc = dialog.getBindingContext();
               if (!bc) return [];
               const selected = bc.getProperty("customer_ID");
+              if (!selected) return [];
 
               return this.projects.filter(
                 ({ customer_ID }) => customer_ID === selected
@@ -63,6 +72,7 @@ sap.ui.define(
               const bc = dialog.getBindingContext();
               if (!bc) return [];
               const selected = bc.getProperty("project_ID");
+              if (!selected) return [];
 
               return this.workPackages.filter(
                 ({ project_ID }) => project_ID === selected
@@ -104,7 +114,17 @@ sap.ui.define(
 
             if (evt.ctrlKey) {
               if (
-                evt.keyCode == 13 &&
+                evt.keyCode === 13 &&
+                !this.byId("submitButton").getEnabled()
+              ) {
+                MessageToast.show(
+                  bundle.getText("appointmentDialog.invalidInput")
+                );
+                return;
+              }
+              if (
+                evt.keyCode === 13 &&
+                activeElementID &&
                 // Check the active element in order to prevent double-submit
                 !activeElementID.includes("submitButton")
               ) {
@@ -113,7 +133,10 @@ sap.ui.define(
               } else if (evt.keyCode === 46) {
                 evt.preventDefault();
 
-                const appointment = this.byId("createItemDialog")
+                const appointmentControl = sap.ui
+                  .getCore()
+                  .byId(activeElementID);
+                const appointment = appointmentControl
                   .getBindingContext()
                   .getObject();
 
@@ -123,15 +146,33 @@ sap.ui.define(
           });
         },
 
+        onAfterOpenDialog() {
+          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
+          this._refreshSelectControls();
+        },
+
+        _getSelectControls() {
+          return selectControlIDs.map((ID) => this.byId(ID));
+        },
+
+        _refreshSelectControls() {
+          this._getSelectControls().forEach((select) =>
+            select.getBinding("items").refresh()
+          );
+        },
+
         onSelectCustomer(event) {
-          const selectedCustomerFriendly = event
-            .getParameter("selectedItem")
+          const model = this.getModel();
+          const selectedItem = event.getParameter("selectedItem");
+          if (!selectedItem) return;
+
+          const selectedCustomerFriendly = selectedItem
             .getBindingContext()
             .getProperty("friendlyID");
 
           const path = event.getSource().getBindingContext().getPath();
 
-          this.getModel().setProperty(
+          model.setProperty(
             path + "/customer_friendlyID",
             selectedCustomerFriendly
           );
@@ -143,20 +184,26 @@ sap.ui.define(
 
         onPressAppointment(event) {
           const { appointment } = event.getParameters();
-          const path = appointment
-            ? appointment.getBindingContext().getPath()
-            : "/appointments/NEW";
 
-          this._bindAndOpenDialog(path);
+          if (appointment) {
+            this._bindAndOpenDialog(appointment.getBindingContext().getPath());
+          }
         },
 
-        async onAppointmentResize(event) {
+        async onEditAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const { startDate, endDate, appointment } = event.getParameters();
+          const { startDate, endDate, appointment, copy } =
+            event.getParameters();
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
-          const path = bindingContext.getPath();
+
+          let path = bindingContext.getPath();
+
+          if (copy) {
+            path = "/appointments/NEW";
+            model.setProperty("/appointments/NEW", appointment);
+          }
 
           model.setProperty(path + "/activatedDate", startDate);
           model.setProperty(path + "/completedDate", endDate);
@@ -190,7 +237,7 @@ sap.ui.define(
 
           try {
             await this.remove({
-              path: `/MyWorkItems('${encodeURIComponent(appointment.ID)}')`,
+              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
               data: appointment,
             });
 
@@ -234,6 +281,11 @@ sap.ui.define(
         },
 
         onCreateAppointment(event) {
+          this._createAppointment(event);
+          this._bindAndOpenDialog("/appointments/NEW");
+        },
+
+        _createAppointment(event) {
           const model = this.getModel();
           const { startDate, endDate } = event.getParameters();
           const appointment = {
@@ -242,8 +294,6 @@ sap.ui.define(
           };
 
           model.setProperty("/appointments/NEW", appointment);
-
-          this._bindAndOpenDialog("/appointments/NEW");
         },
 
         _bindAndOpenDialog(path) {
@@ -260,10 +310,6 @@ sap.ui.define(
           );
 
           dialog.bindElement(path);
-
-          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
-          model.refresh(true);
-
           dialog.open();
         },
 
@@ -276,6 +322,19 @@ sap.ui.define(
           let { appointments } = model.getData();
 
           model.setProperty("/dialogBusy", true);
+
+          const projectSelect = this.byId("projectSelect");
+          const packageSelect = this.byId("packageSelect");
+
+          appointment.project_ID =
+            projectSelect.getItems().length > 0
+              ? projectSelect.getSelectedKey()
+              : null;
+
+          appointment.workPackage_ID =
+            packageSelect.getItems().length > 0
+              ? packageSelect.getSelectedKey()
+              : null;
 
           try {
             const appointmentSync = await this._submitEntry(appointment);
@@ -297,7 +356,11 @@ sap.ui.define(
 
           // Update
           if (ID) {
-            const path = `/MyWorkItems('${encodeURIComponent(ID)}')`;
+            const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
+            // const path = this.getModel("OData").createKey(
+            //   "/MyWorkItems",
+            //   appointment
+            // );
 
             return this.update({
               path,
@@ -318,6 +381,8 @@ sap.ui.define(
 
           if (!appointment || !appointment.ID)
             this.getModel().setProperty("/appointments/NEW", {});
+
+          this.byId("createItemDialog").unbindElement();
         },
 
         onCloseDialog(event) {
@@ -358,6 +423,7 @@ sap.ui.define(
         async _loadAppointments() {
           const model = this.getModel();
           const calendar = this.byId("SPCalendar");
+          const appointmentsOld = model.getProperty("/appointments");
 
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
@@ -390,7 +456,10 @@ sap.ui.define(
             return map;
           }, {});
 
-          model.setProperty("/appointments", appointmentsMap);
+          model.setProperty("/appointments", {
+            ...appointmentsOld,
+            ...appointmentsMap,
+          });
         },
 
         async _loadCustomersAndProjects() {

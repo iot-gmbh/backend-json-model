@@ -11,9 +11,12 @@ sap.ui.define(["../model/legendItems"], (legendItems) => ({
 
   getIconURL(customerID) {
     if (!customerID) return undefined;
-    if (location.hostname.startsWith("localhost"))
-      return `./img/${customerID}.png`;
-    else
-      return `.iotprojectplanning.iot.singleplanningcalendar/img/${customerID}.png`;
+    return this.getOwnerComponent()
+      .getManifestObject()
+      .resolveUri(`./img/${customerID}.png`);
+    // return `./img/${customerID}.png`;
+    // if (location.hostname.startsWith("localhost"))
+    // else
+    //   return `iotprojectplanning.iot.singleplanningcalendar/img/${customerID}.png`;
   },
 }));

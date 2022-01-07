@@ -10,7 +10,7 @@
 		<App id="app" busy="{/busy}" busyIndicatorDelay="0">
 			<pages>
 				<Page showHeader="false">
-					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onAppointmentResize" appointmentDrop="onAppointmentResize" startDateChange="onStartDateChange" viewChange="onChangeView" cellPress="onCreateAppointment" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
+					<SinglePlanningCalendar id="SPCalendar" appointments="{/appointments}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
 						<actions>
 							<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 							<Button id="displayLegend" text="{i18n>displayLegend.button.text}" press="onDisplayLegend" tooltip="{i18n>displayLegend.button.tooltip}" />
@@ -19,7 +19,7 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog">
+							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog">
 								<customHeader>
 									<Bar>
 										<contentLeft>
@@ -41,13 +41,13 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" enabled="{= (${/projectsFiltered}.length > 1)}">
+									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}" enabled="{= ${/workPackagesFiltered}.length > 1}">
+									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

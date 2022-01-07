@@ -40,7 +40,7 @@
                     "title": "{{appTitle}}",
                     "subTitle": "{{appSubtitle}}",
                     "icon": "sap-icon://work-history",
-                    "indicatorDataSource": {
+                    "--indicatorDataSource": {
                         "dataSource": "mainService",
                         "path": "WorkItems/$count",
                         "refresh": 120

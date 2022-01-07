@@ -2,26 +2,61 @@ _schema-version: "3.1"
 ID: project-planning
 description: A simple CAP project.
 version: 1.0.1
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install --production
+        - npx -p @sap/cds-dk cds build --production
+        # - npm install --production
+        # # use cds-dbm for building, not cds
+        # - npx cds-dbm build --production
+        # Workaround by Gregor Wolf for resolving sapmachine and java jre problems: https://github.com/mikezaschka/cds-dbm/pull/33#issuecomment-931631564
+        # - npm run copy:db:template
+
 modules:
+  - name: project-planning-db-deployer
+    type: hdb
+    path: gen/db
+    build-parameters:
+      ignore: ["node_modules/"]
+    requires:
+      - name: project-planning-db
+
+  # - name: project-planning-pg-db-deployer
+  #   type: hdb
+  #   path: gen/db
+  #   parameters:
+  #     buildpacks:
+  #       [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
+  #     no-route: true
+  #     no-start: true
+  #     disk-quota: 2048MB
+  #     memory: 2048MB
+  #     tasks:
+  #       - name: deploy_to_postgresql
+  #         command: chmod 755 deploy.sh && ./deploy.sh
+  #         disk-quota: 2048MB
+  #         memory: 2048MB
+  #   build-parameters:
+  #     ignore: ["node_modules/"]
+  #   requires:
+  #     - name: project-planning-pg-db
+
   - name: project-planning-srv
     type: nodejs
     path: gen/srv
     requires:
-      - name: project-planning-hana-cloud-db
       - name: project-planning-uaa
       - name: project-planning-dest-service
+      - name: project-planning-db
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
-
-  - name: project-planning-hana-cloud-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: project-planning-hana-cloud-db
-    parameters:
-      buildpack: nodejs_buildpack
 
   - name: project-planning-content
     type: com.sap.application.content
@@ -40,6 +75,7 @@ modules:
     parameters:
       content:
         subaccount:
+          existing_destinations_policy: update
           destinations:
             - Name: project-planning-repo-host
               ServiceInstanceName: project-planning-repo-host-service
@@ -50,9 +86,9 @@ modules:
               ServiceInstanceName: project-planning-xsuaa-service
               ServiceKeyName: project-planning-uaa-key
               sap.cloud.service: iot.project.planner
-          existing_destinations_policy: update
     build-parameters:
       no-source: true
+
   - name: project-planning-ui-deployer
     type: com.sap.application.content
     path: .
@@ -76,8 +112,16 @@ modules:
           name: fiori-workitems
           target-path: resources/
         - artifacts:
+            - fiori-workitems-iot.zip
+          name: fiori-workitems-iot
+          target-path: resources/
+        - artifacts:
             - fiori-projects.zip
           name: fiori-projects
+          target-path: resources/
+        - artifacts:
+            - fiori-projects-v2.zip
+          name: fiori-projects-v2
           target-path: resources/
         - artifacts:
             - fiori-workitems-alp.zip
@@ -91,6 +135,7 @@ modules:
             - fiori-single-planning-calendar.zip
           name: fiori-single-planning-calendar
           target-path: resources/
+
   - name: fiori-customers
     type: html5
     path: app/customers
@@ -118,6 +163,15 @@ modules:
       commands:
         - npm run build
       supported-platforms: []
+  - name: fiori-projects-v2
+    type: html5
+    path: app/projects-odata-v2
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build:cf
+      supported-platforms: []
   - name: fiori-workitems-alp
     type: html5
     path: app/workitems-alp
@@ -130,6 +184,15 @@ modules:
   - name: fiori-workitems
     type: html5
     path: app/workitems
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build:cf
+      supported-platforms: []
+  - name: fiori-workitems-iot
+    type: html5
+    path: app/workitems-iot
     build-parameters:
       build-result: dist
       builder: custom
@@ -156,11 +219,14 @@ modules:
         - npm install
         - npm run build:cf
       supported-platforms: []
+
 resources:
-  - name: project-planning-hana-cloud-db
+  - name: project-planning-db
     type: com.sap.xs.hdi-container
     properties:
-      hdi-service-name: ${service-name}
+      hdi-container-name: ${service-name}-TEST
+    parameters:
+      service: hana
 
   - name: project-planning-dest-service
     type: org.cloudfoundry.managed-service
@@ -174,31 +240,34 @@ resources:
         version: 1.0.0
         HTML5Runtime_enabled: true
         init_data:
-          instance:
+          subaccount:
             existing_destinations_policy: update
             destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
+              - Name: project-planning-dest
+                Description: Project Planning OData Service
+                Authentication: NoAuthentication
                 ProxyType: Internet
                 Type: HTTP
-                URL: https://ui5.sap.com
-          # subaccount:
-          #   existing_destinations_policy: update
-          #   destinations:
-          #     - Name: project-planning-dest
-          #       Description: Project Planning OData Services
-          #       Type: HTTP
-          #       Authentication: NoAuthentication
-          #       ProxyType: Internet
-          #       URL: ~{srv-api/srv-url}
-          #       HTML5.DynamicDestination: true
-          #       ForwardAuthToken: true
+                URL: ~{srv-api/srv-url}
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+              - Name: MicrosoftGraphIOTGmbH
+                URL: https://graph.microsoft.com
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: OAuth2ClientCredentials
+                clientId: 9f12ec96-3b66-47e5-a010-d9cf0b09a8f9
+                tokenServiceURL: https://login.microsoftonline.com/d439e362-ecdf-4d78-8fed-86c7c639b131/oauth2/v2.0/token
+                scope: https://graph.microsoft.com/.default
+                clientSecret: # Enter client secret in BTP
+
   - name: project-planning-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
       service-name: project-planning-repo-host-service
       service-plan: app-host
+
   - name: project-planning-uaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -206,11 +275,3 @@ resources:
       service: xsuaa
       service-name: project-planning-xsuaa-service
       service-plan: application
-parameters:
-  deploy_mode: html5-repo
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
