@@ -7,10 +7,10 @@ parameters:
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    # - builder: custom
-    #   commands:
-    # - npm install --production
-    # - npx -p @sap/cds-dk cds build --production
+    - builder: custom
+      commands:
+        - npm install --production
+        - npx -p @sap/cds-dk cds build --production
     # - npm install --production
     # # use cds-dbm for building, not cds
     # - npx cds-dbm build --production
@@ -239,7 +239,7 @@ resources:
         HTML5Runtime_enabled: true
         init_data:
           subaccount:
-            existing_destinations_policy: update
+            existing_destinations_policy: ignore
             destinations:
               - Name: project-planning-dest
                 Description: Project Planning OData Service
