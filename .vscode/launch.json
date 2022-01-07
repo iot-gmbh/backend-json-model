@@ -5,18 +5,14 @@
       "name": "cds watch",
       "request": "launch",
       "type": "node-terminal",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
-      "command": "npm run start:lcl",
+      "command": "npm run start:local",
       "name": "app + srv",
       "request": "launch",
       "type": "node-terminal",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "Start workitems-alp Mock",
@@ -27,10 +23,7 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-mock"
-      ],
+      "runtimeArgs": ["run-script", "start-mock"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
@@ -45,14 +38,8 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-mock"
-      ],
-      "args": [
-        "--",
-        "${input:UI5Version}"
-      ],
+      "runtimeArgs": ["run-script", "start-mock"],
+      "args": ["--", "${input:UI5Version}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229
@@ -66,10 +53,7 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-local"
-      ],
+      "runtimeArgs": ["run-script", "start-local"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
@@ -84,10 +68,7 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-mock"
-      ],
+      "runtimeArgs": ["run-script", "start-mock"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
@@ -102,14 +83,8 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-mock"
-      ],
-      "args": [
-        "--",
-        "${input:UI5Version}"
-      ],
+      "runtimeArgs": ["run-script", "start-mock"],
+      "args": ["--", "${input:UI5Version}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229
@@ -123,10 +98,7 @@
       "windows": {
         "runtimeExecutable": "npm.cmd"
       },
-      "runtimeArgs": [
-        "run-script",
-        "start-local"
-      ],
+      "runtimeArgs": ["run-script", "start-local"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,

@@ -45,7 +45,7 @@ module.exports = async function (srv) {
       )}`,
     });
 
-    return value;
+    return value.map((val) => ({ ...val, id: encodeURIComponent(val.id) }));
   });
 
   srv.on("READ", "Users", async () => {
