@@ -86,7 +86,7 @@
     "cds": {
         "requires": {
             "db": {
-                "kind": "hana"
+                "kind": "sqlite"
             },
             "postgres": {
                 "dialect": "plain",
