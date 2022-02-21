@@ -1,0 +1,25 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "/v2/timetracking/(.*)$",
+      "target": "/v2/timetracking/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "/timetracking/(.*)$",
+      "target": "/timetracking/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
+    }
+  ]
+}

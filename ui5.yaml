@@ -1,0 +1,30 @@
+specVersion: "2.6"
+metadata:
+  name: iot-project-planning
+type: application
+resources:
+  configuration:
+    paths:
+      webapp: app
+framework:
+  name: SAPUI5
+  version: 1.84.0
+  libraries:
+    - name: sap.f
+    - name: sap.m
+    - name: sap.ui.comp
+    - name: sap.ui.core
+    - name: sap.ui.generic.app
+    - name: sap.ui.layout
+    - name: sap.ui.table
+    - name: sap.ushell
+    - name: sap.uxap
+    - name: themelib_sap_fiori_3
+server:
+  customMiddleware:
+    - name: ui5-middleware-simpleproxy
+      mountPath: /v2/timetracking/
+      afterMiddleware: compression
+      configuration:
+        removeETag: true
+        baseUri: http://localhost:4004/v2/timetracking/
