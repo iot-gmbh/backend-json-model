@@ -176,6 +176,7 @@ module.exports = cds.service.impl(async function () {
         .where(where)
         .orderBy(orderBy)
         .limit(limit),
+      // [],
       db.tx(req).run(req.query),
       MSGraphSrv.tx(req)
         .read("Events", columns)

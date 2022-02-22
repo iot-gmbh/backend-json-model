@@ -1,20 +1,25 @@
 {
-  "welcomeFile": "/index.html",
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "/v2/timetracking/(.*)$",
+      "source": "^/v2/timetracking/(.*)$",
       "target": "/v2/timetracking/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },
     {
-      "source": "/timetracking/(.*)$",
+      "source": "^/timetracking/(.*)$",
       "target": "/timetracking/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
+    },
+    {
+      "source": "^/index.html",
+      "target": "index.html",
+      "localDir": "./",
+      "authenticationType": "xsuaa"
     },
     {
       "source": "^/user-api(.*)",

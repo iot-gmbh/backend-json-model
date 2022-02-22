@@ -15,7 +15,7 @@
         "@sap/cds": "^5.8.1",
         "@sap/cds-odata-v2-adapter-proxy": "1.8.9",
         "@sap/xsenv": "3.2.0",
-        "@sap/xssec": "3.2.13",
+        "@sap/xssec": "^3.2.13",
         "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
         "@ui5/cli": "^2.14.6",
         "azure-devops-node-api": "^11.1.1",
@@ -60,7 +60,7 @@
         "start": "cds run",
         "start:all": "run-p start:srv start:approuter start:app",
         "start:srv": "cds run",
-        "start:app": "ui5 serve",
+        "start:app": "ui5 serve --config=ui5.yaml",
         "start:approuter": "node node_modules/@sap/approuter/approuter.js",
         "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
         "debug": "run-p start:srv start:app",
@@ -84,9 +84,14 @@
         "app"
     ],
     "cds": {
+        "auth": {
+            "passport": {
+                "strategy": "JWT"
+            }
+        },
         "requires": {
             "db": {
-                "kind": "sqlite"
+                "kind": "sql"
             },
             "postgres": {
                 "dialect": "plain",

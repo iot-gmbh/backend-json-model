@@ -95,6 +95,8 @@ sap.ui.define(
 
           this.setModel(model);
 
+          await this.getModel("OData").metadataLoaded();
+
           try {
             await Promise.all([
               this._loadAppointments(),
@@ -468,9 +470,10 @@ sap.ui.define(
           const model = this.getModel();
           const user = await this._getUserInfoService();
           // TODO: Mailadresse entfernen
-          const email = user
-            ? user.getEmail()
-            : "benedikt.hoelker@iot-online.de";
+          const email =
+            user && user.getEmail()
+              ? user.getEmail()
+              : "benedikt.hoelker@iot-online.de";
 
           const { results: allProjects } = await this.read({
             path: "/Users2Projects",
