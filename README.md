@@ -27,7 +27,7 @@ It contains these folders and files, following our recommended project layout:
 - Configure the .env file:
 
 ```.env
-AZURE_PERSONAL_ACCESS_TOKEN=ywu5maqh3skzvdrfacgbz3dsxcrvdwz2xaez2ugg3nxblubw2cpq
+AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN=ywu5maqh3skzvdrfacgbz3dsxcrvdwz2xaez2ugg3nxblubw2cpq
 
 MS_GRAPH_CLIENT_SECRET=RrIF3pAn-LMo52PjY~4_y7I~I3~7S.QiJ1
 ```

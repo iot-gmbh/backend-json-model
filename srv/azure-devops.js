@@ -1,6 +1,6 @@
 const azdev = require("azure-devops-node-api");
 const orgUrl = "https://dev.azure.com/iot-gmbh";
-const token = process.env.AZURE_PERSONAL_ACCESS_TOKEN;
+const token = process.env.AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN;
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const connection = new azdev.WebApi(orgUrl, authHandler);
 const AzDevProject = "IOT Projekte";
