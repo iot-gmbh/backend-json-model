@@ -40,6 +40,10 @@ It contains these folders and files, following our recommended project layout:
 
 ## Explanations
 
+### MS Graph
+
+- TODO: Ergänzung mit Link auf MSGraph API
+
 ### The app-router during development
 
 - The approuter is configured via [xs-app.json](./xs-app.json). It listens to all requests and routes them to the frontend-app or backend-destinations depending on the matched route. When you start the UI5-app a UI5-simple-proxy will re-route all backend-requests to the approuter-address (e.g. to http://localhost:5000). From there it will be routed to the CAP-Service (listening on http://localhost:4004). This mechanism guarantess that the JWT-token is passed to the backend while at the same time CORS-errors are prevented.
