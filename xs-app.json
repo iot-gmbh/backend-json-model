@@ -2,14 +2,28 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/v2/timetracking/(.*)$",
+      "source": "/v2/timetracking/(.*)$",
       "target": "/v2/timetracking/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },
     {
-      "source": "^/timetracking/(.*)$",
+      "source": "/v2/admin/(.*)$",
+      "target": "/v2/admin/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "/admin/(.*)$",
+      "target": "/admin/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "/timetracking/(.*)$",
       "target": "/timetracking/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
@@ -25,6 +39,11 @@
       "source": "^/user-api(.*)",
       "target": "$1",
       "service": "sap-approuter-userapi"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "localDir": "./app"
     }
   ]
 }
