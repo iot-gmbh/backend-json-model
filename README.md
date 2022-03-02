@@ -94,6 +94,6 @@ The approuter is configured via [xs-app.json](./xs-app.json). It listens to all 
 
 For analytic purposes, data can be analyzed with an analytic list page (see [/app/](/app/workitems-alp/)). This allows users to drill down through their work and derive reasoned decisions in the future.
 
-## Learn More
+# Learn More
 
 Learn more at https://cap.cloud.sap/docs/get-started/.
