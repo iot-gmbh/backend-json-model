@@ -20,7 +20,7 @@ It contains these folders and files, following our recommended project layout:
 - Create a `default-env.json` in the root folder of your project (download its contents after first deployment of the app): copy the content of the xsuaa-entry from the environment variables of the deployed OData-Service.
 - Configure the .env file with your secrets
 
-  ```.env
+  ``` dotenv
   AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN=***
 
   MS_GRAPH_CLIENT_SECRET=***
@@ -51,7 +51,7 @@ Further integrations (e.g. GitLab) are possible.
 
 Both existing integrations are used to provide unconfirmed work-items that are to be confirmed by the user. During the alpha-test (performed by employees of IOT GmbH) the MS Graph integration turned out to be an essential feature, whereas the Azure DevOps integration has not been used a lot. Anyhow in order to start the app, both integrations have to be configured: During development, the secrets for connecting to DevOps / MS Graph are stored in the `.env`-file in the root of the project:
 
-```.env
+``` dotenv
 AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN=***
 
 MS_GRAPH_CLIENT_SECRET=***
@@ -60,7 +60,7 @@ MS_GRAPH_CLIENT_SECRET=***
 For the deployed application, the secrets have to be provided differently:
 
 - The Azure DevOps secret is provided as a "User-Provided Variable" on the deployed service. Get the token by generating a new token with "READ" authorization for Issues.
-- The MS-Graph token needs to be entered for the destination "MicrosoftGraphIOTGmbH" (see mta.yaml) within the BTP-UI after the app has been deployed for the first time. Get the token by 
+- The MS-Graph token needs to be entered for the destination "MicrosoftGraphIOTGmbH" (see mta.yaml) within the BTP-UI after the app has been deployed for the first time. Get the token by creating tokens for the registered app (see the following linked blogpost).
 
 The Azure DevOps integration was inspired by [this blog post by Robert Ejipe](https://blogs.sap.com/2020/10/12/consuming-microsoft-365-api-in-the-cloud-application-programming-cap-model/). We are using [his library](https://github.com/sapmentors/cds-scp-api) for connecting to MS Graph.
 
