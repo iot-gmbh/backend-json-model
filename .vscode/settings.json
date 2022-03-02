@@ -3,5 +3,14 @@
     "**/.gitignore": true,
     "**/.git": true,
     "**/.vscode": true
-  }
+  },
+  "eslint.validate": [
+    "cds",
+    "csn",
+    "csv",
+    "csv",
+    "csv (semicolon)",
+    "tsv",
+    "tab"
+  ]
 }
