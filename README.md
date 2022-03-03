@@ -19,7 +19,7 @@ It contains these folders and files, following our recommended project layout:
 - You need to have an account (trial or productive) on SAP BTP
 - Install Cloud Foundry CLI. [This tutorial](https://developers.sap.com/tutorials/cp-cf-download-cli.html) shows you how to get it.
 - On top of that you'll need the SAP Multi-Apps plugin. [Get it here](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/27f3af39c2584d4ea8c15ba8c282fd75.html).
-- Create a `default-env.json` in the root folder of your project (download its contents after first deployment of the app): copy the content of the xsuaa-entry from the environment variables of the deployed OData-Service.
+- Create a `default-env.json` in the root folder of your project (download its contents after first deployment of the app): copy the content from the environment variables of the deployed OData-Service.
 - Configure the .env file with your secrets
 
   ```dotenv
