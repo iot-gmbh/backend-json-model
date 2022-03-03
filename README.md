@@ -74,6 +74,12 @@ The Azure DevOps integration was inspired by [this blog post by Robert Ejipe](ht
 
 For each integration there is a .cds-file and a respective .js-implementation (see [/srv/msgraph-service](/srv/msgraph-service.cds) or [/srv/azure-devops](/srv/azure-devops.cds)). Thus each integration is encapsulated in an (OData)-service respectively.
 
+# Work-items
+
+Each unit of work is documented through a "work-item". A work-item allocates a duration of work, carried out by an employee to a project and thus to a customer. Work-items come from different sources: either your O365 calendar (=> MS Graph integration) or your Azure DevOps board (=> DevOps integration) or you create an entirely new work-item.
+
+Work-items from an integration will be shown as a proposal (expressed through dotted-lines) in the single-planning-calendar. When a user confirms them and allocates them to the project-hierarchy, a reference to the work-item and its allocation will be persisted. The CRUD-functionality for work-items (see [/srv/timetracking-service.cds](/srv/timetracking-service.cds)) is overwriting the standard-functionality.
+
 # Technical Explanations
 
 ## Databases
