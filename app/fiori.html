@@ -11,12 +11,84 @@
       window["sap-ushell-config"] = {
         defaultRenderer: "fiori2",
         applications: {
-          "Calendar-plan": {
-            title: "Single Planning Calendar",
+          "AzDevOpsWorkItem-display": {
+            title: "Display Azure DevOps Work Items",
+            additionalInformation:
+              "SAPUI5.Component=iot.azdevworkitems",
+            applicationType: "URL",
+            url: "/azdev-workitems/webapp",
+            navigationMode: "embedded",
+          },
+          "Customers-display": {
+            title: "Display Customers",
+            additionalInformation:
+              "SAPUI5.Component=iot.customers",
+            applicationType: "URL",
+            url: "/customers/webapp",
+            navigationMode: "embedded",
+          },
+          "Projects-display": {
+            title: "Display Projects",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.projects",
+            applicationType: "URL",
+            url: "/projects/webapp",
+            navigationMode: "embedded",
+          },
+          "Projects-analyze": {
+            title: "Analyze Projects",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.projectsalp",
+            applicationType: "URL",
+            url: "/projects-alp/webapp",
+            navigationMode: "embedded",
+          },
+          "ProjectsV2-display": {
+            title: "Display Projects (ODATA V2)",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.projectsodatav2",
+            applicationType: "URL",
+            url: "/projects-odata-v2/webapp",
+            navigationMode: "embedded",
+          },
+          "SinglePlanningCalendar-manage": {
+            title: "Manage Calendar",
             additionalInformation:
               "SAPUI5.Component=iot.singleplanningcalendar",
             applicationType: "URL",
             url: "/single-planning-calendar/webapp",
+            navigationMode: "embedded",
+          },
+          "Users-display": {
+            title: "Display users",
+            additionalInformation:
+              "SAPUI5.Component=iot.project.planner.users",
+            applicationType: "URL",
+            url: "/users/webapp",
+            navigationMode: "embedded",
+          },
+          "WorkItems-display": {
+            title: "Display Work Items",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.workitems",
+            applicationType: "URL",
+            url: "/workitems/webapp",
+            navigationMode: "embedded",
+          },
+          "WorkItemsALP-analyze": {
+            title: "Analyze Work Items",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.workitemsalp",
+            applicationType: "URL",
+            url: "/workitems-alp/webapp",
+            navigationMode: "embedded",
+          },
+          "IOTWorkItems-display": {
+            title: "Display IOT Work Items",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.workitems",
+            applicationType: "URL",
+            url: "/workitems-iot/webapp",
             navigationMode: "embedded",
           },
         },
@@ -34,7 +106,6 @@
       data-sap-ui-compatVersion="edge"
       data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
       data-sap-ui-async="true"
-      data-sap-ui-preload="async"
       data-sap-ui-frameOptions="trusted"
     ></script>
     <script>
