@@ -46,6 +46,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "npm-run-all": "^4.1.5",
+    "open-cli": "^7.0.1",
     "sqlite3": "^5.0.2",
     "ui5-middleware-simpleproxy": "^0.7.6",
     "ui5-task-zipper": "^0.4.7"
@@ -59,9 +60,12 @@
   "scripts": {
     "start": "cds run",
     "start:all": "run-p start:srv start:approuter start:app",
+    "start:all:auth:display": "run-p start:srv start:approuter start:app start:auth display:app",
     "start:srv": "cds run",
-    "start:app": "ui5 serve -o fiori.html --config=ui5.yaml",
+    "start:app": "ui5 serve --config=ui5.yaml",
     "start:approuter": "node node_modules/@sap/approuter/approuter.js",
+    "start:auth": "open-cli http://localhost:5000",
+    "display:app": "ui5 serve -o fiori.html",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "debug": "run-p start:srv start:app",
     "build": "mbt build",
