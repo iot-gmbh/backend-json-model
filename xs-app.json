@@ -2,6 +2,13 @@
   "authenticationMethod": "route",
   "routes": [
     {
+      "source": "/v2/analytics/(.*)$",
+      "target": "/v2/analytics/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
       "source": "/v2/timetracking/(.*)$",
       "target": "/v2/timetracking/$1",
       "destination": "project-planning-dest",
@@ -16,6 +23,13 @@
       "csrfProtection": false
     },
     {
+      "source": "/azure-devops/(.*)$",
+      "target": "/azure-devops/$1",
+      "destination": "project-planning-dest",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
       "source": "/admin/(.*)$",
       "target": "/admin/$1",
       "destination": "project-planning-dest",
@@ -23,8 +37,8 @@
       "csrfProtection": false
     },
     {
-      "source": "/timetracking/(.*)$",
-      "target": "/timetracking/$1",
+      "source": "/workitems/(.*)$",
+      "target": "/workitems/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",
       "csrfProtection": false

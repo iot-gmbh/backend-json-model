@@ -5,7 +5,7 @@
         "service": "iot.project.planner"
     },
     "sap.app": {
-        "id": "iot.project.planner.azdevworkitems",
+        "id": "iot.planner.azdevworkitems",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
