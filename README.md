@@ -28,7 +28,7 @@ It contains these folders and files, following our recommended project layout:
   MS_GRAPH_CLIENT_SECRET=***
   ```
 
-  For Azure Devops generate an access token with (TODO: which scope?). Follow [this blog post by Robert Ejipe](https://blogs.sap.com/2020/10/12/consuming-microsoft-365-api-in-the-cloud-application-programming-cap-model/) in order to connect to MS Graph (see ).
+  For Azure Devops generate an access token with READ-authorizations for issues / work-items. Follow [this blog post by Robert Ejipe](https://blogs.sap.com/2020/10/12/consuming-microsoft-365-api-in-the-cloud-application-programming-cap-model/) in order to connect to MS Graph (see ).
 
 # Getting started
 
@@ -76,9 +76,9 @@ For each integration there is a .cds-file and a respective .js-implementation (s
 
 # Work-items
 
-Each unit of work is documented through a "work-item". A work-item allocates a duration of work, carried out by an employee to a project and thus to a customer. Work-items come from different sources: either your O365 calendar (=> MS Graph integration) or your Azure DevOps board (=> DevOps integration) or you create an entirely new work-item.
+Each unit of work is documented through a "work-item". A work-item documents a duration of work, carried out by an employee and allocates it to a project and a customer consequently. Work-items come from different sources: either your O365 calendar (=> MS Graph integration) or your Azure DevOps board (=> DevOps integration) or you create an entirely new work-item.
 
-Work-items from an integration will be shown as a proposal (expressed through dotted-lines) in the single-planning-calendar. When a user confirms them and allocates them to the project-hierarchy, a reference to the work-item and its allocation will be persisted. The CRUD-functionality for work-items (see [/srv/timetracking-service.cds](/srv/timetracking-service.cds)) is overwriting the standard-functionality.
+Work-items from an integration will be shown as a proposal (expressed through dotted-lines) in the single-planning-calendar. When a user confirms them and allocates them to the project-hierarchy, a reference to the work-item and its allocation will be persisted. The work-item will appear in a straight line after it has been confirmed. The CRUD-functionality for work-items (see [/srv/timetracking-service.cds](/srv/timetracking-service.cds)) is overwriting the standard-functionality.
 
 # Technical Explanations
 

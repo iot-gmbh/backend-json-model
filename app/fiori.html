@@ -13,36 +13,33 @@
         applications: {
           "AzDevOpsWorkItem-display": {
             title: "Display Azure DevOps Work Items",
-            additionalInformation:
-              "SAPUI5.Component=iot.azdevworkitems",
+            additionalInformation: "SAPUI5.Component=iot.azdevworkitems",
             applicationType: "URL",
             url: "/azdev-workitems/webapp",
             navigationMode: "embedded",
           },
           "Customers-display": {
             title: "Display Customers",
-            additionalInformation:
-              "SAPUI5.Component=iot.customers",
+            additionalInformation: "SAPUI5.Component=iot.customers",
             applicationType: "URL",
             url: "/customers/webapp",
             navigationMode: "embedded",
           },
           "Projects-display": {
             title: "Display Projects",
-            additionalInformation:
-              "SAPUI5.Component=iot.planner.projects",
+            additionalInformation: "SAPUI5.Component=iot.planner.projects",
             applicationType: "URL",
             url: "/projects/webapp",
             navigationMode: "embedded",
           },
-          "Projects-analyze": {
-            title: "Analyze Projects",
-            additionalInformation:
-              "SAPUI5.Component=iot.planner.projectsalp",
-            applicationType: "URL",
-            url: "/projects-alp/webapp",
-            navigationMode: "embedded",
-          },
+          // Don't use this one, as its annotations are faulty and there is no requirement for this app
+          // "Projects-analyze": {
+          //   title: "Analyze Projects",
+          //   additionalInformation: "SAPUI5.Component=iot.planner.projectsalp",
+          //   applicationType: "URL",
+          //   url: "/projects-alp/webapp",
+          //   navigationMode: "embedded",
+          // },
           "ProjectsV2-display": {
             title: "Display Projects (ODATA V2)",
             additionalInformation:
@@ -61,32 +58,28 @@
           },
           "Users-display": {
             title: "Display users",
-            additionalInformation:
-              "SAPUI5.Component=iot.project.planner.users",
+            additionalInformation: "SAPUI5.Component=iot.project.planner.users",
             applicationType: "URL",
             url: "/users/webapp",
             navigationMode: "embedded",
           },
           "WorkItems-display": {
             title: "Display Work Items",
-            additionalInformation:
-              "SAPUI5.Component=iot.planner.workitems",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitems",
             applicationType: "URL",
-            url: "/workitems/webapp",
+            url: "/workitems-display/webapp",
             navigationMode: "embedded",
           },
           "WorkItemsALP-analyze": {
             title: "Analyze Work Items",
-            additionalInformation:
-              "SAPUI5.Component=iot.planner.workitemsalp",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitemsalp",
             applicationType: "URL",
             url: "/workitems-alp/webapp",
             navigationMode: "embedded",
           },
           "IOTWorkItems-display": {
             title: "Display IOT Work Items",
-            additionalInformation:
-              "SAPUI5.Component=iot.planner.workitems",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitems",
             applicationType: "URL",
             url: "/workitems-iot/webapp",
             navigationMode: "embedded",
@@ -99,6 +92,8 @@
       id="sap-ushell-bootstrap"
       src="https://sapui5.hana.ondemand.com/test-resources/sap/ushell/bootstrap/sandbox.js"
     ></script>
+    <!-- CDN -->
+    <!-- src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js" -->
     <script
       id="sap-ui-bootstrap"
       src="resources/sap-ui-core.js"
