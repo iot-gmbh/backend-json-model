@@ -23,7 +23,7 @@ module.exports = async function (srv) {
   srv.on("READ", "Events", async (req) => {
     const user = process.env.NODE_ENV
       ? req.user.id
-      : "benedikt.hoelker@iot-online.de";
+      : "daniel.mextorf@iot-online.de";
 
     const query = parseQueryParams(req.query.SELECT);
     const queryString = Object.entries(query)
