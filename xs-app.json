@@ -37,7 +37,7 @@
       "csrfProtection": false
     },
     {
-      "source": "/workitems/(.*)$",
+      "source": "/work-items/(.*)$",
       "target": "/work-items/$1",
       "destination": "project-planning-dest",
       "authenticationType": "xsuaa",

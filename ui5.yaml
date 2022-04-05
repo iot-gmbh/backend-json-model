@@ -61,8 +61,8 @@ server:
         removeETag: true
         baseUri: http://localhost:5000/azure-devops/
     - name: ui5-middleware-simpleproxy
-      mountPath: "*/workitems/"
+      mountPath: "*/work-items/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/workitems/
+        baseUri: http://localhost:5000/work-items/

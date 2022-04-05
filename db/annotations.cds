@@ -19,6 +19,8 @@ annotate my.WorkItems with @(UI : {
         {Value : project_ID, },
         {Value : activatedDate},
         {Value : completedDate, },
+        {Value : invoiceRelevance},
+        {Value : workPackage.invoiceRelevance},
     ],
     SelectionFields     : [
         title,
@@ -26,7 +28,9 @@ annotate my.WorkItems with @(UI : {
         customer_ID,
         project_ID,
         activatedDate,
-        completedDate
+        completedDate,
+        invoiceRelevance,
+        parentInvoiceRelevance,
     ],
     LineItem            : [
         {
@@ -56,6 +60,14 @@ annotate my.WorkItems with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : completedDate,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : parentInvoiceRelevance,
         },
     ]
 }) {
@@ -182,6 +194,10 @@ annotate my.Customers with @(UI : {
             $Type : 'UI.DataField',
             Value : friendlyID,
         },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
     ],
     Facets              : [
         {
@@ -227,6 +243,8 @@ annotate my.Packages with @(UI : {
         {Value : title},
         {Value : description},
         {Value : IOTPackageID},
+        {Value : invoiceRelevance},
+        {Value : project.invoiceRelevance},
     ],
     SelectionFields     : [
         title,
@@ -244,6 +262,14 @@ annotate my.Packages with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : IOTPackageID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : parentInvoiceRelevance,
         },
     ]
 }) {
@@ -300,6 +326,8 @@ annotate my.Projects with @(UI : {
         Data  : [
             {Value : friendlyID},
             {Value : IOTProjectID},
+            {Value : invoiceRelevance},
+            {Value : parentInvoiceRelevance},
         ],
     },
     Identification      : [
@@ -314,7 +342,9 @@ annotate my.Projects with @(UI : {
         title,
         description,
         customer_ID,
-        manager_userPrincipalName
+        manager_userPrincipalName,
+        invoiceRelevance,
+        parentInvoiceRelevance
     ],
     LineItem            : [
         {
@@ -342,6 +372,14 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : IOTProjectID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : parentInvoiceRelevance,
         },
     ]
 }) {
