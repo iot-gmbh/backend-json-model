@@ -184,6 +184,13 @@ annotate my.Customers with @(UI : {
         Label : '{i18n>Classification}',
         Data  : [{Value : friendlyID}],
     },
+    DataPoint #invoiceRelevance: {
+        $Type : 'UI.DataPointType',
+        Value : invoiceRelevance,
+        Title : '{i18n>invoiceRelevance}',
+        MinimumValue : 0.0,
+        MaximumValue : 1.0,
+    },
     SelectionFields     : [name, ],
     LineItem            : [
         {
@@ -209,6 +216,11 @@ annotate my.Customers with @(UI : {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Identification}',
             Target : '@UI.FieldGroup'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Customers.invoiceRelevance}',
+            Target : '@UI.DataPoint#invoiceRelevance' 
         },
         {
             $Type  : 'UI.ReferenceFacet',
