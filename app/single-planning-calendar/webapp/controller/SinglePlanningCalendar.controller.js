@@ -91,7 +91,6 @@ sap.ui.define(
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
-          model.setProperty("/busy", true);
 
           this.setModel(model);
 
@@ -105,8 +104,6 @@ sap.ui.define(
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
-
-          model.setProperty("/busy", false);
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -428,9 +425,10 @@ sap.ui.define(
           const model = this.getModel();
           const calendar = this.byId("SPCalendar");
           const appointmentsOld = model.getProperty("/appointments");
-
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
+
+          model.setProperty("/busy", true);
 
           const { results: appointments } = await this.read({
             path: "/MyWorkItems",
@@ -464,11 +462,15 @@ sap.ui.define(
             ...appointmentsOld,
             ...appointmentsMap,
           });
+
+          model.setProperty("/busy", false);
         },
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
           const user = await this._getUserInfoService();
+
+          model.setProperty("/busy", true);
           // TODO: Mailadresse entfernen
           const email =
             user && user.getEmail()
@@ -502,6 +504,7 @@ sap.ui.define(
           ]);
           model.setProperty("/projects", projects);
           model.setProperty("/workPackages", workPackages);
+          model.setProperty("/busy", false);
         },
 
         _getUserInfoService: function () {
