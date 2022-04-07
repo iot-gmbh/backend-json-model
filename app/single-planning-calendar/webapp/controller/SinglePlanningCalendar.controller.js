@@ -423,12 +423,12 @@ sap.ui.define(
 
         async _loadAppointments() {
           const model = this.getModel();
-          model.setProperty("/busy", true);
           const calendar = this.byId("SPCalendar");
           const appointmentsOld = model.getProperty("/appointments");
-
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
+
+          model.setProperty("/busy", true);
 
           const { results: appointments } = await this.read({
             path: "/MyWorkItems",
@@ -468,8 +468,9 @@ sap.ui.define(
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
-          model.setProperty("/busy", true);
           const user = await this._getUserInfoService();
+
+          model.setProperty("/busy", true);
           // TODO: Mailadresse entfernen
           const email =
             user && user.getEmail()
