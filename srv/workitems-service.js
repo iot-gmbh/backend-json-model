@@ -25,6 +25,7 @@ module.exports = cds.service.impl(async function () {
       Teilprojekt: itm.Teilprojekt,
       Arbeitspaket: itm.Arbeitspaket,
       Taetigkeit: itm.Taetigkeit,
+      Nutzer: itm.Nutzer,
       Einsatzort: itm.Einsatzort,
       P2: itm.P2,
       Bemerkung: itm.Bemerkung,
