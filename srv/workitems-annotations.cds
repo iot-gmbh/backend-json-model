@@ -23,6 +23,7 @@ annotate my.IOTWorkItems with @(UI : {
         Teilprojekt,
         Arbeitspaket,
         Taetigkeit,
+        Nutzer,
         Bemerkung
     ],
     LineItem            : [
@@ -53,6 +54,10 @@ annotate my.IOTWorkItems with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : Taetigkeit,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Nutzer,
         },
         {
             $Type : 'UI.DataField',

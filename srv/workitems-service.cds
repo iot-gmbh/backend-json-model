@@ -55,10 +55,9 @@ service WorkItemsService @(requires : 'authenticated-user') {
         workPackage.IOTPackageID as Teilprojekt : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
         '' as Arbeitspaket                      : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
         'Durchführung' as Taetigkeit            : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
+        assignedTo.userPrincipalName as Nutzer  : String @(title : '{i18n>IOTWorkItems.Nutzer}'),
         'GE' as Einsatzort                      : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
         title as Bemerkung                      : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
-        @UI.Hidden
-        assignedTo.userPrincipalName as assignedToUserPrincipalName,
         @UI.Hidden
         assignedTo.manager.userPrincipalName as managerUserPrincipalName,
     } where deleted is null;
@@ -66,7 +65,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     /*
     IOT Projektaufschreibung
 
-    Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Einsatzort | Bemerkung
+    Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
      */
 
     entity Users      as projection on my.Users {
