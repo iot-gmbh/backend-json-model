@@ -15,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "workitems/",
+                "uri": "work-items/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"
