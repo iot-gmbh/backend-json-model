@@ -1,4 +1,4 @@
-using WorkItemsService as my from './workitems-service';
+using WorkItemsService as my from './work-items-service';
 
 annotate my.IOTWorkItems with @(UI : {
     HeaderInfo          : {

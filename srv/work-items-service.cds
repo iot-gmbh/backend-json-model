@@ -47,7 +47,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     ])                as projection on my.WorkItems {
         activatedDate as Datum                  : String @(title : '{i18n>IOTWorkItems.Datum}'),
         completedDate as DatumBis               : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-        // Casting findet in workitems-service.js statt (mittels moment.js)
+        // Casting findet in work-items-service.js statt (mittels moment.js)
         '' as Beginn                            : String @(title : '{i18n>IOTWorkItems.Beginn}'),
         '' as Ende                              : String @(title : '{i18n>IOTWorkItems.Ende}'),
         '' as P1                                : String @(title : '{i18n>IOTWorkItems.P1}'),
