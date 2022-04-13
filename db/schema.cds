@@ -58,6 +58,7 @@ entity Projects : managed, cuid {
   IOTProjectID           : String;
   manager                : Association to Users;
   customer_friendlyID    : String;
+  testRelevance          : Decimal;
   invoiceRelevance       : Decimal;
   parentInvoiceRelevance : Decimal;
   customer               : Association to Customers;

@@ -19,8 +19,6 @@ annotate my.WorkItems with @(UI : {
         {Value : project_ID, },
         {Value : activatedDate},
         {Value : completedDate, },
-        {Value : invoiceRelevance},
-        {Value : workPackage.invoiceRelevance},
     ],
     SelectionFields     : [
         title,
@@ -255,12 +253,11 @@ annotate my.Packages with @(UI : {
         {Value : title},
         {Value : description},
         {Value : IOTPackageID},
-        {Value : invoiceRelevance},
-        {Value : project.invoiceRelevance},
     ],
     SelectionFields     : [
         title,
-        description
+        description,
+        parentInvoiceRelevance
     ],
     LineItem            : [
         {
