@@ -77,6 +77,6 @@ service WorkItemsService @(requires : 'authenticated-user') {
     } where friendlyID != 'DELETED';
 
     entity Customers  as projection on my.Customers where friendlyID != 'DELETED';
-    entity MyPackages as projection on my.Packages;
+    entity MyPackages as projection on my.PackagesDB;
 // entity AzDevPackages  as projection on AzDevOps.Packages;
 };

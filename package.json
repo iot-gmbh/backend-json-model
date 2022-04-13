@@ -107,7 +107,7 @@
     },
     "requires": {
       "db": {
-        "kind": "sql"
+        "kind": "sqlite"
       },
       "postgres": {
         "dialect": "plain",

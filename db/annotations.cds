@@ -231,7 +231,7 @@ annotate my.Customers with @(UI : {
 }
 
 @cds.odata.valuelist
-annotate my.Packages with @(UI : {
+annotate my.PackagesDB with @(UI : {
     PresentationVariant : {
         $Type          : 'UI.PresentationVariantType',
         SortOrder      : [{Property : title}],

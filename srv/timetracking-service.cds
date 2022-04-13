@@ -16,6 +16,6 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
     entity Customers      as projection on my.Customers;
     entity Projects       as projection on my.Projects;
-    entity Packages       as projection on my.Packages;
+    entity Packages       as projection on my.PackagesDB;
     entity Users2Projects as projection on my.Users2Projects;
 }

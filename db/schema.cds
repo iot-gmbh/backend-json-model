@@ -62,7 +62,7 @@ entity Projects : managed, cuid {
   invoiceRelevance       : Decimal;
   parentInvoiceRelevance : Decimal;
   customer               : Association to Customers;
-  workPackages           : Composition of many Packages
+  workPackages           : Composition of many PackagesDB
                              on workPackages.project = $self;
   teamMembers            : Composition of many Users2Projects
                              on teamMembers.project = $self;
@@ -70,7 +70,7 @@ entity Projects : managed, cuid {
                              on workItems.project = $self;
 }
 
-entity Packages : managed, cuid {
+entity PackagesDB : managed, cuid {
   project                : Association to Projects;
   title                  : String;
   IOTPackageID           : String;
@@ -116,7 +116,7 @@ entity WorkItems {
       project_friendlyID     : String;
       project                : Association to Projects;
       projectTitle           : String;
-      workPackage            : Association to Packages;
+      workPackage            : Association to PackagesDB;
       ticket                 : String;
       type                   : String enum {
         Manual;
