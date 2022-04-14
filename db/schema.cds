@@ -40,9 +40,12 @@ entity Users2Projects : cuid, managed {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-  friendlyID       : String @mandatory;
+  friendlyID       : String  @mandatory;
   name             : String;
-  invoiceRelevance : Decimal;
+  invoiceRelevance : Decimal @assert.range : [
+    0,
+    1
+  ];
   projects         : Association to many Projects
                        on projects.customer = $self;
 }
@@ -52,79 +55,86 @@ entity Customers : managed, cuid {
   friendlyID
 ]}
 entity Projects : managed, cuid {
-  friendlyID             : String @mandatory;
-  title                  : String @mandatory;
-  description            : String;
-  IOTProjectID           : String;
-  manager                : Association to Users;
-  customer_friendlyID    : String;
-  testRelevance          : Decimal;
-  invoiceRelevance       : Decimal;
-  parentInvoiceRelevance : Decimal;
-  customer               : Association to Customers;
-  workPackages           : Composition of many PackagesDB
-                             on workPackages.project = $self;
-  teamMembers            : Composition of many Users2Projects
-                             on teamMembers.project = $self;
-  workItems              : Association to many WorkItems
-                             on workItems.project = $self;
+  friendlyID          : String  @mandatory;
+  title               : String  @mandatory;
+  description         : String;
+  IOTProjectID        : String;
+  manager             : Association to Users;
+  customer_friendlyID : String;
+  invoiceRelevance    : Decimal @assert.range : [
+    0,
+    1
+  ];
+  customer            : Association to Customers;
+  workPackages        : Composition of many Packages
+                          on workPackages.project = $self;
+  teamMembers         : Composition of many Users2Projects
+                          on teamMembers.project = $self;
+  workItems           : Association to many WorkItems
+                          on workItems.project = $self;
 }
 
-entity PackagesDB : managed, cuid {
-  project                : Association to Projects;
-  title                  : String;
-  IOTPackageID           : String;
-  description            : String;
-  invoiceRelevance       : Decimal;
-  parentInvoiceRelevance : Decimal;
-
+entity Packages : managed, cuid {
+  project          : Association to Projects;
+  workItems        : Association to many WorkItems
+                       on workItems.workPackage = $self;
+  title            : String;
+  IOTPackageID     : String;
+  description      : String;
+  invoiceRelevance : Decimal @assert.range : [
+    0,
+    1
+  ];
 }
 
-entity WorkItems {
-  key ID                     : String @odata.Type : 'Edm.String';
-      activatedDate          : DateTime;
-      activatedDateMonth     : Integer;
-      activatedDateYear      : Integer;
-      activatedDateDay       : Integer;
-      completedDate          : DateTime;
-      completedDateMonth     : Integer;
-      completedDateYear      : Integer;
-      completedDateDay       : Integer;
-      assignedTo             : Association to Users;
-      changedDate            : DateTime;
-      assignedToName         : String;
-      createdDate            : DateTime;
-      reason                 : String;
-      state                  : String;
-      teamProject            : String;
-      title                  : String;
-      workItemType           : String;
-      // Scheduling
-      completedWork          : Decimal;
-      remainingWork          : Decimal;
-      originalEstimate       : Decimal;
-      // Documentation
-      resolvedDate           : DateTime;
-      closedDate             : DateTime;
-      customer_friendlyID    : String;
-      customer               : Association to Customers;
-      customerName           : String;
-      private                : Boolean;
-      invoiceRelevance       : Decimal;
-      parentInvoiceRelevance : Decimal;
-      // Custom
-      project_friendlyID     : String;
-      project                : Association to Projects;
-      projectTitle           : String;
-      workPackage            : Association to PackagesDB;
-      ticket                 : String;
-      type                   : String enum {
-        Manual;
-        Event;
-        WorkItem
-      };
-      duration               : Decimal;
-      resetEntry             : Boolean;
-      deleted                : Boolean;
-      confirmed              : Boolean;
+
+entity WorkItems : cuid {
+  //key ID                     : String @odata.Type : 'Edm.String';
+  activatedDate       : DateTime;
+  activatedDateMonth  : Integer;
+  activatedDateYear   : Integer;
+  activatedDateDay    : Integer;
+  completedDate       : DateTime;
+  completedDateMonth  : Integer;
+  completedDateYear   : Integer;
+  completedDateDay    : Integer;
+  assignedTo          : Association to Users;
+  changedDate         : DateTime;
+  assignedToName      : String;
+  createdDate         : DateTime;
+  reason              : String;
+  state               : String;
+  teamProject         : String;
+  title               : String;
+  workItemType        : String;
+  // Scheduling
+  completedWork       : Decimal;
+  remainingWork       : Decimal;
+  originalEstimate    : Decimal;
+  // Documentation
+  resolvedDate        : DateTime;
+  closedDate          : DateTime;
+  customer_friendlyID : String;
+  customer            : Association to Customers;
+  customerName        : String;
+  private             : Boolean;
+  invoiceRelevance    : Decimal @assert.range : [
+    0,
+    1
+  ];
+  // Custom
+  project_friendlyID  : String;
+  project             : Association to Projects;
+  projectTitle        : String;
+  workPackage         : Association to Packages;
+  ticket              : String;
+  type                : String enum {
+    Manual;
+    Event;
+    WorkItem
+  };
+  duration            : Decimal;
+  resetEntry          : Boolean;
+  deleted             : Boolean;
+  confirmed           : Boolean;
 };

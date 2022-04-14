@@ -27,6 +27,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
         * , assignedTo.userPrincipalName as assignedToUserPrincipalName, assignedTo.manager.userPrincipalName as managerUserPrincipalName,
     } where deleted is null
 
+    @cds.redirection.target : true
     entity IOTWorkItems                                  @(restrict : [
         {
             grant : 'READ',
@@ -77,6 +78,8 @@ service WorkItemsService @(requires : 'authenticated-user') {
     } where friendlyID != 'DELETED';
 
     entity Customers  as projection on my.Customers where friendlyID != 'DELETED';
-    entity MyPackages as projection on my.PackagesDB;
+    entity MyPackages as projection on my.Packages {
+        * , workItems : redirected to WorkItems
+    };
 // entity AzDevPackages  as projection on AzDevOps.Packages;
 };

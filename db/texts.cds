@@ -34,7 +34,6 @@ annotate my.Packages {
   description            @title : '{i18n>Packages.description}';
   IOTPackageID           @title : '{i18n>Packages.IOTPackageID}';
   invoiceRelevance       @title : '{i18n>Packages.invoiceRelevance}';
-  parentInvoiceRelevance @title : '{i18n>Packages.parentInvoiceRelevance}';
 }
 
 annotate my.Projects {
@@ -49,7 +48,6 @@ annotate my.Projects {
   teamMembers            @title : '{i18n>Projects.teamMembers}';
   workItems              @title : '{i18n>Projects.workItems}';
   invoiceRelevance       @title : '{i18n>Projects.invoiceRelevance}';
-  parentInvoiceRelevance @title : '{i18n>Projects.parentInvoiceRelevance}';
 }
 
 annotate my.WorkItems {
@@ -84,7 +82,6 @@ annotate my.WorkItems {
   customerName                 @title : '{i18n>WorkItems.customerName}';
   private                      @title : '{i18n>WorkItems.private}';
   invoiceRelevance             @title : '{i18n>WorkItems.invoiceRelevance}';
-  parentInvoiceRelevance       @title : '{i18n>WorkItems.parentInvoiceRelevance}';
   // Custom
   project_friendlyID           @title : '{i18n>WorkItems.project}';
   project                      @title : '{i18n>WorkItems.project}';

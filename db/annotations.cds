@@ -28,7 +28,6 @@ annotate my.WorkItems with @(UI : {
         activatedDate,
         completedDate,
         invoiceRelevance,
-        parentInvoiceRelevance,
     ],
     LineItem            : [
         {
@@ -62,10 +61,6 @@ annotate my.WorkItems with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : parentInvoiceRelevance,
         },
     ]
 }) {
@@ -231,7 +226,7 @@ annotate my.Customers with @(UI : {
 }
 
 @cds.odata.valuelist
-annotate my.PackagesDB with @(UI : {
+annotate my.Packages with @(UI : {
     PresentationVariant : {
         $Type          : 'UI.PresentationVariantType',
         SortOrder      : [{Property : title}],
@@ -257,7 +252,6 @@ annotate my.PackagesDB with @(UI : {
     SelectionFields     : [
         title,
         description,
-        parentInvoiceRelevance
     ],
     LineItem            : [
         {
@@ -275,10 +269,6 @@ annotate my.PackagesDB with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : parentInvoiceRelevance,
         },
     ]
 }) {
@@ -336,7 +326,6 @@ annotate my.Projects with @(UI : {
             {Value : friendlyID},
             {Value : IOTProjectID},
             {Value : invoiceRelevance},
-            {Value : parentInvoiceRelevance},
         ],
     },
     Identification      : [
@@ -353,7 +342,6 @@ annotate my.Projects with @(UI : {
         customer_ID,
         manager_userPrincipalName,
         invoiceRelevance,
-        parentInvoiceRelevance
     ],
     LineItem            : [
         {
@@ -385,10 +373,6 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : parentInvoiceRelevance,
         },
     ]
 }) {

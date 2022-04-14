@@ -33,102 +33,87 @@ service AdminService
   @odata.update.enabled
   entity ProjectsPerUser as projection on my.Users2Projects;
 
-//   entity PackagesDB      as projection on my.PackagesDB;
-
-  @odata.create.enabled
-  @odata.update.enabled
-  // entity Packages        as projection on my.PackagesDB {
-  //     *,
-  //     55 as parentInvoiceRelevance: Decimal @(title : '{i18n>Packages.parentInvoiceRelevance}'),
-
-  // entity PackagesTest as
-  //     select from my.Packages as Packages
-  //         inner join ProjectsTest as Projects
-  //             on Packages.project.ID = Projects.ID {
-  //     Packages.title as title: String @(title : '{i18n>Packages.title}'),
-  //     Projects.testRelevance as parentInvoiceRelevance: Decimal @(title : '{i18n>Packages.parentInvoiceRelevance}'),
-  // };
-
   entity UsersPerProject as projection on my.Users2Projects;
 
   @odata.draft.enabled
   entity Customers       as projection on my.Customers;
 
-  // @odata.draft.enabled
-  // @odata.create.enabled
-  // @odata.update.enabled
-  // entity Projects        as projection on my.Projects {
-  //     *,
-  //     customer.invoiceRelevance as parentInvoiceRelevance    : Decimal @(title : '{i18n>Projects.parentInvoiceRelevance}'),
-  //     teamMembers : redirected to UsersPerProject,
-
   @odata.create.enabled
   @odata.update.enabled
-
+  @cds.redirection.target : true
   entity Projects        as projection on my.Projects {
-
     *,
-
     ifnull(
-
       invoiceRelevance, customer.invoiceRelevance
-
-    )                         as invoiceRelevance       : Decimal @(title : '{i18n>WorkItems.parentInvoiceRelevance}'),
-
-    customer.invoiceRelevance as parentInvoiceRelevance : Decimal @(title : '{i18n>Projects.parentInvoiceRelevance}'),
-    teamMembers                                         : redirected to UsersPerProject,
-
+    ) as invoiceRelevance : Decimal @(title : '{i18n>Projects.invoiceRelevance}'),
+    workPackages          : redirected to Packages,
+    workItems             : redirected to WorkItems,
+    teamMembers           : redirected to UsersPerProject,
 
   } where friendlyID != 'DELETED';
 
-
   // @odata.create.enabled
+  // @odata.update.enabled
+  // @cds.redirection.target : true
+  // entity Packages               as projection on my.Packages {
+  //   *,
+  //   project                                         : redirected to Projects,
+  //   ifnull(Packages.invoiceRelevance, project.invoiceRelevance)
+  //                               as invoiceRelevance : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
+  // };
 
-  // // @odata.update.enabled
-
-
-  entity PackagesDB        as
-
-    select from my.PackagesDB as PackagesDB
-
-    // inner join Projects as Projects
-
-    //   on PackagesDB.project.ID = Projects.ID
-
+  @odata.create.enabled
+  @odata.update.enabled
+  @cds.redirection.target : true
+  entity Packages        as
+    select from my.Packages as Packages
+    inner join Projects as Projects
+      on Packages.project.ID = Projects.ID
     {
-        *,
-    //   PackagesDB.createdAt              as createdAt        : Timestamp,
-    //   PackagesDB.createdBy              as createdBy        : String,
-    //   PackagesDB.ID                     as ID               : UUID,
-    //   PackagesDB.modifiedAt             as modifiedAt       : Timestamp,
-    //   PackagesDB.modifiedBy             as modifiedBy       : String,
-    //   PackagesDB.project                as project       : UUID,
-    //   PackagesDB.parentInvoiceRelevance as parentInvoiceRelevance : Decimal,
-    //   PackagesDB.IOTPackageID           as IOTPackageID     : String,
-    //   PackagesDB.description            as description      : String,
-    //   PackagesDB.title                  as title            : String @(title : '{i18n>Packages.title}'),
+      *,
+      Packages.ID          as ID               : UUID,
+      Packages.createdAt   as createdAt        : Timestamp,
+      Packages.createdBy   as createdBy        : String,
+      Packages.modifiedAt  as modifiedAt       : Timestamp,
+      Packages.modifiedBy  as modifiedBy       : String,
+      Packages.title       as title            : String  @(title : '{i18n>Packages.title}'),
+      Packages.description as description      : String,
+      Packages.workItems   as workItems        : redirected to WorkItems,
+      Packages.project     as project          : redirected to Projects, // mit * abgedeckt
+      ifnull(
+        Packages.invoiceRelevance, Projects.invoiceRelevance
+      )                    as invoiceRelevance : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
+    };
 
-    //   ifnull(
+  // @cds.search
+  // @cds.redirection.target : true
+  // entity WorkItems @(restrict : [
+  //   {
+  //     grant : 'READ',
+  //     to    : 'team-lead',
+  //     where : 'manager_userPrincipalName = $user'
+  //   },
+  //   {
+  //     grant : 'READ',
+  //     to    : 'authenticated-user',
+  //     where : 'userPrincipalName = $user'
+  //   },
+  //   {
+  //     grant : 'READ',
+  //     to    : 'admin',
+  //   },
+  // ])                     as projection on my.WorkItems {
+  //   // expand for authorization checks (see above)
+  //   *,
+  //   workPackage                                                                : redirected to Packages,
+  //   ifnull(invoiceRelevance, workPackage.invoiceRelevance) as invoiceRelevance : Decimal @(title : '{i18n>WorkItems.invoiceRelevance}'),
+  //   assignedTo.userPrincipalName
 
-    //     PackagesDB.invoiceRelevance, Projects.invoiceRelevance
-
-    //   )                                 as invoiceRelevance : Decimal
-
-    //                                                                  @(title : '{i18n>Packages.parentInvoiceRelevance}'),
-
-
-      };
-
-  // entity ProjectsTest    as projection on my.Projects {
-  //     *,
-  //     customer.invoiceRelevance as parentInvoiceRelevance    : Decimal @(title : '{i18n>Projects.parentInvoiceRelevance}'),
-  //     teamMembers : redirected to UsersPerProject,
-  //     4 as testRelevance : Decimal,
-  // }
-  // where friendlyID != 'DELETED';
+  // } where deleted is null;
 
   @cds.search
-  entity WorkItems                                                         @(restrict : [
+  @cds.redirection.target : true
+  entity WorkItems                                                   @(restrict : [
     {
       grant : 'READ',
       to    : 'team-lead',
@@ -143,10 +128,22 @@ service AdminService
       grant : 'READ',
       to    : 'admin',
     },
-  ])                     as projection on my.WorkItems {
-    // expand for authorization checks (see above)
-    *,
-    workPackage.parentInvoiceRelevance as parentInvoiceRelevance : Decimal @(title : '{i18n>WorkItems.parentInvoiceRelevance}'),
-    assignedTo.userPrincipalName
-  } where deleted is null;
+  ])                     as
+    select from my.WorkItems as WorkItems
+    inner join Packages as Packages
+      on WorkItems.workPackage.ID = Packages.ID
+    {
+      *,
+      WorkItems.ID                  as ID                  : String,
+      WorkItems.title               as title               : String,
+      WorkItems.customer_friendlyID as customer_friendlyID : String,
+      WorkItems.customer            as customer            : redirected to Customers,
+      WorkItems.project             as project             : redirected to Projects,
+      WorkItems.workPackage         as workPackage         : redirected to Packages, // mit * abgedeckt
+      ifnull(
+        WorkItems.invoiceRelevance, Packages.invoiceRelevance
+      )                             as invoiceRelevance    : Decimal @(title : '{i18n>WorkItems.invoiceRelevance}'),
+    }
+    where
+      deleted is null;
 };
