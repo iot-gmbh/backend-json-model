@@ -46,11 +46,17 @@ service AdminService
     ifnull(
       invoiceRelevance, customer.invoiceRelevance
     ) as invoiceRelevance : Decimal @(title : '{i18n>Projects.invoiceRelevance}'),
-    workPackages          : redirected to Packages,
+    workPackages          : redirected to PackagesView,
     workItems             : redirected to WorkItems,
     teamMembers           : redirected to UsersPerProject,
-
   } where friendlyID != 'DELETED';
+
+  entity PackagesView    as projection on my.Packages as Packages {
+    *,
+    ifnull(
+      Packages.invoiceRelevance, project.invoiceRelevance
+    ) as invoiceRelevance : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
+  };
 
   // @odata.create.enabled
   // @odata.update.enabled
@@ -70,19 +76,19 @@ service AdminService
     inner join Projects as Projects
       on Packages.project.ID = Projects.ID
     {
-      *,
-      Packages.ID          as ID               : UUID,
-      Packages.createdAt   as createdAt        : Timestamp,
-      Packages.createdBy   as createdBy        : String,
-      Packages.modifiedAt  as modifiedAt       : Timestamp,
-      Packages.modifiedBy  as modifiedBy       : String,
-      Packages.title       as title            : String  @(title : '{i18n>Packages.title}'),
-      Packages.description as description      : String,
-      Packages.workItems   as workItems        : redirected to WorkItems,
-      Packages.project     as project          : redirected to Projects, // mit * abgedeckt
-      ifnull(
-        Packages.invoiceRelevance, Projects.invoiceRelevance
-      )                    as invoiceRelevance : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
+          *,
+      key Packages.ID          as ID               : UUID,
+          Packages.createdAt   as createdAt        : Timestamp,
+          Packages.createdBy   as createdBy        : String,
+          Packages.modifiedAt  as modifiedAt       : Timestamp,
+          Packages.modifiedBy  as modifiedBy       : String,
+          Packages.title       as title            : String  @(title : '{i18n>Packages.title}'),
+          Packages.description as description      : String,
+          Packages.workItems   as workItems        : redirected to WorkItems,
+          Packages.project     as project          : redirected to Projects, // mit * abgedeckt
+          ifnull(
+            Packages.invoiceRelevance, Projects.invoiceRelevance
+          )                    as invoiceRelevance : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
     };
 
   // @cds.search
@@ -111,6 +117,31 @@ service AdminService
 
   // } where deleted is null;
 
+
+  entity WorkItemsView   as projection on my.WorkItems as WorkItems {
+    *,
+    workPackage                                                         : redirected to PackagesView,
+    workPackage.invoiceRelevance         as workPackageInvoiceRelevance : Decimal,
+    workPackage.project.invoiceRelevance as projectInvoiceRelevance     : Decimal,
+
+    case
+      when
+        invoiceRelevance is not null
+      then
+        invoiceRelevance
+      when
+        workPackage.invoiceRelevance is not null
+      then
+        workPackage.invoiceRelevance
+      else
+        workPackage.project.invoiceRelevance
+    end                                  as invoiceRelevance            : Decimal,
+
+  // ifnull(
+  //   WorkItems.invoiceRelevance, workPackage.invoiceRelevance
+  // )                                    as invoiceRelevance            : Decimal @(title : '{i18n>Packages.invoiceRelevance}'),
+  };
+
   @cds.search
   @cds.redirection.target : true
   entity WorkItems                                                   @(restrict : [
@@ -130,7 +161,7 @@ service AdminService
     },
   ])                     as
     select from my.WorkItems as WorkItems
-    inner join Packages as Packages
+    inner join my.Packages as Packages
       on WorkItems.workPackage.ID = Packages.ID
     {
       *,
@@ -139,7 +170,7 @@ service AdminService
       WorkItems.customer_friendlyID as customer_friendlyID : String,
       WorkItems.customer            as customer            : redirected to Customers,
       WorkItems.project             as project             : redirected to Projects,
-      WorkItems.workPackage         as workPackage         : redirected to Packages, // mit * abgedeckt
+      WorkItems.workPackage         as workPackage         : redirected to PackagesView, // mit * abgedeckt
       ifnull(
         WorkItems.invoiceRelevance, Packages.invoiceRelevance
       )                             as invoiceRelevance    : Decimal @(title : '{i18n>WorkItems.invoiceRelevance}'),

@@ -40,12 +40,9 @@ entity Users2Projects : cuid, managed {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-  friendlyID       : String  @mandatory;
+  friendlyID       : String @mandatory;
   name             : String;
-  invoiceRelevance : Decimal @assert.range : [
-    0,
-    1
-  ];
+  invoiceRelevance : Decimal;
   projects         : Association to many Projects
                        on projects.customer = $self;
 }
@@ -55,16 +52,13 @@ entity Customers : managed, cuid {
   friendlyID
 ]}
 entity Projects : managed, cuid {
-  friendlyID          : String  @mandatory;
-  title               : String  @mandatory;
+  friendlyID          : String @mandatory;
+  title               : String @mandatory;
   description         : String;
   IOTProjectID        : String;
   manager             : Association to Users;
   customer_friendlyID : String;
-  invoiceRelevance    : Decimal @assert.range : [
-    0,
-    1
-  ];
+  invoiceRelevance    : Decimal default 1;
   customer            : Association to Customers;
   workPackages        : Composition of many Packages
                           on workPackages.project = $self;
@@ -81,10 +75,7 @@ entity Packages : managed, cuid {
   title            : String;
   IOTPackageID     : String;
   description      : String;
-  invoiceRelevance : Decimal @assert.range : [
-    0,
-    1
-  ];
+  invoiceRelevance : Decimal default 0.5;
 }
 
 
@@ -118,10 +109,7 @@ entity WorkItems : cuid {
   customer            : Association to Customers;
   customerName        : String;
   private             : Boolean;
-  invoiceRelevance    : Decimal @assert.range : [
-    0,
-    1
-  ];
+  invoiceRelevance    : Decimal;
   // Custom
   project_friendlyID  : String;
   project             : Association to Projects;
