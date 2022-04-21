@@ -17,7 +17,7 @@
     "@sap/xsenv": "3.2.0",
     "@sap/xssec": "^3.2.13",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
-    "@ui5/cli": "^2.14.6",
+    "@ui5/cli": "^2.14.7",
     "azure-devops-node-api": "^11.1.1",
     "cds-dbm": "0.0.28",
     "cds-pg": "0.1.22",
