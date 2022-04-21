@@ -1,86 +1,5 @@
 using {iot.planner as my} from './schema';
 
-annotate my.WorkItems with @(UI : {
-    // The Sort order is not evaluated by responsive tables (by design)
-    // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
-    PresentationVariant : {
-        $Type          : 'UI.PresentationVariantType',
-        // SortOrder      : [{
-        //     Descending : true,
-        //     Property   : completedDate,
-        // }],
-        Visualizations : ['@UI.LineItem'],
-    // RequestAtLeast : [completedDate]
-    },
-    Identification      : [
-        {Value : title},
-        {Value : assignedTo.displayName, },
-        {Value : customer_ID, },
-        {Value : project_ID, },
-        {Value : activatedDate},
-        {Value : completedDate, },
-    ],
-    SelectionFields     : [
-        title,
-        assignedTo_userPrincipalName,
-        customer_ID,
-        project_ID,
-        activatedDate,
-        completedDate,
-        invoiceRelevance,
-    ],
-    LineItem            : [
-        {
-            $Type : 'UI.DataField',
-            Value : title,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : assignedTo_userPrincipalName,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : customer_ID,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : project_ID,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : duration
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : activatedDate
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : completedDate,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : invoiceRelevance,
-        },
-    ]
-}) {
-    ID       @UI.Hidden;
-    customer @(Common : {
-        Text         : {
-            $value                 : customer.name,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-    project  @(Common : {
-        Text         : {
-            $value                 : project.title,
-            ![@UI.TextArrangement] : #TextOnly
-        },
-        FieldControl : #Mandatory
-    });
-};
-
 @cds.odata.valuelist
 annotate my.Users with @(UI : {
     PresentationVariant : {
@@ -175,14 +94,10 @@ annotate my.Customers with @(UI : {
     FieldGroup          : {
         $Type : 'UI.FieldGroupType',
         Label : '{i18n>Classification}',
-        Data  : [{Value : friendlyID}],
-    },
-    DataPoint #invoiceRelevance: {
-        $Type : 'UI.DataPointType',
-        Value : invoiceRelevance,
-        Title : '{i18n>invoiceRelevance}',
-        MinimumValue : 0.0,
-        MaximumValue : 1.0,
+        Data  : [
+            {Value : friendlyID},
+            {Value : invoiceRelevance},
+        ],
     },
     SelectionFields     : [name, ],
     LineItem            : [
@@ -212,11 +127,6 @@ annotate my.Customers with @(UI : {
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Label  : '{i18n>Customers.invoiceRelevance}',
-            Target : '@UI.DataPoint#invoiceRelevance' 
-        },
-        {
-            $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Customers.projects}',
             Target : 'projects/@UI.LineItem'
         }
@@ -224,56 +134,6 @@ annotate my.Customers with @(UI : {
 }) {
     ID @UI.Hidden;
 }
-
-@cds.odata.valuelist
-annotate my.Packages with @(UI : {
-    PresentationVariant : {
-        $Type          : 'UI.PresentationVariantType',
-        SortOrder      : [{Property : title}],
-        Visualizations : ['@UI.LineItem'],
-        RequestAtLeast : [title]
-    },
-    HeaderInfo          : {
-        TypeName       : '{i18n>Package}',
-        TypeNamePlural : '{i18n>Packages}',
-        Title          : {Value : title},
-        Description    : {Value : description},
-    },
-    Facets              : [{
-        $Type  : 'UI.ReferenceFacet',
-        Label  : '{i18n>General}',
-        Target : '@UI.Identification'
-    }, ],
-    Identification      : [
-        {Value : title},
-        {Value : description},
-        {Value : IOTPackageID},
-    ],
-    SelectionFields     : [
-        title,
-        description,
-    ],
-    LineItem            : [
-        {
-            $Type : 'UI.DataField',
-            Value : title,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : description,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : IOTPackageID,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : invoiceRelevance,
-        },
-    ]
-}) {
-    ID @UI.Hidden;
-};
 
 @cds.odata.valuelist
 annotate my.Projects with @(UI : {
@@ -380,6 +240,138 @@ annotate my.Projects with @(UI : {
     customer @(Common : {
         Text         : {
             $value                 : customer.name,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+};
+
+@cds.odata.valuelist
+annotate my.Packages with @(UI : {
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        SortOrder      : [{Property : title}],
+        Visualizations : ['@UI.LineItem'],
+        RequestAtLeast : [title]
+    },
+    HeaderInfo          : {
+        TypeName       : '{i18n>Package}',
+        TypeNamePlural : '{i18n>Packages}',
+        Title          : {Value : title},
+        Description    : {Value : description},
+    },
+    Facets              : [{
+        $Type  : 'UI.ReferenceFacet',
+        Label  : '{i18n>General}',
+        Target : '@UI.Identification'
+    }, ],
+    Identification      : [
+        {Value : title},
+        {Value : description},
+        {Value : IOTPackageID},
+    ],
+    SelectionFields     : [
+        title,
+        description,
+        invoiceRelevance,
+    ],
+    LineItem            : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : IOTPackageID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
+    ]
+}) {
+    ID @UI.Hidden;
+};
+
+annotate my.WorkItems with @(UI : {
+    // The Sort order is not evaluated by responsive tables (by design)
+    // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
+    PresentationVariant : {
+        $Type          : 'UI.PresentationVariantType',
+        // SortOrder      : [{
+        //     Descending : true,
+        //     Property   : completedDate,
+        // }],
+        Visualizations : ['@UI.LineItem'],
+    // RequestAtLeast : [completedDate]
+    },
+    Identification      : [
+        {Value : title},
+        {Value : assignedTo.displayName, },
+        {Value : customer_ID, },
+        {Value : project_ID, },
+        {Value : activatedDate},
+        {Value : completedDate, },
+    ],
+    SelectionFields     : [
+        title,
+        assignedTo_userPrincipalName,
+        customer_ID,
+        project_ID,
+        activatedDate,
+        completedDate,
+        invoiceRelevance,
+    ],
+    LineItem            : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : assignedTo_userPrincipalName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : customer_ID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : project_ID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : duration
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : activatedDate
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : completedDate,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : invoiceRelevance,
+        },
+    ]
+}) {
+    ID       @UI.Hidden;
+    customer @(Common : {
+        Text         : {
+            $value                 : customer.name,
+            ![@UI.TextArrangement] : #TextOnly
+        },
+        FieldControl : #Mandatory
+    });
+    project  @(Common : {
+        Text         : {
+            $value                 : project.title,
             ![@UI.TextArrangement] : #TextOnly
         },
         FieldControl : #Mandatory

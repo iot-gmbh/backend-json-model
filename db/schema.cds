@@ -58,7 +58,7 @@ entity Projects : managed, cuid {
   IOTProjectID        : String;
   manager             : Association to Users;
   customer_friendlyID : String;
-  invoiceRelevance    : Decimal default 1;
+  invoiceRelevance    : Decimal;
   customer            : Association to Customers;
   workPackages        : Composition of many Packages
                           on workPackages.project = $self;
@@ -75,9 +75,8 @@ entity Packages : managed, cuid {
   title            : String;
   IOTPackageID     : String;
   description      : String;
-  invoiceRelevance : Decimal default 0.5;
+  invoiceRelevance : Decimal;
 }
-
 
 entity WorkItems : cuid {
   //key ID                     : String @odata.Type : 'Edm.String';
