@@ -44,6 +44,7 @@ service AdminService
 
   @odata.create.enabled
   @odata.update.enabled
+  @odata.draft.enabled
   // @cds.redirection.target : true
   entity Projects        as projection on my.Projects {
     *,
@@ -60,7 +61,10 @@ service AdminService
     // end                               as invoiceRelevance         : Decimal @(title : '{i18n>Projects.invoiceRelevance}'),
     end                       as invoiceRelevance         : Decimal @(
       title         : '{i18n>Projects.invoiceRelevance}',
-      // odata.update.enabled : true,
+      assert.range  : [
+        0,
+        3
+      ],
       Core.Computed : false
     )
 
