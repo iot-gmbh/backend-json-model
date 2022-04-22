@@ -97,9 +97,14 @@ annotate my.Customers with @(UI : {
         Data  : [
             {Value : friendlyID},
             {Value : invoiceRelevance},
+            {Value : bonusRelevance},
         ],
     },
-    SelectionFields     : [name, ],
+    SelectionFields     : [
+        name,
+        invoiceRelevance,
+        bonusRelevance,
+    ],
     LineItem            : [
         {
             $Type : 'UI.DataField',
@@ -112,6 +117,10 @@ annotate my.Customers with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bonusRelevance,
         },
     ],
     Facets              : [
@@ -186,6 +195,7 @@ annotate my.Projects with @(UI : {
             {Value : friendlyID},
             {Value : IOTProjectID},
             {Value : invoiceRelevance},
+            {Value : bonusRelevance},
         ],
     },
     Identification      : [
@@ -202,6 +212,7 @@ annotate my.Projects with @(UI : {
         customer_ID,
         manager_userPrincipalName,
         invoiceRelevance,
+        bonusRelevance,
     ],
     LineItem            : [
         {
@@ -233,6 +244,10 @@ annotate my.Projects with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bonusRelevance,
         },
     ]
 }) {
@@ -274,6 +289,7 @@ annotate my.Packages with @(UI : {
         title,
         description,
         invoiceRelevance,
+        bonusRelevance,
     ],
     LineItem            : [
         {
@@ -291,6 +307,10 @@ annotate my.Packages with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bonusRelevance,
         },
     ]
 }) {
@@ -325,6 +345,7 @@ annotate my.WorkItems with @(UI : {
         activatedDate,
         completedDate,
         invoiceRelevance,
+        bonusRelevance,
     ],
     LineItem            : [
         {
@@ -358,6 +379,10 @@ annotate my.WorkItems with @(UI : {
         {
             $Type : 'UI.DataField',
             Value : invoiceRelevance,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bonusRelevance,
         },
     ]
 }) {

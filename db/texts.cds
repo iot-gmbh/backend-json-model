@@ -23,16 +23,18 @@ annotate my.Users2Projects {
 };
 
 annotate my.Customers {
-  friendlyID       @title : '{i18n>Customers.friendlyID}';
-  name             @title : '{i18n>Customers.name}';
-  invoiceRelevance @title : '{i18n>Customers.invoiceRelevance}';
-  projects         @title : '{i18n>Customers.projects}';
+  friendlyID        @title : '{i18n>Customers.friendlyID}';
+  name              @title : '{i18n>Customers.name}';
+  invoiceRelevance  @title : '{i18n>Customers.invoiceRelevance}';
+  bonusRelevance    @title : '{i18n>Customers.bonusRelevance}';
+  projects          @title : '{i18n>Customers.projects}';
 }
 
 annotate my.Packages {
   title                  @title : '{i18n>Packages.title}';
   description            @title : '{i18n>Packages.description}';
   invoiceRelevance       @title : '{i18n>Packages.invoiceRelevance}';
+  bonusRelevance         @title : '{i18n>Packages.bonusRelevance}';
   IOTPackageID           @title : '{i18n>Packages.IOTPackageID}';
 }
 
@@ -41,6 +43,7 @@ annotate my.Projects {
   title                  @title : '{i18n>Projects.title}';
   description            @title : '{i18n>Projects.description}';
   invoiceRelevance       @title : '{i18n>Projects.invoiceRelevance}';
+  bonusRelevance         @title : '{i18n>Projects.bonusRelevance}';
   IOTProjectID           @title : '{i18n>Projects.IOTProjectID}';
   manager                @title : '{i18n>Projects.manager}';
   customer_friendlyID    @title : '{i18n>Projects.customerFriendlyID}';
@@ -82,6 +85,7 @@ annotate my.WorkItems {
   customerName                 @title : '{i18n>WorkItems.customerName}';
   private                      @title : '{i18n>WorkItems.private}';
   invoiceRelevance             @title : '{i18n>WorkItems.invoiceRelevance}';
+  bonusRelevance               @title : '{i18n>WorkItems.bonusRelevance}';
   // Custom
   project_friendlyID           @title : '{i18n>WorkItems.project}';
   project                      @title : '{i18n>WorkItems.project}';

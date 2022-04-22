@@ -40,10 +40,11 @@ entity Users2Projects : cuid, managed {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : managed, cuid {
-  friendlyID       : String @mandatory;
-  name             : String;
-  invoiceRelevance : Decimal;
-  projects         : Association to many Projects
+  friendlyID        : String @mandatory;
+  name              : String;
+  invoiceRelevance  : Decimal;
+  bonusRelevance    : Decimal;
+  projects          : Association to many Projects
                        on projects.customer = $self;
 }
 
@@ -59,6 +60,7 @@ entity Projects : managed, cuid {
   manager             : Association to Users;
   customer_friendlyID : String;
   invoiceRelevance    : Decimal;
+  bonusRelevance      : Decimal;
   customer            : Association to Customers;
   workPackages        : Composition of many Packages
                           on workPackages.project = $self;
@@ -69,16 +71,17 @@ entity Projects : managed, cuid {
 }
 
 entity Packages : managed, cuid {
-  project          : Association to Projects;
-  workItems        : Association to many WorkItems
-                       on workItems.workPackage = $self;
-  title            : String;
-  IOTPackageID     : String;
-  description      : String;
-  invoiceRelevance : Decimal;
+  project           : Association to Projects;
+  workItems         : Association to many WorkItems
+                        on workItems.workPackage = $self;
+  title             : String;
+  IOTPackageID      : String;
+  description       : String;
+  invoiceRelevance  : Decimal;
+  bonusRelevance    : Decimal;
 }
 
-entity WorkItems : cuid {
+entity WorkItems : managed, cuid {
   //key ID                     : String @odata.Type : 'Edm.String';
   activatedDate       : DateTime;
   activatedDateMonth  : Integer;
@@ -109,6 +112,7 @@ entity WorkItems : cuid {
   customerName        : String;
   private             : Boolean;
   invoiceRelevance    : Decimal;
+  bonusRelevance      : Decimal;
   // Custom
   project_friendlyID  : String;
   project             : Association to Projects;
