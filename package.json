@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@sap/approuter": "^10.12.0",
-        "@sap/eslint-plugin-cds": "^2.3.2",
-        "@sap/hdi-deploy": "^4.2.3",
+    "@sap/eslint-plugin-cds": "^2.3.2",
+    "@sap/hdi-deploy": "^4.2.3",
     "@sap/ux-specification": "^1.96.4",
     "copyfiles": "^2.4.1",
     "eslint": "^8.9.0",
@@ -82,6 +82,7 @@
     "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
     "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
     "deploy:pg": "cds-pg deploy srv --to db",
+    "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services",
     "install:azdev-workitems": "cd app/azdev-workitems && npm i",
     "install:customers": "cd app/customers && npm i",
     "install:projects": "cd app/projects && npm i",
