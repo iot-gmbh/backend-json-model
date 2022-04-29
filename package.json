@@ -60,9 +60,9 @@
   },
   "scripts": {
     "start": "cds run",
-    "start:all": "run-p start:srv start:approuter start:app",
+    "start:hybrid": "run-p start:srv:hybrid start:approuter start:app",
     "start:all:auth:display": "run-p start:srv start:approuter start:app start:auth display:app",
-    "start:srv": "cds run",
+    "start:srv:hybrid": "cds run --profile test",
     "start:app": "ui5 serve --config=ui5.yaml",
     "start:approuter": "node node_modules/@sap/approuter/approuter.js",
     "start:auth": "open-cli http://localhost:5000",
@@ -93,7 +93,7 @@
     "install:workitems-display": "cd app/workitems-display && npm i",
     "install:workitems-alp": "cd app/workitems-alp && npm i",
     "install:workitems-iot": "cd app/workitems-iot && npm i",
-    "postinstall": "run-p install:*"
+    "--postinstall": "run-p install:*"
   },
   "files": [
     "db",
@@ -101,14 +101,32 @@
     "app"
   ],
   "cds": {
-    "auth": {
-      "passport": {
-        "strategy": "JWT"
-      }
-    },
     "requires": {
+      "[development]": {
+        "auth": {
+          "kind": "dummy-auth"
+        }
+      },
+      "[test]": {
+        "auth": {
+          "kind": "jwt-auth"
+        }
+      },
+      "[production]": {
+        "auth": {
+          "kind": "jwt-auth"
+        }
+      },
       "db": {
-        "kind": "sql"
+        "[development]": {
+          "kind": "sqlite"
+        },
+        "[test]": {
+          "kind": "sqlite"
+        },
+        "[production]": {
+          "kind": "hana"
+        }
       },
       "postgres": {
         "dialect": "plain",

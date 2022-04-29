@@ -47,7 +47,7 @@ function calcDates({ activatedDate, completedDate }) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
-  const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
+  // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
   const { WorkItems, Customers, Projects } = db.entities("iot.planner");
 
@@ -171,12 +171,12 @@ module.exports = cds.service.impl(async function () {
     const customers = SELECT.from(Customers);
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
-      AzDevOpsSrv.tx(req)
-        .read("WorkItems", columns)
-        .where(where)
-        .orderBy(orderBy)
-        .limit(limit),
-      // [],
+      // AzDevOpsSrv.tx(req)
+      //   .read("WorkItems", columns)
+      //   .where(where)
+      //   .orderBy(orderBy)
+      //   .limit(limit),
+      [],
       db.tx(req).run(req.query),
       MSGraphSrv.tx(req)
         .read("Events", columns)
