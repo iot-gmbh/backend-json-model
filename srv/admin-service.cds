@@ -37,67 +37,16 @@ service AdminService
   entity UsersPerProject  as projection on my.Users2Projects;
 
   @odata.draft.enabled
-  entity Customers        as projection on my.Customers {
-    *,
-    invoiceRelevance      as invoiceRelevance : Decimal(2, 1) @(
-      title         : '{i18n>Customers.invoiceRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-    bonusRelevance        as bonusRelevance   : Decimal(2, 1) @(
-      title         : '{i18n>Customers.bonusRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-  };
+  entity Customers        as projection on my.Customers;
 
   @odata.create.enabled
   @odata.update.enabled
   @odata.draft.enabled
-  entity Projects         as projection on my.Projects {
-    *,
-    customer                                  : redirected to Customers,
-    invoiceRelevance      as invoiceRelevance : Decimal(2, 1) @(
-      title         : '{i18n>Projects.invoiceRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-    bonusRelevance        as bonusRelevance   : Decimal(2, 1) @(
-      title         : '{i18n>Projects.bonusRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-
-  } where friendlyID != 'DELETED';
+  entity Projects         as projection on my.Projects where friendlyID != 'DELETED';
 
   @odata.create.enabled
   @odata.update.enabled
-  entity Packages         as projection on my.Packages as Packages {
-    *,
-    project                                   : redirected to Projects,
-    invoiceRelevance      as invoiceRelevance : Decimal(2, 1) @(
-      title         : '{i18n>Packages.invoiceRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-    bonusRelevance        as bonusRelevance   : Decimal(2, 1) @(
-      title         : '{i18n>Packages.bonusRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-  };
+  entity Packages         as projection on my.Packages as Packages
 
   @cds.search
   entity WorkItems @(restrict : [
@@ -115,22 +64,5 @@ service AdminService
       grant : 'READ',
       to    : 'admin',
     },
-  ])                      as projection on my.WorkItems as WorkItems {
-    *,
-    workPackage                                 : redirected to Packages,
-    invoiceRelevance      as invoiceRelevance : Decimal(2, 1) @(
-      title         : '{i18n>WorkItems.invoiceRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-    bonusRelevance        as bonusRelevance   : Decimal(2, 1) @(
-      title         : '{i18n>WorkItems.bonusRelevance}',
-      assert.range  : [
-        0,
-        1
-      ],
-    ),
-  };
+  ])                      as projection on my.WorkItems as WorkItems
 };

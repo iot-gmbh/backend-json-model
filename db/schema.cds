@@ -7,6 +7,23 @@ using {
 
 namespace iot.planner;
 
+aspect relevance {
+  invoiceRelevance : Decimal(2, 1) @(
+    title        : '{i18n>invoiceRelevance}',
+    assert.range : [
+      0,
+      1
+    ],
+  );
+  bonusRelevance   : Decimal(2, 1) @(
+    title        : '{i18n>bonusRelevance}',
+    assert.range : [
+      0,
+      1
+    ],
+  );
+};
+
 @assert.unique : {friendlyID : [userPrincipalName, ]}
 entity Users {
   key userPrincipalName : String;
@@ -39,12 +56,10 @@ entity Users2Projects : cuid, managed {
 };
 
 @assert.unique : {friendlyID : [friendlyID]}
-entity Customers : managed, cuid {
-  friendlyID        : String @mandatory;
-  name              : String;
-  invoiceRelevance  : Decimal;
-  bonusRelevance    : Decimal;
-  projects          : Association to many Projects
+entity Customers : cuid, managed, relevance {
+  friendlyID       : String @mandatory;
+  name             : String;
+  projects         : Association to many Projects
                        on projects.customer = $self;
 }
 
@@ -52,15 +67,13 @@ entity Customers : managed, cuid {
   customer_friendlyID,
   friendlyID
 ]}
-entity Projects : managed, cuid {
+entity Projects : cuid, managed, relevance {
   friendlyID          : String @mandatory;
   title               : String @mandatory;
   description         : String;
   IOTProjectID        : String;
   manager             : Association to Users;
   customer_friendlyID : String;
-  invoiceRelevance    : Decimal;
-  bonusRelevance      : Decimal;
   customer            : Association to Customers;
   workPackages        : Composition of many Packages
                           on workPackages.project = $self;
@@ -70,18 +83,16 @@ entity Projects : managed, cuid {
                           on workItems.project = $self;
 }
 
-entity Packages : managed, cuid {
-  project           : Association to Projects;
-  workItems         : Association to many WorkItems
-                        on workItems.workPackage = $self;
-  title             : String;
-  IOTPackageID      : String;
-  description       : String;
-  invoiceRelevance  : Decimal;
-  bonusRelevance    : Decimal;
+entity Packages : cuid, managed, relevance {
+  project          : Association to Projects;
+  workItems        : Association to many WorkItems
+                       on workItems.workPackage = $self;
+  title            : String;
+  IOTPackageID     : String;
+  description      : String;
 }
 
-entity WorkItems : managed, cuid {
+entity WorkItems : cuid, managed, relevance {
   //key ID                     : String @odata.Type : 'Edm.String';
   activatedDate       : DateTime;
   activatedDateMonth  : Integer;
@@ -111,8 +122,6 @@ entity WorkItems : managed, cuid {
   customer            : Association to Customers;
   customerName        : String;
   private             : Boolean;
-  invoiceRelevance    : Decimal;
-  bonusRelevance      : Decimal;
   // Custom
   project_friendlyID  : String;
   project             : Association to Projects;

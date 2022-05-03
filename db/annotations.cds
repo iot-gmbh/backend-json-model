@@ -102,8 +102,6 @@ annotate my.Customers with @(UI : {
     },
     SelectionFields     : [
         name,
-        invoiceRelevance,
-        bonusRelevance,
     ],
     LineItem            : [
         {
@@ -288,8 +286,6 @@ annotate my.Packages with @(UI : {
     SelectionFields     : [
         title,
         description,
-        invoiceRelevance,
-        bonusRelevance,
     ],
     LineItem            : [
         {
@@ -344,8 +340,6 @@ annotate my.WorkItems with @(UI : {
         project_ID,
         activatedDate,
         completedDate,
-        invoiceRelevance,
-        bonusRelevance,
     ],
     LineItem            : [
         {
