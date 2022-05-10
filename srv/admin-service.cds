@@ -24,29 +24,29 @@ service AdminService
       ],
       to    : 'admin',
     },
-  ])                      as projection on my.Users {
+  ])                     as projection on my.Users {
     *,
     projects : redirected to ProjectsPerUser
   };
 
   @odata.create.enabled
   @odata.update.enabled
-  entity ProjectsPerUser  as projection on my.Users2Projects;
+  entity ProjectsPerUser as projection on my.Users2Projects;
 
   @cds.redirection.target : true
-  entity UsersPerProject  as projection on my.Users2Projects;
+  entity UsersPerProject as projection on my.Users2Projects;
 
   @odata.draft.enabled
-  entity Customers        as projection on my.Customers;
+  entity Customers       as projection on my.Customers;
 
   @odata.create.enabled
   @odata.update.enabled
-  @odata.draft.enabled
-  entity Projects         as projection on my.Projects where friendlyID != 'DELETED';
+  // @odata.draft.enabled
+  entity Projects        as projection on my.Projects where friendlyID != 'DELETED';
 
   @odata.create.enabled
   @odata.update.enabled
-  entity Packages         as projection on my.Packages as Packages
+  entity Packages        as projection on my.Packages as Packages
 
   @cds.search
   entity WorkItems @(restrict : [
@@ -64,5 +64,5 @@ service AdminService
       grant : 'READ',
       to    : 'admin',
     },
-  ])                      as projection on my.WorkItems as WorkItems
+  ])                     as projection on my.WorkItems as WorkItems
 };

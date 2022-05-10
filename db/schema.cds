@@ -57,10 +57,10 @@ entity Users2Projects : cuid, managed {
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : cuid, managed, relevance {
-  friendlyID       : String @mandatory;
-  name             : String;
-  projects         : Association to many Projects
-                       on projects.customer = $self;
+  friendlyID : String @mandatory;
+  name       : String;
+  projects   : Association to many Projects
+                 on projects.customer = $self;
 }
 
 @assert.unique : {friendlyID : [
@@ -84,57 +84,57 @@ entity Projects : cuid, managed, relevance {
 }
 
 entity Packages : cuid, managed, relevance {
-  project          : Association to Projects;
-  workItems        : Association to many WorkItems
-                       on workItems.workPackage = $self;
-  title            : String;
-  IOTPackageID     : String;
-  description      : String;
+  project      : Association to Projects;
+  workItems    : Association to many WorkItems
+                   on workItems.workPackage = $self;
+  title        : String;
+  IOTPackageID : String;
+  description  : String;
 }
 
-entity WorkItems : cuid, managed, relevance {
-  //key ID                     : String @odata.Type : 'Edm.String';
-  activatedDate       : DateTime;
-  activatedDateMonth  : Integer;
-  activatedDateYear   : Integer;
-  activatedDateDay    : Integer;
-  completedDate       : DateTime;
-  completedDateMonth  : Integer;
-  completedDateYear   : Integer;
-  completedDateDay    : Integer;
-  assignedTo          : Association to Users;
-  changedDate         : DateTime;
-  assignedToName      : String;
-  createdDate         : DateTime;
-  reason              : String;
-  state               : String;
-  teamProject         : String;
-  title               : String;
-  workItemType        : String;
-  // Scheduling
-  completedWork       : Decimal;
-  remainingWork       : Decimal;
-  originalEstimate    : Decimal;
-  // Documentation
-  resolvedDate        : DateTime;
-  closedDate          : DateTime;
-  customer_friendlyID : String;
-  customer            : Association to Customers;
-  customerName        : String;
-  private             : Boolean;
-  // Custom
-  project_friendlyID  : String;
-  project             : Association to Projects;
-  projectTitle        : String;
-  workPackage         : Association to Packages;
-  ticket              : String;
-  type                : String enum {
-    Manual;
-    Event;
-    WorkItem
-  };
-  duration            : Decimal;
-  resetEntry          : Boolean;
-  deleted             : Boolean;
-  confirmed           : Boolean;
+entity WorkItems : managed, relevance {
+  key ID                  : String @odata.Type : 'Edm.String';
+      activatedDate       : DateTime;
+      activatedDateMonth  : Integer;
+      activatedDateYear   : Integer;
+      activatedDateDay    : Integer;
+      completedDate       : DateTime;
+      completedDateMonth  : Integer;
+      completedDateYear   : Integer;
+      completedDateDay    : Integer;
+      assignedTo          : Association to Users;
+      changedDate         : DateTime;
+      assignedToName      : String;
+      createdDate         : DateTime;
+      reason              : String;
+      state               : String;
+      teamProject         : String;
+      title               : String;
+      workItemType        : String;
+      // Scheduling
+      completedWork       : Decimal(2);
+      remainingWork       : Decimal(2);
+      originalEstimate    : Decimal(2);
+      // Documentation
+      resolvedDate        : DateTime;
+      closedDate          : DateTime;
+      customer_friendlyID : String;
+      customer            : Association to Customers;
+      customerName        : String;
+      private             : Boolean;
+      // Custom
+      project_friendlyID  : String;
+      project             : Association to Projects;
+      projectTitle        : String;
+      workPackage         : Association to Packages;
+      ticket              : String;
+      type                : String enum {
+        Manual;
+        Event;
+        WorkItem
+      };
+      duration            : Decimal(2);
+      resetEntry          : Boolean;
+      deleted             : Boolean;
+      confirmed           : Boolean;
 };

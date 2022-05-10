@@ -156,33 +156,35 @@ modules:
         - ui5 build --config ui5-deploy.yaml
       supported-platforms: []
 
-  - name: project-planning-db-deployer
-    type: hdb
-    path: gen/db
-    build-parameters:
-      ignore: ["node_modules/"]
-    requires:
-      - name: project-planning-db
-
-  # - name: project-planning-pg-db-deployer
+  # HANA
+  # - name: project-planning-db-deployer
   #   type: hdb
   #   path: gen/db
-  #   parameters:
-  #     buildpacks:
-  #       [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
-  #     no-route: true
-  #     no-start: true
-  #     disk-quota: 2048MB
-  #     memory: 2048MB
-  #     tasks:
-  #       - name: deploy_to_postgresql
-  #         command: chmod 755 deploy.sh && ./deploy.sh
-  #         disk-quota: 2048MB
-  #         memory: 2048MB
   #   build-parameters:
   #     ignore: ["node_modules/"]
   #   requires:
-  #     - name: project-planning-pg-db
+  #     - name: project-planning-db
+
+  # PostgreSQL
+  - name: project-planning-pg-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpacks:
+        [https://github.com/cloudfoundry/apt-buildpack#v0.2.2, nodejs_buildpack]
+      no-route: true
+      no-start: true
+      disk-quota: 2048MB
+      memory: 2048MB
+      tasks:
+        - name: deploy_to_postgresql
+          command: chmod 755 deploy.sh && ./deploy.sh
+          disk-quota: 2048MB
+          memory: 2048MB
+    build-parameters:
+      ignore: ["node_modules/"]
+    requires:
+      - name: project-planning-pg-db
 
   - name: project-planning-srv
     type: nodejs
@@ -228,12 +230,23 @@ modules:
       no-source: true
 
 resources:
-  - name: project-planning-db
-    type: com.sap.xs.hdi-container
-    properties:
-      hdi-container-name: ${service-name}-TEST
+  # HANA
+  # - name: project-planning-db
+  #   type: com.sap.xs.hdi-container
+  #   properties:
+  #     hdi-container-name: ${service-name}-TEST
+  #   parameters:
+  #     service: hana
+
+  # PostgreSQL
+  - name: project-planning-pg-db
     parameters:
-      service: hana
+      path: ./pg-options.json
+      service: postgresql-db
+      service-plan: trial
+      skip-service-updates:
+        parameters: true
+    type: org.cloudfoundry.managed-service   
 
   - name: project-planning-dest-service
     type: org.cloudfoundry.managed-service

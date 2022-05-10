@@ -9,46 +9,46 @@
     "node": "^12 || ^14"
   },
   "dependencies": {
-    "@azure/msal-node": "^1.8.0",
+    "@azure/msal-node": "^1.9.0",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.3",
-    "@sap/cds": "^5.9.2",
-    "@sap/cds-odata-v2-adapter-proxy": "1.8.14",
+    "@sap/cds": "^5.9.5",
+    "@sap/cds-odata-v2-adapter-proxy": "1.8.16",
     "@sap/xsenv": "3.2.2",
     "@sap/xssec": "^3.2.13",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
-    "@ui5/cli": "^2.14.8",
+    "@ui5/cli": "^2.14.9",
     "azure-devops-node-api": "^11.1.1",
     "cds-dbm": "0.0.36",
     "cds-pg": "0.1.28",
     "cdse": "^1.1.12",
     "dotenv": "^16.0.0",
-    "express": "^4",
-    "hdb": "^0.19.1",
+    "express": "^4.18.1",
+    "hdb": "^0.19.2",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.3",
     "msal": "^1.4.16",
     "passport": "^0.5.2",
-    "sap-cf-axios": "^0.3.4",
+    "sap-cf-axios": "^0.3.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@sap/approuter": "^10.15.1",
+    "@sap/approuter": "^11.0.0",
     "@sap/eslint-plugin-cds": "^2.3.5",
     "@sap/hdi-deploy": "^4.3.3",
-    "@sap/ux-specification": "^1.100.0",
+    "@sap/ux-specification": "^1.100.1",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.13.0",
+    "eslint": "^8.15.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
     "npm-run-all": "^4.1.5",
     "open-cli": "^7.0.1",
-    "sqlite3": "^5.0.4",
+    "sqlite3": "^5.0.8",
     "ui5-middleware-simpleproxy": "^0.8.2",
     "ui5-task-zipper": "^0.4.11"
   },
@@ -79,9 +79,8 @@
     "deploy:ui": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar ^ -m project-planning-ui-deployer",
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
-    "deploy:pgm:full": "npx cds-dbm deploy --create-db --load-via full",
-    "deploy:pgm:delta": "npx cds-dbm deploy --create-db --load-via delta",
-    "deploy:pg": "cds-pg deploy srv --to db",
+    "deploy:pg:full": "npx cds-dbm deploy --create-db --load-via full",
+    "deploy:pg": "npx cds-dbm deploy --create-db --load-via delta",
     "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services",
     "install:azdev-workitems": "cd app/azdev-workitems && npm i",
     "install:customers": "cd app/customers && npm i",
@@ -118,8 +117,12 @@
         }
       },
       "db": {
+        "kind": "database",
         "[development]": {
-          "kind": "sqlite"
+          "kind": "database"
+        },
+        "[postgres]": {
+          "kind": "database"
         },
         "[test]": {
           "kind": "sqlite"
@@ -128,17 +131,16 @@
           "kind": "hana"
         }
       },
-      "postgres": {
+      "database": {
         "dialect": "plain",
         "impl": "cds-pg",
         "model": [
-          "db",
           "srv"
         ],
         "credentials": {
           "host": "localhost",
           "port": "5432",
-          "database": "projplanning2",
+          "database": "projplanning4",
           "user": "postgres",
           "password": "postgres",
           "schema": "public"
@@ -163,6 +165,22 @@
         "deploy": {
           "tmpFile": "tmp/_autodeploy.json",
           "undeployFile": "db/undeploy.json"
+        },
+        "build": {
+          "tasks": [
+            {
+              "use": "node-cf",
+              "src": "srv"
+            },
+            {
+              "use": "cds-dbm/dist/build/postgres-cf",
+              "for": "postgres-cf",
+              "src": "db",
+              "options": {
+                "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
+              }
+            }
+          ]
         }
       }
     },
