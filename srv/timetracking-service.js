@@ -83,7 +83,7 @@ module.exports = cds.service.impl(async function () {
 
     if (item.resetEntry) {
       // RESET
-      if (item.type !== "Manual")
+      if (item.type === "Manual")
         throw Error("Reset is not allowed for entries of type 'Manual'");
 
       // eslint-disable-next-line no-unused-vars
@@ -91,7 +91,7 @@ module.exports = cds.service.impl(async function () {
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
 
-      return item.type === "Manual" ? { ID: item.ID } : reducedItem;
+      return reducedItem;
     }
 
     const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
