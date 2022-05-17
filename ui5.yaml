@@ -8,7 +8,7 @@ resources:
       webapp: app
 framework:
   name: SAPUI5
-  version: "1.98.0"
+  version: "1.100.1"
   libraries:
     - name: sap.collaboration
     - name: sap.f

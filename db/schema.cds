@@ -7,6 +7,23 @@ using {
 
 namespace iot.planner;
 
+aspect relevance {
+  invoiceRelevance : Decimal(2, 1) @(
+    title        : '{i18n>invoiceRelevance}',
+    assert.range : [
+      0,
+      1
+    ],
+  );
+  bonusRelevance   : Decimal(2, 1) @(
+    title        : '{i18n>bonusRelevance}',
+    assert.range : [
+      0,
+      1
+    ],
+  );
+};
+
 @assert.unique : {friendlyID : [userPrincipalName, ]}
 entity Users {
   key userPrincipalName : String;
@@ -39,18 +56,18 @@ entity Users2Projects : cuid, managed {
 };
 
 @assert.unique : {friendlyID : [friendlyID]}
-entity Customers : managed, cuid {
-  friendlyID : String @mandatory;
-  name       : String;
-  projects   : Association to many Projects
-                 on projects.customer = $self;
+entity Customers : cuid, managed, relevance {
+  friendlyID       : String @mandatory;
+  name             : String;
+  projects         : Association to many Projects
+                       on projects.customer = $self;
 }
 
 @assert.unique : {friendlyID : [
   customer_friendlyID,
   friendlyID
 ]}
-entity Projects : managed, cuid {
+entity Projects : cuid, managed, relevance {
   friendlyID          : String @mandatory;
   title               : String @mandatory;
   description         : String;
@@ -66,56 +83,58 @@ entity Projects : managed, cuid {
                           on workItems.project = $self;
 }
 
-entity Packages : managed, cuid {
-  project      : Association to Projects;
-  title        : String;
-  IOTPackageID : String;
-  description  : String;
+entity Packages : cuid, managed, relevance {
+  project          : Association to Projects;
+  workItems        : Association to many WorkItems
+                       on workItems.workPackage = $self;
+  title            : String;
+  IOTPackageID     : String;
+  description      : String;
 }
 
-entity WorkItems {
-  key ID                  : String @odata.Type : 'Edm.String';
-      activatedDate       : DateTime;
-      activatedDateMonth  : Integer;
-      activatedDateYear   : Integer;
-      activatedDateDay    : Integer;
-      completedDate       : DateTime;
-      completedDateMonth  : Integer;
-      completedDateYear   : Integer;
-      completedDateDay    : Integer;
-      assignedTo          : Association to Users;
-      changedDate         : DateTime;
-      assignedToName      : String;
-      createdDate         : DateTime;
-      reason              : String;
-      state               : String;
-      teamProject         : String;
-      title               : String;
-      workItemType        : String;
-      // Scheduling
-      completedWork       : Decimal;
-      remainingWork       : Decimal;
-      originalEstimate    : Decimal;
-      // Documentation
-      resolvedDate        : DateTime;
-      closedDate          : DateTime;
-      customer_friendlyID : String;
-      customer            : Association to Customers;
-      customerName        : String;
-      private             : Boolean;
-      // Custom
-      project_friendlyID  : String;
-      project             : Association to Projects;
-      projectTitle        : String;
-      workPackage         : Association to Packages;
-      ticket              : String;
-      type                : String enum {
-        Manual;
-        Event;
-        WorkItem
-      };
-      duration            : Decimal;
-      resetEntry          : Boolean;
-      deleted             : Boolean;
-      confirmed           : Boolean;
+entity WorkItems : cuid, managed, relevance {
+  //key ID                     : String @odata.Type : 'Edm.String';
+  activatedDate       : DateTime;
+  activatedDateMonth  : Integer;
+  activatedDateYear   : Integer;
+  activatedDateDay    : Integer;
+  completedDate       : DateTime;
+  completedDateMonth  : Integer;
+  completedDateYear   : Integer;
+  completedDateDay    : Integer;
+  assignedTo          : Association to Users;
+  changedDate         : DateTime;
+  assignedToName      : String;
+  createdDate         : DateTime;
+  reason              : String;
+  state               : String;
+  teamProject         : String;
+  title               : String;
+  workItemType        : String;
+  // Scheduling
+  completedWork       : Decimal;
+  remainingWork       : Decimal;
+  originalEstimate    : Decimal;
+  // Documentation
+  resolvedDate        : DateTime;
+  closedDate          : DateTime;
+  customer_friendlyID : String;
+  customer            : Association to Customers;
+  customerName        : String;
+  private             : Boolean;
+  // Custom
+  project_friendlyID  : String;
+  project             : Association to Projects;
+  projectTitle        : String;
+  workPackage         : Association to Packages;
+  ticket              : String;
+  type                : String enum {
+    Manual;
+    Event;
+    WorkItem
+  };
+  duration            : Decimal;
+  resetEntry          : Boolean;
+  deleted             : Boolean;
+  confirmed           : Boolean;
 };
