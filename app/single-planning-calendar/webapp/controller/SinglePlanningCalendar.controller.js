@@ -270,7 +270,7 @@ sap.ui.define(
             });
 
             appointments[appointmentSync.ID] = appointmentSync;
-            this._loadAppointments();
+            await this._loadAppointments();
 
             this._closeDialog("createItemDialog");
           } catch (error) {
