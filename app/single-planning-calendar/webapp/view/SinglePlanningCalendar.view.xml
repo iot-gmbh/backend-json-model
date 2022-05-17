@@ -26,7 +26,7 @@
 											<Title text="{/createItemDialogTitle} {= !${confirmed} ? ' - Draft' : ''}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${confirmed}}"/>
+											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{= ((${confirmed} === false) || (${type} === 'Manual')) ? ${i18n>resetEntry.button.tooltip.resetNotAllowed} : ${i18n>resetEntry.button.tooltip}}" enabled="{= !!${confirmed} &amp;&amp; ${type} !== 'Manual'}"/>
 											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}"/>
 										</contentRight>
 									</Bar>

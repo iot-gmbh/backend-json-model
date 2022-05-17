@@ -266,10 +266,11 @@ sap.ui.define(
           try {
             const appointmentSync = await this.reset({
               path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
-              appointment,
+              data: appointment,
             });
 
             appointments[appointmentSync.ID] = appointmentSync;
+            await this._loadAppointments();
 
             this._closeDialog("createItemDialog");
           } catch (error) {
