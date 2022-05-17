@@ -13,7 +13,7 @@
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.3",
     "@sap/cds": "^5.9.5",
-    "@sap/cds-odata-v2-adapter-proxy": "1.8.16",
+    "@sap/cds-odata-v2-adapter-proxy": "1.8.18",
     "@sap/xsenv": "3.2.2",
     "@sap/xssec": "^3.2.13",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
@@ -22,21 +22,21 @@
     "cds-dbm": "0.0.36",
     "cds-pg": "0.1.28",
     "cdse": "^1.1.12",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "hdb": "^0.19.2",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.3",
     "msal": "^1.4.16",
-    "passport": "^0.5.2",
+    "passport": "^0.5.3",
     "sap-cf-axios": "^0.3.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@sap/approuter": "^11.0.0",
+    "@sap/approuter": "^11.0.1",
     "@sap/eslint-plugin-cds": "^2.3.5",
     "@sap/hdi-deploy": "^4.3.3",
-    "@sap/ux-specification": "^1.100.1",
+    "@sap/ux-specification": "^1.100.2",
     "copyfiles": "^2.4.1",
     "eslint": "^8.15.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -128,7 +128,7 @@
           "kind": "sqlite"
         },
         "[production]": {
-          "kind": "hana"
+          "kind": "database"
         }
       },
       "database": {
@@ -136,15 +136,7 @@
         "impl": "cds-pg",
         "model": [
           "srv"
-        ],
-        "credentials": {
-          "host": "localhost",
-          "port": "5432",
-          "database": "projplanning4",
-          "user": "postgres",
-          "password": "postgres",
-          "schema": "public"
-        }
+        ]
       },
       "uaa": {
         "kind": "xsuaa"
@@ -165,27 +157,31 @@
         "deploy": {
           "tmpFile": "tmp/_autodeploy.json",
           "undeployFile": "db/undeploy.json"
-        },
-        "build": {
-          "tasks": [
-            {
-              "use": "node-cf",
-              "src": "srv"
-            },
-            {
-              "use": "cds-dbm/dist/build/postgres-cf",
-              "for": "postgres-cf",
-              "src": "db",
-              "options": {
-                "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
-              }
-            }
-          ]
         }
       }
     },
-    "hana": {
-      "deploy-format": "hdbtable"
+    "build": {
+      "tasks": [
+        {
+          "for": "node-cf",
+          "src": "srv",
+          "options": {
+            "model": [
+              "db",
+              "srv",
+              "app"
+            ]
+          }
+        },
+        {
+          "use": "cds-dbm/dist/build/postgres-cf",
+          "for": "postgres-cf",
+          "src": "db",
+          "options": {
+            "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
+          }
+        }
+      ]
     }
   }
 }
