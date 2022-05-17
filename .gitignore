@@ -46,3 +46,6 @@ approuter/*/webapp/
 # Environment
 .env
 tmp
+
+# Postgres
+.azure-postgres-connection.json
