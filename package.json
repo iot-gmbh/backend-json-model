@@ -101,6 +101,9 @@
   ],
   "cds": {
     "requires": {
+      "auth": {
+        "impl": "srv/custom-auth.js"
+      },
       "[development]": {
         "auth": {
           "kind": "dummy-auth"
@@ -136,7 +139,15 @@
         "impl": "cds-pg",
         "model": [
           "srv"
-        ]
+        ],
+        "credentials": {
+          "host": "localhost",
+          "port": "5432",
+          "database": "projectplanning3",
+          "user": "postgres",
+          "password": "postgres",
+          "schema": "public"
+        }
       },
       "uaa": {
         "kind": "xsuaa"
