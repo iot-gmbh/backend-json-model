@@ -141,11 +141,6 @@
       "uaa": {
         "[heroku]": {},
         "kind": "xsuaa"
-      },
-      "MicrosoftGraphIOTGmbH": {
-        "credentials": {
-          "destination": "MicrosoftGraphIOTGmbH"
-        }
       }
     },
     "migrations": {
