@@ -69,7 +69,8 @@
     "display:app": "ui5 serve -o fiori.html",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "debug": "run-p start:srv start:app",
-    "build": "mbt build",
+    "build": "cds build --production",
+    "build:mbt": "mbt build",
     "lint": "eslint srv && eslint app",
     "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
     "build:ui": "mbt module-build -m fiori-azdev-workitems,fiori-customers,fiori-single-planning-calendar -g",
@@ -81,8 +82,7 @@
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
     "deploy:pg:full": "npx cds-dbm deploy --create-db --load-via full",
     "deploy:pg": "npx cds-dbm deploy --create-db --load-via delta",
-    "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services",
-    "heroku-postbuild": "echo heroku postbuild skipped"
+    "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services"
   },
   "files": [
     "db",
