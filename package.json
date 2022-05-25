@@ -92,7 +92,8 @@
     "install:workitems-display": "cd app/workitems-display && npm i",
     "install:workitems-alp": "cd app/workitems-alp && npm i",
     "install:workitems-iot": "cd app/workitems-iot && npm i",
-    "--postinstall": "run-p install:*"
+    "--postinstall": "run-p install:*",
+    "heroku-postbuild": "echo heroku postbuild skipped"
   },
   "files": [
     "db",
@@ -141,15 +142,15 @@
           "srv"
         ],
         "credentials": {
-          "host": "localhost",
-          "port": "5432",
-          "database": "projectplanning3",
-          "user": "postgres",
-          "password": "postgres",
-          "schema": "public"
+          "[heroku]": {
+            "ssl": {
+              "rejectUnauthorized": false
+            }
+          }
         }
       },
       "uaa": {
+        "[heroku]": {},
         "kind": "xsuaa"
       },
       "MicrosoftGraphIOTGmbH": {
