@@ -18,7 +18,7 @@ function parseQueryParams(select) {
 }
 
 module.exports = async function (srv) {
-  const MSGraphSrv = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
+  // const MSGraphSrv = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
 
   srv.on("READ", "Events", async (req) => {
     const user = process.env.NODE_ENV
