@@ -83,7 +83,7 @@
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
     "deploy:pg:full": "npx cds-dbm deploy --create-db --load-via full",
-    "deploy:pg": "npx cds-dbm deploy --create-db --load-via delta",
+    "deploy:pg": "npx cds-dbm deploy --load-via delta",
     "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services"
   },
   "files": [
@@ -133,17 +133,12 @@
           "srv"
         ],
         "credentials": {
-          "host": "ec2-54-165-90-230.compute-1.amazonaws.com",
+          "host": "localhost",
           "port": "5432",
-          "database": "d42eoda6m1vp2l",
-          "username": "rfkekikzphepbj",
-          "user": "rfkekikzphepbj",
-          "password": "cb1a6f635f6f93a8d680c60921889ddd8fbbdd24a1e9a6b81e64f3e5ec4618a4",
-          "schema": "public",
-          "sslmode": "require",
-          "ssl": {
-            "rejectUnauthorized": false
-          }
+          "database": "projectplanning7",
+          "user": "postgres",
+          "password": "postgres",
+          "schema": "public"
         }
       },
       "uaa": {
