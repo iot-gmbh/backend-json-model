@@ -1,4 +1,4 @@
-const cdsapi = require("@sapmentors/cds-scp-api");
+// const cdsapi = require("@sapmentors/cds-scp-api");
 // const { ExpressionBuilder } = require("@sap/cds-runtime/lib/db/sql-builder");
 const ExpressionBuilder = require("@sap/cds/libx/_runtime/db/sql-builder/ExpressionBuilder");
 
@@ -18,6 +18,7 @@ function parseQueryParams(select) {
 }
 
 module.exports = async function (srv) {
+  const MSGraphSrv = {};
   // const MSGraphSrv = await cdsapi.connect.to("MicrosoftGraphIOTGmbH");
 
   srv.on("READ", "Events", async (req) => {
