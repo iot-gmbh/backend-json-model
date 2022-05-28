@@ -58,7 +58,7 @@ service AdminService
     {
       grant : 'READ',
       to    : 'authenticated-user',
-      where : 'userPrincipalName = $user'
+      where : 'assignedTo_userPrincipalName = $user'
     },
     {
       grant : 'READ',
