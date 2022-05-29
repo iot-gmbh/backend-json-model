@@ -131,15 +131,7 @@
         "impl": "cds-pg",
         "model": [
           "srv"
-        ],
-        "credentials": {
-          "host": "localhost",
-          "port": "5432",
-          "database": "projectplanning7",
-          "user": "postgres",
-          "password": "postgres",
-          "schema": "public"
-        }
+        ]
       },
       "uaa": {
         "[heroku]": {},
