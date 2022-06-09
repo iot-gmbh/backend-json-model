@@ -15,6 +15,7 @@
     "@sap/xssec": "^3.2.13",
     "@sapmentors/cds-scp-api": "github:sapmentors/cds-scp-api",
     "@ui5/cli": "^2.14.9",
+    "axios": "^0.27.2",
     "azure-devops-node-api": "^11.1.1",
     "cds-dbm": "0.0.36",
     "cds-pg": "0.1.28",
@@ -29,7 +30,9 @@
     "msal": "^1.4.16",
     "passport": "^0.6.0",
     "sap-cf-axios": "^0.3.5",
-    "uuid": "^8.3.2"
+    "simple-oauth2": "^4.3.0",
+    "uuid": "^8.3.2",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@sap/approuter": "^11.0.1",
