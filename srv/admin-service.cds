@@ -39,6 +39,8 @@ service AdminService
   @odata.draft.enabled
   entity Customers       as projection on my.Customers;
 
+  entity Travels         as projection on my.Travels;
+
   @odata.create.enabled
   @odata.update.enabled
   // @odata.draft.enabled

@@ -44,6 +44,8 @@ entity Users {
                             on teamMembers.manager = $self;
       workItems         : Association to many WorkItems
                             on workItems.assignedTo = $self;
+      travels           : Association to many Travels
+                            on travels.user = $self;
 };
 
 @assert.unique : {friendlyID : [
@@ -138,3 +140,8 @@ entity WorkItems : managed, relevance {
       deleted             : Boolean;
       confirmed           : Boolean;
 };
+
+entity Travels : cuid, managed {
+  customer : Association to Customers;
+  user     : Association to Users;
+}
