@@ -5,9 +5,6 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
-  "engines": {
-    "node": "14.14"
-  },
   "dependencies": {
     "@azure/msal-node": "^1.9.0",
     "@microsoft/microsoft-graph-client": "^3.0.2",
