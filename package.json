@@ -5,7 +5,7 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
-  "engines": {
+  "--engines": {
     "node": ">=14.15.5 <15"
   },
   "dependencies": {
