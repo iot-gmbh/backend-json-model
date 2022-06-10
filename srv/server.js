@@ -24,6 +24,8 @@ cds.on("bootstrap", (app) => {
   app.use(auth(config));
   app.use(proxy());
 
+  //test
+
   // Example of a protected route
   // TODO: Protect app
   // cf. https://blogs.sap.com/2021/08/06/sap-cap-with-social-login-and-rbac-using-auth0/
