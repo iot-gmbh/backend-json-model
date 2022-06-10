@@ -27,7 +27,7 @@ cds.on("bootstrap", (app) => {
   // Example of a protected route
   // TODO: Protect app
   // cf. https://blogs.sap.com/2021/08/06/sap-cap-with-social-login-and-rbac-using-auth0/
-  app.use("/app", requiresAuth(), express.static(__dirname + "/../app"));
+  // app.use("/app", requiresAuth(), express.static(__dirname + "/../app"));
 
   // app.use(
   //   "/fiori.html",
