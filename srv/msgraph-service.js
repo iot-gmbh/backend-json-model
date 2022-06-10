@@ -3,10 +3,10 @@
 const ExpressionBuilder = require("@sap/cds/libx/_runtime/db/sql-builder/ExpressionBuilder");
 
 // MSGraph connection is inspired by: https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-nodejs-console
-// const auth = require("./msgraph/auth");
-// const fetch = require("./msgraph/fetch");
-const auth = {};
-const fetch = {};
+const auth = require("./msgraph/auth");
+const fetch = require("./msgraph/fetch");
+// const auth = {};
+// const fetch = {};
 
 function parseQueryParams(select) {
   const { values } = new ExpressionBuilder(select.where).build();

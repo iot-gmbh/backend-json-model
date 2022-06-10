@@ -36,6 +36,9 @@ cds.on("bootstrap", (app) => {
     requiresAuth(),
     express.static(__dirname + "../app/fiori.html")
   );
+
+  // for example, serve static resources incl. index.html
+  app.use(express.static(__dirname + "/app2"));
 });
 
 module.exports = cds.server;
