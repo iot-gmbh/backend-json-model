@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IOT Planer</title>
+
+    <script>
+      window["sap-ushell-config"] = {
+        defaultRenderer: "fiori2",
+        applications: {
+          "AzDevOpsWorkItem-display": {
+            title: "Display Azure DevOps Work Items",
+            additionalInformation: "SAPUI5.Component=iot.azdevworkitems",
+            applicationType: "URL",
+            url: "/azdev-workitems/webapp",
+            navigationMode: "embedded",
+          },
+          "Customers-display": {
+            title: "Display Customers",
+            additionalInformation: "SAPUI5.Component=iot.customers",
+            applicationType: "URL",
+            url: "/customers/webapp",
+            navigationMode: "embedded",
+          },
+          "Projects-display": {
+            title: "Display Projects",
+            additionalInformation: "SAPUI5.Component=iot.planner.projects",
+            applicationType: "URL",
+            url: "/projects/webapp",
+            navigationMode: "embedded",
+          },
+          // Don't use this one, as its annotations are faulty and there is no requirement for this app
+          // "Projects-analyze": {
+          //   title: "Analyze Projects",
+          //   additionalInformation: "SAPUI5.Component=iot.planner.projectsalp",
+          //   applicationType: "URL",
+          //   url: "/projects-alp/webapp",
+          //   navigationMode: "embedded",
+          // },
+          "ProjectsV2-display": {
+            title: "Display Projects (ODATA V2)",
+            additionalInformation:
+              "SAPUI5.Component=iot.planner.projectsodatav2",
+            applicationType: "URL",
+            url: "/projects-odata-v2/webapp",
+            navigationMode: "embedded",
+          },
+          "SinglePlanningCalendar-manage": {
+            title: "Manage Calendar",
+            additionalInformation:
+              "SAPUI5.Component=iot.singleplanningcalendar",
+            applicationType: "URL",
+            url: "/single-planning-calendar/webapp",
+            navigationMode: "embedded",
+          },
+          "Users-display": {
+            title: "Display Users",
+            additionalInformation: "SAPUI5.Component=iot.project.planner.users",
+            applicationType: "URL",
+            url: "/users/webapp",
+            navigationMode: "embedded",
+          },
+          "WorkItems-display": {
+            title: "Display Work Items",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitems",
+            applicationType: "URL",
+            url: "/workitems-display/webapp",
+            navigationMode: "embedded",
+          },
+          "WorkItemsALP-analyze": {
+            title: "Analyze Work Items",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitemsalp",
+            applicationType: "URL",
+            url: "/workitems-alp/webapp",
+            navigationMode: "embedded",
+          },
+          "IOTWorkItems-display": {
+            title: "Display IOT Work Items",
+            additionalInformation: "SAPUI5.Component=iot.planner.workitems",
+            applicationType: "URL",
+            url: "/workitems-iot/webapp",
+            navigationMode: "embedded",
+          },
+        },
+      };
+    </script>
+
+    <script
+      id="sap-ushell-bootstrap"
+      src="https://ui5.sap.com/1.99.0/test-resources/sap/ushell/bootstrap/sandbox.js"
+    ></script>
+
+    <script
+      id="sap-ui-bootstrap"
+      src="https://ui5.sap.com/1.99.0/resources/sap-ui-core.js"
+      data-sap-ui-theme="sap_fiori_3"
+      data-sap-ui-compatVersion="edge"
+      data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+      data-sap-ui-async="true"
+      data-sap-ui-frameOptions="trusted"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="https://alcdn.msftauth.net/lib/1.3.1/js/msal.min.js"
+      integrity="sha384-kb1EkR5mZZRISRcdpYMFQRBDBb/RG/tKvYeCbgFjLUhPu54tjm1O4OPkvmOMnpPJ"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="text/javascript">
+      if (typeof Msal === "undefined")
+        document.write(
+          unescape(
+            "%3Cscript src='https://alcdn.msftauth.net/lib/1.2.1/js/msal.js' type='text/javascript' integrity='sha384-9TV1245fz+BaI+VvCjMYL0YDMElLBwNS84v3mY57pXNOt6xcUYch2QLImaTahcOP' crossorigin='anonymous'%3E%3C/script%3E"
+          )
+        );
+    </script>
+
+    <script>
+      // Azure AD B2C sample endpoint
+      const azureADconfig = {
+        clientId: "e760cab2-b9a1-4c0d-86fb-ff7084abd902",
+        authority:
+          "https://fabrikamb2c.b2clogin.com/fabrikamb2c.onmicrosoft.com/b2c_1_susi",
+      };
+
+      const azureADconfigCSW = {
+        clientId: "ac6f2c18-a2c6-4b5f-9148-13abaaf8e5aa",
+        authority:
+          "https://cswb2b.b2clogin.com/cswb2b.onmicrosoft.com/B2C_1_SignUpAndSignInV2",
+      };
+
+      var appConfig = {
+        b2cScopes: [azureADconfig.clientId],
+        webApi: "/catalog/Books",
+        adminWebApi: "/admin-catalog/Books",
+      };
+
+      // configuration to initialize msal
+      const msalConfig = {
+        auth: {
+          clientId: azureADconfig.clientId, //This is your client ID
+          authority: azureADconfig.authority, //This is your tenant info
+          validateAuthority: false,
+        },
+        cache: {
+          cacheLocation: "localStorage",
+          storeAuthStateInCookie: true,
+        },
+      };
+
+      // instantiate MSAL
+      const myMSALObj = new Msal.UserAgentApplication(msalConfig);
+
+      // request to signin - returns an idToken
+      const loginRequest = {
+        scopes: appConfig.b2cScopes,
+      };
+
+      // request to acquire a token for resource access
+      const tokenRequest = {
+        scopes: appConfig.b2cScopes,
+      };
+
+      // signin and acquire a token silently with POPUP flow. Fall back in case of failure with silent acquisition to popup
+      function signIn() {
+        myMSALObj
+          .loginPopup(loginRequest)
+          .then(function (loginResponse) {
+            getToken(tokenRequest).then((token) => console.log(token));
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      //acquire a token silently
+      function getToken(tokenRequest) {
+        return myMSALObj
+          .acquireTokenSilent(tokenRequest)
+          .catch(function (error) {
+            console.log("aquire token popup");
+            // fallback to interaction when silent call fails
+            return myMSALObj
+              .acquireTokenPopup(tokenRequest)
+              .then(function (tokenResponse) {})
+              .catch(function (error) {
+                console.log("Failed token acquisition", error);
+              });
+          });
+      }
+
+      signIn();
+
+      sap.ui
+        .getCore()
+        .attachInit(() =>
+          sap.ushell.Container.createRenderer().placeAt("content")
+        );
+    </script>
+  </head>
+  <body class="sapUiBody" id="content"></body>
+</html>
