@@ -2,7 +2,21 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "..\\openui5-sample-app"
+    },
+    {
+      "path": "..\\azure-ad-auth"
+    },
+    {
+      "path": "..\\dalrae.cap.demo.githubauth"
+    },
+    {
+      "path": "..\\ms-identity-node"
+    },
+    {
+      "path": "..\\cap-azure-ad-b2c"
     }
-  ],
-  "settings": {}
+  ]
 }
