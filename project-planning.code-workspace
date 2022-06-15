@@ -17,6 +17,9 @@
     },
     {
       "path": "..\\cap-azure-ad-b2c"
+    },
+    {
+      "path": "..\\cds-msal-auth"
     }
   ]
 }
