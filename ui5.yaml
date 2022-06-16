@@ -5,7 +5,7 @@ type: application
 resources:
   configuration:
     paths:
-      webapp: app
+      webapp: dist
 framework:
   name: SAPUI5
   version: "1.100.1"
@@ -35,34 +35,34 @@ server:
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/admin/
+        baseUri: http://localhost:4004/admin/
     - name: ui5-middleware-simpleproxy
       mountPath: "*/v2/admin/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/v2/admin/
+        baseUri: http://localhost:4004/v2/admin/
     - name: ui5-middleware-simpleproxy
       mountPath: "*/v2/analytics/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/v2/analytics/
+        baseUri: http://localhost:4004/v2/analytics/
     - name: ui5-middleware-simpleproxy
       mountPath: "*/v2/timetracking/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/v2/timetracking/
+        baseUri: http://localhost:4004/v2/timetracking/
     - name: ui5-middleware-simpleproxy
       mountPath: "*/azure-devops/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/azure-devops/
+        baseUri: http://localhost:4004/azure-devops/
     - name: ui5-middleware-simpleproxy
       mountPath: "*/work-items/"
       afterMiddleware: compression
       configuration:
         removeETag: true
-        baseUri: http://localhost:5000/work-items/
+        baseUri: http://localhost:4004/work-items/

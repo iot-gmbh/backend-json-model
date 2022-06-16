@@ -19,7 +19,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "v2/admin/",
+                "uri": "/v2/admin/",
                 "type": "OData",
                 "settings": {
                     "annotations": [

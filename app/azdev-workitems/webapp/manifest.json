@@ -15,7 +15,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "azure-devops/",
+                "uri": "/azure-devops/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"

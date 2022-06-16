@@ -18,7 +18,7 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "v2/analytics",
+                "uri": "/v2/analytics",
                 "type": "OData",
                 "settings": {
                     "annotations": [

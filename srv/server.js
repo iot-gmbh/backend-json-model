@@ -1,7 +1,7 @@
 "use strict";
 
 const cds = require("@sap/cds");
-// const express = require("express");
+const express = require("express");
 const proxy = require("@sap/cds-odata-v2-adapter-proxy");
 const msalAuth = require("cds-msal-auth/auth");
 // const { auth, requiresAuth } = require("express-openid-connect");
@@ -24,6 +24,7 @@ cds.on("bootstrap", (app) => {
   // initialize openid-connect with auth0 configuration
   // app.use(auth(config));
   app.use(proxy());
+  app.use("/dist", express.static(__dirname + "/../dist"));
 
   msalAuth(app);
 
