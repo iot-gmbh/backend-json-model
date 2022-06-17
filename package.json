@@ -52,7 +52,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "local-web-server": "^5.2.1",
     "npm-run-all": "^4.1.5",
     "open-cli": "^7.0.1",
     "sqlite3": "^5.0.8",
@@ -66,8 +65,8 @@
     ]
   },
   "scripts": {
-    "start": "cds run",
-    "start:all": "run-p start serve:ws",
+    "start": "cds run --profile production",
+    "start:dev": "cds run --profile development",
     "start:all:auth:display": "run-p start:srv start:approuter start:app start:auth display:app",
     "start:srv:hybrid": "cds run --profile test",
     "start:hybrid": "run-p start:srv:hybrid start:approuter start:app",

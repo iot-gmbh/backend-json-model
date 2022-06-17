@@ -24,7 +24,7 @@ const tokenRequest = {
 };
 
 const apiConfig = {
-  uri: process.env.MSGRAPH_GRAPH_ENDPOINT + "/v1.0/users",
+  uri: process.env.MSGRAPH_GRAPH_ENDPOINT,
 };
 
 /**

@@ -30,8 +30,9 @@ module.exports = async function (srv) {
       : "daniel.mextorf@iot-online.de";
 
     // here we get an access token
-    const authResponse = await auth.getToken(auth.tokenRequest);
+    // const authResponse = await auth.getToken(auth.tokenRequest);
 
+    const token = req.user.accessToken;
     const query = parseQueryParams(req.query.SELECT);
     const queryString = Object.entries(query)
       .map(([key, value]) => `${key}=${value}`)
@@ -49,11 +50,12 @@ module.exports = async function (srv) {
     var { value } = await fetch.callApi(
       `${
         auth.apiConfig.uri
-      }/${user}/calendarview?${queryString}&$top=1000&$select=${selectFields.join(
+      }/v1.0/me/calendarview?${queryString}&$top=1000&$select=${selectFields.join(
         ","
       )}`,
-      authResponse.accessToken
+      token
     );
+    // if (!value) return [];
 
     return value.map((val) => ({ ...val, id: encodeURIComponent(val.id) }));
   });
