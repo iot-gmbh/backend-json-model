@@ -6,20 +6,14 @@
     },
     "requires": {
         "auth": {
-            "impl": "cds-msal-auth"
-        },
-        "[development]": {
-            "auth": {
+            "impl": "cds-msal-auth",
+            "[development]": {
                 "kind": "dummy-auth"
-            }
-        },
-        "[test]": {
-            "auth": {
+            },
+            "[test]": {
                 "kind": "jwt-auth"
-            }
-        },
-        "[production]": {
-            "auth": {
+            },
+            "[production]": {
                 "kind": "jwt-auth"
             }
         },
@@ -31,7 +25,7 @@
             "[postgres]": {
                 "kind": "database"
             },
-            "[test]": {
+            "[sqlite]": {
                 "kind": "sqlite"
             },
             "[production]": {
@@ -43,7 +37,15 @@
             "impl": "cds-pg",
             "model": [
                 "srv"
-            ]
+            ],
+            "credentials": {
+                "host": "localhost",
+                "port": "5432",
+                "database": "planning",
+                "user": "postgres",
+                "password": "postgres",
+                "schema": "public"
+            }
         },
         "uaa": {
             "[heroku]": {},

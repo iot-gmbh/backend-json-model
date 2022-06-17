@@ -20,6 +20,9 @@
     },
     {
       "path": "..\\cds-msal-auth"
+    },
+    {
+      "path": "..\\cds-dbm"
     }
   ]
 }

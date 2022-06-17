@@ -1,9 +1,9 @@
 using {iot.planner as my} from '../db/schema';
 
-service AdminService
-// @(requires : 'authenticated-user')
-{
-  @odata.draft.enabled
+service AdminService @(requires : 'authenticated-user') {
+  // @odata.draft.enabled
+  @odata.create.enabled
+  @odata.update.enabled
   entity Users @(restrict : [
     {
       grant : 'READ',
