@@ -25,13 +25,6 @@ function parseQueryParams(select) {
 
 module.exports = async function (srv) {
   srv.on("READ", "Events", async (req) => {
-    const user = process.env.NODE_ENV
-      ? req.user.id
-      : "daniel.mextorf@iot-online.de";
-
-    // here we get an access token
-    // const authResponse = await auth.getToken(auth.tokenRequest);
-
     const token = req.user.accessToken;
     const query = parseQueryParams(req.query.SELECT);
     const queryString = Object.entries(query)
