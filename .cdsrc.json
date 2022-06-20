@@ -20,32 +20,31 @@
         "db": {
             "kind": "database",
             "[development]": {
-                "kind": "database"
+                "kind": "sqlite"
             },
-            "[postgres]": {
-                "kind": "database"
+            "[test]": {
+                "kind": "postgres-local"
             },
             "[sqlite]": {
                 "kind": "sqlite"
             },
             "[production]": {
-                "kind": "database"
+                "kind": "postgres-heroku"
             }
         },
-        "database": {
-            "dialect": "plain",
+        "postgres-local": {
+            "dialect": "postgres-local",
             "impl": "cds-pg",
             "model": [
                 "srv"
-            ],
-            "credentials": {
-                "host": "localhost",
-                "port": "5432",
-                "database": "planning",
-                "user": "postgres",
-                "password": "postgres",
-                "schema": "public"
-            }
+            ]
+        },
+        "postgres-heroku": {
+            "dialect": "postgres-heroku",
+            "impl": "cds-pg",
+            "model": [
+                "srv"
+            ]
         },
         "uaa": {
             "[heroku]": {},
