@@ -107,5 +107,83 @@
     "db",
     "srv",
     "app"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "auth": {
+        "impl": "cds-msal-auth",
+        "[development]": {
+          "kind": "dummy-auth"
+        },
+        "[test]": {
+          "kind": "jwt-auth"
+        },
+        "[production]": {
+          "kind": "jwt-auth"
+        }
+      },
+      "db": {
+        "kind": "database",
+        "[development]": {
+          "kind": "sqlite"
+        },
+        "[test]": {
+          "kind": "postgres"
+        },
+        "[sqlite]": {
+          "kind": "sqlite"
+        },
+        "[production]": {
+          "kind": "postgres"
+        }
+      },
+      "postgres": {
+        "dialect": "plain",
+        "impl": "cds-pg",
+        "model": [
+          "srv"
+        ]
+      },
+      "uaa": {
+        "[heroku]": {},
+        "kind": "xsuaa"
+      }
+    },
+    "migrations": {
+      "db": {
+        "schema": {
+          "default": "public",
+          "clone": "_cdsdbm_clone",
+          "reference": "_cdsdbm_ref"
+        },
+        "deploy": {
+          "tmpFile": "tmp/_autodeploy.json",
+          "undeployFile": "db/undeploy.json"
+        }
+      }
+    },
+    "build": {
+      "tasks": [
+        {
+          "for": "node-cf",
+          "src": "srv",
+          "options": {
+            "model": [
+              "db",
+              "srv",
+              "app"
+            ]
+          }
+        },
+        {
+          "use": "cds-dbm/dist/build/postgres-cf",
+          "for": "postgres-cf",
+          "src": "db",
+          "options": {
+            "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
+          }
+        }
+      ]
+    }
+  }
 }
