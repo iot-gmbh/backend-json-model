@@ -23,24 +23,17 @@
                 "kind": "sqlite"
             },
             "[test]": {
-                "kind": "postgres-local"
+                "kind": "postgres"
             },
             "[sqlite]": {
                 "kind": "sqlite"
             },
             "[production]": {
-                "kind": "postgres-heroku"
+                "kind": "postgres"
             }
         },
-        "postgres-local": {
-            "dialect": "postgres-local",
-            "impl": "cds-pg",
-            "model": [
-                "srv"
-            ]
-        },
-        "postgres-heroku": {
-            "dialect": "postgres-heroku",
+        "postgres": {
+            "dialect": "plain",
             "impl": "cds-pg",
             "model": [
                 "srv"
