@@ -41,13 +41,13 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}">
+									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" change="onSelectProject" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}">
+									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}" change="onSelectPackage" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

@@ -57,27 +57,9 @@ sap.ui.define(
             busy: false,
             customers: [],
             projects: [],
-            get projectsFiltered() {
-              const bc = dialog.getBindingContext();
-              if (!bc) return [];
-              const selected = bc.getProperty("customer_ID");
-              if (!selected) return [];
-
-              return this.projects.filter(
-                ({ customer_ID }) => customer_ID === selected
-              );
-            },
+            projectsFiltered: [],
             workPackages: [],
-            get workPackagesFiltered() {
-              const bc = dialog.getBindingContext();
-              if (!bc) return [];
-              const selected = bc.getProperty("project_ID");
-              if (!selected) return [];
-
-              return this.workPackages.filter(
-                ({ project_ID }) => project_ID === selected
-              );
-            },
+            workPackagesFiltered: [],
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
@@ -163,18 +145,60 @@ sap.ui.define(
         onSelectCustomer(event) {
           const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
+
           if (!selectedItem) return;
 
-          const selectedCustomerFriendly = selectedItem
+          const selectedCustomer = selectedItem
             .getBindingContext()
-            .getProperty("friendlyID");
+            .getProperty("ID");
+          const path = selectedItem.getBindingContext().getPath();
 
-          const path = event.getSource().getBindingContext().getPath();
+          const { projects, workPackages } = model.getData();
 
-          model.setProperty(
-            path + "/customer_friendlyID",
-            selectedCustomerFriendly
+          const projectsFiltered = projects.filter(
+            ({ customer_ID }) => customer_ID === selectedCustomer
           );
+
+          const firstProject = projectsFiltered[0];
+          let packagesFiltered = [];
+          let firstPackageKey = "";
+
+          if (firstProject) {
+            packagesFiltered = workPackages.filter(
+              ({ project_ID }) => project_ID === firstProject.ID
+            );
+            firstPackageKey =
+              packagesFiltered.length >= 1 ? packagesFiltered[0] : "";
+          }
+
+          model.setProperty("/projectsFiltered", projectsFiltered);
+          model.setProperty("/workPackagesFiltered", packagesFiltered);
+
+          this.byId("projectSelect").setSelectedKey(firstProject.ID);
+          this.byId("packageSelect").setSelectedKey(firstPackageKey);
+        },
+
+        onSelectProject(event) {
+          const model = this.getModel();
+          const selectedItem = event.getParameter("selectedItem");
+
+          if (!selectedItem) return;
+
+          const path = selectedItem.getBindingContext().getPath();
+          const selectedProject = selectedItem
+            .getBindingContext()
+            .getProperty("ID");
+
+          const { workPackages } = model.getData();
+
+          const packagesFiltered = workPackages.filter(
+            ({ project_ID }) => project_ID === selectedProject.ID
+          );
+          const firstPackageKey =
+            packagesFiltered.length >= 1 ? packagesFiltered[0] : "";
+
+          model.setProperty("/workPackagesFiltered", packagesFiltered);
+          model.setProperty(path + "/workPackage_ID", firstPackageKey);
         },
 
         onDisplayLegend() {
@@ -308,6 +332,9 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
+          this.byId("packageSelect").setSelectedKey(undefined);
+          this.byId("projectSelect").setSelectedKey(undefined);
+          this.byId("customerSelect").setSelectedKey(undefined);
           dialog.bindElement(path);
           dialog.open();
         },
