@@ -65,8 +65,7 @@
     ]
   },
   "scripts": {
-    "start": "cds run --profile production",
-    "start:dev": "cds run --profile development",
+    "start": "cds run",
     "start:all:auth:display": "run-p start:srv start:approuter start:app start:auth display:app",
     "start:srv:hybrid": "cds run --profile test",
     "start:hybrid": "run-p start:srv:hybrid start:approuter start:app",
@@ -100,7 +99,8 @@
     "deploy:srv": "npm run build:srv && cf deploy -m project-planning-srv",
     "deploy:db": "cf deploy -m project-planning-db-deployer -r project-planning-db",
     "deploy:pg:full": "npx cds-dbm deploy --create-db --load-via full",
-    "deploy:pg": "npx cds-dbm deploy --load-via delta",
+    "deploy:pg:delta": "npx cds-dbm deploy --load-via delta",
+    "deploy:pg": "npx cds-dbm deploy",
     "undeploy": "cf undeploy project-planning --delete-service-keys --delete-services"
   },
   "files": [
