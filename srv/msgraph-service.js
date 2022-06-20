@@ -48,7 +48,7 @@ module.exports = async function (srv) {
       )}`,
       token
     );
-    // if (!value) return [];
+    if (!value) return [];
 
     return value.map((val) => ({ ...val, id: encodeURIComponent(val.id) }));
   });
