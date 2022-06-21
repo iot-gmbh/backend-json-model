@@ -16,8 +16,6 @@
 		"start-noflp": "fiori run --open 'index.html'",
 		"build": "ui5 build --clean-dest",
 		"build:cf": "ui5 build -a --clean-dest --include-task=generateManifestBundle generateCachebusterInfo",
-		"build": "ui5 build --clean-dest",
-		"build:cf": "ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateManifestBundle generateCachebusterInfo",
 		"deploy": "fiori verify",
 		"deploy-config": "fiori add deploy-config",
 		"start-mock": "fiori run --open 'test/flpSandboxMockServer.html#projectsodatav2-tile'"
@@ -33,8 +31,7 @@
 	},
 	"ui5": {
 		"dependencies": [
-			"ui5-task-zipper",
-			"@sap/ux-ui5-tooling"
+			"ui5-task-zipper"
 		]
 	}
 }

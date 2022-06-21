@@ -110,6 +110,7 @@ sap.ui.define(
                 !activeElementID.includes("submitButton")
               ) {
                 evt.preventDefault();
+
                 this.onSubmitEntry();
               } else if (evt.keyCode === 46) {
                 evt.preventDefault();
@@ -341,6 +342,15 @@ sap.ui.define(
           const appointment = this.byId("createItemDialog")
             .getBindingContext()
             .getObject();
+
+          if (appointment.isAllDay) {
+            MessageToast.show(
+              this.getResourceBundle().getText(
+                "message.allDayEventsAreNotEditable"
+              )
+            );
+            return;
+          }
 
           let { appointments } = model.getData();
 

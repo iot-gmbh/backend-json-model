@@ -23,15 +23,17 @@
 								<customHeader>
 									<Bar>
 										<contentLeft>
-											<Title text="{/createItemDialogTitle} {= !${confirmed} ? ' - Draft' : ''}"/>
+											<Title text="{/createItemDialogTitle} {= !${confirmed} ? ${i18n>appointmentDialog.draftIndicator} : ''}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${confirmed}}"/>
-											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}"/>
+											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${confirmed} &amp;&amp; !${isAllDay}}"/>
+											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" enabled="{= !${isAllDay}}"/>
 										</contentRight>
 									</Bar>
 								</customHeader>
+
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
+									<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}"/>
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
@@ -60,7 +62,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_ID} &amp;&amp; !!${project_ID}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_ID} &amp;&amp; !!${project_ID} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>
