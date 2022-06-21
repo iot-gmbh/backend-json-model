@@ -148,34 +148,33 @@ sap.ui.define(
 
           if (!selectedItem) return;
 
-          const selectedCustomer = selectedItem
-            .getBindingContext()
-            .getProperty("ID");
-          const path = selectedItem.getBindingContext().getPath();
-
+          const selectedCustomer = selectedItem.getBindingContext().getObject();
           const { projects, workPackages } = model.getData();
 
           const projectsFiltered = projects.filter(
-            ({ customer_ID }) => customer_ID === selectedCustomer
+            ({ customer_ID }) => customer_ID === selectedCustomer.ID
           );
 
           const firstProject = projectsFiltered[0];
+
           let packagesFiltered = [];
-          let firstPackageKey = "";
+          let firstProjectID = "";
+          let firstPackageID = "";
 
           if (firstProject) {
             packagesFiltered = workPackages.filter(
               ({ project_ID }) => project_ID === firstProject.ID
             );
-            firstPackageKey =
-              packagesFiltered.length >= 1 ? packagesFiltered[0] : "";
+
+            firstProjectID = firstProject.ID;
+            firstPackageID = packagesFiltered[0] ? packagesFiltered[0].ID : "";
+
+            this.byId("projectSelect").setSelectedKey(firstProjectID);
+            this.byId("packageSelect").setSelectedKey(firstPackageID);
           }
 
           model.setProperty("/projectsFiltered", projectsFiltered);
           model.setProperty("/workPackagesFiltered", packagesFiltered);
-
-          this.byId("projectSelect").setSelectedKey(firstProject.ID);
-          this.byId("packageSelect").setSelectedKey(firstPackageKey);
         },
 
         onSelectProject(event) {
@@ -184,15 +183,13 @@ sap.ui.define(
 
           if (!selectedItem) return;
 
-          const selectedProject = selectedItem
-            .getBindingContext()
-            .getProperty("ID");
-
+          const selectedProject = selectedItem.getBindingContext().getObject();
           const { workPackages } = model.getData();
 
           const packagesFiltered = workPackages.filter(
             ({ project_ID }) => project_ID === selectedProject.ID
           );
+
           const firstPackageKey = packagesFiltered[0]
             ? packagesFiltered[0].ID
             : "";
