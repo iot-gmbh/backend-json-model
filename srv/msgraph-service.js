@@ -38,6 +38,7 @@ module.exports = async function (srv) {
       "end",
       "categories",
       "sensitivity",
+      "isAllDay",
     ];
 
     var { value } = await fetch.callApi(

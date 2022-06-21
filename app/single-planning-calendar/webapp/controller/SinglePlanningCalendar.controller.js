@@ -480,7 +480,19 @@ sap.ui.define(
           });
 
           const appointmentsMap = appointments.reduce((map, appointment) => {
-            map[appointment.ID] = appointment;
+            map[appointment.ID] = {
+              /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
+                This leads to problems with UI5, because the events are repeated each day which is ugly
+                TODO: Find a better solution. Maybe this thread can help: https://answers.sap.com/questions/13324088/why-cap-shows-datetime-field-different-in-fiori-db.html
+              */
+              completedDate: appointment.isAllDay
+                ? appointment.completedDate.setHours(0)
+                : appointment.completedDate,
+              activatedDate: appointment.isAllDay
+                ? appointment.activatedDate.setHours(0)
+                : appointment.activatedDate,
+              ...appointment,
+            };
 
             return map;
           }, {});

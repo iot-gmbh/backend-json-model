@@ -10,16 +10,30 @@ function transformEventToWorkItem({
   end,
   categories: [customer_friendlyID],
   sensitivity,
+  isAllDay,
   user,
 }) {
   return {
     ID: id,
     title: subject,
     customer_friendlyID,
-    activatedDate: start.dateTime.substring(0, 19) + "Z",
-    completedDate: end.dateTime.substring(0, 19) + "Z",
+    /* 
+      The original format is: '2022-06-23T14:30:00.0000000'
+      OData needs a format like this: '2022-06-23T00:00:00Z'
+
+      All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
+      This leads to UI5 showing repeating them each single day instead of showing all-day events.
+      Thus we replace the time for all-day events
+    */
+    activatedDate: isAllDay
+      ? start.dateTime.substring(0, 11) + "00:00:00Z"
+      : start.dateTime.substring(0, 19) + "Z",
+    completedDate: isAllDay
+      ? end.dateTime.substring(0, 11) + "00:00:00Z"
+      : end.dateTime.substring(0, 19) + "Z",
     assignedTo_userPrincipalName: user,
     private: sensitivity === "private",
+    isAllDay,
     type: "Event",
   };
 }
@@ -52,7 +66,6 @@ module.exports = cds.service.impl(async function () {
   const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
 
   this.on("READ", "MyUser", async (req) => {
-    const user = req.user;
     const tx = this.transaction(req);
     const details = await tx.run(
       SELECT.from(Users).where({ userPrincipalName: req.user.id })
