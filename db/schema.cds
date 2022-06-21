@@ -124,6 +124,7 @@ entity WorkItems : managed, relevance {
       customer            : Association to Customers;
       customerName        : String;
       private             : Boolean;
+      isAllDay            : Boolean;
       // Custom
       project_friendlyID  : String;
       project             : Association to Projects;
