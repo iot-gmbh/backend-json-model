@@ -49,7 +49,17 @@ module.exports = cds.service.impl(async function () {
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
-  const { WorkItems, Customers, Projects } = db.entities("iot.planner");
+  const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
+
+  this.on("READ", "MyUser", async (req) => {
+    const user = req.user;
+    const tx = this.transaction(req);
+    const details = await tx.run(
+      SELECT.from(Users).where({ userPrincipalName: req.user.id })
+    );
+
+    return details;
+  });
 
   this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;

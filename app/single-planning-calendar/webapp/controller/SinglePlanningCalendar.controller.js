@@ -184,7 +184,6 @@ sap.ui.define(
 
           if (!selectedItem) return;
 
-          const path = selectedItem.getBindingContext().getPath();
           const selectedProject = selectedItem
             .getBindingContext()
             .getProperty("ID");
@@ -194,11 +193,12 @@ sap.ui.define(
           const packagesFiltered = workPackages.filter(
             ({ project_ID }) => project_ID === selectedProject.ID
           );
-          const firstPackageKey =
-            packagesFiltered.length >= 1 ? packagesFiltered[0] : "";
+          const firstPackageKey = packagesFiltered[0]
+            ? packagesFiltered[0].ID
+            : "";
 
           model.setProperty("/workPackagesFiltered", packagesFiltered);
-          model.setProperty(path + "/workPackage_ID", firstPackageKey);
+          this.byId("packageSelect").setSelectedKey(firstPackageKey);
         },
 
         onDisplayLegend() {
@@ -495,14 +495,9 @@ sap.ui.define(
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
-          const user = await this._getUserInfoService();
+          const user = await this._getUser();
 
           model.setProperty("/busy", true);
-          // TODO: Mailadresse entfernen
-          const email =
-            user && user.getEmail()
-              ? user.getEmail()
-              : "benedikt.hoelker@iot-online.de";
 
           const { results: allProjects } = await this.read({
             path: "/Users2Projects",
@@ -510,7 +505,7 @@ sap.ui.define(
               new Filter({
                 path: "user_userPrincipalName",
                 operator: "EQ",
-                value1: email,
+                value1: user.userPrincipalName,
               }),
             ],
             urlParameters: { $expand: "project/customer,project/workPackages" },
@@ -529,21 +524,23 @@ sap.ui.define(
           model.setProperty("/customers", [
             ...new Map(customers.map((cstmer) => [cstmer.ID, cstmer])).values(),
           ]);
+
           model.setProperty("/projects", projects);
           model.setProperty("/workPackages", workPackages);
           model.setProperty("/busy", false);
         },
 
-        _getUserInfoService: function () {
-          return new Promise((resolve) =>
-            sap.ui.require(["sap/ushell/library"], (ushellLib) => {
-              const container = ushellLib.Container;
-              if (!container) return resolve();
-
-              const service = container.getServiceAsync("UserInfo"); // .getService is deprecated!
-              return resolve(service);
-            })
-          );
+        _getUser: function () {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").read("/MyUser", {
+              success: (response) => {
+                const myUser = response.results[0];
+                if (!myUser)
+                  reject("User does not exist in DB. Please create it.");
+                return resolve(myUser);
+              },
+            });
+          });
         },
       }
     );
