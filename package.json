@@ -78,7 +78,7 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "debug": "run-p start:srv start:app",
     "lint": "eslint srv && eslint app",
-    "build": "cds build --production && build:ui",
+    "build": "cds build --production && npm run build:ui",
     "build:mbt": "mbt build",
     "build:ui5": "ui5 build --dest dist",
     "build:srv": "mbt module-build -m project-planning-srv -g -r project-planning-db,project-planning-destinations",
