@@ -57,27 +57,9 @@ sap.ui.define(
             busy: false,
             customers: [],
             projects: [],
-            get projectsFiltered() {
-              const bc = dialog.getBindingContext();
-              if (!bc) return [];
-              const selected = bc.getProperty("customer_ID");
-              if (!selected) return [];
-
-              return this.projects.filter(
-                ({ customer_ID }) => customer_ID === selected
-              );
-            },
+            projectsFiltered: [],
             workPackages: [],
-            get workPackagesFiltered() {
-              const bc = dialog.getBindingContext();
-              if (!bc) return [];
-              const selected = bc.getProperty("project_ID");
-              if (!selected) return [];
-
-              return this.workPackages.filter(
-                ({ project_ID }) => project_ID === selected
-              );
-            },
+            workPackagesFiltered: [],
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
@@ -163,18 +145,57 @@ sap.ui.define(
         onSelectCustomer(event) {
           const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
+
           if (!selectedItem) return;
 
-          const selectedCustomerFriendly = selectedItem
-            .getBindingContext()
-            .getProperty("friendlyID");
+          const selectedCustomer = selectedItem.getBindingContext().getObject();
+          const { projects, workPackages } = model.getData();
 
-          const path = event.getSource().getBindingContext().getPath();
-
-          model.setProperty(
-            path + "/customer_friendlyID",
-            selectedCustomerFriendly
+          const projectsFiltered = projects.filter(
+            ({ customer_ID }) => customer_ID === selectedCustomer.ID
           );
+
+          const firstProject = projectsFiltered[0];
+
+          let packagesFiltered = [];
+          let firstProjectID = "";
+          let firstPackageID = "";
+
+          if (firstProject) {
+            packagesFiltered = workPackages.filter(
+              ({ project_ID }) => project_ID === firstProject.ID
+            );
+
+            firstProjectID = firstProject.ID;
+            firstPackageID = packagesFiltered[0] ? packagesFiltered[0].ID : "";
+
+            this.byId("projectSelect").setSelectedKey(firstProjectID);
+            this.byId("packageSelect").setSelectedKey(firstPackageID);
+          }
+
+          model.setProperty("/projectsFiltered", projectsFiltered);
+          model.setProperty("/workPackagesFiltered", packagesFiltered);
+        },
+
+        onSelectProject(event) {
+          const model = this.getModel();
+          const selectedItem = event.getParameter("selectedItem");
+
+          if (!selectedItem) return;
+
+          const selectedProject = selectedItem.getBindingContext().getObject();
+          const { workPackages } = model.getData();
+
+          const packagesFiltered = workPackages.filter(
+            ({ project_ID }) => project_ID === selectedProject.ID
+          );
+
+          const firstPackageKey = packagesFiltered[0]
+            ? packagesFiltered[0].ID
+            : "";
+
+          model.setProperty("/workPackagesFiltered", packagesFiltered);
+          this.byId("packageSelect").setSelectedKey(firstPackageKey);
         },
 
         onDisplayLegend() {
@@ -308,6 +329,9 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
+          this.byId("packageSelect").setSelectedKey(undefined);
+          this.byId("projectSelect").setSelectedKey(undefined);
+          this.byId("customerSelect").setSelectedKey(undefined);
           dialog.bindElement(path);
           dialog.open();
         },
@@ -453,7 +477,19 @@ sap.ui.define(
           });
 
           const appointmentsMap = appointments.reduce((map, appointment) => {
-            map[appointment.ID] = appointment;
+            map[appointment.ID] = {
+              /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
+                This leads to problems with UI5, because the events are repeated each day which is ugly
+                TODO: Find a better solution. Maybe this thread can help: https://answers.sap.com/questions/13324088/why-cap-shows-datetime-field-different-in-fiori-db.html
+              */
+              completedDate: appointment.isAllDay
+                ? appointment.completedDate.setHours(0)
+                : appointment.completedDate,
+              activatedDate: appointment.isAllDay
+                ? appointment.activatedDate.setHours(0)
+                : appointment.activatedDate,
+              ...appointment,
+            };
 
             return map;
           }, {});
@@ -468,14 +504,9 @@ sap.ui.define(
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
-          const user = await this._getUserInfoService();
+          const user = await this._getUser();
 
           model.setProperty("/busy", true);
-          // TODO: Mailadresse entfernen
-          const email =
-            user && user.getEmail()
-              ? user.getEmail()
-              : "benedikt.hoelker@iot-online.de";
 
           const { results: allProjects } = await this.read({
             path: "/Users2Projects",
@@ -483,7 +514,7 @@ sap.ui.define(
               new Filter({
                 path: "user_userPrincipalName",
                 operator: "EQ",
-                value1: email,
+                value1: user.userPrincipalName,
               }),
             ],
             urlParameters: { $expand: "project/customer,project/workPackages" },
@@ -502,21 +533,23 @@ sap.ui.define(
           model.setProperty("/customers", [
             ...new Map(customers.map((cstmer) => [cstmer.ID, cstmer])).values(),
           ]);
+
           model.setProperty("/projects", projects);
           model.setProperty("/workPackages", workPackages);
           model.setProperty("/busy", false);
         },
 
-        _getUserInfoService: function () {
-          return new Promise((resolve) =>
-            sap.ui.require(["sap/ushell/library"], (ushellLib) => {
-              const container = ushellLib.Container;
-              if (!container) return resolve();
-
-              const service = container.getServiceAsync("UserInfo"); // .getService is deprecated!
-              return resolve(service);
-            })
-          );
+        _getUser: function () {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").read("/MyUser", {
+              success: (response) => {
+                const myUser = response.results[0];
+                if (!myUser)
+                  reject("User does not exist in DB. Please create it.");
+                return resolve(myUser);
+              },
+            });
+          });
         },
       }
     );
