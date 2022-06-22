@@ -46,6 +46,12 @@
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
+									<Label text="{i18n>WorkItems.subproject}" required="true"/>
+									<Select id="subprojectSelect" selectedKey="{subproject_ID}" items="{path: '/subprojectsFiltered', sorter: {path: 'title'}}">
+										<items>
+											<core:Item text="{title}" key="{ID}"/>
+										</items>
+									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
 									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}">
 										<items>
