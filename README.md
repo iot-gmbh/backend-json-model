@@ -113,6 +113,8 @@ In order to switch the environment you run the corresponding script:
     "set:prod": "bash ./set-env.sh production"
 ```
 
+The idea for switching environment information via scripts is from a [blogpost](https://blogs.sap.com/2022/01/20/solving-the-complexity-of-using-default-env.json-in-a-project-with-multiple-tiers-or-targets/) by Pieter Janssens.
+
 > Note:
 > Setting NODE_ENV and copying default-env-variables cannot be combined into the same script, as the NODE_ENV variable cannot be set via a script.
 
