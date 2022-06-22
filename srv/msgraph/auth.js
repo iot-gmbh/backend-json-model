@@ -7,10 +7,9 @@ const msal = require("@azure/msal-node");
  */
 const msalConfig = {
   auth: {
-    clientId: process.env.MSGRAPH_CLIENT_ID,
-    authority:
-      process.env.MSGRAPH_AAD_ENDPOINT + "/" + process.env.MSGRAPH_TENANT_ID,
-    clientSecret: process.env.MSGRAPH_CLIENT_SECRET,
+    clientId: process.env.CLIENT_ID,
+    authority: process.env.MSGRAPH_AAD_ENDPOINT + "/" + process.env.TENANT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
   },
 };
 
