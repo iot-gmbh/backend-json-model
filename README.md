@@ -92,6 +92,14 @@ During its lifetime the project has been targeting different databases:
   There are also Docker-files in this repo, that have been used to test Postgres locally. This [repo of Gregor Wolf](https://github.com/gregorwolf/pg-beershop) served as a major source of inspiration.
   Meanwhile SAP has announced to officially support a Postgres-adapter: https://twitter.com/wolf_gregor/status/1496865985739079687/photo/2
 
+## Deployment to Heroku
+
+## Authentication with Microsoft MSAL
+
+The app is designed to be running standalone without BTP. Thus we cannot use BTP XSUAA-service for authentication. As we want to provide access to users from Azure AD, we need to integrate [MSAL (Microsoft Authentication Library)](https://www.npmjs.com/package/@azure/msal-node). MSAL is available for different products: Single-Page-Apps (SPA's), NodeJS-Apps and others. We decided for msal-node as the application contains a full nodejs backend including API. According to this [discussion on GitHub](https://github.com/AzureAD/microsoft-authentication-library-for-js/discussions/3549), msal-browser is used for SPA's with an existing API. The MSAL-integration is explained in detail on the [MS-tutorial-page](https://docs.microsoft.com/de-de/azure/active-directory/develop/msal-node-migration). The authentication flow is inspired by this [MSAL-sample-application](https://github.com/Azure-Samples/ms-identity-node).
+
+The MSAL-authentication flow for CAP is extracted into its own package: `cds-msal-auth` (https://github.com/BenediktHoelker/cds-msal-auth.git)
+
 ## The app-router during development
 
 The approuter is configured via [xs-app.json](./xs-app.json). It listens to all requests and routes them to the frontend-app or backend-destinations depending on the matched route. When you start the UI5-app a UI5-simple-proxy will re-route all backend-requests to the approuter-address (e.g. to http://localhost:5000). From there it will be routed to the CAP-Service (listening on http://localhost:4004). This mechanism guarantess that the JWT-token is passed to the backend while at the same time CORS-errors are prevented.
