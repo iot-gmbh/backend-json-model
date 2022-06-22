@@ -8,7 +8,7 @@
         "auth": {
             "impl": "cds-msal-auth",
             "[development]": {
-                "kind": "dummy-auth"
+                "kind": "jwt-auth"
             },
             "[test]": {
                 "kind": "jwt-auth"
@@ -25,9 +25,6 @@
             "[test]": {
                 "kind": "postgres"
             },
-            "[sqlite]": {
-                "kind": "sqlite"
-            },
             "[production]": {
                 "kind": "postgres"
             }
@@ -40,7 +37,6 @@
             ]
         },
         "uaa": {
-            "[heroku]": {},
             "kind": "xsuaa"
         }
     },

@@ -87,22 +87,62 @@ Work-items from an integration will be shown as a proposal (expressed through do
 During its lifetime the project has been targeting different databases:
 
 - SQLite during local development (this is CAP's recommendend development-DB and works smoothely)
-- HANA for production (since as of 2022-03-02 it's the only officially supported DB). The cheapest variant of HANA means operating costs of ~800€ / month which is very expensive. In order to look it up, first go to the [capacity-estimator](https://hcsizingestimator.cfapps.eu10.hana.ondemand.com/), then calculate the price for capacity-units based on your licence-model via the [BTP-estimator](https://www.sap.com/products/business-technology-platform/price-list/estimator-tool.html).
-- PostgreSQL as alternative for production. There are multiple files (e.g. package.json and mta.yaml) which still contain artifacts that have been used to connect to a Postgres-DB via the according [open-source adapter made by the SAP mentors](https://github.com/sapmentors/cds-pg). In order to deploy the app and migrate its data, another open-source library has been used [cds-dbm](https://github.com/mikezaschka/cds-dbm). Yet, cds-dbm does not seem to receive regular support, so the Postgres-support of this repo (project-planning) has not been followed up for a couple of months (as of 2022-03-02). The folder /db-deployer-apt/... contains files with a workaround for shortcomings of the cds-dbm module.
-  There are also Docker-files in this repo, that have been used to test Postgres locally. This [repo of Gregor Wolf](https://github.com/gregorwolf/pg-beershop) served as a major source of inspiration.
-  Meanwhile SAP has announced to officially support a Postgres-adapter: https://twitter.com/wolf_gregor/status/1496865985739079687/photo/2
+- PostgreSQL for test and production
+
+### SQLite
+
+SQLite is used for development. Section [Switching Profiles](#switching-profiles) explains how to activate the `development` profile.
+
+### Postgres
+
+Postgres is used for test and production (again see [Switching Profiles](#switching-profiles)). The local Postgres-DB can be instantiated with docker and this [docker-compose.yaml](./docker-compose.yaml) respectively. To setup the DB, Docker needs to be installed on the local machine. Afterwards run the script `docker:start:pg`. This will instantiate a docker container with a database listening on port 5432.
+
+> Note:
+> If Postgres is also installed locally on Windows there might be conflicts. If you get a message like `wrong password for user *Windows_User*` probably you are trying to reach the local Postgres. The solution is to open Task manager and stop the Postgres-Service.
+
+The connection to the Postgres-DB is created by `cds-pg`, DB-deployment is done with `cds-dbm`. Both adapters are created by the CAP-community and are open-source products.
+
+> Note:
+> Heroku requires certain SSL-configurations when deploying to its Postgres-Service. Thus we needed to perform slight modifications of `cds-dbm`'s `PostgresAdapter.ts`.
 
 ## Deployment to Heroku
+
+Deploying to Heroku is inspired by Gregor Wolf's [pg-beershop] (https://github.com/gregorwolf/pg-beershop). Atm project-planning is using Benedikt's private Heroku-account.
+
+<!-- TODO: Add IOT Heroku deployment -->
 
 ## Authentication with Microsoft MSAL
 
 The app is designed to be running standalone without BTP. Thus we cannot use BTP XSUAA-service for authentication. As we want to provide access to users from Azure AD, we need to integrate [MSAL (Microsoft Authentication Library)](https://www.npmjs.com/package/@azure/msal-node). MSAL is available for different products: Single-Page-Apps (SPA's), NodeJS-Apps and others. We decided for msal-node as the application contains a full nodejs backend including API. According to this [discussion on GitHub](https://github.com/AzureAD/microsoft-authentication-library-for-js/discussions/3549), msal-browser is used for SPA's with an existing API. The MSAL-integration is explained in detail on the [MS-tutorial-page](https://docs.microsoft.com/de-de/azure/active-directory/develop/msal-node-migration). The authentication flow is inspired by this [MSAL-sample-application](https://github.com/Azure-Samples/ms-identity-node).
 
-The MSAL-authentication flow for CAP is extracted into its own package: `cds-msal-auth` (https://github.com/BenediktHoelker/cds-msal-auth.git)
+The MSAL-authentication flow for CAP is extracted into its own package: `cds-msal-auth` (https://github.com/BenediktHoelker/cds-msal-auth.git). The library is referenced as custom-authentication-implementation in `.cdsrc`:
 
-## The app-router during development
+```json
+    "requires": {
+        "auth": {
+            "impl": "cds-msal-auth",
+```
 
-The approuter is configured via [xs-app.json](./xs-app.json). It listens to all requests and routes them to the frontend-app or backend-destinations depending on the matched route. When you start the UI5-app a UI5-simple-proxy will re-route all backend-requests to the approuter-address (e.g. to http://localhost:5000). From there it will be routed to the CAP-Service (listening on http://localhost:4004). This mechanism guarantess that the JWT-token is passed to the backend while at the same time CORS-errors are prevented.
+## Switching Profiles
+
+CAP-profiles are used to distinguish between development, test and production setup locally. _Development_ uses an SQLite-DB, _test_ uses a local Postgres-DB and _production_ uses a remote Postgres-DB, hosted on Heroku. On Unix (or Windows git-bash) the profile is switched in the following way:
+
+```sh
+export NODE_ENV=**development/test/production**
+```
+
+Furthermore, the corresponding `default-env.json` needs to be used (telling CAP how to connect to the development-, test-, or production-database). In order to switch the environment you run the corresponding script:
+
+```json
+    "set:dev": "bash ./set-env.sh development",
+    "set:test": "bash ./set-env.sh test",
+    "set:prod": "bash ./set-env.sh production"
+```
+
+> Note:
+> Setting NODE_ENV and copying default-env-variables cannot be combined into the same script, as the NODE_ENV variable cannot be set via a script.
+
+In production the `dist` folder is served where the UI5-apps have been copied to.
 
 ## Analytics
 

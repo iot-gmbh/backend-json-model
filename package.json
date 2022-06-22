@@ -16,7 +16,7 @@
     "@sap/cds-odata-v2-adapter-proxy": "1.8.20",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.1.1",
-    "cds-dbm": "0.0.36",
+    "cds-dbm": "git+https://github.com/BenediktHoelker/cds-dbm.git",
     "cds-msal-auth": "git+https://github.com/BenediktHoelker/cds-msal-auth.git",
     "cds-pg": "0.1.29",
     "dotenv": "^16.0.1",
@@ -55,6 +55,9 @@
     "deploy:pg:delta": "npx cds-dbm deploy --load-via delta",
     "deploy:pg": "npx cds-dbm deploy",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
+    "set:dev": "bash ./set-env.sh development",
+    "set:test": "bash ./set-env.sh test",
+    "set:prod": "bash ./set-env.sh production"
   },
   "files": [
     "db",
