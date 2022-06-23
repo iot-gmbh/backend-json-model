@@ -2,7 +2,8 @@
 _out
 *.db
 connection.properties
-default-*.json
+default-*-*.json
+# default-*-*.json
 # default-envs/production.json
 !*default-envs/example.json
 gen/
