@@ -40,7 +40,7 @@
   "scripts": {
     "start": "cds run",
     "lint": "eslint srv && eslint app",
-    "build": "npm run build:ui && cds build --production",
+    "build": "cds build --production",
     "build:ui": "npm-run-all build:ui:*",
     "build:ui:azdev-workitems": "rimraf dist/azdev-workitems && mkdirp -p dist/azdev-workitems && npm run build --prefix app/azdev-workitems && cp -r app/azdev-workitems/dist/* dist/azdev-workitems",
     "build:ui:customers": "rimraf dist/customers && mkdirp -p dist/customers && npm run build --prefix app/customers && cp -r app/customers/dist/* dist/customers",
