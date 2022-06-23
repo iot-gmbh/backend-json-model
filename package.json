@@ -5,8 +5,8 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
-  "--engines": {
-    "node": ">=14.15.5 <15"
+  "engines": {
+    "node": "16"
   },
   "dependencies": {
     "@azure/msal-node": "^1.10.0",
