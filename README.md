@@ -75,7 +75,7 @@ Postgres is used for test and production (again see [Switching Profiles](#switch
 The connection to the Postgres-DB is created by `cds-pg`, DB-deployment is done with `cds-dbm`. Both adapters are created by the CAP-community and are open-source products.
 
 > Note:
-> Heroku requires certain SSL-configurations when deploying to its Postgres-Service. Thus we needed to perform slight modifications of `cds-dbm`'s `PostgresAdapter.ts`.
+> Heroku requires certain SSL-configurations when deploying to its Postgres-Service. Thus we needed to perform slight modifications of `cds-dbm`'s `PostgresAdapter.ts`. Atm the package is referenced locally via `file:../cds-dbm`, so it needs to be cloned first (https://github.com/BenediktHoelker/cds-dbm).
 
 ## Deployment to Heroku
 
