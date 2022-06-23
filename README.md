@@ -81,6 +81,16 @@ The connection to the Postgres-DB is created by `cds-pg`, DB-deployment is done 
 
 Deploying to Heroku is inspired by Gregor Wolf's [pg-beershop] (https://github.com/gregorwolf/pg-beershop). Atm project-planning is using Benedikt's private Heroku-account.
 
+In order to deploy the DB to Heroku you configure the connection information in default-env.json. `cds-dbm` is running long when a lot of data needs to be processed (due to large initial data sets). The latency can be reduced by performing the DB-deployment from within Heroku. In order to do so you proceed like the following:
+
+Connect to the Heroku dyno by running
+
+```sh
+heroku ps:exec
+```
+
+`cds-dbm` is using liquibase for DB-migrations. Liquibase in turn needs a JAVA runtime. The JAVA runtime can be added as a buildpack (like Heroku explain in their [FAQ](https://help.heroku.com/2FSHO0RR/how-can-i-add-java-to-a-non-java-app)).
+
 <!-- TODO: Add IOT Heroku deployment -->
 
 ## Authentication with Microsoft MSAL
