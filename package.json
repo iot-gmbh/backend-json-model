@@ -58,7 +58,7 @@
     "set:dev": "bash ./set-env.sh development",
     "set:test": "bash ./set-env.sh test",
     "set:prod": "bash ./set-env.sh production",
-    "parse-heroku-creds": "bash ./set_credential_envs_from_url.sh cds_requires_postgres_credentials"
+    "parse-heroku-creds": "source ./set_credential_envs_from_url.sh cds_requires_postgres_credentials"
   },
   "files": [
     "db",

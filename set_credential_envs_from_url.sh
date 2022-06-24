@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Function that sets environement variables with the credentials of the given database url
 #
 # set_credential_envs_from_url <database_url> <env_prefix>
