@@ -16,7 +16,7 @@
     "@sap/cds-odata-v2-adapter-proxy": "1.8.21",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.1.1",
-    "cds-dbm": "git+https://github.com/BenediktHoelker/cds-dbm.git#ea74d732d8d0428bc86e23c5c821f71255e110f2",
+    "cds-dbm": "git+https://github.com/BenediktHoelker/cds-dbm.git#67ddd8153a2da810f92f52e8bd1254cbe1e584ed",
     "cds-msal-auth": "^0.0.1",
     "cds-pg": "0.1.29",
     "dotenv": "^16.0.1",
@@ -57,7 +57,8 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "set:dev": "bash ./set-env.sh development",
     "set:test": "bash ./set-env.sh test",
-    "set:prod": "bash ./set-env.sh production"
+    "set:prod": "bash ./set-env.sh production",
+    "parse-heroku-creds": "bash ./set_credential_envs_from_url.sh cds_requires_postgres_credentials && npm run deploy:pg"
   },
   "files": [
     "db",
