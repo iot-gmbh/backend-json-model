@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "Plan & Track projects",
   "repository": "<Add your repository here>",
+  "author": {
+    "name": "Benedikt Hölker"
+  },
   "license": "UNLICENSED",
   "private": true,
   "engines": {
