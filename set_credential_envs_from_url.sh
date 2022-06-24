@@ -45,13 +45,13 @@ var_name_port="$1_port"
 var_name_schema="$1_schema"
 var_name_ssl="$1_ssl_rejectUnauthorized"
 
-export cds_requires_postgres_credentials_pass=`echo $pass | grep : | cut -d: -f2`
-export $var_name_pass=`echo $pass | grep : | cut -d: -f2`
-export $var_name_user=`echo $user | grep : | cut -d: -f2`
-export $var_name_host=`echo $host | grep : | cut -d: -f2`
-export $var_name_port=`echo $port | grep : | cut -d: -f2`
-export $var_name_schema=public
-export $var_name_ssl=false
+heroku config:set cds_requires_postgres_credentials_pass=`echo $pass | grep : | cut -d: -f2`
+heroku config:set $var_name_pass=`echo $pass | grep : | cut -d: -f2`
+heroku config:set $var_name_user=`echo $user | grep : | cut -d: -f2`
+heroku config:set $var_name_host=`echo $host | grep : | cut -d: -f2`
+heroku config:set $var_name_port=`echo $port | grep : | cut -d: -f2`
+heroku config:set $var_name_schema=public
+heroku config:set $var_name_ssl=false
 
 # echo "url: $url"
 # echo "proto: $proto"
