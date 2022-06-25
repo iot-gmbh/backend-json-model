@@ -19,7 +19,7 @@
     "@sap/cds-odata-v2-adapter-proxy": "1.8.21",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.1.1",
-    "cds-dbm": "github:BenediktHoelker/cds-dbm#147e74509b496044a09bf5030ab522d70a2170d9",
+    "cds-dbm": "github:BenediktHoelker/cds-dbm#3ca629a5dbacdf3c0d067630a3390d84d2c3c3b6",
     "cds-msal-auth": "^0.0.1",
     "cds-pg": "0.1.29",
     "dotenv": "^16.0.1",
