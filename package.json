@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.3.5",
+    "cross-env": "^7.0.3",
     "eslint": "^8.18.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
