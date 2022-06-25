@@ -54,7 +54,6 @@
     "build:ui:workitems-iot": "rimraf dist/workitems-iot && mkdirp -p dist/workitems-iot && npm run build --prefix app/workitems-iot && cp -r app/workitems-iot/dist/* dist/workitems-iot",
     "build:ui:workitems-alp": "rimraf dist/workitems-alp && mkdirp -p dist/workitems-alp && npm run build --prefix app/workitems-alp && cp -r app/workitems-alp/dist/* dist/workitems-alp",
     "build:ui:workitems-display": "rimraf dist/workitems-display && mkdirp -p dist/workitems-display && npm run build --prefix app/workitems-display && cp -r app/workitems-display/dist/* dist/workitems-display",
-    "deploy": "cf deploy mta_archives/%npm_package_name%_%npm_package_version%.mtar -f",
     "deploy:pg:full": "npx cds-dbm deploy --create-db --load-via full",
     "deploy:pg:delta": "npx cds-dbm deploy --load-via delta",
     "deploy:pg": "npx cds-dbm deploy",
