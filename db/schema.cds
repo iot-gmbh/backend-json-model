@@ -9,14 +9,14 @@ namespace iot.planner;
 
 aspect relevance {
   invoiceRelevance : Decimal(2, 1) @(
-    title        : '{i18n>invoiceRelevance}',
+    title        : '{i18n>relevance.invoiceRelevance}',
     assert.range : [
       0,
       1
     ],
   );
   bonusRelevance   : Decimal(2, 1) @(
-    title        : '{i18n>bonusRelevance}',
+    title        : '{i18n>relevance.bonusRelevance}',
     assert.range : [
       0,
       1
@@ -47,6 +47,14 @@ entity Users {
       travels           : Association to many Travels
                             on travels.user = $self;
 };
+
+entity Categories : cuid, managed, relevance {
+  title       : String;
+  description : String;
+  parent      : Association to Categories;
+  children    : Association to many Categories
+                  on children.parent = $self;
+}
 
 @assert.unique : {friendlyID : [
   user,
