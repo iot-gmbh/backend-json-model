@@ -1,6 +1,64 @@
 using {iot.planner as my} from './schema';
 
 @cds.odata.valuelist
+annotate my.WorkItems with @(UI : {
+  PresentationVariant : {
+    $Type          : 'UI.PresentationVariantType',
+    SortOrder      : [{Property : title}],
+    Visualizations : ['@UI.LineItem'],
+    RequestAtLeast : [title]
+  },
+  HeaderInfo          : {
+    TypeName       : '{i18n>Customer}',
+    TypeNamePlural : '{i18n>Customers}',
+    Title          : {Value : title},
+  },
+  Identification      : [{Value : title}],
+  FieldGroup          : {
+    $Type : 'UI.FieldGroupType',
+    Label : '{i18n>Classification}',
+    Data  : [
+      {Value : title},
+      {Value : invoiceRelevance},
+      {Value : bonusRelevance},
+    ],
+  },
+  SelectionFields     : [title, ],
+  LineItem            : [
+    {
+      $Type : 'UI.DataField',
+      Value : title,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : assignedTo_userPrincipalName,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : invoiceRelevance,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : bonusRelevance,
+    },
+  ],
+  Facets              : [
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Identification}',
+      Target : '@UI.Identification'
+    },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Identification}',
+      Target : '@UI.FieldGroup'
+    }
+  ]
+}) {
+  ID @UI.Hidden;
+}
+
+@cds.odata.valuelist
 annotate my.Users with @(UI : {
   PresentationVariant : {
     $Type          : 'UI.PresentationVariantType',
@@ -311,7 +369,6 @@ annotate my.Packages with @(UI : {
   ID @UI.Hidden;
 };
 
-@cds.odata.valuelist
 annotate my.Categories with @(UI : {
   PresentationVariant : {
     $Type          : 'UI.PresentationVariantType',
@@ -362,152 +419,20 @@ annotate my.Categories with @(UI : {
     },
   ]
 }) {
-  ID     @UI.Hidden;
-  parent @(Common : {
-    Text         : {
-      $value                 : parent.title,
-      ![@UI.TextArrangement] : #TextOnly
-    },
-    FieldControl : #Mandatory
-  });
-};
-
-annotate my.WorkItems with @(UI : {
-  // The Sort order is not evaluated by responsive tables (by design)
-  // See: https://sapui5.hana.ondemand.com/#/api/sap.ui.comp.smarttable.SmartTable%23annotations/PresentationVariant
-  PresentationVariant : {
-    $Type          : 'UI.PresentationVariantType',
-    // SortOrder      : [{
-    //     Descending : true,
-    //     Property   : completedDate,
-    // }],
-    Visualizations : ['@UI.LineItem'],
-  // RequestAtLeast : [completedDate]
-  },
-  Identification      : [
-    {Value : title},
-    {Value : assignedTo.displayName, },
-    {Value : customer_ID, },
-    {Value : project_ID, },
-    {Value : activatedDate},
-    {Value : completedDate, },
-  ],
-  SelectionFields     : [
-    title,
-    assignedTo_userPrincipalName,
-    customer_ID,
-    project_ID,
-    activatedDate,
-    completedDate,
-  ],
-  LineItem            : [
-    {
-      $Type : 'UI.DataField',
-      Value : title,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : assignedTo_userPrincipalName,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : customer_ID,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : project_ID,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : duration
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : activatedDate
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : completedDate,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : invoiceRelevance,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : bonusRelevance,
-    },
-  ]
-}) {
-  ID       @UI.Hidden;
-  customer @(Common : {
-    Text         : {
-      $value                 : customer.name,
-      ![@UI.TextArrangement] : #TextOnly
-    },
-    FieldControl : #Mandatory
-  });
-  project  @(Common : {
-    Text         : {
-      $value                 : project.title,
-      ![@UI.TextArrangement] : #TextOnly
-    },
-    FieldControl : #Mandatory
-  });
-};
-
-@cds.odata.valuelist
-annotate my.Users2Projects;
-//  with @(UI : {
-//     PresentationVariant : {
-//         $Type          : 'UI.PresentationVariantType',
-//         SortOrder      : [{Property : user.displayName}],
-//         Visualizations : ['@UI.LineItem'],
-//         RequestAtLeast : [user.displayName]
-//     },
-//     HeaderInfo          : {
-//         TypeName       : '{i18n>User2Project}',
-//         TypeNamePlural : '{i18n>Users2Projects}',
-//         Title          : {Value : user.displayName},
-//         Description    : {Value : project.title},
-//     },
-//     Facets              : [{
-//         $Type  : 'UI.ReferenceFacet',
-//         Label  : '{i18n>General}',
-//         Target : '@UI.Identification'
-//     }, ],
-//     Identification      : [
-//         {Value : user_userPrincipalName},
-//         {Value : project_ID},
-//     ],
-//     SelectionFields     : [
-//         user_userPrincipalName,
-//         project_ID,
-//     ],
-//     LineItem            : [
-//         {
-//             $Type : 'UI.DataField',
-//             Value : user_userPrincipalName,
-//         },
-//         {
-//             $Type : 'UI.DataField',
-//             Value : project_ID,
-//         },
-//     ]
-// }) {
-//     ID      @UI.Hidden;
-//     project @(Common : {
-//         Text         : {
-//             $value                 : project.title,
-//             ![@UI.TextArrangement] : #TextOnly
-//         },
-//         FieldControl : #Mandatory
-//     });
-//     user    @(Common : {
-//         Text         : {
-//             $value                 : user.displayName,
-//             ![@UI.TextArrangement] : #TextOnly
-//         },
-//         FieldControl : #Mandatory
-//     });
-// };
+  ID             @(
+    UI.Hidden,
+    sap.hierarchy.node.for : 'ID'
+  );
+  parent         @(
+    sap.hierarchy.parent.node.for : 'ID',
+    Common                        : {
+      Text         : {
+        $value                 : parent.title,
+        ![@UI.TextArrangement] : #TextOnly
+      },
+      FieldControl : #Mandatory,
+    }
+  );
+  hierarchyLevel @sap.hierarchy.level.for       : 'ID';
+  drillDownState @sap.hierarchy.drill.state.for : 'ID';
+}

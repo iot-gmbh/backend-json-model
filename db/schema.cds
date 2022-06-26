@@ -49,11 +49,13 @@ entity Users {
 };
 
 entity Categories : cuid, managed, relevance {
-  title       : String;
-  description : String;
-  parent      : Association to Categories;
-  children    : Association to many Categories
-                  on children.parent = $self;
+  title          : String;
+  description    : String;
+  hierarchyLevel : Integer;
+  drillDownState : String default 'expanded';
+  parent         : Association to Categories;
+  children       : Association to many Categories
+                     on children.parent = $self;
 }
 
 @assert.unique : {friendlyID : [

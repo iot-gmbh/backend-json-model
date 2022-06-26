@@ -1,0 +1,9 @@
+specVersion: "2.2"
+metadata:
+  name: iot.categories
+type: application
+builder:
+  resources:
+    excludes:
+      - "/test/**"
+      - "/localService/**"

@@ -50,7 +50,8 @@ service AdminService @(requires : 'authenticated-user') {
   @odata.update.enabled
   entity Packages        as projection on my.Packages as Packages
 
-  @odata.draft.enabled
+  @odata.create.enabled
+  @odata.update.enabled
   entity Categories      as projection on my.Categories as Categories
 
   @cds.search
