@@ -156,7 +156,8 @@
                         "smartVariantManagement": true,
                         "enableTableFilterInPageVariant": true,
                         "tableSettings": {
-                            "type": "TreeTable"
+                            "type": "TreeTable",
+                            "numberOfExpandedLevels": 2
                         },
                         "filterSettings": {
                             "dateSettings": {

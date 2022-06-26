@@ -407,10 +407,6 @@ annotate my.Categories with @(UI : {
     },
     {
       $Type : 'UI.DataField',
-      Value : parent_ID,
-    },
-    {
-      $Type : 'UI.DataField',
       Value : invoiceRelevance,
     },
     {

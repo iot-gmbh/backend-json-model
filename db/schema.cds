@@ -52,7 +52,10 @@ entity Categories : cuid, managed, relevance {
   title          : String;
   description    : String;
   hierarchyLevel : Integer;
+  friendlyID     : String;
+  mappingID      : String;
   drillDownState : String default 'expanded';
+  manager        : Association to Users;
   parent         : Association to Categories;
   children       : Association to many Categories
                      on children.parent = $self;
