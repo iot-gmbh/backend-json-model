@@ -38,6 +38,7 @@ sap.ui.define(
     const selectControlIDs = [
       "customerSelect",
       "projectSelect",
+      "subprojectSelect",
       "packageSelect",
     ];
 
@@ -65,6 +66,17 @@ sap.ui.define(
 
               return this.projects.filter(
                 ({ customer_ID }) => customer_ID === selected
+              );
+            },
+            subprojects: [],
+            get subprojectsFiltered() {
+              const bc = dialog.getBindingContext();
+              if (!bc) return [];
+              const selected = bc.getProperty("project_ID");
+              if (!selected) return [];
+
+              return this.subprojects.filter(
+                ({ project_ID }) => project_ID === selected
               );
             },
             workPackages: [],
@@ -292,7 +304,6 @@ sap.ui.define(
             activatedDate: startDate,
             completedDate: endDate,
           };
-
           model.setProperty("/appointments/NEW", appointment);
         },
 
@@ -324,11 +335,17 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           const projectSelect = this.byId("projectSelect");
+          const subprojectSelect = this.byId("subprojectSelect");
           const packageSelect = this.byId("packageSelect");
 
           appointment.project_ID =
             projectSelect.getItems().length > 0
               ? projectSelect.getSelectedKey()
+              : null;
+
+          appointment.subproject_ID =
+            subprojectSelect.getItems().length > 0
+              ? subprojectSelect.getSelectedKey()
               : null;
 
           appointment.workPackage_ID =
@@ -487,16 +504,21 @@ sap.ui.define(
                 value1: email,
               }),
             ],
-            urlParameters: { $expand: "project/customer,project/workPackages" },
+            urlParameters: {
+              $expand:
+                "project/customer,project/workPackages,project/subprojects",
+            },
           });
 
           let customers = [];
           let projects = [];
+          let subprojects = [];
           let workPackages = [];
 
           allProjects.forEach(({ project }) => {
-            projects.push(project);
             customers.push(project.customer);
+            projects.push(project);
+            subprojects.push(...project.subprojects.results);
             workPackages.push(...project.workPackages.results);
           });
 
@@ -504,6 +526,7 @@ sap.ui.define(
             ...new Map(customers.map((cstmer) => [cstmer.ID, cstmer])).values(),
           ]);
           model.setProperty("/projects", projects);
+          model.setProperty("/subprojects", subprojects);
           model.setProperty("/workPackages", workPackages);
           model.setProperty("/busy", false);
         },
