@@ -18,13 +18,13 @@ function transformEventToWorkItem({
     title: subject,
     customer_friendlyID,
     /* 
-      The original format is: '2022-06-23T14:30:00.0000000'
-      OData needs a format like this: '2022-06-23T00:00:00Z'
+The original format is: '2022-06-23T14:30:00.0000000'
+OData needs a format like this: '2022-06-23T00:00:00Z'
 
-      All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
-      This leads to UI5 showing repeating them each single day instead of showing all-day events.
-      Thus we replace the time for all-day events
-    */
+All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
+This leads to UI5 showing repeating them each single day instead of showing all-day events.
+Thus we replace the time for all-day events
+*/
     activatedDate: isAllDay
       ? start.dateTime.substring(0, 11) + "00:00:00Z"
       : start.dateTime.substring(0, 19) + "Z",
@@ -64,6 +64,26 @@ module.exports = cds.service.impl(async function () {
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
   const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
+
+  this.on("READ", "MyCategories", async (req) => {
+    const userID = req.user.id;
+    const results = await db.run(
+      `WITH RECURSIVE categoryData AS 
+        (SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          FROM iot_planner_categories AS cat
+          INNER JOIN iot_planner_users2categories as user2cat
+            on cat.ID = user2cat.category_ID
+            and user2cat.user_userPrincipalName = '${userID}'
+          UNION 
+            SELECT this.ID, this.title, this.description, this.parent_ID, prior.hierarchyLevel + 1 
+              FROM categoryData AS prior 
+              INNER JOIN iot_planner_categories AS this 
+                ON this.parent_ID = prior.ID
+        ) 
+        SELECT * FROM categoryData AS e ORDER BY e.hierarchyLevel;`
+    );
+    return results;
+  });
 
   this.on("READ", "MyUser", async (req) => {
     const tx = this.transaction(req);
@@ -221,9 +241,9 @@ module.exports = cds.service.impl(async function () {
     ]
       // .reduce((acc, item) => acc.concat(item), [])
       /*
-        Nur Items mit ID und AssignedTo übernehmen
-        => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
-        */
+  Nur Items mit ID und AssignedTo übernehmen
+  => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
+  */
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
       .reduce((map, curr) => {

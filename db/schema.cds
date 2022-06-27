@@ -61,6 +61,11 @@ entity Categories : cuid, managed, relevance {
                      on children.parent = $self;
 }
 
+entity Users2Categories : cuid, managed {
+  user     : Association to Users;
+  category : Association to Categories;
+}
+
 @assert.unique : {friendlyID : [
   user,
   project

@@ -14,6 +14,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
     }
   ])                    as projection on my.WorkItems;
 
+  entity MyCategories   as projection on my.Categories;
   entity Customers      as projection on my.Customers;
   entity Projects       as projection on my.Projects;
   entity Packages       as projection on my.Packages;
