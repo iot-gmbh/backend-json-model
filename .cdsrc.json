@@ -18,8 +18,11 @@
             }
         },
         "db": {
-            "kind": "database",
+            "kind": "sqlite",
             "[development]": {
+                "kind": "postgres"
+            },
+            "[sqlite]": {
                 "kind": "sqlite"
             },
             "[test]": {

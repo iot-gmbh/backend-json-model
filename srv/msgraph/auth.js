@@ -7,9 +7,9 @@ const msal = require("@azure/msal-node");
  */
 const msalConfig = {
   auth: {
-    clientId: process.env.CLIENT_ID,
-    authority: process.env.MSGRAPH_AAD_ENDPOINT + "/" + process.env.TENANT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientId: process.env.CLIENT_ID, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
+    authority: process.env.CLOUD_INSTANCE + process.env.TENANT_ID, // Full directory URL, in the form of https://login.microsoftonline.com/<tenant>
+    clientSecret: process.env.CLIENT_SECRET, // Client secret generated from the app registration in Azure portal
   },
 };
 
@@ -19,11 +19,11 @@ const msalConfig = {
  * https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow
  */
 const tokenRequest = {
-  scopes: [process.env.MSGRAPH_GRAPH_ENDPOINT + "/.default"],
+  scopes: process.env.GRAPH_SCOPES,
 };
 
 const apiConfig = {
-  uri: process.env.MSGRAPH_GRAPH_ENDPOINT,
+  uri: process.env.GRAPH_API_ENDPOINT,
 };
 
 /**
