@@ -4,7 +4,7 @@ _out
 connection.properties
 default-*-*.json
 default-env.json
-default-envs/production.json
+production.json
 !*default-envs/example.json
 gen/
 node_modules/
