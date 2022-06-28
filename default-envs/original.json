@@ -47,9 +47,7 @@
         "provider": null,
         "plan": "application",
         "name": "project-planning-xsuaa-service",
-        "tags": [
-          "xsuaa"
-        ],
+        "tags": ["xsuaa"],
         "instance_guid": "05a5588e-3678-49a1-bfa5-862fbbf68a45",
         "instance_name": "project-planning-xsuaa-service",
         "binding_guid": "64f973be-9d15-49a5-bcf3-b645de9e2cb1",
@@ -81,11 +79,7 @@
         "provider": null,
         "plan": "hdi-shared",
         "name": "project-planning-db",
-        "tags": [
-          "hana",
-          "database",
-          "relational"
-        ],
+        "tags": ["hana", "database", "relational"],
         "instance_guid": "de270421-ad15-47d8-814d-062c85bf198d",
         "instance_name": "project-planning-db",
         "binding_guid": "302e4add-7fec-4203-a707-9a716a849394",

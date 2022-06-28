@@ -1,6 +1,5 @@
 {
   "configurations": [
-    
     {
       "command": "cds run",
       "name": "cds run",

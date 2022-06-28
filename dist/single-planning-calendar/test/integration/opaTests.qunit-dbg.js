@@ -2,10 +2,9 @@
 QUnit.config.autostart = false;
 
 sap.ui.getCore().attachInit(function () {
-	"use strict";
+  "use strict";
 
-	sap.ui.require([
-	], function () {
-		QUnit.start();
-	});
+  sap.ui.require([], function () {
+    QUnit.start();
+  });
 });

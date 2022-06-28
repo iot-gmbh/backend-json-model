@@ -103,7 +103,6 @@ module.exports = cds.service.impl(async function () {
           FROM parentCTE;`
     );
 
-    if (!Array.isArray(results)) return [];
     const categories = results.map(
       ({ id, parent_id, hierarchylevel, ...data }) => ({
         ID: id,

@@ -1,29 +1,24 @@
 {
-    "VCAP_SERVICES": {
-        "postgres": [
-            {
-                "name": "postgres ...",
-                "label": "postgres ...",
-                "tags": [
-                    "plain",
-                    "database",
-                    "relational",
-                    "postgres"
-                ],
-                "credentials": {
-                    "host": "example",
-                    "port": "5432",
-                    "database": "example",
-                    "dbname": "example",
-                    "user": "example",
-                    "username": "example",
-                    "password": "example",
-                    "schema": "public",
-                    "ssl": {
-                        "rejectUnauthorized": false
-                    }
-                }
-            }
-        ]
-    }
+  "VCAP_SERVICES": {
+    "postgres": [
+      {
+        "name": "postgres ...",
+        "label": "postgres ...",
+        "tags": ["plain", "database", "relational", "postgres"],
+        "credentials": {
+          "host": "example",
+          "port": "5432",
+          "database": "example",
+          "dbname": "example",
+          "user": "example",
+          "username": "example",
+          "password": "example",
+          "schema": "public",
+          "ssl": {
+            "rejectUnauthorized": false
+          }
+        }
+      }
+    ]
+  }
 }

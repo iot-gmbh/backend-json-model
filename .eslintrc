@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@sap/cds/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:@sap/cds/recommended"],
   "env": {
     "node": true,
     "es6": true,

@@ -1,71 +1,65 @@
 {
-    "VCAP_SERVICES": {
-        "destination": [
-            {
-                "label": "destination",
-                "provider": null,
-                "plan": "lite",
-                "name": "project-planning-dest-service",
-                "tags": [
-                    "destination",
-                    "conn",
-                    "connsvc"
-                ],
-                "instance_guid": "c4121995-438f-4a94-80f8-10e7ef3860e2",
-                "instance_name": "project-planning-dest-service",
-                "binding_guid": "9f1123ef-05af-402c-b081-14426f9ce626",
-                "binding_name": null,
-                "credentials": {
-                    "tenantmode": "dedicated",
-                    "clientid": "sb-clonec4121995438f4a9480f810e7ef3860e2!b6068|destination-xsappname!b2",
-                    "credential-type": "binding-secret",
-                    "xsappname": "clonec4121995438f4a9480f810e7ef3860e2!b6068|destination-xsappname!b2",
-                    "clientsecret": "9f1123ef-05af-402c-b081-14426f9ce626$Pq-nGpdhgMFeN5pDzqi5dHoahoADAf39VKRTG94N5w8=",
-                    "uri": "https://destination-configuration.cfapps.eu20.hana.ondemand.com",
-                    "url": "https://iot-on-azure-dev-q46eg7s6.authentication.eu20.hana.ondemand.com",
-                    "uaadomain": "authentication.eu20.hana.ondemand.com",
-                    "instanceid": "c4121995-438f-4a94-80f8-10e7ef3860e2",
-                    "verificationkey": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApc+l9Ux7QQFenvKqg2HpazTpu9xjxG2T8zLUDYhuYr/wzTU9Y8xg69GfIDTa41dQHC6WaFCs6zwu7uzGMU5m0YMv7s6hCH2EbnXjHsRhFRK/NcZFUyCMJlMN+pi5jfZ1Qiy4pU5n1j35PTDva9lbNs3fM3+EiSzghZO0veRrPJO2f1+mUXSLMPomZQ0HSv11npcXy/y9+irGJpOZtimO96xINiDZKQ2sxylkpy6OSa5EzR5gzbS1X0+p+oweRsidoyDGl77zqM5UCXgosTIV83Vq6MtdbOX8k8i/clxew16V2+NGYhrMirMBq6R1docrv4w3ab3debAez2iCDbsaJQIDAQAB-----END PUBLIC KEY-----",
-                    "identityzone": "iot-on-azure-dev-q46eg7s6",
-                    "tenantid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591"
-                },
-                "syslog_drain_url": null,
-                "volume_mounts": []
-            }
-        ],
-        "xsuaa": [
-            {
-                "label": "xsuaa",
-                "provider": null,
-                "plan": "application",
-                "name": "project-planning-xsuaa-service",
-                "tags": [
-                    "xsuaa"
-                ],
-                "instance_guid": "05a5588e-3678-49a1-bfa5-862fbbf68a45",
-                "instance_name": "project-planning-xsuaa-service",
-                "binding_guid": "3b59480a-cc02-4d3c-811e-ca5dc4299d87",
-                "binding_name": null,
-                "credentials": {
-                    "tenantmode": "dedicated",
-                    "sburl": "https://internal-xsuaa.authentication.eu20.hana.ondemand.com",
-                    "subaccountid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
-                    "credential-type": "instance-secret",
-                    "clientid": "sb-project-planning!t6068",
-                    "xsappname": "project-planning!t6068",
-                    "clientsecret": "PaBLn+HcFYgxM7CDqBp5EoU7qP4=",
-                    "url": "https://iot-on-azure-dev-q46eg7s6.authentication.eu20.hana.ondemand.com",
-                    "uaadomain": "authentication.eu20.hana.ondemand.com",
-                    "verificationkey": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApc+l9Ux7QQFenvKqg2HpazTpu9xjxG2T8zLUDYhuYr/wzTU9Y8xg69GfIDTa41dQHC6WaFCs6zwu7uzGMU5m0YMv7s6hCH2EbnXjHsRhFRK/NcZFUyCMJlMN+pi5jfZ1Qiy4pU5n1j35PTDva9lbNs3fM3+EiSzghZO0veRrPJO2f1+mUXSLMPomZQ0HSv11npcXy/y9+irGJpOZtimO96xINiDZKQ2sxylkpy6OSa5EzR5gzbS1X0+p+oweRsidoyDGl77zqM5UCXgosTIV83Vq6MtdbOX8k8i/clxew16V2+NGYhrMirMBq6R1docrv4w3ab3debAez2iCDbsaJQIDAQAB-----END PUBLIC KEY-----",
-                    "apiurl": "https://api.authentication.eu20.hana.ondemand.com",
-                    "identityzone": "iot-on-azure-dev-q46eg7s6",
-                    "identityzoneid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
-                    "tenantid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
-                    "zoneid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591"
-                },
-                "syslog_drain_url": null,
-                "volume_mounts": []
-            }
-        ]
-    }
+  "VCAP_SERVICES": {
+    "destination": [
+      {
+        "label": "destination",
+        "provider": null,
+        "plan": "lite",
+        "name": "project-planning-dest-service",
+        "tags": ["destination", "conn", "connsvc"],
+        "instance_guid": "c4121995-438f-4a94-80f8-10e7ef3860e2",
+        "instance_name": "project-planning-dest-service",
+        "binding_guid": "9f1123ef-05af-402c-b081-14426f9ce626",
+        "binding_name": null,
+        "credentials": {
+          "tenantmode": "dedicated",
+          "clientid": "sb-clonec4121995438f4a9480f810e7ef3860e2!b6068|destination-xsappname!b2",
+          "credential-type": "binding-secret",
+          "xsappname": "clonec4121995438f4a9480f810e7ef3860e2!b6068|destination-xsappname!b2",
+          "clientsecret": "9f1123ef-05af-402c-b081-14426f9ce626$Pq-nGpdhgMFeN5pDzqi5dHoahoADAf39VKRTG94N5w8=",
+          "uri": "https://destination-configuration.cfapps.eu20.hana.ondemand.com",
+          "url": "https://iot-on-azure-dev-q46eg7s6.authentication.eu20.hana.ondemand.com",
+          "uaadomain": "authentication.eu20.hana.ondemand.com",
+          "instanceid": "c4121995-438f-4a94-80f8-10e7ef3860e2",
+          "verificationkey": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApc+l9Ux7QQFenvKqg2HpazTpu9xjxG2T8zLUDYhuYr/wzTU9Y8xg69GfIDTa41dQHC6WaFCs6zwu7uzGMU5m0YMv7s6hCH2EbnXjHsRhFRK/NcZFUyCMJlMN+pi5jfZ1Qiy4pU5n1j35PTDva9lbNs3fM3+EiSzghZO0veRrPJO2f1+mUXSLMPomZQ0HSv11npcXy/y9+irGJpOZtimO96xINiDZKQ2sxylkpy6OSa5EzR5gzbS1X0+p+oweRsidoyDGl77zqM5UCXgosTIV83Vq6MtdbOX8k8i/clxew16V2+NGYhrMirMBq6R1docrv4w3ab3debAez2iCDbsaJQIDAQAB-----END PUBLIC KEY-----",
+          "identityzone": "iot-on-azure-dev-q46eg7s6",
+          "tenantid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591"
+        },
+        "syslog_drain_url": null,
+        "volume_mounts": []
+      }
+    ],
+    "xsuaa": [
+      {
+        "label": "xsuaa",
+        "provider": null,
+        "plan": "application",
+        "name": "project-planning-xsuaa-service",
+        "tags": ["xsuaa"],
+        "instance_guid": "05a5588e-3678-49a1-bfa5-862fbbf68a45",
+        "instance_name": "project-planning-xsuaa-service",
+        "binding_guid": "3b59480a-cc02-4d3c-811e-ca5dc4299d87",
+        "binding_name": null,
+        "credentials": {
+          "tenantmode": "dedicated",
+          "sburl": "https://internal-xsuaa.authentication.eu20.hana.ondemand.com",
+          "subaccountid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
+          "credential-type": "instance-secret",
+          "clientid": "sb-project-planning!t6068",
+          "xsappname": "project-planning!t6068",
+          "clientsecret": "PaBLn+HcFYgxM7CDqBp5EoU7qP4=",
+          "url": "https://iot-on-azure-dev-q46eg7s6.authentication.eu20.hana.ondemand.com",
+          "uaadomain": "authentication.eu20.hana.ondemand.com",
+          "verificationkey": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApc+l9Ux7QQFenvKqg2HpazTpu9xjxG2T8zLUDYhuYr/wzTU9Y8xg69GfIDTa41dQHC6WaFCs6zwu7uzGMU5m0YMv7s6hCH2EbnXjHsRhFRK/NcZFUyCMJlMN+pi5jfZ1Qiy4pU5n1j35PTDva9lbNs3fM3+EiSzghZO0veRrPJO2f1+mUXSLMPomZQ0HSv11npcXy/y9+irGJpOZtimO96xINiDZKQ2sxylkpy6OSa5EzR5gzbS1X0+p+oweRsidoyDGl77zqM5UCXgosTIV83Vq6MtdbOX8k8i/clxew16V2+NGYhrMirMBq6R1docrv4w3ab3debAez2iCDbsaJQIDAQAB-----END PUBLIC KEY-----",
+          "apiurl": "https://api.authentication.eu20.hana.ondemand.com",
+          "identityzone": "iot-on-azure-dev-q46eg7s6",
+          "identityzoneid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
+          "tenantid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591",
+          "zoneid": "f5cb243d-9d60-41bc-a03e-32ba34d2c591"
+        },
+        "syslog_drain_url": null,
+        "volume_mounts": []
+      }
+    ]
+  }
 }

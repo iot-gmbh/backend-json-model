@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.3.5",
+    "@sap/ux-specification": "^1.102.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.18.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -44,6 +45,8 @@
   "scripts": {
     "start": "cds run",
     "lint": "eslint srv && eslint app",
+    "lint:fix": "eslint srv --fix && eslint app --fix",
+    "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production",
     "build:ui": "npm-run-all build:ui:*",
     "build:ui:azdev-workitems": "rimraf dist/azdev-workitems && mkdirp -p dist/azdev-workitems && npm run build --prefix app/azdev-workitems && cp -r app/azdev-workitems/dist/* dist/azdev-workitems",
@@ -60,11 +63,15 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "env:dev": "bash ./set-env.sh development",
     "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh production"
+    "env:prod": "bash ./set-env.sh production",
+    "watch-assign-users-to-categories": "cds watch --open assign-users-to-categories/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
     "db",
     "srv",
     "app"
+  ],
+  "sapux": [
+    "app/assign-users-to-categories"
   ]
 }
