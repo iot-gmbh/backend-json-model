@@ -66,23 +66,54 @@ module.exports = cds.service.impl(async function () {
   const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
 
   this.on("READ", "MyCategories", async (req) => {
-    const userID = req.user.id;
     const results = await db.run(
-      `WITH RECURSIVE categoryData AS 
-        (SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+      // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
+      // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
+      // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
+      // TODO: Make it work on SQLite
+      `WITH RECURSIVE 
+        childrenCTE AS (
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${userID}'
+            and user2cat.user_userPrincipalName = '${req.user.id}'
           UNION 
-            SELECT this.ID, this.title, this.description, this.parent_ID, prior.hierarchyLevel + 1 
-              FROM categoryData AS prior 
-              INNER JOIN iot_planner_categories AS this 
-                ON this.parent_ID = prior.ID
-        ) 
-        SELECT * FROM categoryData AS e ORDER BY e.hierarchyLevel;`
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM childrenCTE AS prior 
+          INNER JOIN iot_planner_categories AS this 
+              ON this.parent_ID = prior.ID
+          ),
+        parentCTE AS (
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          FROM iot_planner_categories AS cat
+          INNER JOIN iot_planner_users2categories as user2cat
+            on cat.ID = user2cat.category_ID
+            and user2cat.user_userPrincipalName = '${req.user.id}'
+          UNION 
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM parentCTE AS prior 
+          INNER JOIN iot_planner_categories AS this 
+            ON this.ID = prior.parent_ID
+          ) 
+          SELECT * 
+          FROM childrenCTE
+          UNION 
+          SELECT * 
+          FROM parentCTE;`
     );
-    return results;
+
+    if (!Array.isArray(results)) return [];
+    const categories = results.map(
+      ({ id, parent_id, hierarchylevel, ...data }) => ({
+        ID: id,
+        parent_ID: parent_id,
+        hierarchyLevel: hierarchylevel,
+        ...data,
+      })
+    );
+
+    return categories;
   });
 
   this.on("READ", "MyUser", async (req) => {
