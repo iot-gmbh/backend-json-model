@@ -1,88 +1,20 @@
-<mvc:View
-    controllerName="iot.planner.assignuserstocategories.controller.Worklist"
+<mvc:View controllerName="iot.planner.assignuserstocategories.controller.Worklist"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:semantic="sap.f.semantic">
 
-    <semantic:SemanticPage
-        id="page"
-        headerPinnable="false"
-        toggleHeaderOnTitleClick="false">
+    <Page id="_IDGenPage1" title="{i18n>worklistTitle}">
 
-        <semantic:titleHeading>
-            <Title
-                text="{i18n>worklistTitle}"
-                level="H2"/>
-        </semantic:titleHeading>
+        <smartFilterBar:SmartFilterBar id="smartFilterBar" entitySet="Categories" persistencyKey="SmartFilter_Explored" enableBasicSearch="true"/>
+        <smartTable:SmartTable id="CategoriesSmartTable" entitySet="Categories" smartFilterId="smartFilterBar" tableType="TreeTable" useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" useTablePersonalisation="true" header="Line Items" showRowCount="false" persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true" class="sapUiResponsiveContentPadding" editTogglable="true">
+            <!-- layout data used to make the table growing but the filter bar fixed -->
+            <smartTable:layoutData>
+                <FlexItemData id="_IDGenFlexItemData2" growFactor="1" baseSize="0%"/>
+            </smartTable:layoutData>
+        </smartTable:SmartTable>
 
-        <semantic:content>
-            <Table
-                id="table"
-                width="auto"
-                items="{
-                    path: '/Categories',
-                    sorter: {
-                        path: 'title',
-                        descending: false
-                    }
-                }"
-                noDataText="{worklistView>/tableNoDataText}"
-                busyIndicatorDelay="{worklistView>/tableBusyDelay}"
-                growing="true"
-                growingScrollToLoad="true"
-                updateFinished=".onUpdateFinished">
-
-                <headerToolbar>
-                    <OverflowToolbar>
-                        <Title
-                            id="tableHeader"
-                            text="{worklistView>/worklistTableTitle}"
-                            level="H3"/>
-                        <ToolbarSpacer />
-                        <SearchField
-                            id="searchField"
-                            tooltip="{i18n>worklistSearchTooltip}"
-                            search=".onSearch">
-                            <layoutData>
-                                <OverflowToolbarLayoutData
-                                    maxWidth="200px"
-                                    priority="NeverOverflow"/>
-                            </layoutData>
-                        </SearchField>
-                    </OverflowToolbar>
-                </headerToolbar>
-
-                <columns>
-                    <Column id="nameColumn">
-                        <Text text="{i18n>tableNameColumnTitle}" id="nameColumnTitle"/>
-                    </Column>
-                    <Column id="unitNumberColumn" hAlign="End">
-                        <Text text="{i18n>tableUnitNumberColumnTitle}" id="unitNumberColumnTitle"/>
-                    </Column>
-                </columns>
-
-                <items>
-                    <ColumnListItem
-                        type="Navigation"
-                        press=".onPress">
-                        <cells>
-                            <ObjectIdentifier
-                                title="{title}"/>
-                            <ObjectNumber
-                                number="{
-                                    path: 'hierarchyLevel',
-                                    formatter: '.formatter.numberUnit'
-                                }" />
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
-        </semantic:content>
-
-        <semantic:sendEmailAction>
-            <semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress"/>
-        </semantic:sendEmailAction>
-
-    </semantic:SemanticPage>
+    </Page>
 
 </mvc:View>

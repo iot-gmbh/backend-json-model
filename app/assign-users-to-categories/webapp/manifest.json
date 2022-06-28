@@ -17,12 +17,12 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/admin/",
+        "uri": "/v2/admin/",
         "type": "OData",
         "settings": {
           "annotations": [],
           "localUri": "localService/metadata.xml",
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
     }
@@ -73,10 +73,11 @@
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "synchronizationMode": "None",
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
+          "defaultUpdateMethod": "MERGE",
+          "defaultOperationMode": "Server",
+          "defaultBindingMode": "TwoWay",
+          "refreshAfterChange": false,
+          "defaultCountMode": "Inline"
         }
       }
     },
@@ -91,7 +92,9 @@
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
-          "target": ["notFound"]
+          "target": [
+            "notFound"
+          ]
         },
         "async": true
       },
@@ -99,12 +102,16 @@
         {
           "pattern": "",
           "name": "worklist",
-          "target": ["worklist"]
+          "target": [
+            "worklist"
+          ]
         },
         {
           "pattern": "Categories/{objectId}",
           "name": "object",
-          "target": ["object"]
+          "target": [
+            "object"
+          ]
         }
       ],
       "targets": {
