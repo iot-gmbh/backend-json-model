@@ -56,6 +56,8 @@ entity Categories : cuid, managed, relevance {
   mappingID      : String;
   drillDownState : String default 'expanded';
   manager        : Association to Users;
+  members        : Association to many Users2Categories
+                     on members.category = $self;
   parent         : Association to Categories;
   children       : Association to many Categories
                      on children.parent = $self;

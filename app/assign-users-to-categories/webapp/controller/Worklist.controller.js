@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 sap.ui.define(
   [
     "./BaseController",
@@ -152,6 +153,31 @@ sap.ui.define(
               this.getResourceBundle().getText("worklistNoDataWithSearchText")
             );
           }
+        },
+
+        onTokenUpdate(event) {
+          const model = this.getModel();
+          const { addedTokens } = event.getParameters();
+
+          addedTokens.forEach((token) => {
+            const user_userPrincipalName = token.getKey();
+            const category_ID = token.getBindingContext().getProperty("ID");
+
+            model.createEntry("/Users2Categories", {
+              properties: {
+                category_ID,
+                user_userPrincipalName,
+              },
+            });
+          });
+
+          model.submitChanges();
+        },
+
+        onDeleteToken(event) {
+          const path = event.getSource().getBindingContext().getPath();
+
+          this.getModel().remove(path);
         },
       }
     )
