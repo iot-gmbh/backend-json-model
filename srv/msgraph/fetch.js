@@ -1,4 +1,4 @@
-const axios = require("axios");
+const axios = require('axios');
 
 /**
  * Calls the endpoint with authorization bearer token.
@@ -12,7 +12,7 @@ async function callApi(endpoint, accessToken) {
     },
   };
 
-  console.log("request made to web API at: " + new Date().toString());
+  console.log(`request made to web API at: ${new Date().toString()}`);
 
   try {
     const response = await axios.default.get(endpoint, options);
@@ -24,5 +24,5 @@ async function callApi(endpoint, accessToken) {
 }
 
 module.exports = {
-  callApi: callApi,
+  callApi,
 };

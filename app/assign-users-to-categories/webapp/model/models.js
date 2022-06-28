@@ -8,15 +8,11 @@ sap.ui.define(
    *
    * @returns {Function} createDeviceModel() for providing runtime info for the device the UI5 app is running on
    */
-  function (JSONModel, Device) {
-    "use strict";
-
-    return {
-      createDeviceModel: function () {
-        var oModel = new JSONModel(Device);
-        oModel.setDefaultBindingMode("OneWay");
-        return oModel;
-      },
-    };
-  }
+  (JSONModel, Device) => ({
+    createDeviceModel() {
+      const oModel = new JSONModel(Device);
+      oModel.setDefaultBindingMode("OneWay");
+      return oModel;
+    },
+  }),
 );

@@ -12,7 +12,7 @@ sap.ui.define(
     "sap/m/MessageBox",
     "sap/m/MessageToast",
   ],
-  function (
+  (
     BaseController,
     ErrorParser,
     Filter,
@@ -20,8 +20,8 @@ sap.ui.define(
     JSONModel,
     legendItems,
     MessageBox,
-    MessageToast
-  ) {
+    MessageToast,
+  ) => {
     function addDays(date, days) {
       const result = new Date(date);
       result.setDate(result.getDate() + days);
@@ -46,7 +46,7 @@ sap.ui.define(
       {
         formatter,
 
-        onInit: async function () {
+        async onInit() {
           const bundle = this.getResourceBundle();
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
@@ -64,7 +64,7 @@ sap.ui.define(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
                 type,
-              })
+              }),
             ),
           });
 
@@ -88,26 +88,25 @@ sap.ui.define(
           }
 
           $(document).keydown((evt) => {
-            const activeElementID =
-              $(document.activeElement) &&
-              $(document.activeElement).control()[0] &&
-              $(document.activeElement).control()[0].getId();
+            const activeElementID = $(document.activeElement)
+              && $(document.activeElement).control()[0]
+              && $(document.activeElement).control()[0].getId();
 
             if (evt.ctrlKey) {
               if (
-                evt.keyCode === 13 &&
-                !this.byId("submitButton").getEnabled()
+                evt.keyCode === 13
+                && !this.byId("submitButton").getEnabled()
               ) {
                 MessageToast.show(
-                  bundle.getText("appointmentDialog.invalidInput")
+                  bundle.getText("appointmentDialog.invalidInput"),
                 );
                 return;
               }
               if (
-                evt.keyCode === 13 &&
-                activeElementID &&
+                evt.keyCode === 13
+                && activeElementID
                 // Check the active element in order to prevent double-submit
-                !activeElementID.includes("submitButton")
+                && !activeElementID.includes("submitButton")
               ) {
                 evt.preventDefault();
 
@@ -138,9 +137,7 @@ sap.ui.define(
         },
 
         _refreshSelectControls() {
-          this._getSelectControls().forEach((select) =>
-            select.getBinding("items").refresh()
-          );
+          this._getSelectControls().forEach((select) => select.getBinding("items").refresh());
         },
 
         onSelectCustomer(event) {
@@ -153,7 +150,7 @@ sap.ui.define(
           const { projects, workPackages } = model.getData();
 
           const projectsFiltered = projects.filter(
-            ({ customer_ID }) => customer_ID === selectedCustomer.ID
+            ({ customer_ID }) => customer_ID === selectedCustomer.ID,
           );
 
           const firstProject = projectsFiltered[0];
@@ -164,7 +161,7 @@ sap.ui.define(
 
           if (firstProject) {
             packagesFiltered = workPackages.filter(
-              ({ project_ID }) => project_ID === firstProject.ID
+              ({ project_ID }) => project_ID === firstProject.ID,
             );
 
             firstProjectID = firstProject.ID;
@@ -188,7 +185,7 @@ sap.ui.define(
           const { workPackages } = model.getData();
 
           const packagesFiltered = workPackages.filter(
-            ({ project_ID }) => project_ID === selectedProject.ID
+            ({ project_ID }) => project_ID === selectedProject.ID,
           );
 
           const firstPackageKey = packagesFiltered[0]
@@ -214,8 +211,9 @@ sap.ui.define(
         async onEditAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const { startDate, endDate, appointment, copy } =
-            event.getParameters();
+          const {
+            startDate, endDate, appointment, copy,
+          } = event.getParameters();
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
 
@@ -226,8 +224,8 @@ sap.ui.define(
             model.setProperty("/appointments/NEW", appointment);
           }
 
-          model.setProperty(path + "/activatedDate", startDate);
-          model.setProperty(path + "/completedDate", endDate);
+          model.setProperty(`${path}/activatedDate`, startDate);
+          model.setProperty(`${path}/completedDate`, endDate);
 
           if (!data.customer_ID || !data.project_ID) {
             this._bindAndOpenDialog(path);
@@ -327,7 +325,7 @@ sap.ui.define(
             "/createItemDialogTitle",
             appointment.ID
               ? bundle.getText("editAppointment")
-              : bundle.getText("createAppointment")
+              : bundle.getText("createAppointment"),
           );
 
           this.byId("packageSelect").setSelectedKey(undefined);
@@ -346,34 +344,32 @@ sap.ui.define(
           if (appointment.isAllDay) {
             MessageToast.show(
               this.getResourceBundle().getText(
-                "message.allDayEventsAreNotEditable"
-              )
+                "message.allDayEventsAreNotEditable",
+              ),
             );
             return;
           }
 
-          let { appointments } = model.getData();
+          const { appointments } = model.getData();
 
           model.setProperty("/dialogBusy", true);
 
           const projectSelect = this.byId("projectSelect");
           const packageSelect = this.byId("packageSelect");
 
-          appointment.project_ID =
-            projectSelect.getItems().length > 0
-              ? projectSelect.getSelectedKey()
-              : null;
+          appointment.project_ID = projectSelect.getItems().length > 0
+            ? projectSelect.getSelectedKey()
+            : null;
 
-          appointment.workPackage_ID =
-            packageSelect.getItems().length > 0
-              ? packageSelect.getSelectedKey()
-              : null;
+          appointment.workPackage_ID = packageSelect.getItems().length > 0
+            ? packageSelect.getSelectedKey()
+            : null;
 
           try {
             const appointmentSync = await this._submitEntry(appointment);
 
             appointments[appointmentSync.ID] = appointmentSync;
-            appointments["NEW"] = {};
+            appointments.NEW = {};
 
             model.setProperty("/appointments", appointments);
           } catch (error) {
@@ -390,7 +386,7 @@ sap.ui.define(
           // Update
           if (ID) {
             const path = `/MyWorkItems(ID='${encodeURIComponent(
-              appointment.ID
+              appointment.ID,
             )}')`;
             // const path = this.getModel("OData").createKey(
             //   "/MyWorkItems",
@@ -404,9 +400,8 @@ sap.ui.define(
           }
 
           // Create
-          else {
-            return this.create({ path: "/MyWorkItems", data: appointment });
-          }
+
+          return this.create({ path: "/MyWorkItems", data: appointment });
         },
 
         onAfterCloseDialog() {
@@ -414,8 +409,7 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
 
-          if (!appointment || !appointment.ID)
-            this.getModel().setProperty("/appointments/NEW", {});
+          if (!appointment || !appointment.ID) this.getModel().setProperty("/appointments/NEW", {});
 
           this.byId("createItemDialog").unbindElement();
         },
@@ -428,11 +422,11 @@ sap.ui.define(
           this.byId(dialogName).close();
         },
 
-        onChangeView: function () {
+        onChangeView() {
           this._loadAppointments();
         },
 
-        onStartDateChange: function () {
+        onStartDateChange() {
           this._loadAppointments();
         },
 
@@ -530,9 +524,9 @@ sap.ui.define(
             urlParameters: { $expand: "project/customer,project/workPackages" },
           });
 
-          let customers = [];
-          let projects = [];
-          let workPackages = [];
+          const customers = [];
+          const projects = [];
+          const workPackages = [];
 
           allProjects.forEach(({ project }) => {
             projects.push(project);
@@ -549,19 +543,18 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
-        _getUser: function () {
+        _getUser() {
           return new Promise((resolve, reject) => {
             this.getModel("OData").read("/MyUser", {
               success: (response) => {
                 const myUser = response.results[0];
-                if (!myUser)
-                  reject("User does not exist in DB. Please create it.");
+                if (!myUser) reject("User does not exist in DB. Please create it.");
                 return resolve(myUser);
               },
             });
           });
         },
-      }
+      },
     );
-  }
+  },
 );

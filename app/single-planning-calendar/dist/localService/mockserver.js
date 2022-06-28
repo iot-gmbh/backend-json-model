@@ -5,25 +5,23 @@ sap.ui.define(
     "sap/base/util/UriParameters",
     "sap/base/Log",
   ],
-  function (e, t, r, a) {
-    "use strict";
-    var o,
-      i = "iot.singleplanningcalendar/",
-      n = i + "localService/mockdata";
-    var s = {
-      init: function (s) {
-        var u = s || {};
-        return new Promise(function (s, c) {
-          var p = sap.ui.require.toUrl(i + "manifest.json"),
-            l = new t(p);
-          l.attachRequestCompleted(function () {
-            var t = new r(window.location.href),
-              c = sap.ui.require.toUrl(n),
-              p = l.getProperty("/sap.app/dataSources/mainService"),
-              f = sap.ui.require.toUrl(i + p.settings.localUri),
-              d =
-                p.uri &&
-                new URI(p.uri).absoluteTo(sap.ui.require.toUrl(i)).toString();
+  (e, t, r, a) => {
+    let o;
+    const i = "iot.singleplanningcalendar/";
+    const n = `${i}localService/mockdata`;
+    const s = {
+      init(s) {
+        const u = s || {};
+        return new Promise((s, c) => {
+          const p = sap.ui.require.toUrl(`${i}manifest.json`);
+          const l = new t(p);
+          l.attachRequestCompleted(() => {
+            const t = new r(window.location.href);
+            const c = sap.ui.require.toUrl(n);
+            const p = l.getProperty("/sap.app/dataSources/mainService");
+            const f = sap.ui.require.toUrl(i + p.settings.localUri);
+            const d = p.uri
+                && new URI(p.uri).absoluteTo(sap.ui.require.toUrl(i)).toString();
             if (!o) {
               o = new e({ rootUri: d });
             } else {
@@ -37,23 +35,23 @@ sap.ui.define(
               sMockdataBaseUrl: c,
               bGenerateMissingMockData: true,
             });
-            var g = o.getRequests();
-            var m = function (e, t, r) {
+            const g = o.getRequests();
+            const m = function (e, t, r) {
               r.response = function (r) {
                 r.respond(e, { "Content-Type": "text/plain;charset=utf-8" }, t);
               };
             };
             if (u.metadataError || t.get("metadataError")) {
-              g.forEach(function (e) {
+              g.forEach((e) => {
                 if (e.path.toString().indexOf("$metadata") > -1) {
                   m(500, "metadata Error", e);
                 }
               });
             }
-            var v = u.errorType || t.get("errorType"),
-              h = v === "badRequest" ? 400 : 500;
+            const v = u.errorType || t.get("errorType");
+            const h = v === "badRequest" ? 400 : 500;
             if (v) {
-              g.forEach(function (e) {
+              g.forEach((e) => {
                 m(h, v, e);
               });
             }
@@ -62,17 +60,17 @@ sap.ui.define(
             a.info("Running the app with mock data");
             s();
           });
-          l.attachRequestFailed(function () {
-            var e = "Failed to load application manifest";
+          l.attachRequestFailed(() => {
+            const e = "Failed to load application manifest";
             a.error(e);
             c(new Error(e));
           });
         });
       },
-      getMockServer: function () {
+      getMockServer() {
         return o;
       },
     };
     return s;
-  }
+  },
 );

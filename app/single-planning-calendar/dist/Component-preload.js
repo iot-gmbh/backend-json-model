@@ -1,4 +1,4 @@
-//@ui5-bundle iot/singleplanningcalendar/Component-preload.js
+// @ui5-bundle iot/singleplanningcalendar/Component-preload.js
 sap.ui.require.preload({
   "iot/singleplanningcalendar/Component.js": function () {
     sap.ui.define(
@@ -7,88 +7,84 @@ sap.ui.require.preload({
         "sap/ui/Device",
         "iot/singleplanningcalendar/model/models",
       ],
-      function (e, i, n) {
-        "use strict";
-        return e.extend("iot.singleplanningcalendar.Component", {
-          metadata: { manifest: "json" },
-          init: function () {
-            e.prototype.init.apply(this, arguments);
-            this.getRouter().initialize();
-            this.setModel(n.createDeviceModel(), "device");
-          },
-        });
-      }
+      (e, i, n) => e.extend("iot.singleplanningcalendar.Component", {
+        metadata: { manifest: "json" },
+        init() {
+          e.prototype.init.apply(this, arguments);
+          this.getRouter().initialize();
+          this.setModel(n.createDeviceModel(), "device");
+        },
+      }),
     );
   },
   "iot/singleplanningcalendar/controller/BaseController.js": function () {
     sap.ui.define(
       ["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History"],
-      function (e, t) {
-        "use strict";
-        return e.extend(
-          "iot.singleplanningcalendar.controller.BaseController",
-          {
-            getRouter: function () {
-              return this.getOwnerComponent().getRouter();
-            },
-            getModel: function (e) {
-              return this.getView().getModel(e);
-            },
-            setModel: function (e, t) {
-              return this.getView().setModel(e, t);
-            },
-            getResourceBundle: function () {
-              return this.getOwnerComponent()
-                .getModel("i18n")
-                .getResourceBundle();
-            },
-            async read({ path: e, ...t }) {
-              return new Promise((r, n) => {
-                this.getModel("OData").read(e, { ...t, success: r, error: n });
-              });
-            },
-            async update({ path: e, data: t }) {
-              return new Promise((r, n) => {
-                this.getModel("OData").update(e, t, { success: r, error: n });
-              });
-            },
-            async create({ path: e, data: t }) {
-              return new Promise((r, n) => {
-                this.getModel("OData").create(e, t, { success: r, error: n });
-              });
-            },
-            async reset({ path: e, data: t }) {
-              return new Promise((r, n) => {
-                this.getModel("OData").update(
-                  e,
-                  { ...t, resetEntry: true },
-                  { success: r, error: n }
-                );
-              });
-            },
-            async remove({
-              path: e,
-              data: { ID: t, activatedDate: r, completedDate: n },
-            }) {
-              return new Promise((a, s) => {
-                this.getModel("OData").update(
-                  e,
-                  { ID: t, activatedDate: r, completedDate: n, deleted: true },
-                  { success: a, error: s }
-                );
-              });
-            },
-            onNavBack: function () {
-              var e = t.getInstance().getPreviousHash();
-              if (e !== undefined) {
-                history.go(-1);
-              } else {
-                this.getRouter().navTo("master", {}, true);
-              }
-            },
-          }
-        );
-      }
+      (e, t) => e.extend(
+        "iot.singleplanningcalendar.controller.BaseController",
+        {
+          getRouter() {
+            return this.getOwnerComponent().getRouter();
+          },
+          getModel(e) {
+            return this.getView().getModel(e);
+          },
+          setModel(e, t) {
+            return this.getView().setModel(e, t);
+          },
+          getResourceBundle() {
+            return this.getOwnerComponent()
+              .getModel("i18n")
+              .getResourceBundle();
+          },
+          async read({ path: e, ...t }) {
+            return new Promise((r, n) => {
+              this.getModel("OData").read(e, { ...t, success: r, error: n });
+            });
+          },
+          async update({ path: e, data: t }) {
+            return new Promise((r, n) => {
+              this.getModel("OData").update(e, t, { success: r, error: n });
+            });
+          },
+          async create({ path: e, data: t }) {
+            return new Promise((r, n) => {
+              this.getModel("OData").create(e, t, { success: r, error: n });
+            });
+          },
+          async reset({ path: e, data: t }) {
+            return new Promise((r, n) => {
+              this.getModel("OData").update(
+                e,
+                { ...t, resetEntry: true },
+                { success: r, error: n },
+              );
+            });
+          },
+          async remove({
+            path: e,
+            data: { ID: t, activatedDate: r, completedDate: n },
+          }) {
+            return new Promise((a, s) => {
+              this.getModel("OData").update(
+                e,
+                {
+                  ID: t, activatedDate: r, completedDate: n, deleted: true,
+                },
+                { success: a, error: s },
+              );
+            });
+          },
+          onNavBack() {
+            const e = t.getInstance().getPreviousHash();
+            if (e !== undefined) {
+              history.go(-1);
+            } else {
+              this.getRouter().navTo("master", {}, true);
+            }
+          },
+        },
+      ),
     );
   },
   "iot/singleplanningcalendar/controller/ErrorParser.js":
@@ -106,7 +102,7 @@ sap.ui.require.preload({
           "sap/m/MessageBox",
           "sap/m/MessageToast",
         ],
-        function (e, t, s, o, n, a, r, i) {
+        (e, t, s, o, n, a, r, i) => {
           function c(e, t) {
             const s = new Date(e);
             s.setDate(s.getDate() + t);
@@ -123,7 +119,7 @@ sap.ui.require.preload({
             "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
             {
               formatter: o,
-              onInit: async function () {
+              async onInit() {
                 const e = this.getResourceBundle();
                 const s = this.byId("SPCalendar");
                 const o = s.getViews()[1];
@@ -140,7 +136,7 @@ sap.ui.require.preload({
                     ([t, { type: s }]) => ({
                       text: e.getText(`legendItems.${t}`),
                       type: s,
-                    })
+                    }),
                   ),
                 });
                 s.setSelectedView(o);
@@ -157,14 +153,13 @@ sap.ui.require.preload({
                   r.error(t.parse(e));
                 }
                 $(document).keydown((t) => {
-                  const s =
-                    $(document.activeElement) &&
-                    $(document.activeElement).control()[0] &&
-                    $(document.activeElement).control()[0].getId();
+                  const s = $(document.activeElement)
+                    && $(document.activeElement).control()[0]
+                    && $(document.activeElement).control()[0].getId();
                   if (t.ctrlKey) {
                     if (
-                      t.keyCode === 13 &&
-                      !this.byId("submitButton").getEnabled()
+                      t.keyCode === 13
+                      && !this.byId("submitButton").getEnabled()
                     ) {
                       i.show(e.getText("appointmentDialog.invalidInput"));
                       return;
@@ -188,9 +183,7 @@ sap.ui.require.preload({
                 return p.map((e) => this.byId(e));
               },
               _refreshSelectControls() {
-                this._getSelectControls().forEach((e) =>
-                  e.getBinding("items").refresh()
-                );
+                this._getSelectControls().forEach((e) => e.getBinding("items").refresh());
               },
               onSelectCustomer(e) {
                 const t = this.getModel();
@@ -249,8 +242,8 @@ sap.ui.require.preload({
                   d = "/appointments/NEW";
                   s.setProperty("/appointments/NEW", i);
                 }
-                s.setProperty(d + "/activatedDate", n);
-                s.setProperty(d + "/completedDate", a);
+                s.setProperty(`${d}/activatedDate`, n);
+                s.setProperty(`${d}/completedDate`, a);
                 if (!p.customer_ID || !p.project_ID) {
                   this._bindAndOpenDialog(d);
                   return;
@@ -323,7 +316,7 @@ sap.ui.require.preload({
                   "/createItemDialogTitle",
                   o.ID
                     ? s.getText("editAppointment")
-                    : s.getText("createAppointment")
+                    : s.getText("createAppointment"),
                 );
                 this.byId("packageSelect").setSelectedKey(undefined);
                 this.byId("projectSelect").setSelectedKey(undefined);
@@ -339,23 +332,21 @@ sap.ui.require.preload({
                 if (s.isAllDay) {
                   i.show(
                     this.getResourceBundle().getText(
-                      "message.allDayEventsAreNotEditable"
-                    )
+                      "message.allDayEventsAreNotEditable",
+                    ),
                   );
                   return;
                 }
-                let { appointments: o } = e.getData();
+                const { appointments: o } = e.getData();
                 e.setProperty("/dialogBusy", true);
                 const n = this.byId("projectSelect");
                 const a = this.byId("packageSelect");
-                s.project_ID =
-                  n.getItems().length > 0 ? n.getSelectedKey() : null;
-                s.workPackage_ID =
-                  a.getItems().length > 0 ? a.getSelectedKey() : null;
+                s.project_ID = n.getItems().length > 0 ? n.getSelectedKey() : null;
+                s.workPackage_ID = a.getItems().length > 0 ? a.getSelectedKey() : null;
                 try {
                   const t = await this._submitEntry(s);
                   o[t.ID] = t;
-                  o["NEW"] = {};
+                  o.NEW = {};
                   e.setProperty("/appointments", o);
                 } catch (e) {
                   r.error(t.parse(e));
@@ -368,16 +359,14 @@ sap.ui.require.preload({
                 if (t) {
                   const t = `/MyWorkItems(ID='${encodeURIComponent(e.ID)}')`;
                   return this.update({ path: t, data: e });
-                } else {
-                  return this.create({ path: "/MyWorkItems", data: e });
                 }
+                return this.create({ path: "/MyWorkItems", data: e });
               },
               onAfterCloseDialog() {
                 const e = this.byId("createItemDialog")
                   .getBindingContext()
                   .getObject();
-                if (!e || !e.ID)
-                  this.getModel().setProperty("/appointments/NEW", {});
+                if (!e || !e.ID) this.getModel().setProperty("/appointments/NEW", {});
                 this.byId("createItemDialog").unbindElement();
               },
               onCloseDialog(e) {
@@ -386,17 +375,19 @@ sap.ui.require.preload({
               _closeDialog(e) {
                 this.byId(e).close();
               },
-              onChangeView: function () {
+              onChangeView() {
                 this._loadAppointments();
               },
-              onStartDateChange: function () {
+              onStartDateChange() {
                 this._loadAppointments();
               },
               _getCalendarEndDate() {
                 const e = this.byId("SPCalendar");
                 const t = e.getStartDate();
                 const s = e._getSelectedView().getKey();
-                const o = { Day: 1, WorkWeek: 5, Week: 7, Month: 31 };
+                const o = {
+                  Day: 1, WorkWeek: 5, Week: 7, Month: 31,
+                };
                 const n = o[s];
                 const a = c(t, n);
                 return a;
@@ -461,9 +452,9 @@ sap.ui.require.preload({
                     $expand: "project/customer,project/workPackages",
                   },
                 });
-                let n = [];
-                let a = [];
-                let r = [];
+                const n = [];
+                const a = [];
+                const r = [];
                 o.forEach(({ project: e }) => {
                   a.push(e);
                   n.push(e.customer);
@@ -476,7 +467,7 @@ sap.ui.require.preload({
                 e.setProperty("/workPackages", r);
                 e.setProperty("/busy", false);
               },
-              _getUser: function () {
+              _getUser() {
                 return new Promise((e, t) => {
                   this.getModel("OData").read("/MyUser", {
                     success: (s) => {
@@ -487,9 +478,9 @@ sap.ui.require.preload({
                   });
                 });
               },
-            }
+            },
           );
-        }
+        },
       );
     },
   "iot/singleplanningcalendar/i18n/i18n.properties":
@@ -502,25 +493,23 @@ sap.ui.require.preload({
         "sap/base/util/UriParameters",
         "sap/base/Log",
       ],
-      function (e, t, r, a) {
-        "use strict";
-        var o,
-          i = "iot.singleplanningcalendar/",
-          n = i + "localService/mockdata";
-        var s = {
-          init: function (s) {
-            var u = s || {};
-            return new Promise(function (s, c) {
-              var p = sap.ui.require.toUrl(i + "manifest.json"),
-                l = new t(p);
-              l.attachRequestCompleted(function () {
-                var t = new r(window.location.href),
-                  c = sap.ui.require.toUrl(n),
-                  p = l.getProperty("/sap.app/dataSources/mainService"),
-                  f = sap.ui.require.toUrl(i + p.settings.localUri),
-                  d =
-                    p.uri &&
-                    new URI(p.uri)
+      (e, t, r, a) => {
+        let o;
+        const i = "iot.singleplanningcalendar/";
+        const n = `${i}localService/mockdata`;
+        const s = {
+          init(s) {
+            const u = s || {};
+            return new Promise((s, c) => {
+              const p = sap.ui.require.toUrl(`${i}manifest.json`);
+              const l = new t(p);
+              l.attachRequestCompleted(() => {
+                const t = new r(window.location.href);
+                const c = sap.ui.require.toUrl(n);
+                const p = l.getProperty("/sap.app/dataSources/mainService");
+                const f = sap.ui.require.toUrl(i + p.settings.localUri);
+                const d = p.uri
+                    && new URI(p.uri)
                       .absoluteTo(sap.ui.require.toUrl(i))
                       .toString();
                 if (!o) {
@@ -536,27 +525,27 @@ sap.ui.require.preload({
                   sMockdataBaseUrl: c,
                   bGenerateMissingMockData: true,
                 });
-                var g = o.getRequests();
-                var m = function (e, t, r) {
+                const g = o.getRequests();
+                const m = function (e, t, r) {
                   r.response = function (r) {
                     r.respond(
                       e,
                       { "Content-Type": "text/plain;charset=utf-8" },
-                      t
+                      t,
                     );
                   };
                 };
                 if (u.metadataError || t.get("metadataError")) {
-                  g.forEach(function (e) {
+                  g.forEach((e) => {
                     if (e.path.toString().indexOf("$metadata") > -1) {
                       m(500, "metadata Error", e);
                     }
                   });
                 }
-                var v = u.errorType || t.get("errorType"),
-                  h = v === "badRequest" ? 400 : 500;
+                const v = u.errorType || t.get("errorType");
+                const h = v === "badRequest" ? 400 : 500;
                 if (v) {
-                  g.forEach(function (e) {
+                  g.forEach((e) => {
                     m(h, v, e);
                   });
                 }
@@ -565,19 +554,19 @@ sap.ui.require.preload({
                 a.info("Running the app with mock data");
                 s();
               });
-              l.attachRequestFailed(function () {
-                var e = "Failed to load application manifest";
+              l.attachRequestFailed(() => {
+                const e = "Failed to load application manifest";
                 a.error(e);
                 c(new Error(e));
               });
             });
           },
-          getMockServer: function () {
+          getMockServer() {
             return o;
           },
         };
         return s;
-      }
+      },
     );
   },
   "iot/singleplanningcalendar/manifest.json":
@@ -623,16 +612,13 @@ sap.ui.require.preload({
   "iot/singleplanningcalendar/model/models.js": function () {
     sap.ui.define(
       ["sap/ui/model/json/JSONModel", "sap/ui/Device"],
-      function (e, n) {
-        "use strict";
-        return {
-          createDeviceModel: function () {
-            var i = new e(n);
-            i.setDefaultBindingMode("OneWay");
-            return i;
-          },
-        };
-      }
+      (e, n) => ({
+        createDeviceModel() {
+          const i = new e(n);
+          i.setDefaultBindingMode("OneWay");
+          return i;
+        },
+      }),
     );
   },
   "iot/singleplanningcalendar/view/SinglePlanningCalendar.view.xml":

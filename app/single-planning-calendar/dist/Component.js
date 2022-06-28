@@ -4,15 +4,12 @@ sap.ui.define(
     "sap/ui/Device",
     "iot/singleplanningcalendar/model/models",
   ],
-  function (e, i, n) {
-    "use strict";
-    return e.extend("iot.singleplanningcalendar.Component", {
-      metadata: { manifest: "json" },
-      init: function () {
-        e.prototype.init.apply(this, arguments);
-        this.getRouter().initialize();
-        this.setModel(n.createDeviceModel(), "device");
-      },
-    });
-  }
+  (e, i, n) => e.extend("iot.singleplanningcalendar.Component", {
+    metadata: { manifest: "json" },
+    init() {
+      e.prototype.init.apply(this, arguments);
+      this.getRouter().initialize();
+      this.setModel(n.createDeviceModel(), "device");
+    },
+  }),
 );

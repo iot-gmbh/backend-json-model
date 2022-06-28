@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "plugin:@sap/cds/recommended"],
+  "extends": ["airbnb", "eslint:recommended", "plugin:@sap/cds/recommended"],
   "env": {
     "node": true,
     "es6": true,
@@ -19,6 +19,7 @@
     "cds": true
   },
   "rules": {
+    "no-underscore-dangle": 0,
     "no-console": "off",
     "require-atomic-updates": "off"
   }

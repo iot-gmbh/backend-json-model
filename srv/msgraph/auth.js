@@ -1,4 +1,4 @@
-const msal = require("@azure/msal-node");
+const msal = require('@azure/msal-node');
 
 /**
  * Configuration object to be passed to MSAL instance on creation.
@@ -41,7 +41,7 @@ async function getToken(tokenRequest) {
 }
 
 module.exports = {
-  apiConfig: apiConfig,
-  tokenRequest: tokenRequest,
-  getToken: getToken,
+  apiConfig,
+  tokenRequest,
+  getToken,
 };

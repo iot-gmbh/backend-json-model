@@ -1,11 +1,10 @@
 sap.ui.define(
   ["sap/ui/test/Opa5", "./arrangements/Startup", "./NavigationJourney"],
-  function (e, a) {
-    "use strict";
+  (e, a) => {
     e.extendConfig({
       arrangements: new a(),
       viewNamespace: "iot.singleplanningcalendar.view.",
       autoWait: true,
     });
-  }
+  },
 );

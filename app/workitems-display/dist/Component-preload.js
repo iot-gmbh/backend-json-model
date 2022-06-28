@@ -1,14 +1,11 @@
-//@ui5-bundle iot/planner/workitems/Component-preload.js
+// @ui5-bundle iot/planner/workitems/Component-preload.js
 jQuery.sap.registerPreloadedModules({
   version: "2.0",
   modules: {
     "iot/planner/workitems/Component.js": function () {
-      sap.ui.define(["sap/fe/core/AppComponent"], function (e) {
-        "use strict";
-        return e.extend("iot.planner.workitems.Component", {
-          metadata: { manifest: "json" },
-        });
-      });
+      sap.ui.define(["sap/fe/core/AppComponent"], (e) => e.extend("iot.planner.workitems.Component", {
+        metadata: { manifest: "json" },
+      }));
     },
     "iot/planner/workitems/i18n/i18n.properties":
       "# This is the resource bundle for workitems\r\n\r\n#Texts for manifest.json\r\n\r\n#XTIT: Application name\r\nappTitle=Display Work Items\r\nappSubtitle=Find & Display\r\n\r\n#YDES: Application description\r\nappDescription=Find and display Work Items\r\n",

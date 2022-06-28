@@ -9,7 +9,7 @@ sap.ui.define(
     "sap/m/MessageBox",
     "sap/m/MessageToast",
   ],
-  function (e, t, s, o, n, a, r, i) {
+  (e, t, s, o, n, a, r, i) => {
     function c(e, t) {
       const s = new Date(e);
       s.setDate(s.getDate() + t);
@@ -26,7 +26,7 @@ sap.ui.define(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         formatter: o,
-        onInit: async function () {
+        async onInit() {
           const e = this.getResourceBundle();
           const s = this.byId("SPCalendar");
           const o = s.getViews()[1];
@@ -43,7 +43,7 @@ sap.ui.define(
               ([t, { type: s }]) => ({
                 text: e.getText(`legendItems.${t}`),
                 type: s,
-              })
+              }),
             ),
           });
           s.setSelectedView(o);
@@ -60,10 +60,9 @@ sap.ui.define(
             r.error(t.parse(e));
           }
           $(document).keydown((t) => {
-            const s =
-              $(document.activeElement) &&
-              $(document.activeElement).control()[0] &&
-              $(document.activeElement).control()[0].getId();
+            const s = $(document.activeElement)
+              && $(document.activeElement).control()[0]
+              && $(document.activeElement).control()[0].getId();
             if (t.ctrlKey) {
               if (t.keyCode === 13 && !this.byId("submitButton").getEnabled()) {
                 i.show(e.getText("appointmentDialog.invalidInput"));
@@ -88,9 +87,7 @@ sap.ui.define(
           return p.map((e) => this.byId(e));
         },
         _refreshSelectControls() {
-          this._getSelectControls().forEach((e) =>
-            e.getBinding("items").refresh()
-          );
+          this._getSelectControls().forEach((e) => e.getBinding("items").refresh());
         },
         onSelectCustomer(e) {
           const t = this.getModel();
@@ -149,8 +146,8 @@ sap.ui.define(
             d = "/appointments/NEW";
             s.setProperty("/appointments/NEW", i);
           }
-          s.setProperty(d + "/activatedDate", n);
-          s.setProperty(d + "/completedDate", a);
+          s.setProperty(`${d}/activatedDate`, n);
+          s.setProperty(`${d}/completedDate`, a);
           if (!p.customer_ID || !p.project_ID) {
             this._bindAndOpenDialog(d);
             return;
@@ -221,7 +218,7 @@ sap.ui.define(
           const n = this.byId("createItemDialog");
           t.setProperty(
             "/createItemDialogTitle",
-            o.ID ? s.getText("editAppointment") : s.getText("createAppointment")
+            o.ID ? s.getText("editAppointment") : s.getText("createAppointment"),
           );
           this.byId("packageSelect").setSelectedKey(undefined);
           this.byId("projectSelect").setSelectedKey(undefined);
@@ -237,22 +234,21 @@ sap.ui.define(
           if (s.isAllDay) {
             i.show(
               this.getResourceBundle().getText(
-                "message.allDayEventsAreNotEditable"
-              )
+                "message.allDayEventsAreNotEditable",
+              ),
             );
             return;
           }
-          let { appointments: o } = e.getData();
+          const { appointments: o } = e.getData();
           e.setProperty("/dialogBusy", true);
           const n = this.byId("projectSelect");
           const a = this.byId("packageSelect");
           s.project_ID = n.getItems().length > 0 ? n.getSelectedKey() : null;
-          s.workPackage_ID =
-            a.getItems().length > 0 ? a.getSelectedKey() : null;
+          s.workPackage_ID = a.getItems().length > 0 ? a.getSelectedKey() : null;
           try {
             const t = await this._submitEntry(s);
             o[t.ID] = t;
-            o["NEW"] = {};
+            o.NEW = {};
             e.setProperty("/appointments", o);
           } catch (e) {
             r.error(t.parse(e));
@@ -265,9 +261,8 @@ sap.ui.define(
           if (t) {
             const t = `/MyWorkItems(ID='${encodeURIComponent(e.ID)}')`;
             return this.update({ path: t, data: e });
-          } else {
-            return this.create({ path: "/MyWorkItems", data: e });
           }
+          return this.create({ path: "/MyWorkItems", data: e });
         },
         onAfterCloseDialog() {
           const e = this.byId("createItemDialog")
@@ -282,17 +277,19 @@ sap.ui.define(
         _closeDialog(e) {
           this.byId(e).close();
         },
-        onChangeView: function () {
+        onChangeView() {
           this._loadAppointments();
         },
-        onStartDateChange: function () {
+        onStartDateChange() {
           this._loadAppointments();
         },
         _getCalendarEndDate() {
           const e = this.byId("SPCalendar");
           const t = e.getStartDate();
           const s = e._getSelectedView().getKey();
-          const o = { Day: 1, WorkWeek: 5, Week: 7, Month: 31 };
+          const o = {
+            Day: 1, WorkWeek: 5, Week: 7, Month: 31,
+          };
           const n = o[s];
           const a = c(t, n);
           return a;
@@ -347,9 +344,9 @@ sap.ui.define(
             ],
             urlParameters: { $expand: "project/customer,project/workPackages" },
           });
-          let n = [];
-          let a = [];
-          let r = [];
+          const n = [];
+          const a = [];
+          const r = [];
           o.forEach(({ project: e }) => {
             a.push(e);
             n.push(e.customer);
@@ -362,7 +359,7 @@ sap.ui.define(
           e.setProperty("/workPackages", r);
           e.setProperty("/busy", false);
         },
-        _getUser: function () {
+        _getUser() {
           return new Promise((e, t) => {
             this.getModel("OData").read("/MyUser", {
               success: (s) => {
@@ -373,7 +370,7 @@ sap.ui.define(
             });
           });
         },
-      }
+      },
     );
-  }
+  },
 );

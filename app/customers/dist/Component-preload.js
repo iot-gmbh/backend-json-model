@@ -1,14 +1,11 @@
-//@ui5-bundle iot/customers/Component-preload.js
+// @ui5-bundle iot/customers/Component-preload.js
 jQuery.sap.registerPreloadedModules({
   version: "2.0",
   modules: {
     "iot/customers/Component.js": function () {
-      sap.ui.define(["sap/fe/core/AppComponent"], function (e) {
-        "use strict";
-        return e.extend("iot.customers.Component", {
-          metadata: { manifest: "json" },
-        });
-      });
+      sap.ui.define(["sap/fe/core/AppComponent"], (e) => e.extend("iot.customers.Component", {
+        metadata: { manifest: "json" },
+      }));
     },
     "iot/customers/i18n/i18n.properties":
       "# This is the resource bundle for customers\r\n\r\n#Texts for manifest.json\r\n\r\n#XTIT: Application name\r\nappTitle=Customers\r\nappSubtitle=Find & Manage\r\n\r\n#YDES: Application description\r\nappDescription=Find and display customers\r\n",

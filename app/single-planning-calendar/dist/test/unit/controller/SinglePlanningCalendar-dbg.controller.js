@@ -1,19 +1,17 @@
-/*global QUnit*/
+/* global QUnit */
 
 sap.ui.define(
   ["iot/single-planning-calendar/controller/SinglePlanningCalendar.controller"],
-  function (Controller) {
-    "use strict";
-
+  (Controller) => {
     QUnit.module("SinglePlanningCalendar Controller");
 
     QUnit.test(
       "I should test the SinglePlanningCalendar controller",
-      function (assert) {
-        var oAppController = new Controller();
+      (assert) => {
+        const oAppController = new Controller();
         oAppController.onInit();
         assert.ok(oAppController);
-      }
+      },
     );
-  }
+  },
 );

@@ -45,7 +45,8 @@
   "scripts": {
     "start": "cds run",
     "lint": "eslint srv && eslint app",
-    "lint:fix": "eslint srv --fix && eslint app --fix",
+    "lint:fix:app": "eslint app --fix",
+    "lint:fix:srv": "eslint srv --fix",
     "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production",
     "build:ui": "npm-run-all build:ui:*",

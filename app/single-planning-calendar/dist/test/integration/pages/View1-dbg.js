@@ -1,19 +1,18 @@
-sap.ui.define(["sap/ui/test/Opa5"], function (Opa5) {
-  "use strict";
-  var sViewName = "SinglePlanningCalendar";
+sap.ui.define(["sap/ui/test/Opa5"], (Opa5) => {
+  const sViewName = "SinglePlanningCalendar";
   Opa5.createPageObjects({
     onTheAppPage: {
       actions: {},
 
       assertions: {
-        iShouldSeeTheApp: function () {
+        iShouldSeeTheApp() {
           return this.waitFor({
             id: "app",
             viewName: sViewName,
-            success: function () {
-              Opa5.assert.ok(true, "The " + sViewName + " view is displayed");
+            success() {
+              Opa5.assert.ok(true, `The ${sViewName} view is displayed`);
             },
-            errorMessage: "Did not find the " + sViewName + " view",
+            errorMessage: `Did not find the ${sViewName} view`,
           });
         },
       },

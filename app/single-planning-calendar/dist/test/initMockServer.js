@@ -1,15 +1,14 @@
 sap.ui.define(
   ["../localService/mockserver", "sap/m/MessageBox"],
-  function (e, i) {
-    "use strict";
-    var r = [];
+  (e, i) => {
+    const r = [];
     r.push(e.init());
     Promise.all(r)
-      .catch(function (e) {
+      .catch((e) => {
         i.error(e.message);
       })
-      .finally(function () {
+      .finally(() => {
         sap.ui.require(["sap/ui/core/ComponentSupport"]);
       });
-  }
+  },
 );

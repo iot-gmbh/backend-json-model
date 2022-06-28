@@ -1,14 +1,11 @@
-//@ui5-bundle iot/planner/projects/Component-preload.js
+// @ui5-bundle iot/planner/projects/Component-preload.js
 jQuery.sap.registerPreloadedModules({
   version: "2.0",
   modules: {
     "iot/planner/projects/Component.js": function () {
-      sap.ui.define(["sap/fe/core/AppComponent"], function (e) {
-        "use strict";
-        return e.extend("iot.planner.projects.Component", {
-          metadata: { manifest: "json" },
-        });
-      });
+      sap.ui.define(["sap/fe/core/AppComponent"], (e) => e.extend("iot.planner.projects.Component", {
+        metadata: { manifest: "json" },
+      }));
     },
     "iot/planner/projects/i18n/i18n.properties":
       "# This is the resource bundle for projects\r\n\r\n#Texts for manifest.json\r\n\r\n#XTIT: Application name\r\nappTitle=Display Projects\r\nappSubtitle=Find & Manage\r\n\r\n#YDES: Application description\r\nappDescription=Manage projects\r\n",

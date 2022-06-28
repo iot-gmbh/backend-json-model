@@ -1,6 +1,4 @@
 module.exports = function (config) {
-  "use strict";
-
   config.set({
     frameworks: ["ui5"],
     ui5: {

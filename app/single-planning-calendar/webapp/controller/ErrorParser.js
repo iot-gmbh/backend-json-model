@@ -8,8 +8,7 @@ function extractErrorMsgFromXML(error) {
 
 function extractErrorMsgFromJSON(error) {
   const responseText = JSON.parse(error.responseText);
-  const message =
-    responseText.error.message.value || "The error could not be parsed.";
+  const message = responseText.error.message.value || "The error could not be parsed.";
 
   return message;
 }
