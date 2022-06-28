@@ -20,7 +20,7 @@ sap.ui.define(
     JSONModel,
     legendItems,
     MessageBox,
-    MessageToast,
+    MessageToast
   ) => {
     function addDays(date, days) {
       const result = new Date(date);
@@ -64,7 +64,7 @@ sap.ui.define(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
                 type,
-              }),
+              })
             ),
           });
 
@@ -88,25 +88,26 @@ sap.ui.define(
           }
 
           $(document).keydown((evt) => {
-            const activeElementID = $(document.activeElement)
-              && $(document.activeElement).control()[0]
-              && $(document.activeElement).control()[0].getId();
+            const activeElementID =
+              $(document.activeElement) &&
+              $(document.activeElement).control()[0] &&
+              $(document.activeElement).control()[0].getId();
 
             if (evt.ctrlKey) {
               if (
-                evt.keyCode === 13
-                && !this.byId("submitButton").getEnabled()
+                evt.keyCode === 13 &&
+                !this.byId("submitButton").getEnabled()
               ) {
                 MessageToast.show(
-                  bundle.getText("appointmentDialog.invalidInput"),
+                  bundle.getText("appointmentDialog.invalidInput")
                 );
                 return;
               }
               if (
-                evt.keyCode === 13
-                && activeElementID
+                evt.keyCode === 13 &&
+                activeElementID &&
                 // Check the active element in order to prevent double-submit
-                && !activeElementID.includes("submitButton")
+                !activeElementID.includes("submitButton")
               ) {
                 evt.preventDefault();
 
@@ -137,7 +138,9 @@ sap.ui.define(
         },
 
         _refreshSelectControls() {
-          this._getSelectControls().forEach((select) => select.getBinding("items").refresh());
+          this._getSelectControls().forEach((select) =>
+            select.getBinding("items").refresh()
+          );
         },
 
         onSelectCustomer(event) {
@@ -150,7 +153,7 @@ sap.ui.define(
           const { projects, workPackages } = model.getData();
 
           const projectsFiltered = projects.filter(
-            ({ customer_ID }) => customer_ID === selectedCustomer.ID,
+            ({ customer_ID }) => customer_ID === selectedCustomer.ID
           );
 
           const firstProject = projectsFiltered[0];
@@ -161,7 +164,7 @@ sap.ui.define(
 
           if (firstProject) {
             packagesFiltered = workPackages.filter(
-              ({ project_ID }) => project_ID === firstProject.ID,
+              ({ project_ID }) => project_ID === firstProject.ID
             );
 
             firstProjectID = firstProject.ID;
@@ -185,7 +188,7 @@ sap.ui.define(
           const { workPackages } = model.getData();
 
           const packagesFiltered = workPackages.filter(
-            ({ project_ID }) => project_ID === selectedProject.ID,
+            ({ project_ID }) => project_ID === selectedProject.ID
           );
 
           const firstPackageKey = packagesFiltered[0]
@@ -211,9 +214,8 @@ sap.ui.define(
         async onEditAppointment(event) {
           const model = this.getModel();
           const { appointments } = model.getData();
-          const {
-            startDate, endDate, appointment, copy,
-          } = event.getParameters();
+          const { startDate, endDate, appointment, copy } =
+            event.getParameters();
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
 
@@ -325,7 +327,7 @@ sap.ui.define(
             "/createItemDialogTitle",
             appointment.ID
               ? bundle.getText("editAppointment")
-              : bundle.getText("createAppointment"),
+              : bundle.getText("createAppointment")
           );
 
           this.byId("packageSelect").setSelectedKey(undefined);
@@ -344,8 +346,8 @@ sap.ui.define(
           if (appointment.isAllDay) {
             MessageToast.show(
               this.getResourceBundle().getText(
-                "message.allDayEventsAreNotEditable",
-              ),
+                "message.allDayEventsAreNotEditable"
+              )
             );
             return;
           }
@@ -357,13 +359,15 @@ sap.ui.define(
           const projectSelect = this.byId("projectSelect");
           const packageSelect = this.byId("packageSelect");
 
-          appointment.project_ID = projectSelect.getItems().length > 0
-            ? projectSelect.getSelectedKey()
-            : null;
+          appointment.project_ID =
+            projectSelect.getItems().length > 0
+              ? projectSelect.getSelectedKey()
+              : null;
 
-          appointment.workPackage_ID = packageSelect.getItems().length > 0
-            ? packageSelect.getSelectedKey()
-            : null;
+          appointment.workPackage_ID =
+            packageSelect.getItems().length > 0
+              ? packageSelect.getSelectedKey()
+              : null;
 
           try {
             const appointmentSync = await this._submitEntry(appointment);
@@ -386,7 +390,7 @@ sap.ui.define(
           // Update
           if (ID) {
             const path = `/MyWorkItems(ID='${encodeURIComponent(
-              appointment.ID,
+              appointment.ID
             )}')`;
             // const path = this.getModel("OData").createKey(
             //   "/MyWorkItems",
@@ -409,7 +413,8 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
 
-          if (!appointment || !appointment.ID) this.getModel().setProperty("/appointments/NEW", {});
+          if (!appointment || !appointment.ID)
+            this.getModel().setProperty("/appointments/NEW", {});
 
           this.byId("createItemDialog").unbindElement();
         },
@@ -481,6 +486,7 @@ sap.ui.define(
           });
 
           const appointmentsMap = appointments.reduce((map, appointment) => {
+            // eslint-disable-next-line no-param-reassign
             map[appointment.ID] = {
               /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
                 This leads to problems with UI5, because the events are repeated each day which is ugly
@@ -508,36 +514,34 @@ sap.ui.define(
 
         async _loadCustomersAndProjects() {
           const model = this.getModel();
-          const user = await this._getUser();
 
           model.setProperty("/busy", true);
 
-          const { results: allProjects } = await this.read({
-            path: "/Users2Projects",
-            filters: [
-              new Filter({
-                path: "user_userPrincipalName",
-                operator: "EQ",
-                value1: user.userPrincipalName,
-              }),
-            ],
-            urlParameters: { $expand: "project/customer,project/workPackages" },
+          const { results: categories } = await this.read({
+            path: "/MyCategories",
           });
 
           const customers = [];
           const projects = [];
           const workPackages = [];
 
-          allProjects.forEach(({ project }) => {
-            projects.push(project);
-            customers.push(project.customer);
-            workPackages.push(...project.workPackages.results);
+          categories.forEach((category) => {
+            switch (category.hierarchyLevel) {
+              case 0:
+                customers.push(category);
+                break;
+              case 1:
+                projects.push(category);
+                break;
+              case 2:
+                workPackages.push(category);
+                break;
+              default:
+                customers.push(category);
+            }
           });
 
-          model.setProperty("/customers", [
-            ...new Map(customers.map((cstmer) => [cstmer.ID, cstmer])).values(),
-          ]);
-
+          model.setProperty("/customers", customers);
           model.setProperty("/projects", projects);
           model.setProperty("/workPackages", workPackages);
           model.setProperty("/busy", false);
@@ -548,13 +552,16 @@ sap.ui.define(
             this.getModel("OData").read("/MyUser", {
               success: (response) => {
                 const myUser = response.results[0];
-                if (!myUser) reject("User does not exist in DB. Please create it.");
+                if (!myUser)
+                  reject(
+                    new Error("User does not exist in DB. Please create it.")
+                  );
                 return resolve(myUser);
               },
             });
           });
         },
-      },
+      }
     );
-  },
+  }
 );

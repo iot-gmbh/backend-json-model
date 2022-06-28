@@ -39,7 +39,7 @@
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
 									<ComboBox id="customerSelect" selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
 										<items>
-											<core:Item text="{name}" key="{ID}"/>
+											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
