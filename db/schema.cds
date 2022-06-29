@@ -55,12 +55,19 @@ entity Categories : cuid, managed, relevance {
   friendlyID     : String;
   mappingID      : String;
   drillDownState : String default 'expanded';
+  levelName      : Association to CategoryLevels
+                     on hierarchyLevel = levelName.hierarchyLevel;
   manager        : Association to Users;
   members        : Association to many Users2Categories
                      on members.category = $self;
   parent         : Association to Categories;
   children       : Association to many Categories
                      on children.parent = $self;
+}
+
+entity CategoryLevels {
+  key hierarchyLevel : Integer;
+      title          : String;
 }
 
 entity Users2Categories : cuid, managed {
@@ -160,6 +167,7 @@ entity WorkItems : managed, relevance {
       resetEntry          : Boolean;
       deleted             : Boolean;
       confirmed           : Boolean;
+      parent              : Association to Categories;
 };
 
 entity Travels : cuid, managed {

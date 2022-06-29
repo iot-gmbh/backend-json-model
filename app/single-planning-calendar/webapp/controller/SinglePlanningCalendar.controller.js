@@ -227,6 +227,12 @@ sap.ui.define(
           }
         },
 
+        onPressDeleteAppointment(event) {
+          const appointment = event.getSource().getBindingContext().getObject();
+
+          this._deleteAppointment(appointment);
+        },
+
         async _deleteAppointment(appointment) {
           const model = this.getModel();
           const { appointments } = model.getData();
@@ -247,12 +253,6 @@ sap.ui.define(
           }
 
           model.setProperty("/dialogBusy", false);
-        },
-
-        onPressDeleteAppointment(event) {
-          const appointment = event.getSource().getBindingContext().getObject();
-
-          this._deleteAppointment(appointment);
         },
 
         async onPressResetAppointment(event) {

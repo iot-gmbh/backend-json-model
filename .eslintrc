@@ -29,6 +29,7 @@
     "no-underscore-dangle": 0,
     "max-len": 0,
     "no-console": "off",
-    "require-atomic-updates": "off"
+    "require-atomic-updates": "off",
+    "camelcase": "off"
   }
 }

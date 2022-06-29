@@ -1,7 +1,7 @@
-const uuid = require('uuid');
-const cds = require('@sap/cds');
+const uuid = require("uuid");
+const cds = require("@sap/cds");
 
-require('dotenv').config();
+require("dotenv").config();
 
 function transformEventToWorkItem({
   id,
@@ -32,9 +32,9 @@ Thus we replace the time for all-day events
       ? `${end.dateTime.substring(0, 11)}00:00:00Z`
       : `${end.dateTime.substring(0, 19)}Z`,
     assignedTo_userPrincipalName: user,
-    private: sensitivity === 'private',
+    private: sensitivity === "private",
     isAllDay,
-    type: 'Event',
+    type: "Event",
   };
 }
 
@@ -58,16 +58,15 @@ function calcDates({ activatedDate, completedDate }) {
   };
 }
 
+// eslint-disable-next-line func-names
 module.exports = cds.service.impl(async function () {
-  const db = await cds.connect.to('db');
-  const MSGraphSrv = await cds.connect.to('MSGraphService');
+  const db = await cds.connect.to("db");
+  const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
-  const {
-    WorkItems, Customers, Projects, Users,
-  } = db.entities('iot.planner');
+  const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
 
-  this.on('READ', 'MyCategories', async (req) => {
+  this.on("READ", "MyCategories", async (req) => {
     const results = await db.run(
       // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
       // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
@@ -102,79 +101,81 @@ module.exports = cds.service.impl(async function () {
           FROM childrenCTE
           UNION 
           SELECT * 
-          FROM parentCTE;`,
+          FROM parentCTE;`
     );
 
     const categories = results.map(
-      ({
-        id, parent_id, hierarchylevel, ...data
-      }) => ({
+      ({ id, parent_id, hierarchylevel, ...data }) => ({
         ID: id,
         parent_ID: parent_id,
         hierarchyLevel: hierarchylevel,
         ...data,
-      }),
+      })
     );
 
     return categories;
   });
 
-  this.on('READ', 'MyUser', async (req) => {
+  this.on("READ", "MyUser", async (req) => {
     const tx = this.transaction(req);
     const details = await tx.run(
-      SELECT.from(Users).where({ userPrincipalName: req.user.id }),
+      SELECT.from(Users).where({ userPrincipalName: req.user.id })
     );
 
     return details;
   });
 
-  this.on('DELETE', 'MyWorkItems', async (req) => {
+  this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
     const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
       this.read(WorkItems).where({ ID: item.ID }),
-      this.read(Customers).where({ friendlyID: 'DELETED' }),
-      this.read(Projects).where({ friendlyID: 'DELETED' }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
     ]);
 
-    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1) throw Error('Delete-Dummys (for ref-integrity) not found.');
+    if (dltDummyCstmer.length !== 1 || dltDummyProj.length !== 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
-    if (entries.length > 0) await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
+    if (entries.length > 0)
+      await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
 
     await tx.run(
       INSERT.into(WorkItems).entries({
         ID: item.ID,
         deleted: true,
-        assignedTo_userPrincipalName: 'DELETED',
+        assignedTo_userPrincipalName: "DELETED",
         customer_ID: dltDummyCstmer[0].ID,
         project_ID: dltDummyProj[0].ID,
-      }),
+      })
     );
   });
 
-  this.on('UPDATE', 'MyWorkItems', async (req) => {
+  this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
 
     if (item.resetEntry) {
       // RESET
-      if (item.type !== 'Manual') throw Error("Reset is not allowed for entries of type 'Manual'");
+      if (item.type !== "Manual")
+        throw Error("Reset is not allowed for entries of type 'Manual'");
 
       // eslint-disable-next-line no-unused-vars
       const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
 
-      return item.type === 'Manual' ? { ID: item.ID } : reducedItem;
+      return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
     const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
       this.read(WorkItems).where({ ID: item.ID }),
-      this.read(Customers).where({ friendlyID: 'DELETED' }),
-      this.read(Projects).where({ friendlyID: 'DELETED' }),
+      this.read(Customers).where({ friendlyID: "DELETED" }),
+      this.read(Projects).where({ friendlyID: "DELETED" }),
     ]);
 
-    if (dltDummyCstmer.length != 1 || dltDummyProj.length != 1) throw Error('Delete-Dummys (for ref-integrity) not found.');
+    if (dltDummyCstmer.length !== 1 || dltDummyProj.length !== 1)
+      throw Error("Delete-Dummys (for ref-integrity) not found.");
 
     if (item.deleted) {
       // DELETE
@@ -190,7 +191,7 @@ module.exports = cds.service.impl(async function () {
             assignedTo_userPrincipalName: req.user.id,
             customer_ID: dltDummyCstmer[0].ID,
             project_ID: dltDummyProj[0].ID,
-          }),
+          })
         );
       }
 
@@ -217,10 +218,10 @@ module.exports = cds.service.impl(async function () {
     return itm;
   });
 
-  this.on('CREATE', 'MyWorkItems', async (req, next) => {
+  this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
-    req.data.type = 'Manual';
+    req.data.type = "Manual";
     req.data.confirmed = true;
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
@@ -234,12 +235,10 @@ module.exports = cds.service.impl(async function () {
     return next();
   });
 
-  this.on('READ', 'MyWorkItems', async (req) => {
+  this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
-        SELECT: {
-          where = 'ID != null', columns, orderBy, limit,
-        },
+        SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
     const customers = SELECT.from(Customers);
@@ -253,13 +252,15 @@ module.exports = cds.service.impl(async function () {
       [],
       db.tx(req).run(req.query),
       MSGraphSrv.tx(req)
-        .read('Events', columns)
+        .read("Events", columns)
         .where(where)
         .orderBy(orderBy)
         .limit(limit),
     ]);
 
-    const MSGraphWorkItems = MSGraphEvents.map((event) => transformEventToWorkItem({ ...event, user: req.user.id, customers }));
+    const MSGraphWorkItems = MSGraphEvents.map((event) =>
+      transformEventToWorkItem({ ...event, user: req.user.id, customers })
+    );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
@@ -268,7 +269,7 @@ module.exports = cds.service.impl(async function () {
       ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
-    // .reduce((acc, item) => acc.concat(item), [])
+      // .reduce((acc, item) => acc.concat(item), [])
       /*
   Nur Items mit ID und AssignedTo übernehmen
   => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
@@ -289,13 +290,14 @@ module.exports = cds.service.impl(async function () {
 
     // TODO: Schleifen-basierte SQL-Abfragen ersetzen
     async function addExtraInfosTo(workItems) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const item of workItems.filter(({ title }) => !!title)) {
-        const titleSubstrings = item.title.split(' ');
+        const titleSubstrings = item.title.split(" ");
 
         if (!item.customer_ID) {
           const query = [titleSubstrings, item.customer_friendlyID]
             .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
-            .join(' OR ');
+            .join(" OR ");
 
           const [customer] = await srv.read(Customers).where(query);
 
@@ -307,7 +309,7 @@ module.exports = cds.service.impl(async function () {
         if (!item.project_ID) {
           const query = titleSubstrings
             .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
-            .join(' OR ');
+            .join(" OR ");
 
           const [project] = await srv.read(Projects).where(query);
 
