@@ -54,12 +54,6 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
-    const selectControlIDs = [
-      "hierarchySelectLevel0",
-      "hierarchySelectLevel1",
-      "hierarchySelectLevel2",
-    ];
-
     return BaseController.extend(
       "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
@@ -79,20 +73,6 @@ sap.ui.define(
               1: {},
               2: {},
             },
-            customers: [],
-            projects: [],
-            get projectsFiltered() {
-              const bc = dialog.getBindingContext();
-              if (!bc) return [];
-              const customer_ID = bc.getProperty("customer_ID");
-              if (!customer_ID) return [];
-              const categories = model.getProperty("/categories") || [];
-              return categories.filter(
-                ({ parent_ID }) => parent_ID === customer_ID
-              );
-            },
-            workPackages: [],
-            workPackagesFiltered: [],
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
@@ -161,21 +141,6 @@ sap.ui.define(
           });
         },
 
-        onAfterOpenDialog() {
-          // Update all bindings (otherwise there is outdated data in the dependent Select-controls)
-          this._refreshSelectControls();
-        },
-
-        _getSelectControls() {
-          return selectControlIDs.map((ID) => this.byId(ID));
-        },
-
-        _refreshSelectControls() {
-          this._getSelectControls().forEach((select) =>
-            select.getBinding("items").refresh()
-          );
-        },
-
         onSelectCustomer(event) {
           this._onSelectHierarchy(0, 2, event);
         },
@@ -189,17 +154,22 @@ sap.ui.define(
         },
 
         _onSelectHierarchy(level, maxLevel, event) {
-          const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
           const selectedCategory = selectedItem.getBindingContext().getObject();
 
+          this._setHierarchy(level, maxLevel, selectedCategory);
+        },
+
+        _setHierarchy(level, maxLevel, selectedCategory, defaults = {}) {
+          const model = this.getModel();
           for (let i = level + 1; i <= maxLevel; i += 1) {
             const hierarchySelect = this.byId(`hierarchySelectLevel${i}`);
             const deepPath = `${"descendants[0].".repeat(i - level)}`;
             const itemsPath = deepPath.slice(0, -4);
-            const selectedKeyPath = `${deepPath}ID`;
             const items = byString(selectedCategory, itemsPath);
-            const key = byString(selectedCategory, selectedKeyPath);
+            const selectedKeyPath = `${deepPath}ID`;
+            const key =
+              defaults[i - 1] || byString(selectedCategory, selectedKeyPath);
 
             hierarchySelect.setSelectedKey(key);
             model.setProperty(`/selected/${i - 1}/descendants`, items);
@@ -328,7 +298,11 @@ sap.ui.define(
           const model = this.getModel();
           const bundle = this.getResourceBundle();
           const appointment = model.getProperty(path);
+          const { customer_ID, project_ID, package_ID } = appointment;
           const dialog = this.byId("createItemDialog");
+          const customer = model
+            .getProperty("/categories")
+            .find(({ ID }) => ID === customer_ID);
 
           model.setProperty(
             "/createItemDialogTitle",
@@ -337,9 +311,14 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          this.byId("hierarchySelectLevel2").setSelectedKey(undefined);
-          this.byId("hierarchySelectLevel1").setSelectedKey(undefined);
-          this.byId("hierarchySelectLevel0").setSelectedKey(undefined);
+          if (customer) {
+            this._setHierarchy(0, 2, customer, {
+              0: customer_ID,
+              1: project_ID,
+              2: package_ID,
+            });
+          }
+
           dialog.bindElement(path);
           dialog.open();
         },
@@ -362,20 +341,6 @@ sap.ui.define(
           const { appointments } = model.getData();
 
           model.setProperty("/dialogBusy", true);
-
-          const hierarchySelectLevel1 = this.byId("hierarchySelectLevel1");
-          const hierarchySelectLevel2 = this.byId("hierarchySelectLevel2");
-
-          appointment.project_ID =
-            hierarchySelectLevel1.getItems().length > 0
-              ? hierarchySelectLevel1.getSelectedKey()
-              : null;
-
-          appointment.workPackage_ID =
-            hierarchySelectLevel2.getItems().length > 0
-              ? hierarchySelectLevel2.getSelectedKey()
-              : null;
-
           try {
             const appointmentSync = await this._submitEntry(appointment);
 
@@ -399,18 +364,12 @@ sap.ui.define(
             const path = `/MyWorkItems(ID='${encodeURIComponent(
               appointment.ID
             )}')`;
-            // const path = this.getModel("OData").createKey(
-            //   "/MyWorkItems",
-            //   appointment
-            // );
 
             return this.update({
               path,
               data: appointment,
             });
           }
-
-          // Create
 
           return this.create({ path: "/MyWorkItems", data: appointment });
         },
