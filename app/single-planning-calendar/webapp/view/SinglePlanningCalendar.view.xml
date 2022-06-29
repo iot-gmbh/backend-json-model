@@ -37,19 +37,19 @@
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox id="customerSelect" selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}}" selectionChange="onSelectCustomer">
+									<ComboBox id="hierarchySelectLevel0" selectedKey="{customer_ID}" items="{path: '/categories', filters: [{path: 'hierarchyLevel', operator: 'EQ', value1: '0'}], sorter: {path: 'title'}}" selectionChange="onSelectCustomer">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="projectSelect" selectedKey="{project_ID}" items="{path: '/projectsFiltered', sorter: {path: 'title'}}" change="onSelectProject" forceSelection="false">
+									<Select id="hierarchySelectLevel1" selectedKey="{project_ID}" items="{path: '/selected/0/descendants'}" change="onSelectProject" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="packageSelect" selectedKey="{workPackage_ID}" items="{path: '/workPackagesFiltered', sorter: {path: 'title'}}" change="onSelectPackage" forceSelection="false">
+									<Select id="hierarchySelectLevel2" selectedKey="{workPackage_ID}" items="{path: '/selected/1/descendants'}" change="onSelectPackage" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>

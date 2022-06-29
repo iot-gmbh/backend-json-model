@@ -1,6 +1,25 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 /* globals $ */
+
+function byString(o, s) {
+  let object = o;
+  let string = s;
+  string = string.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
+  string = string.replace(/^\./, ""); // strip a leading dot
+  const a = string.split(".");
+  for (let i = 0, n = a.length; i < n; i += 1) {
+    const k = a[i];
+    if (k in object) {
+      object = object[k];
+    } else {
+      return undefined;
+    }
+  }
+
+  return object;
+}
+
 sap.ui.define(
   [
     "./BaseController",
@@ -31,14 +50,14 @@ sap.ui.define(
     function getMondayMorning() {
       const date = new Date(new Date().setHours(0, 0, 0, 1));
       const day = date.getDay();
-      const diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
       return new Date(date.setDate(diff));
     }
 
     const selectControlIDs = [
-      "customerSelect",
-      "projectSelect",
-      "packageSelect",
+      "hierarchySelectLevel0",
+      "hierarchySelectLevel1",
+      "hierarchySelectLevel2",
     ];
 
     return BaseController.extend(
@@ -55,9 +74,23 @@ sap.ui.define(
           const model = new JSONModel({
             appointments: { NEW: {} },
             busy: false,
+            selected: {
+              0: {},
+              1: {},
+              2: {},
+            },
             customers: [],
             projects: [],
-            projectsFiltered: [],
+            get projectsFiltered() {
+              const bc = dialog.getBindingContext();
+              if (!bc) return [];
+              const customer_ID = bc.getProperty("customer_ID");
+              if (!customer_ID) return [];
+              const categories = model.getProperty("/categories") || [];
+              return categories.filter(
+                ({ parent_ID }) => parent_ID === customer_ID
+              );
+            },
             workPackages: [],
             workPackagesFiltered: [],
             legendItems: Object.entries(legendItems.getItems()).map(
@@ -144,59 +177,33 @@ sap.ui.define(
         },
 
         onSelectCustomer(event) {
-          const model = this.getModel();
-          const selectedItem = event.getParameter("selectedItem");
-
-          if (!selectedItem) return;
-
-          const selectedCustomer = selectedItem.getBindingContext().getObject();
-          const { projects, workPackages } = model.getData();
-
-          const projectsFiltered = projects.filter(
-            ({ customer_ID }) => customer_ID === selectedCustomer.ID
-          );
-
-          const firstProject = projectsFiltered[0];
-
-          let packagesFiltered = [];
-          let firstProjectID = "";
-          let firstPackageID = "";
-
-          if (firstProject) {
-            packagesFiltered = workPackages.filter(
-              ({ project_ID }) => project_ID === firstProject.ID
-            );
-
-            firstProjectID = firstProject.ID;
-            firstPackageID = packagesFiltered[0] ? packagesFiltered[0].ID : "";
-
-            this.byId("projectSelect").setSelectedKey(firstProjectID);
-            this.byId("packageSelect").setSelectedKey(firstPackageID);
-          }
-
-          model.setProperty("/projectsFiltered", projectsFiltered);
-          model.setProperty("/workPackagesFiltered", packagesFiltered);
+          this._onSelectHierarchy(0, 2, event);
         },
 
         onSelectProject(event) {
+          this._onSelectHierarchy(1, 2, event);
+        },
+
+        onSelectPackage(event) {
+          this._onSelectHierarchy(2, 2, event);
+        },
+
+        _onSelectHierarchy(level, maxLevel, event) {
           const model = this.getModel();
           const selectedItem = event.getParameter("selectedItem");
+          const selectedCategory = selectedItem.getBindingContext().getObject();
 
-          if (!selectedItem) return;
+          for (let i = level + 1; i <= maxLevel; i += 1) {
+            const hierarchySelect = this.byId(`hierarchySelectLevel${i}`);
+            const deepPath = `${"descendants[0].".repeat(i - level)}`;
+            const itemsPath = deepPath.slice(0, -4);
+            const selectedKeyPath = `${deepPath}ID`;
+            const items = byString(selectedCategory, itemsPath);
+            const key = byString(selectedCategory, selectedKeyPath);
 
-          const selectedProject = selectedItem.getBindingContext().getObject();
-          const { workPackages } = model.getData();
-
-          const packagesFiltered = workPackages.filter(
-            ({ project_ID }) => project_ID === selectedProject.ID
-          );
-
-          const firstPackageKey = packagesFiltered[0]
-            ? packagesFiltered[0].ID
-            : "";
-
-          model.setProperty("/workPackagesFiltered", packagesFiltered);
-          this.byId("packageSelect").setSelectedKey(firstPackageKey);
+            hierarchySelect.setSelectedKey(key);
+            model.setProperty(`/selected/${i - 1}/descendants`, items);
+          }
         },
 
         onDisplayLegend() {
@@ -330,9 +337,9 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          this.byId("packageSelect").setSelectedKey(undefined);
-          this.byId("projectSelect").setSelectedKey(undefined);
-          this.byId("customerSelect").setSelectedKey(undefined);
+          this.byId("hierarchySelectLevel2").setSelectedKey(undefined);
+          this.byId("hierarchySelectLevel1").setSelectedKey(undefined);
+          this.byId("hierarchySelectLevel0").setSelectedKey(undefined);
           dialog.bindElement(path);
           dialog.open();
         },
@@ -356,17 +363,17 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
-          const projectSelect = this.byId("projectSelect");
-          const packageSelect = this.byId("packageSelect");
+          const hierarchySelectLevel1 = this.byId("hierarchySelectLevel1");
+          const hierarchySelectLevel2 = this.byId("hierarchySelectLevel2");
 
           appointment.project_ID =
-            projectSelect.getItems().length > 0
-              ? projectSelect.getSelectedKey()
+            hierarchySelectLevel1.getItems().length > 0
+              ? hierarchySelectLevel1.getSelectedKey()
               : null;
 
           appointment.workPackage_ID =
-            packageSelect.getItems().length > 0
-              ? packageSelect.getSelectedKey()
+            hierarchySelectLevel2.getItems().length > 0
+              ? hierarchySelectLevel2.getSelectedKey()
               : null;
 
           try {
@@ -521,29 +528,16 @@ sap.ui.define(
             path: "/MyCategories",
           });
 
-          const customers = [];
-          const projects = [];
-          const workPackages = [];
-
           categories.forEach((category) => {
-            switch (category.hierarchyLevel) {
-              case 0:
-                customers.push(category);
-                break;
-              case 1:
-                projects.push(category);
-                break;
-              case 2:
-                workPackages.push(category);
-                break;
-              default:
-                customers.push(category);
-            }
+            const parent = categories.find(
+              ({ ID }) => ID === category.parent_ID
+            );
+            if (!parent) return;
+            if (!parent.descendants) parent.descendants = [];
+            parent.descendants = [...parent.descendants, category];
           });
 
-          model.setProperty("/customers", customers);
-          model.setProperty("/projects", projects);
-          model.setProperty("/workPackages", workPackages);
+          model.setProperty("/categories", categories);
           model.setProperty("/busy", false);
         },
 
