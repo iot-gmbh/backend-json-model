@@ -9,7 +9,7 @@
 
     <Page title="{i18n>worklistTitle}">
 
-        <table:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 3}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <table:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <table:columns>
                 <table:Column label="{i18n>title}" width="15%">
                     <table:template>
@@ -23,7 +23,7 @@
                 </table:Column>
                 <table:Column label="{i18n>members}" width="30%">
                     <table:template>
-                        <MultiInput tokens="{path: 'members', parameters: {expand: 'user'}, templateShareable: false}" suggestionItems="{
+                        <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
                                     path: '/Users',
                                     sorter: { path: 'displayName' },
                                     templateShareable: false
