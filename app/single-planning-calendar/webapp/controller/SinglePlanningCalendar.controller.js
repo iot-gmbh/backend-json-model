@@ -94,7 +94,7 @@ sap.ui.define(
           try {
             await Promise.all([
               this._loadAppointments(),
-              this._loadCustomersAndProjects(),
+              this._loadHierarchy(),
             ]);
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
@@ -206,7 +206,7 @@ sap.ui.define(
           model.setProperty(`${path}/activatedDate`, startDate);
           model.setProperty(`${path}/completedDate`, endDate);
 
-          if (!data.customer_ID || !data.project_ID) {
+          if (!data.parent_ID) {
             this._bindAndOpenDialog(path);
             return;
           }
@@ -478,7 +478,7 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
-        async _loadCustomersAndProjects() {
+        async _loadHierarchy() {
           const model = this.getModel();
 
           model.setProperty("/busy", true);

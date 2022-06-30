@@ -66,6 +66,46 @@ module.exports = cds.service.impl(async function () {
 
   const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
 
+  this.on("READ", "Hierarchy", async (req) => {
+    const results = await db.run(
+      // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
+      // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
+      // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
+      // TODO: Make it work on SQLite
+      `WITH RECURSIVE 
+        childrenCTE AS (
+          SELECT 
+            cat.ID, 
+            cat.title, 
+            cat.description,
+            cat.parent_ID,
+            cat.hierarchyLevel
+          FROM iot_planner_categories AS cat
+          WHERE cat.hierarchyLevel = 0
+          LEFT OUTER JOIN iot_planner_workitems as workitems
+            on workitems.parent_ID = cat.ID
+          UNION 
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM childrenCTE AS prior 
+          INNER JOIN iot_planner_categories AS this 
+              ON this.parent_ID = prior.ID
+          )
+          SELECT * 
+          FROM childrenCTE;`
+    );
+
+    const categories = results.map(
+      ({ id, parent_id, hierarchylevel, ...data }) => ({
+        ID: id,
+        parent_ID: parent_id,
+        hierarchyLevel: hierarchylevel,
+        ...data,
+      })
+    );
+
+    return categories;
+  });
+
   this.on("READ", "MyCategories", async (req) => {
     const results = await db.run(
       // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors

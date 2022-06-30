@@ -18,8 +18,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
   entity MyCategories   as projection on my.Categories;
   entity CategoryLevels as projection on my.CategoryLevels;
+  entity Hierarchies    as projection on my.Hierarchies;
 
-  entity WorkItems      as
+  entity Hierarchy      as
     select from my.WorkItems as item
     left outer join my.Categories as cat1
       on item.parent.ID = cat1.ID
@@ -41,7 +42,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
           cat3.levelName.title as cat3LevelName
     };
 
-  entity Customers      as projection on my.Customers;
+
   entity Projects       as projection on my.Projects;
   entity Packages       as projection on my.Packages;
   entity Users2Projects as projection on my.Users2Projects;
