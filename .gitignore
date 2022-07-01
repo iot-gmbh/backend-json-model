@@ -37,7 +37,8 @@ node_modules/
 .idea/
 .mta/
 *.mtar
-# dist/
+dist/
+ui_dist/
 package-lock.json
 mta_archives/
 deployer/resources/
