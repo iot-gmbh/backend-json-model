@@ -1,1 +1,0 @@
-sap.ui.define(["../localService/mockserver","sap/m/MessageBox"],(e,s)=>{const r=[];r.push(e.init());Promise.all(r).catch(e=>{s.error(e.message)}).finally(()=>{sap.ui.require(["sap/ui/core/ComponentSupport"])})});

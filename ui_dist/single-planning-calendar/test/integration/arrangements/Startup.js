@@ -1,1 +1,0 @@
-sap.ui.define(["sap/ui/test/Opa5"],a=>a.extend("iot.singleplanningcalendar.test.integration.arrangements.Startup",{iStartMyApp(a){const t=a||{};t.delay=t.delay||50;this.iStartMyUIComponent({componentConfig:{name:"iot.singleplanningcalendar",async:true},hash:t.hash,autoWait:t.autoWait})}}));

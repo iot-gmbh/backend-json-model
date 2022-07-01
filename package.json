@@ -52,7 +52,7 @@
     "lint:fix:srv": "eslint srv --fix",
     "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production",
-    "build:ui": "npm-run-all build:ui:*",
+    "build:ui": "rimraf ui_dist && npm-run-all build:ui:*",
     "build:ui:azdev-workitems": "rimraf dist/azdev-workitems && mkdirp -p ui_dist/azdev-workitems && npm run build --prefix app/azdev-workitems && cp -r app/azdev-workitems/dist/* ui_dist/azdev-workitems",
     "build:ui:customers": "rimraf dist/customers && mkdirp -p ui_dist/customers && npm run build --prefix app/customers && cp -r app/customers/dist/* ui_dist/customers",
     "build:ui:projects-odata-v2": "rimraf dist/projects-odata-v2 && mkdirp -p ui_dist/projects-odata-v2 && npm run build --prefix app/projects-odata-v2 && cp -r app/projects-odata-v2/dist/* ui_dist/projects-odata-v2",
