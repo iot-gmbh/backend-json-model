@@ -1,10 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "prettier",
-    "eslint:recommended",
-    "plugin:@sap/cds/recommended"
-  ],
+  "extends": ["airbnb", "prettier", "plugin:@sap/cds/recommended"],
   "env": {
     "node": true,
     "es6": true,
@@ -23,7 +18,9 @@
     "DROP": true,
     "cds": true,
     "history": true,
-    "location": true
+    "location": true,
+    "sap": true,
+    "document": true
   },
   "rules": {
     "no-underscore-dangle": 0,

@@ -20,12 +20,27 @@ function byString(o, s) {
   return object;
 }
 
+const nest = (items, ID = null, link = "parent_ID") =>
+  items
+    .filter((item) => item[link] === ID)
+    .map((item) => ({ ...item, children: nest(items, item.ID) }));
+
+const reduce = (nestedArray) =>
+  nestedArray.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr.ID]: { ...curr, children: reduce(curr.children) },
+    }),
+    {}
+  );
+
 sap.ui.define(
   [
     "./BaseController",
     "./ErrorParser",
     "sap/ui/model/Filter",
     "../model/formatter",
+    "sap/ui/core/Item",
     "sap/ui/model/json/JSONModel",
     "../model/legendItems",
     "sap/m/MessageBox",
@@ -36,6 +51,7 @@ sap.ui.define(
     ErrorParser,
     Filter,
     formatter,
+    Item,
     JSONModel,
     legendItems,
     MessageBox,
@@ -66,13 +82,14 @@ sap.ui.define(
           const dialog = this.byId("createItemDialog");
 
           const model = new JSONModel({
-            appointments: { NEW: {} },
+            appointments: { NEW: { hierarchy: {} } },
             busy: false,
             selected: {
               0: {},
               1: {},
               2: {},
             },
+            categories: {},
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
@@ -140,42 +157,6 @@ sap.ui.define(
             }
           });
         },
-
-        onSelectCustomer(event) {
-          this._onSelectHierarchy(0, 2, event);
-        },
-
-        onSelectProject(event) {
-          this._onSelectHierarchy(1, 2, event);
-        },
-
-        onSelectPackage(event) {
-          this._onSelectHierarchy(2, 2, event);
-        },
-
-        _onSelectHierarchy(level, maxLevel, event) {
-          const selectedItem = event.getParameter("selectedItem");
-          const selectedCategory = selectedItem.getBindingContext().getObject();
-
-          this._setHierarchy(level, maxLevel, selectedCategory);
-        },
-
-        _setHierarchy(level, maxLevel, selectedCategory, defaults = {}) {
-          const model = this.getModel();
-          for (let i = level + 1; i <= maxLevel; i += 1) {
-            const hierarchySelect = this.byId(`hierarchySelectLevel${i}`);
-            const deepPath = `${"descendants[0].".repeat(i - level)}`;
-            const itemsPath = deepPath.slice(0, -4);
-            const items = byString(selectedCategory, itemsPath);
-            const selectedKeyPath = `${deepPath}ID`;
-            const key =
-              defaults[i - 1] || byString(selectedCategory, selectedKeyPath);
-
-            hierarchySelect.setSelectedKey(key);
-            model.setProperty(`/selected/${i - 1}/descendants`, items);
-          }
-        },
-
         onDisplayLegend() {
           this.byId("legendDialog").open();
         },
@@ -211,20 +192,11 @@ sap.ui.define(
             return;
           }
 
-          try {
-            // Remove customer & project (= Navigation-Props) from the object, so the getters won't be overwritten
-            const appointmentSync = await this._submitEntry({
-              ...data,
-              activatedDate: startDate,
-              completedDate: endDate,
-            });
-
-            appointments[appointmentSync.ID] = appointmentSync;
-
-            model.setProperty("/appointments", appointments);
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
-          }
+          this._submitEntry({
+            ...data,
+            activatedDate: startDate,
+            completedDate: endDate,
+          });
         },
 
         onPressDeleteAppointment(event) {
@@ -289,6 +261,7 @@ sap.ui.define(
           const appointment = {
             activatedDate: startDate,
             completedDate: endDate,
+            hierarchy: {},
           };
 
           model.setProperty("/appointments/NEW", appointment);
@@ -298,11 +271,7 @@ sap.ui.define(
           const model = this.getModel();
           const bundle = this.getResourceBundle();
           const appointment = model.getProperty(path);
-          const { customer_ID, project_ID, package_ID } = appointment;
           const dialog = this.byId("createItemDialog");
-          const customer = model
-            .getProperty("/categories")
-            .find(({ ID }) => ID === customer_ID);
 
           model.setProperty(
             "/createItemDialogTitle",
@@ -311,16 +280,37 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          if (customer) {
-            this._setHierarchy(0, 2, customer, {
-              0: customer_ID,
-              1: project_ID,
-              2: package_ID,
-            });
-          }
+          this._bindHierarchyInputs(appointment);
 
           dialog.bindElement(path);
           dialog.open();
+        },
+
+        _bindHierarchyInputs(appointment) {
+          if (!appointment.hierarchy) return;
+          const {
+            hierarchy: { customer_ID, project_ID, workPackage_ID },
+          } = appointment;
+
+          this._bindSelectControl("Project", `/categories/${customer_ID}`);
+          this._bindSelectControl(
+            "Package",
+            `/categories/${customer_ID}/children/${project_ID}`
+          );
+        },
+
+        bindSelectControl(event, name) {
+          const selectedItem = event.getParameter("selectedItem");
+          const path = selectedItem?.getBindingContext().getPath();
+
+          this._bindSelectControl(name, path);
+        },
+
+        _bindSelectControl(name, path) {
+          this.byId(`select${name}`).bindItems({
+            path: `${path}/children`,
+            template: new Item({ text: "{title}", key: "{ID}" }),
+          });
         },
 
         async onSubmitEntry() {
@@ -338,40 +328,52 @@ sap.ui.define(
             return;
           }
 
-          const { appointments } = model.getData();
-
           model.setProperty("/dialogBusy", true);
-          try {
-            const appointmentSync = await this._submitEntry(appointment);
 
-            appointments[appointmentSync.ID] = appointmentSync;
-            appointments.NEW = {};
-
-            model.setProperty("/appointments", appointments);
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
-          }
+          await this._submitEntry(appointment);
 
           model.setProperty("/dialogBusy", false);
           this._closeDialog("createItemDialog");
         },
 
-        _submitEntry(appointment) {
-          const { ID } = appointment;
+        async _submitEntry(appointment) {
+          const {
+            ID,
+            hierarchy: { customer_ID, project_ID, workPackage_ID },
+          } = appointment;
 
-          // Update
-          if (ID) {
-            const path = `/MyWorkItems(ID='${encodeURIComponent(
-              appointment.ID
-            )}')`;
+          const data = {
+            ...appointment,
+            hierarchy: { parent: workPackage_ID || project_ID || customer_ID },
+          };
 
-            return this.update({
-              path,
-              data: appointment,
-            });
+          const model = this.getModel();
+          const appointments = model.getProperty("/appointments");
+          let appointmentSync;
+
+          try {
+            // Update
+            if (ID) {
+              const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
+
+              appointmentSync = await this.update({
+                path,
+                data,
+              });
+            } else {
+              appointmentSync = await this.create({
+                path: "/MyWorkItems",
+                data,
+              });
+            }
+
+            appointmentSync.hierarchy = appointment.hierarchy;
+            appointments[appointmentSync.ID] = appointmentSync;
+
+            model.setProperty("/appointments", appointments);
+          } catch (error) {
+            MessageBox.error(ErrorParser.parse(error));
           }
-
-          return this.create({ path: "/MyWorkItems", data: appointment });
         },
 
         onAfterCloseDialog() {
@@ -380,7 +382,7 @@ sap.ui.define(
             .getObject();
 
           if (!appointment || !appointment.ID)
-            this.getModel().setProperty("/appointments/NEW", {});
+            this.getModel().setProperty("/appointments/NEW", { hierarchy: {} });
 
           this.byId("createItemDialog").unbindElement();
         },
@@ -431,7 +433,7 @@ sap.ui.define(
 
           const { results: appointments } = await this.read({
             path: "/MyWorkItems",
-            urlParameters: { $top: 100 },
+            urlParameters: { $top: 100, $expand: "hierarchy" },
             filters: [
               new Filter({
                 filters: [
@@ -487,16 +489,9 @@ sap.ui.define(
             path: "/MyCategories",
           });
 
-          categories.forEach((category) => {
-            const parent = categories.find(
-              ({ ID }) => ID === category.parent_ID
-            );
-            if (!parent) return;
-            if (!parent.descendants) parent.descendants = [];
-            parent.descendants = [...parent.descendants, category];
-          });
+          const categoriesMap = reduce(nest(categories));
 
-          model.setProperty("/categories", categories);
+          model.setProperty("/categories", categoriesMap);
           model.setProperty("/busy", false);
         },
 

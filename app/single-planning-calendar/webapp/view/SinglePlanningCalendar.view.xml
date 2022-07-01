@@ -37,19 +37,19 @@
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
 									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox id="hierarchySelectLevel0" selectedKey="{customer_ID}" items="{path: '/categories', filters: [{path: 'hierarchyLevel', operator: 'EQ', value1: '0'}], sorter: {path: 'title'}}" selectionChange="onSelectCustomer">
+									<ComboBox id="selectCustomer" selectedKey="{hierarchy/customer_ID}" items="{/categories}" selectionChange=".bindSelectControl($event, 'Project')">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="hierarchySelectLevel1" selectedKey="{project_ID}" items="{path: '/selected/0/descendants'}" change="onSelectProject" forceSelection="false">
+									<Select id="selectProject" selectedKey="{hierarchy/project_ID}" change=".bindSelectControl($event, 'Package')" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
 									</Select>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="hierarchySelectLevel2" selectedKey="{workPackage_ID}" items="{path: '/selected/1/descendants'}" change="onSelectPackage" forceSelection="false">
+									<Select id="selectPackage" selectedKey="{hierarchy/workPackage_ID}" change="onSelectPackage" forceSelection="false">
 										<items>
 											<core:Item text="{title}" key="{ID}"/>
 										</items>
@@ -62,7 +62,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${customer_ID} &amp;&amp; !!${project_ID} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${hierarchy/customer_ID} &amp;&amp; !!${hierarchy/project_ID} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

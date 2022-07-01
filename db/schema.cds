@@ -24,57 +24,6 @@ aspect relevance {
   );
 };
 
-@assert.unique : {friendlyID : [userPrincipalName, ]}
-entity Users {
-  key userPrincipalName : String;
-      displayName       : String;
-      givenName         : String;
-      jobTitle          : String;
-      mail              : String;
-      mobilePhone       : String;
-      officeLocation    : String;
-      preferredLanguage : String;
-      surname           : String;
-      manager           : Association to Users;
-      projects          : Association to many Users2Projects
-                            on projects.user = $self;
-      managedProjects   : Association to many Projects
-                            on managedProjects.manager = $self;
-      teamMembers       : Association to many Users
-                            on teamMembers.manager = $self;
-      workItems         : Association to many WorkItems
-                            on workItems.assignedTo = $self;
-      travels           : Association to many Travels
-                            on travels.user = $self;
-};
-
-entity Categories : cuid, managed, relevance {
-  title          : String;
-  description    : String;
-  hierarchyLevel : Integer;
-  friendlyID     : String;
-  mappingID      : String;
-  drillDownState : String default 'expanded';
-  levelName      : Association to CategoryLevels
-                     on hierarchyLevel = levelName.hierarchyLevel;
-  manager        : Association to Users;
-  members        : Association to many Users2Categories
-                     on members.category = $self;
-  parent         : Association to Categories;
-  children       : Association to many Categories
-                     on children.parent = $self;
-}
-
-entity CategoryLevels {
-  key hierarchyLevel : Integer;
-      title          : String;
-}
-
-entity Users2Categories : cuid, managed {
-  user     : Association to Users;
-  category : Association to Categories;
-}
-
 @assert.unique : {friendlyID : [
   user,
   project
@@ -83,27 +32,6 @@ entity Users2Projects : cuid, managed {
   user    : Association to Users;
   project : Association to Projects;
 };
-
-view Hierarchies as
-  select from WorkItems as item
-  left outer join Categories as cat1
-    on item.parent.ID = cat1.ID
-  left outer join Categories as cat2
-    on cat1.parent.ID = cat2.ID
-  left outer join Categories as cat3
-    on cat2.parent.ID = cat3.ID
-  {
-    key item.ID,
-        cat1.title           as cat1,
-        cat1.hierarchyLevel  as cat1Level,
-        cat1.levelName.title as cat1LevelName,
-        cat2.title           as cat2,
-        cat2.hierarchyLevel  as cat2Level,
-        cat2.levelName.title as cat2LevelName,
-        cat3.title           as cat3,
-        cat3.hierarchyLevel  as cat3Level,
-        cat3.levelName.title as cat3LevelName
-  };
 
 @assert.unique : {friendlyID : [friendlyID]}
 entity Customers : cuid, managed, relevance {
@@ -140,6 +68,58 @@ entity Packages : cuid, managed, relevance {
   title        : String;
   IOTPackageID : String;
   description  : String;
+}
+
+@assert.unique : {friendlyID : [userPrincipalName, ]}
+entity Users {
+  key userPrincipalName : String;
+      displayName       : String;
+      givenName         : String;
+      jobTitle          : String;
+      mail              : String;
+      mobilePhone       : String;
+      officeLocation    : String;
+      preferredLanguage : String;
+      surname           : String;
+      manager           : Association to Users;
+      projects          : Association to many Users2Projects
+                            on projects.user = $self;
+      managedProjects   : Association to many Projects
+                            on managedProjects.manager = $self;
+      teamMembers       : Association to many Users
+                            on teamMembers.manager = $self;
+      workItems         : Association to many WorkItems
+                            on workItems.assignedTo = $self;
+      travels           : Association to many Travels
+                            on travels.user = $self;
+};
+
+entity Categories : cuid, managed, relevance {
+  title          : String;
+  description    : String;
+  hierarchyLevel : Integer;
+  friendlyID     : String;
+  mappingID      : String;
+  drillDownState : String default 'expanded';
+  path           : String;
+  levelName      : Association to CategoryLevels
+                     on hierarchyLevel = levelName.hierarchyLevel;
+  manager        : Association to Users;
+  members        : Association to many Users2Categories
+                     on members.category = $self;
+  parent         : Association to Categories;
+  children       : Association to many Categories
+                     on children.parent = $self;
+}
+
+entity CategoryLevels {
+  key hierarchyLevel : Integer;
+      title          : String;
+}
+
+entity Users2Categories : cuid, managed {
+  user     : Association to Users;
+  category : Association to Categories;
 }
 
 entity WorkItems : managed, relevance {
@@ -188,9 +168,50 @@ entity WorkItems : managed, relevance {
       resetEntry          : Boolean;
       deleted             : Boolean;
       confirmed           : Boolean;
-      parent              : Association to Categories;
       hierarchy           : Association to Hierarchies;
 };
+
+view Hierarchies as
+  select from Categories as parent
+  left outer join Categories as grandParent
+    on parent.parent.ID = grandParent.ID
+  left outer join Categories as greatGrandParent
+    on grandParent.parent.ID = greatGrandParent.ID
+  {
+    key parent.ID as parent,
+        case parent.hierarchyLevel
+          when
+            0
+          then
+            parent.ID
+          when
+            1
+          then
+            grandParent.ID
+          else
+            greatGrandParent.ID
+        end       as customer_ID    : String,
+        case parent.hierarchyLevel
+          when
+            1
+          then
+            parent.ID
+          when
+            2
+          then
+            grandParent.ID
+          else
+            greatGrandParent.ID
+        end       as project_ID     : String,
+        case parent.hierarchyLevel
+          when
+            2
+          then
+            parent.ID
+          else
+            greatGrandParent.ID
+        end       as workPackage_ID : String,
+  };
 
 entity Travels : cuid, managed {
   customer : Association to Customers;
