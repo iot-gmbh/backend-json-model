@@ -1,0 +1,1 @@
+sap.ui.define(["./BaseController"],e=>e.extend("iot.planner.assignuserstocategories.controller.App",{onInit(){this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass())}}));

@@ -1,0 +1,50 @@
+<mvc:View controllerName="iot.planner.assignuserstocategories.controller.Worklist"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:semantic="sap.f.semantic">
+
+    <Page title="{i18n>worklistTitle}">
+
+        <table:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+            <table:columns>
+                <table:Column label="{i18n>title}" width="15%">
+                    <table:template>
+                        <ObjectIdentifier text="{title}"/>
+                    </table:template>
+                </table:Column>
+                <table:Column label="{i18n>description}" width="15%">
+                    <table:template>
+                        <Text text="{description}"/>
+                    </table:template>
+                </table:Column>
+                <table:Column label="{i18n>members}" width="30%">
+                    <table:template>
+                        <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
+                                    path: '/Users',
+                                    sorter: { path: 'displayName' },
+                                    templateShareable: false
+                                }" showValueHelp="false" tokenUpdate="onTokenUpdate">
+                            <suggestionItems>
+                                <core:Item key="{userPrincipalName}" text="{displayName}"/>
+                            </suggestionItems>
+                            <tokens >
+                                <Token key="{user_userPrincipalName}" text="{user/displayName}" delete="onDeleteToken"/>
+                            </tokens>
+                        </MultiInput>
+                    </table:template>
+                </table:Column>
+            </table:columns>
+        </table:TreeTable>
+        <!-- <footer>
+            <Bar>
+                <contentRight>
+                    <Button type="Emphasized" text="Submit" press="onPressSubmit"/>
+                </contentRight>
+            </Bar>
+        </footer> -->
+    </Page>
+</mvc:View>
