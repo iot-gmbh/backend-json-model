@@ -1,25 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-/* globals $ */
-
-function byString(o, s) {
-  let object = o;
-  let string = s;
-  string = string.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
-  string = string.replace(/^\./, ""); // strip a leading dot
-  const a = string.split(".");
-  for (let i = 0, n = a.length; i < n; i += 1) {
-    const k = a[i];
-    if (k in object) {
-      object = object[k];
-    } else {
-      return undefined;
-    }
-  }
-
-  return object;
-}
-
 const nest = (items, ID = null, link = "parent_ID") =>
   items
     .filter((item) => item[link] === ID)
@@ -157,6 +137,7 @@ sap.ui.define(
             }
           });
         },
+
         onDisplayLegend() {
           this.byId("legendDialog").open();
         },
@@ -292,11 +273,32 @@ sap.ui.define(
             hierarchy: { customer_ID, project_ID, workPackage_ID },
           } = appointment;
 
-          this._bindSelectControl("Project", `/categories/${customer_ID}`);
-          this._bindSelectControl(
-            "Package",
-            `/categories/${customer_ID}/children/${project_ID}`
-          );
+          if (customer_ID) {
+            this._bindSelectControl("Project", `/categories/${customer_ID}`);
+          }
+
+          if (project_ID) {
+            this._bindSelectControl(
+              "Package",
+              `/categories/${customer_ID}/children/${project_ID}`
+            );
+          }
+        },
+
+        _bindSelectControl(name, path) {
+          const selectControl = this.byId(`select${name}`);
+          // const model = this.getModel();
+          // const childrenPath = `${path}/children`;
+          // const firstChild = Object.values(model.getProperty(childrenPath))[0];
+
+          // if (firstChild) {
+          //   selectControl.setSelectedKey(firstChild.ID);
+          // }
+
+          selectControl.bindItems({
+            path: `${path}/children`,
+            template: new Item({ text: "{title}", key: "{ID}" }),
+          });
         },
 
         bindSelectControl(event, name) {
@@ -304,13 +306,6 @@ sap.ui.define(
           const path = selectedItem?.getBindingContext().getPath();
 
           this._bindSelectControl(name, path);
-        },
-
-        _bindSelectControl(name, path) {
-          this.byId(`select${name}`).bindItems({
-            path: `${path}/children`,
-            template: new Item({ text: "{title}", key: "{ID}" }),
-          });
         },
 
         async onSubmitEntry() {
@@ -376,6 +371,14 @@ sap.ui.define(
           }
         },
 
+        onCloseDialog(event) {
+          event.getSource().getParent().close();
+        },
+
+        _closeDialog(dialogName) {
+          this.byId(dialogName).close();
+        },
+
         onAfterCloseDialog() {
           const appointment = this.byId("createItemDialog")
             .getBindingContext()
@@ -385,14 +388,6 @@ sap.ui.define(
             this.getModel().setProperty("/appointments/NEW", { hierarchy: {} });
 
           this.byId("createItemDialog").unbindElement();
-        },
-
-        onCloseDialog(event) {
-          event.getSource().getParent().close();
-        },
-
-        _closeDialog(dialogName) {
-          this.byId(dialogName).close();
         },
 
         onChangeView() {

@@ -43,17 +43,9 @@
 										</items>
 									</ComboBox>
 									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="selectProject" selectedKey="{hierarchy/project_ID}" change=".bindSelectControl($event, 'Package')" forceSelection="false">
-										<items>
-											<core:Item text="{title}" key="{ID}"/>
-										</items>
-									</Select>
+									<Select id="selectProject" selectedKey="{hierarchy/project_ID}" change=".bindSelectControl($event, 'Package')" forceSelection="false"/>
 									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="selectPackage" selectedKey="{hierarchy/workPackage_ID}" change="onSelectPackage" forceSelection="false">
-										<items>
-											<core:Item text="{title}" key="{ID}"/>
-										</items>
-									</Select>
+									<Select id="selectPackage" selectedKey="{hierarchy/workPackage_ID}" change="onSelectPackage" forceSelection="false"/>
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>

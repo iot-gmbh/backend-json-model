@@ -20,6 +20,7 @@
     "history": true,
     "location": true,
     "sap": true,
+    "$": true,
     "document": true
   },
   "rules": {
