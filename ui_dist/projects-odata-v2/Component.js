@@ -1,0 +1,1 @@
+sap.ui.define(["sap/suite/ui/generic/template/lib/AppComponent"],e=>e.extend("iot.planner.projectsodatav2.Component",{metadata:{manifest:"json"}}));

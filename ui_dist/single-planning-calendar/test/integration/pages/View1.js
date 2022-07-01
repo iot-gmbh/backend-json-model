@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ui/test/Opa5"],e=>{const s="SinglePlanningCalendar";e.createPageObjects({onTheAppPage:{actions:{},assertions:{iShouldSeeTheApp(){return this.waitFor({id:"app",viewName:s,success(){e.assert.ok(true,`The ${s} view is displayed`)},errorMessage:`Did not find the ${s} view`})}}}})});
