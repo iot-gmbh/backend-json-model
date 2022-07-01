@@ -32,20 +32,10 @@
 									</Bar>
 								</customHeader>
 
-								<form:SimpleForm editable="true" layout="ResponsiveGridLayout">
+								<form:SimpleForm editable="true" layout="ResponsiveGridLayout" id="appointmentSimpleForm">
 									<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}"/>
 									<Label text="{i18n>WorkItems.title}" required="true"/>
 									<Input value="{title}"/>
-									<Label text="{i18n>WorkItems.customer}" required="true"/>
-									<ComboBox id="selectCustomer" selectedKey="{hierarchy/customer_ID}" items="{/categories}" selectionChange=".bindSelectControl($event, 'Project')">
-										<items>
-											<core:Item text="{title}" key="{ID}"/>
-										</items>
-									</ComboBox>
-									<Label text="{i18n>WorkItems.project}" required="true"/>
-									<Select id="selectProject" selectedKey="{hierarchy/project_ID}" change=".bindSelectControl($event, 'Package')" forceSelection="false"/>
-									<Label text="{i18n>WorkItems.workPackage}"/>
-									<Select id="selectPackage" selectedKey="{hierarchy/workPackage_ID}" change="onSelectPackage" forceSelection="false"/>
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>
@@ -54,7 +44,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${hierarchy/customer_ID} &amp;&amp; !!${hierarchy/project_ID} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${hierarchy/level0} &amp;&amp; !!${hierarchy/level1} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

@@ -177,6 +177,8 @@ view Hierarchies as
     on parent.parent.ID = grandParent.ID
   left outer join Categories as greatGrandParent
     on grandParent.parent.ID = greatGrandParent.ID
+  left outer join Categories as greatGreatGrandParent
+    on greatGrandParent.parent.ID = greatGreatGrandParent.ID
   {
     key parent.ID as parent,
         case parent.hierarchyLevel
@@ -188,9 +190,13 @@ view Hierarchies as
             1
           then
             grandParent.ID
-          else
+          when
+            2
+          then
             greatGrandParent.ID
-        end       as customer_ID    : String,
+          else
+            greatGreatGrandParent.ID
+        end       as level0 : String,
         case parent.hierarchyLevel
           when
             1
@@ -200,17 +206,33 @@ view Hierarchies as
             2
           then
             grandParent.ID
-          else
+          when
+            3
+          then
             greatGrandParent.ID
-        end       as project_ID     : String,
+          else
+            greatGreatGrandParent.ID
+        end       as level1 : String,
         case parent.hierarchyLevel
           when
             2
           then
             parent.ID
+          when
+            3
+          then
+            grandParent.ID
           else
             greatGrandParent.ID
-        end       as workPackage_ID : String,
+        end       as level2 : String,
+        case parent.hierarchyLevel
+          when
+            3
+          then
+            parent.ID
+          else
+            grandParent.ID
+        end       as level3 : String,
   };
 
 entity Travels : cuid, managed {

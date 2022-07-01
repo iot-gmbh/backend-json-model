@@ -14,6 +14,19 @@ const reduce = (nestedArray) =>
     {}
   );
 
+const capitalizeFirstLetter = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
+
+const createDeepPath = (depth, hierarchy) => {
+  let path = `/categories`;
+
+  for (let i = 1; i <= depth; i += 1) {
+    path += `/${hierarchy[`level${i - 1}`]}/children`;
+  }
+
+  return path;
+};
+
 sap.ui.define(
   [
     "./BaseController",
@@ -22,9 +35,11 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/core/Item",
     "sap/ui/model/json/JSONModel",
+    "sap/m/Label",
     "../model/legendItems",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "sap/m/Select",
   ],
   (
     BaseController,
@@ -33,9 +48,11 @@ sap.ui.define(
     formatter,
     Item,
     JSONModel,
+    Label,
     legendItems,
     MessageBox,
-    MessageToast
+    MessageToast,
+    Select
   ) => {
     function addDays(date, days) {
       const result = new Date(date);
@@ -62,13 +79,8 @@ sap.ui.define(
           const dialog = this.byId("createItemDialog");
 
           const model = new JSONModel({
-            appointments: { NEW: { hierarchy: {} } },
+            appointments: { NEW: {} },
             busy: false,
-            selected: {
-              0: {},
-              1: {},
-              2: {},
-            },
             categories: {},
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
@@ -268,44 +280,31 @@ sap.ui.define(
         },
 
         _bindHierarchyInputs(appointment) {
-          if (!appointment.hierarchy) return;
-          const {
-            hierarchy: { customer_ID, project_ID, workPackage_ID },
-          } = appointment;
+          const { hierarchy } = appointment;
+          if (!hierarchy) return;
 
-          if (customer_ID) {
-            this._bindSelectControl("Project", `/categories/${customer_ID}`);
-          }
+          const model = this.getModel();
+          const hierarchyDepth = model.getProperty("/hierarchyDepth");
 
-          if (project_ID) {
-            this._bindSelectControl(
-              "Package",
-              `/categories/${customer_ID}/children/${project_ID}`
-            );
+          for (let i = 0; i <= hierarchyDepth; i += 1) {
+            const variableName = `level${i}`;
+
+            if (hierarchy[variableName] || i === 0) {
+              this._bindSelectControl(
+                `select${capitalizeFirstLetter(variableName)}`,
+                createDeepPath(i, hierarchy)
+              );
+            }
           }
         },
 
-        _bindSelectControl(name, path) {
-          const selectControl = this.byId(`select${name}`);
-          // const model = this.getModel();
-          // const childrenPath = `${path}/children`;
-          // const firstChild = Object.values(model.getProperty(childrenPath))[0];
-
-          // if (firstChild) {
-          //   selectControl.setSelectedKey(firstChild.ID);
-          // }
+        _bindSelectControl(controlID, path) {
+          const selectControl = this.byId(controlID);
 
           selectControl.bindItems({
-            path: `${path}/children`,
+            path,
             template: new Item({ text: "{title}", key: "{ID}" }),
           });
-        },
-
-        bindSelectControl(event, name) {
-          const selectedItem = event.getParameter("selectedItem");
-          const path = selectedItem?.getBindingContext().getPath();
-
-          this._bindSelectControl(name, path);
         },
 
         async onSubmitEntry() {
@@ -332,24 +331,26 @@ sap.ui.define(
         },
 
         async _submitEntry(appointment) {
-          const {
-            ID,
-            hierarchy: { customer_ID, project_ID, workPackage_ID },
-          } = appointment;
-
-          const data = {
-            ...appointment,
-            hierarchy: { parent: workPackage_ID || project_ID || customer_ID },
-          };
+          const { hierarchy, ...data } = appointment;
 
           const model = this.getModel();
-          const appointments = model.getProperty("/appointments");
+          const { appointments, hierarchyDepth } = model.getData();
+          let hierarchy_parent = "";
+
+          for (let i = hierarchyDepth; i >= 0; i -= 1) {
+            if (hierarchy[`level${i}`]) {
+              hierarchy_parent = hierarchy[`level${i}`];
+            }
+          }
+
           let appointmentSync;
 
           try {
             // Update
-            if (ID) {
-              const path = `/MyWorkItems(ID='${encodeURIComponent(ID)}')`;
+            if (appointment.ID) {
+              const path = `/MyWorkItems(ID='${encodeURIComponent(
+                appointment.ID
+              )}')`;
 
               appointmentSync = await this.update({
                 path,
@@ -364,6 +365,7 @@ sap.ui.define(
 
             appointmentSync.hierarchy = appointment.hierarchy;
             appointments[appointmentSync.ID] = appointmentSync;
+            appointments.NEW = {};
 
             model.setProperty("/appointments", appointments);
           } catch (error) {
@@ -377,17 +379,6 @@ sap.ui.define(
 
         _closeDialog(dialogName) {
           this.byId(dialogName).close();
-        },
-
-        onAfterCloseDialog() {
-          const appointment = this.byId("createItemDialog")
-            .getBindingContext()
-            .getObject();
-
-          if (!appointment || !appointment.ID)
-            this.getModel().setProperty("/appointments/NEW", { hierarchy: {} });
-
-          this.byId("createItemDialog").unbindElement();
         },
 
         onChangeView() {
@@ -480,12 +471,49 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const { results: categories } = await this.read({
-            path: "/MyCategories",
-          });
+          const [{ results: categories }, { results: hierarchyLevels }] =
+            await Promise.all([
+              this.read({
+                path: "/MyCategories",
+              }),
+              this.read({
+                path: "/HierarchyLevels",
+              }),
+            ]);
 
           const categoriesMap = reduce(nest(categories));
+          const hierarchyDepth = Math.max(
+            ...categories.map(({ hierarchyLevel }) => hierarchyLevel)
+          );
 
+          const simpleForm = this.byId("appointmentSimpleForm");
+          const insertAtContentIndex = 3;
+
+          hierarchyLevels.forEach(({ hierarchyLevel, title }, i) => {
+            simpleForm.insertContent(
+              new Label({ text: title }),
+              insertAtContentIndex + i * 2
+            );
+            simpleForm.insertContent(
+              new Select({
+                selectedKey: `{hierarchy/level${hierarchyLevel}}`,
+                id: this.getView().createId(`selectLevel${hierarchyLevel}`),
+                forceSelection: false,
+                change: (event) => {
+                  const selectedItem = event.getParameter("selectedItem");
+                  const path = selectedItem?.getBindingContext().getPath();
+
+                  this._bindSelectControl(
+                    `selectLevel${hierarchyLevel + 1}`,
+                    `${path}/children`
+                  );
+                },
+              }),
+              insertAtContentIndex + i * 2 + 1
+            );
+          });
+
+          model.setProperty("/hierarchyDepth", hierarchyDepth);
           model.setProperty("/categories", categoriesMap);
           model.setProperty("/busy", false);
         },
