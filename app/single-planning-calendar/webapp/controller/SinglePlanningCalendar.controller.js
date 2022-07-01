@@ -340,9 +340,11 @@ sap.ui.define(
           for (let i = hierarchyDepth; i >= 0; i -= 1) {
             if (hierarchy[`level${i}`]) {
               hierarchy_parent = hierarchy[`level${i}`];
+              break;
             }
           }
 
+          data.hierarchy_parent = hierarchy_parent;
           let appointmentSync;
 
           try {
@@ -503,10 +505,12 @@ sap.ui.define(
                   const selectedItem = event.getParameter("selectedItem");
                   const path = selectedItem?.getBindingContext().getPath();
 
-                  this._bindSelectControl(
-                    `selectLevel${hierarchyLevel + 1}`,
-                    `${path}/children`
-                  );
+                  if (hierarchyLevel < hierarchyDepth) {
+                    this._bindSelectControl(
+                      `selectLevel${hierarchyLevel + 1}`,
+                      `${path}/children`
+                    );
+                  }
                 },
               }),
               insertAtContentIndex + i * 2 + 1
