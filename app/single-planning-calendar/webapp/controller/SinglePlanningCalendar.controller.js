@@ -383,6 +383,10 @@ sap.ui.define(
           this.byId(dialogName).close();
         },
 
+        onAfterCloseDialog() {
+          this.getModel().setProperty("/appointments/NEW", {});
+        },
+
         onChangeView() {
           this._loadAppointments();
         },
