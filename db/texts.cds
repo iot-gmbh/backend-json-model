@@ -17,41 +17,11 @@ annotate my.Users with {
   workItems         @title : '{i18n>Users.workItems}';
 };
 
-annotate my.Users2Projects {
-  user    @title : '{i18n>Users2Projects.user}';
-  project @title : '{i18n>Users2Projects.project}';
-};
-
-annotate my.Customers {
-  friendlyID @title : '{i18n>Customers.friendlyID}';
-  name       @title : '{i18n>Customers.name}';
-  projects   @title : '{i18n>Customers.projects}';
-}
-
-annotate my.Packages {
-  title        @title : '{i18n>Packages.title}';
-  description  @title : '{i18n>Packages.description}';
-  IOTPackageID @title : '{i18n>Packages.IOTPackageID}';
-}
-
 annotate my.Categories {
   title       @title : '{i18n>Categories.title}';
   description @title : '{i18n>Categories.description}';
   parent      @title : '{i18n>Categories.parent}';
   children    @title : '{i18n>Categories.children}';
-}
-
-annotate my.Projects {
-  friendlyID          @title : '{i18n>Projects.friendlyID}';
-  title               @title : '{i18n>Projects.title}';
-  description         @title : '{i18n>Projects.description}';
-  IOTProjectID        @title : '{i18n>Projects.IOTProjectID}';
-  manager             @title : '{i18n>Projects.manager}';
-  customer_friendlyID @title : '{i18n>Projects.customerFriendlyID}';
-  customer            @title : '{i18n>Projects.customer}';
-  workPackages        @title : '{i18n>Projects.workPackages}';
-  teamMembers         @title : '{i18n>Projects.teamMembers}';
-  workItems           @title : '{i18n>Projects.workItems}';
 }
 
 annotate my.WorkItems {

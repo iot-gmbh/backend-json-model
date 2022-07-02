@@ -317,12 +317,9 @@ module.exports = cds.service.impl(async function () {
   */
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((map, curr) => {
-        map[curr.ID] = {
-          ...map[curr.ID],
-          ...curr,
-        };
-        return map;
+      .reduce((acc, curr) => {
+        const accUpdt = { ...map, [curr.ID]: curr };
+        return accUpdt;
       }, {});
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);

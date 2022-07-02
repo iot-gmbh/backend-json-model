@@ -19,8 +19,5 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity MyCategories    as projection on my.Categories;
   entity HierarchyLevels as projection on my.CategoryLevels;
   entity Hierarchies     as projection on my.Hierarchies;
-  entity Projects        as projection on my.Projects;
-  entity Packages        as projection on my.Packages;
-  entity Users2Projects  as projection on my.Users2Projects;
   entity MyUser          as projection on my.Users;
 }
