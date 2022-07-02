@@ -6,8 +6,9 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/m/Token",
   ],
-  (BaseController, JSONModel, formatter, Filter, FilterOperator) =>
+  (BaseController, JSONModel, formatter, Filter, FilterOperator, Token) =>
     BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
@@ -155,9 +156,53 @@ sap.ui.define(
           }
         },
 
+        onCreateToken(event) {
+          const multiInput = event.getSource();
+          const { value } = event.getParameters();
+          const newToken = new Token({ text: value });
+
+          multiInput.addToken(newToken);
+          multiInput.setValue();
+          multiInput.fireTokenUpdate({ addedTokens: [newToken] });
+        },
+
+        onTagsUpdate(event) {
+          const model = this.getModel();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
+
+          addedTokens.forEach((token) => {
+            // const ID = token.getKey();
+            const title = token.getText();
+            const category_ID = token.getBindingContext().getProperty("ID");
+
+            model.createEntry("/Tags", {
+              properties: {
+                title,
+              },
+            });
+
+            model.createEntry("/Tags2Categories", {
+              properties: {
+                tag_title: title,
+                category_ID,
+              },
+            });
+          });
+
+          removedTokens.forEach((token) => {
+            const path = model.createKey("/Tags", { title: token.getText() });
+
+            this.getModel().remove(path);
+          });
+
+          model.submitChanges();
+        },
+
         onTokenUpdate(event) {
           const model = this.getModel();
-          const { addedTokens } = event.getParameters();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
 
           addedTokens.forEach((token) => {
             const user_userPrincipalName = token.getKey();
@@ -169,6 +214,12 @@ sap.ui.define(
                 user_userPrincipalName,
               },
             });
+          });
+
+          removedTokens.forEach((token) => {
+            const path = token.getBindingContext().getPath();
+
+            this.getModel().remove(path);
           });
 
           model.submitChanges();

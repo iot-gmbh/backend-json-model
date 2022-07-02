@@ -34,6 +34,9 @@ service AdminService @(requires : 'authenticated-user') {
   ])                      as projection on my.Users;
 
   entity Travels          as projection on my.Travels;
+  entity Tags             as projection on my.Tags;
+  entity Tags2Categories  as projection on my.Tags2Categories;
+  entity Tags2WorkItems   as projection on my.Tags2WorkItems;
 
   @odata.create.enabled
   @odata.update.enabled

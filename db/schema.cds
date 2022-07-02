@@ -62,7 +62,8 @@ entity Categories : cuid, managed, relevance {
   mappingID      : String;
   drillDownState : String default 'expanded';
   path           : String;
-  tags           : Association to Tags;
+  tags           : Association to many Tags2Categories
+                     on tags.category = $self;
   levelName      : Association to CategoryLevels
                      on hierarchyLevel = levelName.hierarchyLevel;
   manager        : Association to Users;
@@ -73,13 +74,26 @@ entity Categories : cuid, managed, relevance {
                      on children.parent = $self;
 }
 
-entity Tags : cuid {
-  title : String;
+entity Tags {
+  key title    : String;
+      category : Association to Categories;
+      workItem : Association to WorkItems;
+}
+
+entity Tags2Categories : cuid {
+  tag      : Association to Tags;
+  category : Association to Categories;
+}
+
+entity Tags2WorkItems {
+  tag      : Association to Tags;
+  workItem : Association to WorkItems;
 }
 
 entity WorkItems : managed, relevance {
   key ID                  : String @odata.Type : 'Edm.String';
-      tags                : Association to Tags;
+      tags                : Association to many Tags2WorkItems
+                              on tags.workItem = $self;
       activatedDate       : DateTime;
       activatedDateMonth  : Integer;
       activatedDateYear   : Integer;
