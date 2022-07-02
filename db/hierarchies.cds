@@ -1,14 +1,14 @@
-using {iot.planner.Categories as Categories} from './schema';
+using {iot.planner as my} from './schema';
 
-namespace iot.planner;
+namespace iot.planner.hierarchies;
 
 view Hierarchies as
-  select from Categories as parent
-  left outer join Categories as grandParent
+  select from my.Categories as parent
+  left outer join my.Categories as grandParent
     on parent.parent.ID = grandParent.ID
-  left outer join Categories as greatGrandParent
+  left outer join my.Categories as greatGrandParent
     on grandParent.parent.ID = greatGrandParent.ID
-  left outer join Categories as greatGreatGrandParent
+  left outer join my.Categories as greatGreatGrandParent
     on greatGrandParent.parent.ID = greatGreatGrandParent.ID
   {
     key parent.ID as parent,

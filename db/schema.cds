@@ -5,7 +5,7 @@ using {
   sap
 } from '@sap/cds/common';
 
-using {iot.planner.Hierarchies as Hierarchies} from './hierarchies';
+using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
 
 
 namespace iot.planner;
@@ -118,12 +118,10 @@ entity WorkItems : managed, relevance {
       hierarchy           : Association to Hierarchies;
 };
 
-
 entity CategoryLevels {
   key hierarchyLevel : Integer;
       title          : String;
 }
-
 
 entity Travels : cuid, managed {
   user : Association to Users;
