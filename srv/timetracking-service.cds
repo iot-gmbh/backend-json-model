@@ -15,10 +15,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                     as projection on my.WorkItems;
+  ])                    as projection on my.WorkItems;
 
-  entity MyCategories    as projection on my.Categories;
-  entity HierarchyLevels as projection on my.CategoryLevels;
-  entity Hierarchies     as projection on hier.Hierarchies;
-  entity MyUser          as projection on my.Users;
+  entity MyCategories   as projection on my.Categories;
+  entity CategoryLevels as projection on my.CategoryLevels;
+  entity Hierarchies    as projection on hier.Hierarchies;
+  entity MyUser         as projection on my.Users;
 }

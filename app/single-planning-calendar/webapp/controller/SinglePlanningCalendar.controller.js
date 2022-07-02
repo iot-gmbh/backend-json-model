@@ -473,13 +473,13 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const [{ results: categories }, { results: hierarchyLevels }] =
+          const [{ results: categories }, { results: CategoryLevels }] =
             await Promise.all([
               this.read({
                 path: "/MyCategories",
               }),
               this.read({
-                path: "/HierarchyLevels",
+                path: "/CategoryLevels",
               }),
             ]);
 
@@ -491,7 +491,7 @@ sap.ui.define(
           const simpleForm = this.byId("appointmentSimpleForm");
           const insertAtContentIndex = 3;
 
-          hierarchyLevels.forEach(({ hierarchyLevel, title }, i) => {
+          CategoryLevels.forEach(({ hierarchyLevel, title }, i) => {
             simpleForm.insertContent(
               new Label({ text: title }),
               insertAtContentIndex + i * 2

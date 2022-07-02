@@ -120,7 +120,7 @@ entity WorkItems : managed, relevance {
 
 entity CategoryLevels {
   key hierarchyLevel : Integer;
-      title          : String;
+      title          : localized String;
 }
 
 entity Travels : cuid, managed {
