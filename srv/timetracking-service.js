@@ -8,7 +8,7 @@ function transformEventToWorkItem({
   subject,
   start,
   end,
-  categories: [customer_friendlyID],
+  // categories: [customer_friendlyID],
   sensitivity,
   isAllDay,
   user,
@@ -16,7 +16,7 @@ function transformEventToWorkItem({
   return {
     ID: id,
     title: subject,
-    customer_friendlyID,
+    // customer_friendlyID,
     /*
 The original format is: '2022-06-23T14:30:00.0000000'
 OData needs a format like this: '2022-06-23T00:00:00Z'
@@ -64,47 +64,7 @@ module.exports = cds.service.impl(async function () {
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
-  const { WorkItems, Customers, Projects, Users } = db.entities("iot.planner");
-
-  this.on("READ", "Hierarchy", async (req) => {
-    const results = await db.run(
-      // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
-      // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
-      // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
-      // TODO: Make it work on SQLite
-      `WITH RECURSIVE 
-        childrenCTE AS (
-          SELECT 
-            cat.ID, 
-            cat.title, 
-            cat.description,
-            cat.parent_ID,
-            cat.hierarchyLevel
-          FROM iot_planner_categories AS cat
-          WHERE cat.hierarchyLevel = 0
-          LEFT OUTER JOIN iot_planner_workitems as workitems
-            on workitems.parent_ID = cat.ID
-          UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-          FROM childrenCTE AS prior 
-          INNER JOIN iot_planner_categories AS this 
-              ON this.parent_ID = prior.ID
-          )
-          SELECT * 
-          FROM childrenCTE;`
-    );
-
-    const categories = results.map(
-      ({ id, parent_id, hierarchylevel, ...data }) => ({
-        ID: id,
-        parent_ID: parent_id,
-        hierarchyLevel: hierarchylevel,
-        ...data,
-      })
-    );
-
-    return categories;
-  });
+  const { WorkItems, Categories, Users } = db.entities("iot.planner");
 
   this.on("READ", "MyCategories", async (req) => {
     const results = await db.run(
@@ -168,14 +128,15 @@ module.exports = cds.service.impl(async function () {
   this.on("DELETE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
-    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+    const [entries, dummyCategories] = await Promise.all([
       this.read(WorkItems).where({ ID: item.ID }),
-      this.read(Customers).where({ friendlyID: "DELETED" }),
-      this.read(Projects).where({ friendlyID: "DELETED" }),
+      this.read(Categories).where({ title: "DELETED" }),
     ]);
 
-    if (dltDummyCstmer.length !== 1 || dltDummyProj.length !== 1)
-      throw Error("Delete-Dummys (for ref-integrity) not found.");
+    if (dummyCategories.length !== 1)
+      throw Error(
+        "Dummy-category not found (needed for referential integrity of the workitem that is marked to be deleted)."
+      );
 
     if (entries.length > 0)
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
@@ -185,8 +146,7 @@ module.exports = cds.service.impl(async function () {
         ID: item.ID,
         deleted: true,
         assignedTo_userPrincipalName: "DELETED",
-        customer_ID: dltDummyCstmer[0].ID,
-        project_ID: dltDummyProj[0].ID,
+        hierarchy_parent: dummyCategories[0].ID,
       })
     );
   });
@@ -208,14 +168,15 @@ module.exports = cds.service.impl(async function () {
       return item.type === "Manual" ? { ID: item.ID } : reducedItem;
     }
 
-    const [entries, dltDummyCstmer, dltDummyProj] = await Promise.all([
+    const [entries, dummyCategories] = await Promise.all([
       this.read(WorkItems).where({ ID: item.ID }),
-      this.read(Customers).where({ friendlyID: "DELETED" }),
-      this.read(Projects).where({ friendlyID: "DELETED" }),
+      this.read(Categories).where({ title: "DELETED" }),
     ]);
 
-    if (dltDummyCstmer.length !== 1 || dltDummyProj.length !== 1)
-      throw Error("Delete-Dummys (for ref-integrity) not found.");
+    if (dummyCategories.length !== 1)
+      throw Error(
+        "Dummy-category not found (needed for referential integrity of the workitem that is marked to be deleted)."
+      );
 
     if (item.deleted) {
       // DELETE
@@ -225,18 +186,16 @@ module.exports = cds.service.impl(async function () {
         await tx.run(
           INSERT.into(WorkItems).entries({
             ID: item.ID,
-            activatedDate: item.activatedDate,
-            completedDate: item.completedDate,
             deleted: true,
             assignedTo_userPrincipalName: req.user.id,
-            customer_ID: dltDummyCstmer[0].ID,
-            project_ID: dltDummyProj[0].ID,
+            hierarchy_parent: dummyCategories[0].ID,
           })
         );
       }
 
       return item;
     }
+
     // UPDATE
     item.confirmed = true;
     item.duration = calcDurationInH({
@@ -281,7 +240,8 @@ module.exports = cds.service.impl(async function () {
         SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
-    const customers = SELECT.from(Customers);
+
+    const categories = SELECT.from(Categories);
 
     const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
       // AzDevOpsSrv.tx(req)
@@ -300,7 +260,7 @@ module.exports = cds.service.impl(async function () {
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({ ...event, user: req.user.id, customers })
+      transformEventToWorkItem({ ...event, user: req.user.id, categories })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
@@ -318,47 +278,47 @@ module.exports = cds.service.impl(async function () {
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
       .reduce((acc, curr) => {
-        const accUpdt = { ...map, [curr.ID]: curr };
+        const accUpdt = { ...acc, [curr.ID]: curr };
         return accUpdt;
       }, {});
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
 
-    const srv = this;
+    // const srv = this;
 
     // TODO: Schleifen-basierte SQL-Abfragen ersetzen
-    async function addExtraInfosTo(workItems) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const item of workItems.filter(({ title }) => !!title)) {
-        const titleSubstrings = item.title.split(" ");
+    // async function addExtraInfosTo(workItems) {
+    //   // eslint-disable-next-line no-restricted-syntax
+    //   for (const item of workItems.filter(({ title }) => !!title)) {
+    //     const titleSubstrings = item.title.split(" ");
 
-        if (!item.customer_ID) {
-          const query = [titleSubstrings, item.customer_friendlyID]
-            .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
-            .join(" OR ");
+    //     if (!item.customer_ID) {
+    //       const query = [titleSubstrings, item.customer_friendlyID]
+    //         .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
+    //         .join(" OR ");
 
-          const [customer] = await srv.read(Customers).where(query);
+    //       const [customer] = await srv.read(Customers).where(query);
 
-          if (customer) {
-            item.customer_ID = customer.ID;
-          }
-        }
+    //       if (customer) {
+    //         item.customer_ID = customer.ID;
+    //       }
+    //     }
 
-        if (!item.project_ID) {
-          const query = titleSubstrings
-            .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
-            .join(" OR ");
+    //     if (!item.project_ID) {
+    //       const query = titleSubstrings
+    //         .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
+    //         .join(" OR ");
 
-          const [project] = await srv.read(Projects).where(query);
+    //       const [project] = await srv.read(Projects).where(query);
 
-          if (project) {
-            item.project_ID = project.ID;
-          }
-        }
-      }
-    }
+    //       if (project) {
+    //         item.project_ID = project.ID;
+    //       }
+    //     }
+    //   }
+    // }
 
-    await addExtraInfosTo(results);
+    // await addExtraInfosTo(results);
 
     results.$count = results.length;
     return results;

@@ -124,5 +124,6 @@ entity CategoryLevels {
 }
 
 entity Travels : cuid, managed {
-  user : Association to Users;
+  user      : Association to Users;
+  hierarchy : Association to Hierarchies;
 }

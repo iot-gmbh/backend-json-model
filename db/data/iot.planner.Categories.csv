@@ -1,4 +1,6 @@
 ﻿createdAt;createdBy;modifiedAt;modifiedBy;ID;title;description;parent_ID;mappingID;hierarchyLevel;friendlyID;manager_userPrincipalName
+
+2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;d846ed9f-fc4d-42a7-952f-0f52b02caf74;DELETED;DELETED;;;;;
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;41517d4c-6a6d-4764-bd22-2a5faafb8ff1;Ausrichtung;Workshopausrichtung;1680f2a2-6d3d-4840-8d25-bf2d2a877b06;;3;;
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;3aa60225-40bf-422f-a670-32cf68507234;Teilnahme;Workshopteilnahme;1680f2a2-6d3d-4840-8d25-bf2d2a877b06;;3;;
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;020db38e-6449-4f97-a9ff-176e962966e4;Intorq Kommissioniercockpit;Fiori Entwicklung Kommi-Cockpit;1ec5e099-2373-45a1-b937-aa81a0afd060;749-INQ1601-Einführung-SAP-EWM;1;Kommicockpit;
@@ -19,8 +21,6 @@
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;43dccf1c-e168-4e69-9444-9aad73fa8ec8;Urlaub;;51112c9f-28a8-4f27-834e-db850cb8218a;835-IOT2101-Interne-Aufschreibung;1;Urlaub;
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;7dc01399-e393-444c-8b5e-c6bdb6e884d2;Management;;51112c9f-28a8-4f27-834e-db850cb8218a;835-IOT2101-Interne-Aufschreibung;1;Management;
 2021-05-06 08:42:50.069;Benedikt.Hoelker@iot-online.de;2021-05-02 12:55:08.091;Benedikt.Hoelker@iot-online.de;d701630f-0651-4b28-be84-848fe9913f1b;Saxonia Coaching;Coaching insb. Tizian Dauler (WM-Anwendungen);09026668-9083-4893-831f-dac63a4202ff;850-CAS2105-Fiori-Readiness-Check;1;Saxonia Coaching;
-2021-05-02 12:55:08.091;Benedikt.Hoelker@iot-online.de;2021-05-28 11:28:42.083;Benedikt.Hoelker@iot-online.de;b208d086-144b-4696-ab56-b3119a6dd4e7;Virtuelle Kasse;;f7847ed4-1ea9-4e99-b2cb-b30d5afcce48;810-FRA2001-ERP-AM;1;Virtuelle Kasse;
-2021-05-02 12:55:08.091;;;;e0631475-3752-4083-b539-b4f1478b17c7;DELETED;;b75f893b-bede-4e47-b4e7-2bdd190fa3b2;;1;DELETED;
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;94243d69-41de-4485-8827-9688abb1b126;Frankonia Filialapps;Alles rund um die Filiale;f7847ed4-1ea9-4e99-b2cb-b30d5afcce48;810-FRA2001-ERP-AM;1;Filialapps;
 2021-05-02 12:55:08.091;benedikt.hoelker@gmail.com;2021-05-02 12:55:08.091;benedikt.hoelker@gmail.com;bf1f1aa2-fdfc-4253-9f30-a0ba3da9557d;Ein neues Projekt;;48d9e826-e8e0-4740-9a06-9678289e7633;789;1;MAN Test;
 2021-05-02 12:55:08.091;benedikt.hoelker@gmail.com;2021-05-02 12:55:08.091;benedikt.hoelker@gmail.com;e472e9e0-430e-41b9-87d1-fc1f515c9f23;Test;;1ec5e099-2373-45a1-b937-aa81a0afd060;;1;Test;
@@ -75,8 +75,6 @@
 2021-05-02 14:55:08.091;anonymous;2021-05-02 14:55:08.091;anonymous;5601805f-8801-45d9-bde7-fc3863e205ce;KEB Automation GmbH;;;;0;KEB;
 2021-05-02 14:55:08.091;anonymous;2021-05-02 14:55:08.091;anonymous;3d15c8e5-9b70-4d47-9942-452e06728571;Privat;;;;0;Privat;
 2021-05-02 14:55:08.091;Benedikt.Hoelker@iot-online.de;2021-05-02 14:55:08.091;Benedikt.Hoelker@iot-online.de;1dc43734-beef-4e25-81cd-63822ef303ab;CAS AG;;;;0;CAS;
-2021-05-02 14:55:08.091;Benedikt.Hoelker@iot-online.de;2021-05-02 14:55:08.091;Benedikt.Hoelker@iot-online.de;09026668-9083-4893-831f-dac63a4202ff;SAXONIA Edelmetalle GmbH;;;;0;Saxonia;
-;;;;b75f893b-bede-4e47-b4e7-2bdd190fa3b2;DELETED;;;;0;DELETED;
 2021-07-25 07:36:30.987429;benedikt.hoelker@iot-onlinde.;2021-07-25 07:36:30.987429;benedikt.hoelker@iot-onlinde.;0f709da0-36b5-497a-8616-a03b700e936b;Stabilus;;;;0;Stabilus;
 2021-10-25 08:44:30.404366;Benedikt.Hoelker@iot-online.de;2021-10-25 08:49:04.249506;anonymous;3a479c15-7bb1-4380-aaf2-89200c6e389b;Mennekes Elektrotechnik GmbH & Co. KG;;;;0;Mennekes;
 2021-10-31 18:23:04.327957;Benedikt.Hoelker@iot-online.de;2021-10-31 18:23:04.327957;Benedikt.Hoelker@iot-online.de;d6fe438a-07b7-44c1-b959-4017b430fda7;Gelsenwasser;;;;0;Gelsenwasser;

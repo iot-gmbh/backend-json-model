@@ -173,8 +173,4 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "WorkItems", (req) =>
     readWorkItems({ req, restrictToOwnUser: false })
   );
-
-  // this.on("READ", "MyWorkItems", (req) =>
-  //   readWorkItems({ req, restrictToOwnUser: true })
-  // );
 });
