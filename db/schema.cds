@@ -85,14 +85,14 @@ entity Tags2Categories : cuid {
   category : Association to Categories;
 }
 
-entity Tags2WorkItems {
+entity Tags2WorkItems : cuid {
   tag      : Association to Tags;
   workItem : Association to WorkItems;
 }
 
 entity WorkItems : managed, relevance {
   key ID                  : String @odata.Type : 'Edm.String';
-      tags                : Association to many Tags2WorkItems
+      tags                : Composition of many Tags2WorkItems
                               on tags.workItem = $self;
       activatedDate       : DateTime;
       activatedDateMonth  : Integer;

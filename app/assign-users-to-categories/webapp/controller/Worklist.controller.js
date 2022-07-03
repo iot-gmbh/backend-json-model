@@ -166,7 +166,7 @@ sap.ui.define(
           multiInput.fireTokenUpdate({ addedTokens: [newToken] });
         },
 
-        onTagsUpdate(event) {
+        onUpdateTags(event) {
           const model = this.getModel();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
@@ -214,7 +214,7 @@ sap.ui.define(
           multiInput.setTokens(Object.values(tokensMap));
         },
 
-        onTokenUpdate(event) {
+        onUpdateUsers2Categories(event) {
           const model = this.getModel();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
@@ -236,7 +236,7 @@ sap.ui.define(
           removedTokens.forEach((token) => {
             const path = token.getBindingContext().getPath();
 
-            this.getModel().remove(path);
+            model.remove(path);
           });
 
           model.submitChanges();

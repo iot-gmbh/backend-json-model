@@ -43,7 +43,7 @@
                                     path: '/Users',
                                     templateShareable: false,
                                     sorter: { path: 'displayName' }
-                                }" showValueHelp="false" tokenUpdate="onTokenUpdate">
+                                }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
                             <suggestionItems>
                                 <core:Item key="{userPrincipalName}" text="{displayName}"/>
                             </suggestionItems>

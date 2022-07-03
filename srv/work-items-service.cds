@@ -63,6 +63,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     title                                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
     @UI.Hidden
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+    ID
   } where deleted is null;
 
   /*
