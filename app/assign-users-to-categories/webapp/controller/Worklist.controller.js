@@ -171,9 +171,12 @@ sap.ui.define(
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
+          this._removeDuplicateTokens(event.getSource());
+
           addedTokens.forEach((token) => {
             // const ID = token.getKey();
             const title = token.getText();
+            // Suspicious: For added tokens, token.getBindingContext() gives the category - for removed tokens, it gives the token itself
             const category_ID = token.getBindingContext().getProperty("ID");
 
             model.createEntry("/Tags", {
@@ -191,18 +194,32 @@ sap.ui.define(
           });
 
           removedTokens.forEach((token) => {
-            const path = model.createKey("/Tags", { title: token.getText() });
+            const path = token.getBindingContext().getPath();
 
-            this.getModel().remove(path);
+            model.remove(path);
           });
 
           model.submitChanges();
+        },
+
+        _removeDuplicateTokens(multiInput) {
+          const tokens = multiInput.getTokens();
+          const tokensMap = {};
+
+          tokens.forEach((token) => {
+            const title = token.getText();
+            tokensMap[title] = token;
+          });
+
+          multiInput.setTokens(Object.values(tokensMap));
         },
 
         onTokenUpdate(event) {
           const model = this.getModel();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
+
+          this._removeDuplicateTokens(event.getSource());
 
           addedTokens.forEach((token) => {
             const user_userPrincipalName = token.getKey();
