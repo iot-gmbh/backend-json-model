@@ -1,6 +1,7 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
 
+// Test gitmoji
 require("dotenv").config();
 
 function transformEventToWorkItem({
@@ -63,7 +64,6 @@ module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
-
   const { Categories, Tags, Users, WorkItems } = db.entities("iot.planner");
 
   this.on("READ", "MyCategories", async (req) => {
