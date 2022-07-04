@@ -35,7 +35,20 @@
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout" id="appointmentSimpleForm">
 									<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}"/>
 									<Label text="{i18n>WorkItems.title}" required="true"/>
-									<Input value="{title}"/>
+									<MultiInput value="{title}"/>
+									<Label text="{i18n>WorkItems.tags}"/>
+									<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
+                                    path: 'OData>/Tags',
+                                    templateShareable: false,
+                                    sorter: { path: 'title' }
+                                }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
+										<suggestionItems>
+											<core:Item key="{OData>title}" text="{OData>title}"/>
+										</suggestionItems>
+										<tokens>
+											<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
+										</tokens>
+									</MultiInput>
 									<Label text="{i18n>WorkItems.ticket}"/>
 									<Input value="{ticket}"/>
 									<Label text="{i18n>WorkItems.activatedDate}"/>

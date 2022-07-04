@@ -6,8 +6,9 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/m/Token",
   ],
-  (BaseController, JSONModel, formatter, Filter, FilterOperator) =>
+  (BaseController, JSONModel, formatter, Filter, FilterOperator, Token) =>
     BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
@@ -155,9 +156,70 @@ sap.ui.define(
           }
         },
 
-        onTokenUpdate(event) {
+        onCreateToken(event) {
+          const multiInput = event.getSource();
+          const { value } = event.getParameters();
+          const newToken = new Token({ text: value });
+
+          multiInput.addToken(newToken);
+          multiInput.setValue();
+          multiInput.fireTokenUpdate({ addedTokens: [newToken] });
+        },
+
+        onUpdateTags(event) {
           const model = this.getModel();
-          const { addedTokens } = event.getParameters();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
+
+          this._removeDuplicateTokens(event.getSource());
+
+          addedTokens.forEach((token) => {
+            // const ID = token.getKey();
+            const title = token.getText();
+            // Suspicious: For added tokens, token.getBindingContext() gives the category - for removed tokens, it gives the token itself
+            const category_ID = token.getBindingContext().getProperty("ID");
+
+            model.createEntry("/Tags", {
+              properties: {
+                title,
+              },
+            });
+
+            model.createEntry("/Tags2Categories", {
+              properties: {
+                tag_title: title,
+                category_ID,
+              },
+            });
+          });
+
+          removedTokens.forEach((token) => {
+            const path = token.getBindingContext().getPath();
+
+            model.remove(path);
+          });
+
+          model.submitChanges();
+        },
+
+        _removeDuplicateTokens(multiInput) {
+          const tokens = multiInput.getTokens();
+          const tokensMap = {};
+
+          tokens.forEach((token) => {
+            const title = token.getText();
+            tokensMap[title] = token;
+          });
+
+          multiInput.setTokens(Object.values(tokensMap));
+        },
+
+        onUpdateUsers2Categories(event) {
+          const model = this.getModel();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
+
+          this._removeDuplicateTokens(event.getSource());
 
           addedTokens.forEach((token) => {
             const user_userPrincipalName = token.getKey();
@@ -169,6 +231,12 @@ sap.ui.define(
                 user_userPrincipalName,
               },
             });
+          });
+
+          removedTokens.forEach((token) => {
+            const path = token.getBindingContext().getPath();
+
+            model.remove(path);
           });
 
           model.submitChanges();

@@ -9,7 +9,7 @@
 
     <Page title="{i18n>worklistTitle}">
 
-        <table:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <table:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,tags,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <table:columns>
                 <table:Column label="{i18n>title}" width="15%">
                     <table:template>
@@ -21,13 +21,29 @@
                         <Text text="{description}"/>
                     </table:template>
                 </table:Column>
+                <table:Column label="{i18n>tags}" width="20%">
+                    <table:template>
+                        <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
+                                    path: '/Tags',
+                                    templateShareable: false,
+                                    sorter: { path: 'title' }
+                                }" showValueHelp="false" tokenUpdate="onTagsUpdate" change="onCreateToken">
+                            <suggestionItems>
+                                <core:Item key="{title}" text="{title}"/>
+                            </suggestionItems>
+                            <tokens>
+                                <Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
+                            </tokens>
+                        </MultiInput>
+                    </table:template>
+                </table:Column>
                 <table:Column label="{i18n>members}" width="30%">
                     <table:template>
                         <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
                                     path: '/Users',
-                                    sorter: { path: 'displayName' },
-                                    templateShareable: false
-                                }" showValueHelp="false" tokenUpdate="onTokenUpdate">
+                                    templateShareable: false,
+                                    sorter: { path: 'displayName' }
+                                }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
                             <suggestionItems>
                                 <core:Item key="{userPrincipalName}" text="{displayName}"/>
                             </suggestionItems>

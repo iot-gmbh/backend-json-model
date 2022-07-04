@@ -383,12 +383,49 @@ sap.ui.define(
           this.byId(dialogName).close();
         },
 
+        onAfterCloseDialog() {
+          this.getModel().setProperty("/appointments/NEW", {});
+        },
+
         onChangeView() {
           this._loadAppointments();
         },
 
         onStartDateChange() {
           this._loadAppointments();
+        },
+
+        onUpdateTags(event) {
+          const model = this.getModel();
+          const multiInput = event.getSource();
+          const path = multiInput.getBindingContext().getPath();
+
+          this._removeDuplicateTokens(multiInput);
+
+          const tags = multiInput
+            .getTokens()
+            .map((token) => ({ tag_title: token.getKey() }));
+
+          model.setProperty(`${path}/tags`, tags);
+        },
+
+        _removeDuplicateTokens(multiInput) {
+          const tokens = multiInput.getTokens();
+          const tokensMap = {};
+
+          tokens.forEach((token) => {
+            const title = token.getText();
+            tokensMap[title] = token;
+          });
+
+          multiInput.setTokens(Object.values(tokensMap));
+        },
+
+        onDeleteToken(event) {
+          const token = event.getSource();
+          const multiInput = token.getParent();
+
+          multiInput.removeToken(token);
         },
 
         _getCalendarEndDate() {
@@ -421,7 +458,7 @@ sap.ui.define(
 
           const { results: appointments } = await this.read({
             path: "/MyWorkItems",
-            urlParameters: { $top: 100, $expand: "hierarchy" },
+            urlParameters: { $top: 100, $expand: "hierarchy,tags" },
             filters: [
               new Filter({
                 filters: [
@@ -442,6 +479,7 @@ sap.ui.define(
           });
 
           const appointmentsMap = appointments.reduce((map, appointment) => {
+            const tags = appointment.tags.results;
             // eslint-disable-next-line no-param-reassign
             map[appointment.ID] = {
               /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
@@ -455,6 +493,7 @@ sap.ui.define(
                 ? appointment.activatedDate.setHours(0)
                 : appointment.activatedDate,
               ...appointment,
+              tags,
             };
 
             return map;
@@ -473,13 +512,13 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const [{ results: categories }, { results: hierarchyLevels }] =
+          const [{ results: categories }, { results: CategoryLevels }] =
             await Promise.all([
               this.read({
                 path: "/MyCategories",
               }),
               this.read({
-                path: "/HierarchyLevels",
+                path: "/CategoryLevels",
               }),
             ]);
 
@@ -491,11 +530,12 @@ sap.ui.define(
           const simpleForm = this.byId("appointmentSimpleForm");
           const insertAtContentIndex = 3;
 
-          hierarchyLevels.forEach(({ hierarchyLevel, title }, i) => {
+          CategoryLevels.forEach(({ hierarchyLevel, title }, i) => {
             simpleForm.insertContent(
               new Label({ text: title }),
               insertAtContentIndex + i * 2
             );
+
             simpleForm.insertContent(
               new Select({
                 selectedKey: `{hierarchy/level${hierarchyLevel}}`,
@@ -510,6 +550,14 @@ sap.ui.define(
                       `selectLevel${hierarchyLevel + 1}`,
                       `${path}/children`
                     );
+
+                    for (
+                      let j = hierarchyLevel + 2;
+                      j <= hierarchyDepth;
+                      j += 1
+                    ) {
+                      this.byId(`selectLevel${j}`).unbindItems();
+                    }
                   }
                 },
               }),

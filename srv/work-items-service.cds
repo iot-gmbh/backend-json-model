@@ -23,7 +23,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])                as projection on my.WorkItems {
+  ])           as projection on my.WorkItems {
     *,
     assignedTo.userPrincipalName         as assignedToUserPrincipalName,
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
@@ -47,15 +47,15 @@ service WorkItemsService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])                as projection on my.WorkItems {
+  ])           as projection on my.WorkItems {
     activatedDate                        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
     completedDate                        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
     // Casting findet in work-items-service.js statt (mittels moment.js)
     ''                                   as Beginn       : String @(title : '{i18n>IOTWorkItems.Beginn}'),
     ''                                   as Ende         : String @(title : '{i18n>IOTWorkItems.Ende}'),
     ''                                   as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
-    project.IOTProjectID                 as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
-    workPackage.IOTPackageID             as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
+    hierarchy.level1MappingID            as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
+    hierarchy.level2MappingID            as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
     ''                                   as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
     'Durchführung'                       as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
     assignedTo.userPrincipalName         as Nutzer       : String @(title : '{i18n>IOTWorkItems.Nutzer}'),
@@ -63,6 +63,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     title                                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
     @UI.Hidden
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+    ID
   } where deleted is null;
 
   /*
@@ -71,22 +72,8 @@ service WorkItemsService @(requires : 'authenticated-user') {
   Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
    */
 
-  entity Users      as projection on my.Users {
+  entity Users as projection on my.Users {
     *,
     workItems : redirected to WorkItems
   };
-
-  entity Projects   as projection on my.Projects {
-    *,
-    workItems    : redirected to WorkItems,
-    workPackages : redirected to MyPackages
-  } where friendlyID != 'DELETED';
-
-  entity Customers  as projection on my.Customers where friendlyID != 'DELETED';
-
-  entity MyPackages as projection on my.Packages {
-    *,
-    workItems : redirected to WorkItems
-  };
-// entity AzDevPackages  as projection on AzDevOps.Packages;
 };

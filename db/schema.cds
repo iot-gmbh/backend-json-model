@@ -5,6 +5,9 @@ using {
   sap
 } from '@sap/cds/common';
 
+using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
+
+
 namespace iot.planner;
 
 aspect relevance {
@@ -24,52 +27,6 @@ aspect relevance {
   );
 };
 
-@assert.unique : {friendlyID : [
-  user,
-  project
-]}
-entity Users2Projects : cuid, managed {
-  user    : Association to Users;
-  project : Association to Projects;
-};
-
-@assert.unique : {friendlyID : [friendlyID]}
-entity Customers : cuid, managed, relevance {
-  friendlyID : String @mandatory;
-  name       : String;
-  projects   : Association to many Projects
-                 on projects.customer = $self;
-}
-
-@assert.unique : {friendlyID : [
-  customer_friendlyID,
-  friendlyID
-]}
-entity Projects : cuid, managed, relevance {
-  friendlyID          : String @mandatory;
-  title               : String @mandatory;
-  description         : String;
-  IOTProjectID        : String;
-  manager             : Association to Users;
-  customer_friendlyID : String;
-  customer            : Association to Customers;
-  workPackages        : Composition of many Packages
-                          on workPackages.project = $self;
-  teamMembers         : Composition of many Users2Projects
-                          on teamMembers.project = $self;
-  workItems           : Association to many WorkItems
-                          on workItems.project = $self;
-}
-
-entity Packages : cuid, managed, relevance {
-  project      : Association to Projects;
-  workItems    : Association to many WorkItems
-                   on workItems.workPackage = $self;
-  title        : String;
-  IOTPackageID : String;
-  description  : String;
-}
-
 @assert.unique : {friendlyID : [userPrincipalName, ]}
 entity Users {
   key userPrincipalName : String;
@@ -82,10 +39,8 @@ entity Users {
       preferredLanguage : String;
       surname           : String;
       manager           : Association to Users;
-      projects          : Association to many Users2Projects
-                            on projects.user = $self;
-      managedProjects   : Association to many Projects
-                            on managedProjects.manager = $self;
+      categories        : Association to many Users2Categories
+                            on categories.user = $self;
       teamMembers       : Association to many Users
                             on teamMembers.manager = $self;
       workItems         : Association to many WorkItems
@@ -93,6 +48,11 @@ entity Users {
       travels           : Association to many Travels
                             on travels.user = $self;
 };
+
+entity Users2Categories : cuid, managed {
+  user     : Association to Users;
+  category : Association to Categories;
+}
 
 entity Categories : cuid, managed, relevance {
   title          : String;
@@ -102,6 +62,8 @@ entity Categories : cuid, managed, relevance {
   mappingID      : String;
   drillDownState : String default 'expanded';
   path           : String;
+  tags           : Association to many Tags2Categories
+                     on tags.category = $self;
   levelName      : Association to CategoryLevels
                      on hierarchyLevel = levelName.hierarchyLevel;
   manager        : Association to Users;
@@ -112,18 +74,26 @@ entity Categories : cuid, managed, relevance {
                      on children.parent = $self;
 }
 
-entity CategoryLevels {
-  key hierarchyLevel : Integer;
-      title          : String;
+entity Tags {
+  key title    : String;
+      category : Association to Categories;
+      workItem : Association to WorkItems;
 }
 
-entity Users2Categories : cuid, managed {
-  user     : Association to Users;
+entity Tags2Categories : cuid {
+  tag      : Association to Tags;
   category : Association to Categories;
+}
+
+entity Tags2WorkItems : cuid {
+  tag      : Association to Tags;
+  workItem : Association to WorkItems;
 }
 
 entity WorkItems : managed, relevance {
   key ID                  : String @odata.Type : 'Edm.String';
+      tags                : Composition of many Tags2WorkItems
+                              on tags.workItem = $self;
       activatedDate       : DateTime;
       activatedDateMonth  : Integer;
       activatedDateYear   : Integer;
@@ -149,15 +119,12 @@ entity WorkItems : managed, relevance {
       resolvedDate        : DateTime;
       closedDate          : DateTime;
       customer_friendlyID : String;
-      customer            : Association to Customers;
       customerName        : String;
       private             : Boolean;
       isAllDay            : Boolean;
       // Custom
       project_friendlyID  : String;
-      project             : Association to Projects;
       projectTitle        : String;
-      workPackage         : Association to Packages;
       ticket              : String;
       type                : String enum {
         Manual;
@@ -171,71 +138,12 @@ entity WorkItems : managed, relevance {
       hierarchy           : Association to Hierarchies;
 };
 
-view Hierarchies as
-  select from Categories as parent
-  left outer join Categories as grandParent
-    on parent.parent.ID = grandParent.ID
-  left outer join Categories as greatGrandParent
-    on grandParent.parent.ID = greatGrandParent.ID
-  left outer join Categories as greatGreatGrandParent
-    on greatGrandParent.parent.ID = greatGreatGrandParent.ID
-  {
-    key parent.ID as parent,
-        case parent.hierarchyLevel
-          when
-            0
-          then
-            parent.ID
-          when
-            1
-          then
-            grandParent.ID
-          when
-            2
-          then
-            greatGrandParent.ID
-          else
-            greatGreatGrandParent.ID
-        end       as level0 : String,
-        case parent.hierarchyLevel
-          when
-            1
-          then
-            parent.ID
-          when
-            2
-          then
-            grandParent.ID
-          when
-            3
-          then
-            greatGrandParent.ID
-          else
-            greatGreatGrandParent.ID
-        end       as level1 : String,
-        case parent.hierarchyLevel
-          when
-            2
-          then
-            parent.ID
-          when
-            3
-          then
-            grandParent.ID
-          else
-            greatGrandParent.ID
-        end       as level2 : String,
-        case parent.hierarchyLevel
-          when
-            3
-          then
-            parent.ID
-          else
-            grandParent.ID
-        end       as level3 : String,
-  };
+entity CategoryLevels {
+  key hierarchyLevel : Integer;
+      title          : localized String;
+}
 
 entity Travels : cuid, managed {
-  customer : Association to Customers;
-  user     : Association to Users;
+  user      : Association to Users;
+  hierarchy : Association to Hierarchies;
 }

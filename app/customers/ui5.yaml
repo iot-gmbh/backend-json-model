@@ -1,9 +1,0 @@
-specVersion: "2.2"
-metadata:
-  name: iot.customers
-type: application
-builder:
-  resources:
-    excludes:
-      - "/test/**"
-      - "/localService/**"

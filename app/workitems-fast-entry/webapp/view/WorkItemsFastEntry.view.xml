@@ -1,0 +1,90 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:f="sap.f" controllerName="iot.workitemsfastentry.controller.WorkItemsFastEntry">
+	<Shell id="shell" appWidthLimited="false">
+		<App>
+			<Page>
+				<customHeader>
+					<f:ShellBar title="{i18n>title}"/>
+				</customHeader>
+				<content>
+					<f:DynamicPage>
+						<f:header>
+							<f:DynamicPageHeader pinnable="false">
+								<Input value="{/newWorkItemText}" placeholder="{i18n>inputPlaceholder}" change=".addWorkItem"/>
+							</f:DynamicPageHeader>
+						</f:header>
+						<f:content>
+							<Table id="table" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" items="{
+								path: '/workItems',
+								sorter: {
+									path: 'endDate',
+									descending: true
+								}
+							}">
+								<headerToolbar>
+									<OverflowToolbar>
+										<ToolbarSpacer/>
+										<SearchField liveChange=".onSearch" width="20rem"/>
+									</OverflowToolbar>
+								</headerToolbar>
+
+								<columns>
+									<Column>
+										<Text text="{i18n>tableColumnDate}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnStartDate}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnEndDate}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnCustomer}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnExtractedCustomer}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnProject}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnExtractedProject}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnText}"/>
+									</Column>
+								</columns>
+
+								<items>
+									<ColumnListItem press=".onPress">
+										<cells>
+											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+											<TimePicker value="{ path: 'startDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<TimePicker value="{ path: 'endDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<ComboBox selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}, templateShareable: false}" selectionChange="filterProjects">
+												<items>
+													<core:Item text="{name}" key="{ID}"/>
+												</items>
+											</ComboBox>
+											<Input value="{extractedCustomer}"/>
+											<ComboBox selectedKey="{project_ID}" items="{path: 'filteredProjects', sorter: {path: 'friendlyID'}, templateShareable: false}" selectionChange="">
+												<items>
+													<core:Item text="{friendlyID}" key="{ID}"/>
+												</items>
+											</ComboBox>
+											<Input value="{extractedProject}"/>
+											<Input value="{text}"/>
+										</cells>
+									</ColumnListItem>
+								</items>
+
+							</Table>
+						</f:content>
+					</f:DynamicPage>
+				</content>
+			</Page>
+		</App>
+	</Shell>
+</mvc:View>

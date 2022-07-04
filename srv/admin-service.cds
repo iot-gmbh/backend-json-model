@@ -31,51 +31,12 @@ service AdminService @(requires : 'authenticated-user') {
       ],
       to    : 'admin',
     },
-  ])                      as projection on my.Users {
-    *,
-    projects : redirected to ProjectsPerUser
-  };
-
-  // entity UsersToCategories          as
-  //   select
-  //     key Categories.ID,
-  //         *
-  //   from my.Categories
-  //   left outer join AggregatedUsersPerCategoryView
-  //     on Categories.ID = AggregatedUsersPerCategoryView.ID;
-
-  // entity Users2Categories           as projection on my.Users2Categories;
-  // entity AggregatedUsersPerCategory as projection on AggregatedUsersPerCategoryView;
-
-  // view AggregatedUsersPerCategoryView as
-  //   select
-  //     key category.ID,
-  //         string_agg(
-  //           user.userPrincipalName, ', ') as users : String
-  //     from my.Users2Categories
-  //     group by
-  //       category.ID;
-
-  @odata.create.enabled
-  @odata.update.enabled
-  entity ProjectsPerUser  as projection on my.Users2Projects;
-
-  @cds.redirection.target : true
-  entity UsersPerProject  as projection on my.Users2Projects;
-
-  @odata.draft.enabled
-  entity Customers        as projection on my.Customers;
+  ])                      as projection on my.Users;
 
   entity Travels          as projection on my.Travels;
-
-  @odata.create.enabled
-  @odata.update.enabled
-  // @odata.draft.enabled
-  entity Projects         as projection on my.Projects where friendlyID != 'DELETED';
-
-  @odata.create.enabled
-  @odata.update.enabled
-  entity Packages         as projection on my.Packages as Packages
+  entity Tags             as projection on my.Tags;
+  entity Tags2Categories  as projection on my.Tags2Categories;
+  entity Tags2WorkItems   as projection on my.Tags2WorkItems;
 
   @odata.create.enabled
   @odata.update.enabled
