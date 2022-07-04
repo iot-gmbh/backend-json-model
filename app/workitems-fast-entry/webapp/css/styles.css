@@ -1,0 +1,4 @@
+/* Strikes through the completed items */
+li[data-work-item-completed='true'] span {
+	text-decoration: line-through;
+}
