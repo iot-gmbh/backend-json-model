@@ -535,6 +535,7 @@ sap.ui.define(
               new Label({ text: title }),
               insertAtContentIndex + i * 2
             );
+
             simpleForm.insertContent(
               new Select({
                 selectedKey: `{hierarchy/level${hierarchyLevel}}`,
@@ -549,6 +550,14 @@ sap.ui.define(
                       `selectLevel${hierarchyLevel + 1}`,
                       `${path}/children`
                     );
+
+                    for (
+                      let j = hierarchyLevel + 2;
+                      j <= hierarchyDepth;
+                      j += 1
+                    ) {
+                      this.byId(`selectLevel${j}`).unbindItems();
+                    }
                   }
                 },
               }),

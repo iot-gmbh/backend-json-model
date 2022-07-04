@@ -18,13 +18,13 @@ function transformEventToWorkItem({
     title: subject,
     // customer_friendlyID,
     /*
-The original format is: '2022-06-23T14:30:00.0000000'
-OData needs a format like this: '2022-06-23T00:00:00Z'
+      The original format is: '2022-06-23T14:30:00.0000000'
+      OData needs a format like this: '2022-06-23T00:00:00Z'
 
-All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
-This leads to UI5 showing repeating them each single day instead of showing all-day events.
-Thus we replace the time for all-day events
-*/
+      All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
+      This leads to UI5 showing repeating them each single day instead of showing all-day events.
+      Thus we replace the time for all-day events
+      */
     activatedDate: isAllDay
       ? `${start.dateTime.substring(0, 11)}00:00:00Z`
       : `${start.dateTime.substring(0, 19)}Z`,
@@ -64,7 +64,7 @@ module.exports = cds.service.impl(async function () {
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
 
-  const { WorkItems, Categories, Users } = db.entities("iot.planner");
+  const { Categories, Tags, Users, WorkItems } = db.entities("iot.planner");
 
   this.on("READ", "MyCategories", async (req) => {
     const results = await db.run(
@@ -72,36 +72,37 @@ module.exports = cds.service.impl(async function () {
       // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
       // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
       // TODO: Make it work on SQLite
-      `WITH RECURSIVE 
+      `
+      WITH RECURSIVE 
         childrenCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
             and user2cat.user_userPrincipalName = '${req.user.id}'
           UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
           FROM childrenCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
-          ),
+        ),
         parentCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
             and user2cat.user_userPrincipalName = '${req.user.id}'
           UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(this.title, ' > ', prior.path) as varchar(5000)) as path 
           FROM parentCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
             ON this.ID = prior.parent_ID
-          ) 
-          SELECT * 
-          FROM childrenCTE
-          UNION 
-          SELECT * 
-          FROM parentCTE;`
+        ) 
+        SELECT * 
+        FROM childrenCTE
+        UNION 
+        SELECT * 
+        FROM parentCTE;`
     );
 
     const categories = results.map(
@@ -272,9 +273,9 @@ module.exports = cds.service.impl(async function () {
     ]
       // .reduce((acc, item) => acc.concat(item), [])
       /*
-  Nur Items mit ID und AssignedTo übernehmen
-  => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
-  */
+        Nur Items mit ID und AssignedTo übernehmen
+        => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
+        */
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
       .reduce((acc, curr) => {
@@ -284,20 +285,22 @@ module.exports = cds.service.impl(async function () {
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
 
-    // const srv = this;
+    const srv = this;
 
     // TODO: Schleifen-basierte SQL-Abfragen ersetzen
     // async function addExtraInfosTo(workItems) {
-    //   // eslint-disable-next-line no-restricted-syntax
-    //   for (const item of workItems.filter(({ title }) => !!title)) {
+    //   const [categories, tags2Categories, ] = await Promise.all(
+    //     srv.read(Categories),
+    //     srv.read(Tags)
+    //   );
+
+    //   workItems.filter(item => !!item.title).forEach(item => {
     //     const titleSubstrings = item.title.split(" ");
 
     //     if (!item.customer_ID) {
     //       const query = [titleSubstrings, item.customer_friendlyID]
     //         .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
     //         .join(" OR ");
-
-    //       const [customer] = await srv.read(Customers).where(query);
 
     //       if (customer) {
     //         item.customer_ID = customer.ID;
@@ -315,7 +318,7 @@ module.exports = cds.service.impl(async function () {
     //         item.project_ID = project.ID;
     //       }
     //     }
-    //   }
+    //   })
     // }
 
     // await addExtraInfosTo(results);
