@@ -1,7 +1,7 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
 
-// Test gitmoji
+// Test gitmoji 2
 require("dotenv").config();
 
 function transformEventToWorkItem({
