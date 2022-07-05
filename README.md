@@ -118,9 +118,9 @@ Furthermore, the corresponding `default-env.json` needs to be configured (tellin
 In order to switch the environment you run the corresponding script:
 
 ```json
-    "set:dev": "bash ./set-env.sh development",
-    "set:test": "bash ./set-env.sh test",
-    "set:prod": "bash ./set-env.sh production"
+    "env:dev": "bash ./set-env.sh development",
+    "env:test": "bash ./set-env.sh test",
+    "env:prod": "bash ./set-env.sh production"
 ```
 
 The idea for switching environment information via scripts is from a [blogpost](https://blogs.sap.com/2022/01/20/solving-the-complexity-of-using-default-env.json-in-a-project-with-multiple-tiers-or-targets/) by Pieter Janssens.
