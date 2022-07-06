@@ -35,7 +35,16 @@
 								<form:SimpleForm editable="true" layout="ResponsiveGridLayout" id="appointmentSimpleForm">
 									<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}"/>
 									<Label text="{i18n>WorkItems.title}" required="true"/>
-									<MultiInput value="{title}"/>
+									<Input value="{title}"/>
+									<Label text="{i18n>WorkItems.hierarchy}"/>
+									<!-- <SearchField value="{parent_ID}" id="hierarchySearch" enableSuggestions="true" suggest= ".onSuggestHierarchy" suggestionItems="{path: '/categoriesFlat', sorter: {path: 'path'}}">
+										<SuggestionItem text="{path}" description="{description}" key="{ID}" />
+									</SearchField> -->
+									<Input id="hierarchySearch" value="{parent_ID}" showSuggestion="true" suggestionItems="{/categoriesFlat}">
+										<suggestionItems>
+											<core:Item text="{path}" />
+										</suggestionItems>
+									</Input>
 									<Label text="{i18n>WorkItems.tags}"/>
 									<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
                                     path: 'OData>/Tags',

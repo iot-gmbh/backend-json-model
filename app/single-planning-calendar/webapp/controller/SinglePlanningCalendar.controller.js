@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+
 /* eslint-disable camelcase */
 const nest = (items, ID = null, link = "parent_ID") =>
   items
@@ -148,6 +149,29 @@ sap.ui.define(
               }
             }
           });
+
+          this.byId("hierarchySearch").setFilterFunction((term, item) =>
+            // A case-insensitive "string contains" style filter
+            item.getText().match(new RegExp(term, "i"))
+          );
+        },
+
+        // Stub atm
+        onSuggestHierachy(event) {
+          const searchField = event.getSource();
+          const value = event.getParameter("suggestValue");
+          if (!value) return;
+
+          const filters = [
+            new Filter({ path: "path", operator: "Contains", value1: value }),
+          ];
+
+          const binding = searchField.getBinding("suggestionItems");
+
+          binding.filter(filters);
+          searchField.suggest();
+          // If suggestionItems are bound agains ODataModel (with async filter):
+          // binding.attachEventOnce("dataReceived", () => searchField.suggest());
         },
 
         onDisplayLegend() {
@@ -273,7 +297,7 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          this._bindHierarchyInputs(appointment);
+          // this._bindHierarchyInputs(appointment);
 
           dialog.bindElement(path);
           dialog.open();
@@ -530,43 +554,44 @@ sap.ui.define(
           const simpleForm = this.byId("appointmentSimpleForm");
           const insertAtContentIndex = 3;
 
-          CategoryLevels.forEach(({ hierarchyLevel, title }, i) => {
-            simpleForm.insertContent(
-              new Label({ text: title }),
-              insertAtContentIndex + i * 2
-            );
+          // CategoryLevels.forEach(({ hierarchyLevel, title }, i) => {
+          //   simpleForm.insertContent(
+          //     new Label({ text: title }),
+          //     insertAtContentIndex + i * 2
+          //   );
 
-            simpleForm.insertContent(
-              new Select({
-                selectedKey: `{hierarchy/level${hierarchyLevel}}`,
-                id: this.getView().createId(`selectLevel${hierarchyLevel}`),
-                forceSelection: false,
-                change: (event) => {
-                  const selectedItem = event.getParameter("selectedItem");
-                  const path = selectedItem?.getBindingContext().getPath();
+          //   simpleForm.insertContent(
+          //     new Select({
+          //       selectedKey: `{hierarchy/level${hierarchyLevel}}`,
+          //       id: this.getView().createId(`selectLevel${hierarchyLevel}`),
+          //       forceSelection: false,
+          //       change: (event) => {
+          //         const selectedItem = event.getParameter("selectedItem");
+          //         const path = selectedItem?.getBindingContext().getPath();
 
-                  if (hierarchyLevel < hierarchyDepth) {
-                    this._bindSelectControl(
-                      `selectLevel${hierarchyLevel + 1}`,
-                      `${path}/children`
-                    );
+          //         if (hierarchyLevel < hierarchyDepth) {
+          //           this._bindSelectControl(
+          //             `selectLevel${hierarchyLevel + 1}`,
+          //             `${path}/children`
+          //           );
 
-                    for (
-                      let j = hierarchyLevel + 2;
-                      j <= hierarchyDepth;
-                      j += 1
-                    ) {
-                      this.byId(`selectLevel${j}`).unbindItems();
-                    }
-                  }
-                },
-              }),
-              insertAtContentIndex + i * 2 + 1
-            );
-          });
+          //           for (
+          //             let j = hierarchyLevel + 2;
+          //             j <= hierarchyDepth;
+          //             j += 1
+          //           ) {
+          //             this.byId(`selectLevel${j}`).unbindItems();
+          //           }
+          //         }
+          //       },
+          //     }),
+          //     insertAtContentIndex + i * 2 + 1
+          //   );
+          // });
 
           model.setProperty("/hierarchyDepth", hierarchyDepth);
           model.setProperty("/categories", categoriesMap);
+          model.setProperty("/categoriesFlat", categories);
           model.setProperty("/busy", false);
         },
 

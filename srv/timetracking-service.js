@@ -77,32 +77,16 @@ module.exports = cds.service.impl(async function () {
         childrenCTE AS (
           SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
           FROM iot_planner_categories AS cat
-          INNER JOIN iot_planner_users2categories as user2cat
-            on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
+          WHERE cat.parent_ID is null
           UNION 
           SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
           FROM childrenCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
-        ),
-        parentCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
-          FROM iot_planner_categories AS cat
-          INNER JOIN iot_planner_users2categories as user2cat
-            on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(this.title, ' > ', prior.path) as varchar(5000)) as path 
-          FROM parentCTE AS prior 
-          INNER JOIN iot_planner_categories AS this 
-            ON this.ID = prior.parent_ID
-        ) 
+        )
         SELECT * 
         FROM childrenCTE
-        UNION 
-        SELECT * 
-        FROM parentCTE;`
+        ;`
     );
 
     const categories = results.map(
