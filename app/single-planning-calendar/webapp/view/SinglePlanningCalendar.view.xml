@@ -66,7 +66,7 @@
 									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${hierarchy/level0} &amp;&amp; !!${hierarchy/level1} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title}g &amp;&amp; !${isAllDay}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

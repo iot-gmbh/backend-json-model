@@ -75,17 +75,30 @@ module.exports = cds.service.impl(async function () {
       `
       WITH RECURSIVE 
         childrenCTE AS (
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          FROM iot_planner_categories AS cat
+          INNER JOIN iot_planner_users2categories as user2cat
+            on cat.ID = user2cat.category_ID
+            and user2cat.user_userPrincipalName = '${req.user.id}'
+          UNION 
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM childrenCTE AS parent 
+          INNER JOIN iot_planner_categories AS this 
+              ON this.parent_ID = parent.ID
+          ),
+        pathCTE AS (
           SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
           FROM iot_planner_categories AS cat
           WHERE cat.parent_ID is null
           UNION 
           SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
-          FROM childrenCTE AS prior 
+          FROM pathCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
         )
         SELECT * 
-        FROM childrenCTE
+        FROM pathCTE
+        INNER JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
         ;`
     );
 
