@@ -249,12 +249,12 @@ module.exports = cds.service.impl(async function () {
       //   .limit(limit),
       [],
       db.tx(req).run(req.query),
-      // [],
-      MSGraphSrv.tx(req)
-        .read("Events", "*")
-        .where(where)
-        .orderBy(orderBy)
-        .limit(limit),
+      [],
+      // MSGraphSrv.tx(req)
+      //   .read("Events", "*")
+      //   .where(where)
+      //   .orderBy(orderBy)
+      //   .limit(limit),
     ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>

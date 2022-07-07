@@ -5,10 +5,9 @@ using {
   sap
 } from '@sap/cds/common';
 
-using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
-
-
 namespace iot.planner;
+
+using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
 
 aspect relevance {
   invoiceRelevance : Decimal(2, 1) @(
@@ -135,7 +134,11 @@ entity WorkItems : managed, relevance {
       resetEntry          : Boolean;
       deleted             : Boolean;
       confirmed           : Boolean;
-      hierarchy           : Association to Hierarchies;
+      parent              : Association to Categories;
+      hierarchy           : Association to Hierarchies
+                              on parent.ID = hierarchy.parent;
+      // Used by the Frontend's hierarchy input-filter
+      parentPath          : String;
 };
 
 entity CategoryLevels {
@@ -144,6 +147,6 @@ entity CategoryLevels {
 }
 
 entity Travels : cuid, managed {
-  user      : Association to Users;
-  hierarchy : Association to Hierarchies;
+  user   : Association to Users;
+  parent : Association to Categories;
 }

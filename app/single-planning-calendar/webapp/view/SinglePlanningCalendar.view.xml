@@ -1,8 +1,9 @@
 <mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
 	xmlns="sap.m"
 	xmlns:unified="sap.ui.unified"
-	xmlns:form="sap.ui.layout.form"
+	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
+	xmlns:table="sap.ui.table"
 	xmlns:l="sap.ui.layout"
 	xmlns:smartfield="sap.ui.comp.smartfield"
 	xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
@@ -19,7 +20,7 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog">
+							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="400px" contentWidth="670px">
 								<customHeader>
 									<Bar>
 										<contentLeft>
@@ -31,42 +32,72 @@
 										</contentRight>
 									</Bar>
 								</customHeader>
+								<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}" class="sapUiTinyMargin"/>
+								<f:Form id="appointmentForm" editable="true">
+									<f:layout>
+										<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
+									</f:layout>
+									<f:formContainers>
+										<f:FormContainer>
+											<f:formElements>
+												<f:FormElement label="{i18n>WorkItems.title}">
+													<f:fields>
+														<Input value="{title}"/>
+													</f:fields>
+												</f:FormElement>
+												<f:FormElement label="{i18n>WorkItems.tags}">
+													<f:fields>
+														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
+															path: 'OData>/Tags',
+															templateShareable: false,
+															sorter: { path: 'title' }
+														}" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
+															<suggestionItems>
+																<core:Item key="{OData>title}" text="{OData>title}"/>
+															</suggestionItems>
+															<tokens>
+																<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
+															</tokens>
+														</MultiInput>
+													</f:fields>
+												</f:FormElement>
+												<f:FormElement label="{i18n>WorkItems.activatedDate}">
+													<f:fields>
+														<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
+													</f:fields>
+												</f:FormElement>
+												<f:FormElement label="{i18n>WorkItems.completedDate}">
+													<f:fields>
+														<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
+													</f:fields>
+												</f:FormElement>
+											</f:formElements>
+										</f:FormContainer>
+										<f:FormContainer>
+											<f:formElements>
+												<f:FormElement label="{i18n>WorkItems.hierarchy}">
+													<f:fields>
+														<Input id="hierarchySearch" value="{parent/path}" showSuggestion="false" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+													</f:fields>
+												</f:FormElement>
+												<f:FormElement>
+													<f:fields>
+														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+															<StandardTreeItem title="{title}"/>
+														</Tree>
+													</f:fields>
+												</f:FormElement>
+											</f:formElements>
+										</f:FormContainer>
+									</f:formContainers>
+								</f:Form>
 
-								<form:SimpleForm editable="true" layout="ResponsiveGridLayout" id="appointmentSimpleForm">
-									<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}"/>
-									<Label text="{i18n>WorkItems.title}" required="true"/>
-									<Input value="{title}"/>
-									<Label text="{i18n>WorkItems.hierarchy}"/>
-									<!-- <SearchField value="{parent_ID}" id="hierarchySearch" enableSuggestions="true" suggest= ".onSuggestHierarchy" suggestionItems="{path: '/categoriesFlat', sorter: {path: 'path'}}">
-										<SuggestionItem text="{path}" description="{description}" key="{ID}" />
-									</SearchField> -->
-									<Input id="hierarchySearch" value="{parent_ID}" showSuggestion="true" suggestionItems="{/categoriesFlat}">
-										<suggestionItems>
-											<core:Item text="{path}" />
-										</suggestionItems>
-									</Input>
-									<Label text="{i18n>WorkItems.tags}"/>
-									<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-                                    path: 'OData>/Tags',
-                                    templateShareable: false,
-                                    sorter: { path: 'title' }
-                                }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
-										<suggestionItems>
-											<core:Item key="{OData>title}" text="{OData>title}"/>
-										</suggestionItems>
-										<tokens>
-											<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-										</tokens>
-									</MultiInput>
-									<Label text="{i18n>WorkItems.ticket}"/>
-									<Input value="{ticket}"/>
-									<Label text="{i18n>WorkItems.activatedDate}"/>
-									<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-									<Label text="{i18n>WorkItems.completedDate}"/>
-									<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-								</form:SimpleForm>
 								<buttons>
-									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title}g &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+									<Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${parentPath} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
 									<Button text="{i18n>close}" press="onCloseDialog" />
 								</buttons>
 							</Dialog>

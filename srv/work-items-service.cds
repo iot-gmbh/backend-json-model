@@ -56,7 +56,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     ''                                   as P1           : String @(title : '{i18n>IOTWorkItems.P1}'),
     hierarchy.level1MappingID            as Projekt      : String @(title : '{i18n>IOTWorkItems.Projekt}'),
     hierarchy.level2MappingID            as Teilprojekt  : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
-    ''                                   as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
+    hierarchy.level3MappingID            as Arbeitspaket : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
     'Durchführung'                       as Taetigkeit   : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
     assignedTo.userPrincipalName         as Nutzer       : String @(title : '{i18n>IOTWorkItems.Nutzer}'),
     'GE'                                 as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
