@@ -23,7 +23,9 @@ sap.ui.define(
         const oOptions = oOptionsParameter || {};
 
         return new Promise((fnResolve, fnReject) => {
-          const sManifestUrl = sap.ui.require.toUrl(`${_sAppPath}manifest.json`);
+          const sManifestUrl = sap.ui.require.toUrl(
+            `${_sAppPath}manifest.json`
+          );
           const oManifestModel = new JSONModel(sManifestUrl);
 
           oManifestModel.attachRequestCompleted(() => {
@@ -31,16 +33,17 @@ sap.ui.define(
             // parse manifest for local metatadata URI
             const sJsonFilesUrl = sap.ui.require.toUrl(_sJsonFilesPath);
             const oMainDataSource = oManifestModel.getProperty(
-              "/sap.app/dataSources/mainService",
+              "/sap.app/dataSources/mainService"
             );
             const sMetadataUrl = sap.ui.require.toUrl(
-              _sAppPath + oMainDataSource.settings.localUri,
+              _sAppPath + oMainDataSource.settings.localUri
             );
-              // ensure there is a trailing slash
-            const sMockServerUrl = oMainDataSource.uri
-                && new URI(oMainDataSource.uri)
-                  .absoluteTo(sap.ui.require.toUrl(_sAppPath))
-                  .toString();
+            // ensure there is a trailing slash
+            const sMockServerUrl =
+              oMainDataSource.uri &&
+              new URI(oMainDataSource.uri)
+                .absoluteTo(sap.ui.require.toUrl(_sAppPath))
+                .toString();
 
             // create a mock server instance or stop the existing one to reinitialize
             if (!oMockServer) {
@@ -72,7 +75,7 @@ sap.ui.define(
                 oXhr.respond(
                   iErrCode,
                   { "Content-Type": "text/plain;charset=utf-8" },
-                  sMessage,
+                  sMessage
                 );
               };
             };
@@ -87,7 +90,8 @@ sap.ui.define(
             }
 
             // simulate request errors
-            const sErrorParam = oOptions.errorType || oUriParameters.get("errorType");
+            const sErrorParam =
+              oOptions.errorType || oUriParameters.get("errorType");
             const iErrorCode = sErrorParam === "badRequest" ? 400 : 500;
             if (sErrorParam) {
               aRequests.forEach((aEntry) => {
@@ -124,5 +128,5 @@ sap.ui.define(
     };
 
     return oMockServerInterface;
-  },
+  }
 );

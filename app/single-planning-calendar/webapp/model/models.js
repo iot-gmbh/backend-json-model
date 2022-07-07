@@ -6,5 +6,5 @@ sap.ui.define(
       oModel.setDefaultBindingMode("OneWay");
       return oModel;
     },
-  }),
+  })
 );

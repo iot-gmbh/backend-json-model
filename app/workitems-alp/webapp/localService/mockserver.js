@@ -16,7 +16,7 @@ sap.ui.define(["sap/ui/core/util/MockServer"], (MockServer) => {
       const sJsonFilesUrl = jQuery.sap.getModulePath(_sJsonFilesModulePath);
       const sManifestUrl = jQuery.sap.getModulePath(
         `${_sAppModulePath}manifest`,
-        ".json",
+        ".json"
       );
       const sEntity = "WorkItems";
       const sErrorParam = oUriParameters.get("errorType");
@@ -25,11 +25,10 @@ sap.ui.define(["sap/ui/core/util/MockServer"], (MockServer) => {
       const oDataSource = oManifest["sap.app"].dataSources;
       const oMainDataSource = oDataSource.mainService;
       const sMetadataUrl = jQuery.sap.getModulePath(
-        _sAppModulePath
-            + oMainDataSource.settings.localUri.replace(".xml", ""),
-        ".xml",
+        _sAppModulePath + oMainDataSource.settings.localUri.replace(".xml", ""),
+        ".xml"
       );
-        // ensure there is a trailing slash
+      // ensure there is a trailing slash
       const sMockServerUrl = /.*\/$/.test(oMainDataSource.uri)
         ? oMainDataSource.uri
         : `${oMainDataSource.uri}/`;
@@ -59,7 +58,7 @@ sap.ui.define(["sap/ui/core/util/MockServer"], (MockServer) => {
             {
               "Content-Type": "text/plain;charset=utf-8",
             },
-            sMessage,
+            sMessage
           );
         };
       };
@@ -90,9 +89,8 @@ sap.ui.define(["sap/ui/core/util/MockServer"], (MockServer) => {
           const oAnnotation = oDataSource[sAnnotationName];
           const sUri = oAnnotation.uri;
           const sLocalUri = jQuery.sap.getModulePath(
-            _sAppModulePath
-                + oAnnotation.settings.localUri.replace(".xml", ""),
-            ".xml",
+            _sAppModulePath + oAnnotation.settings.localUri.replace(".xml", ""),
+            ".xml"
           );
 
           // backend annotations
@@ -113,7 +111,7 @@ sap.ui.define(["sap/ui/core/util/MockServer"], (MockServer) => {
                   oXhr.respondXML(
                     200,
                     {},
-                    jQuery.sap.serializeXML(oAnnotations),
+                    jQuery.sap.serializeXML(oAnnotations)
                   );
                   return true;
                 },

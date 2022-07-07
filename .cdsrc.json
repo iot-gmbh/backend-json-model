@@ -35,9 +35,7 @@
     "postgres": {
       "dialect": "plain",
       "impl": "cds-pg",
-      "model": [
-        "srv"
-      ],
+      "model": ["srv"],
       "credentials": {
         "[production]": {
           "ssl": {
@@ -69,11 +67,7 @@
         "for": "node-cf",
         "src": "srv",
         "options": {
-          "model": [
-            "db",
-            "srv",
-            "app"
-          ]
+          "model": ["db", "srv", "app"]
         }
       },
       {

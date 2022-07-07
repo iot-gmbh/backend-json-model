@@ -11,7 +11,7 @@ sap.ui.define(
         const oAppController = new Controller();
         oAppController.onInit();
         assert.ok(oAppController);
-      },
+      }
     );
-  },
+  }
 );

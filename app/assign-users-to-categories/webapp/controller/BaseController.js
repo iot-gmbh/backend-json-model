@@ -51,14 +51,15 @@ sap.ui.define(
          * @public
          */
         onShareEmailPress() {
-          const oViewModel = this.getModel("objectView") || this.getModel("worklistView");
+          const oViewModel =
+            this.getModel("objectView") || this.getModel("worklistView");
           URLHelper.triggerEmail(
             null,
             oViewModel.getProperty("/shareSendEmailSubject"),
-            oViewModel.getProperty("/shareSendEmailMessage"),
+            oViewModel.getProperty("/shareSendEmailMessage")
           );
         },
-      },
+      }
     );
-  },
+  }
 );

@@ -6,5 +6,5 @@ sap.ui.define(
       viewNamespace: "iot.singleplanningcalendar.view.",
       autoWait: true,
     });
-  },
+  }
 );

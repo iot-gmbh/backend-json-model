@@ -5,18 +5,15 @@ sap.ui.define(
   (opaTest) => {
     QUnit.module("Navigation Journey");
 
-    opaTest(
-      "Should see the initial page of the app",
-      (Given, When, Then) => {
-        // Arrangements
-        Given.iStartMyApp();
+    opaTest("Should see the initial page of the app", (Given, When, Then) => {
+      // Arrangements
+      Given.iStartMyApp();
 
-        // Assertions
-        Then.onTheAppPage.iShouldSeeTheApp();
+      // Assertions
+      Then.onTheAppPage.iShouldSeeTheApp();
 
-        // Cleanup
-        Then.iTeardownMyApp();
-      },
-    );
-  },
+      // Cleanup
+      Then.iTeardownMyApp();
+    });
+  }
 );

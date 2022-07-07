@@ -66,9 +66,7 @@ sap.ui.define(
 				Given.iStartMyApp();
 
 				// Actions
-				When.onTheAppPage
-					.iEnterTextForSearchAndPressEnter('earn')
-					.and.iFilterForItems('active');
+				When.onTheAppPage.iEnterTextForSearchAndPressEnter('earn').and.iFilterForItems('active');
 
 				// Assertions
 				Then.onTheAppPage.iShouldSeeItemCount(1);
@@ -85,9 +83,7 @@ sap.ui.define(
 				Given.iStartMyApp();
 
 				// Actions
-				When.onTheAppPage
-					.iEnterTextForSearchAndPressEnter('earn')
-					.and.iFilterForItems('completed');
+				When.onTheAppPage.iEnterTextForSearchAndPressEnter('earn').and.iFilterForItems('completed');
 
 				// Assertions
 				Then.onTheAppPage.iShouldSeeItemCount(0);
@@ -104,9 +100,7 @@ sap.ui.define(
 				Given.iStartMyApp();
 
 				// Actions
-				When.onTheAppPage
-					.iEnterTextForSearchAndPressEnter('earn')
-					.and.iFilterForItems('all');
+				When.onTheAppPage.iEnterTextForSearchAndPressEnter('earn').and.iFilterForItems('all');
 
 				// Assertions
 				Then.onTheAppPage.iShouldSeeItemCount(1);

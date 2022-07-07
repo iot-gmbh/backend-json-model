@@ -5,22 +5,19 @@ sap.ui.define(
 	(opaTest) => {
 		QUnit.module('Filter');
 
-		opaTest(
-			"should show correct items when filtering for 'Active' items",
-			(Given, When, Then) => {
-				// Arrangements
-				Given.iStartMyApp();
+		opaTest("should show correct items when filtering for 'Active' items", (Given, When, Then) => {
+			// Arrangements
+			Given.iStartMyApp();
 
-				// Actions
-				When.onTheAppPage.iFilterForItems('active');
+			// Actions
+			When.onTheAppPage.iFilterForItems('active');
 
-				// Assertions
-				Then.onTheAppPage.iShouldSeeItemCount(1);
+			// Assertions
+			Then.onTheAppPage.iShouldSeeItemCount(1);
 
-				// Cleanup
-				Then.iTeardownMyApp();
-			}
-		);
+			// Cleanup
+			Then.iTeardownMyApp();
+		});
 
 		opaTest(
 			"should show correct items when filtering for 'Completed' items",
