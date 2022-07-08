@@ -77,7 +77,7 @@
 											<f:formElements>
 												<f:FormElement label="{i18n>WorkItems.hierarchy}">
 													<f:fields>
-														<Input id="hierarchySearch" value="{parent/path}" showSuggestion="false" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy">
+														<Input id="hierarchySearch" value="{parentPath}" showSuggestion="false" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy">
 															<suggestionItems>
 																<core:Item text="{path}" key="{ID}"/>
 															</suggestionItems>

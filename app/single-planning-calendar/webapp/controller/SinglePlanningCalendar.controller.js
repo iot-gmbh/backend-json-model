@@ -87,6 +87,8 @@ sap.ui.define(
               this._loadAppointments(),
               this._loadHierarchy(),
             ]);
+
+            this._fillParentPaths();
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
@@ -139,11 +141,15 @@ sap.ui.define(
 
         onChangeHierarchy(event) {
           const { newValue } = event.getParameters();
+          this._filterHierarchyByPath(newValue);
+        },
+
+        _filterHierarchyByPath(path) {
           const filters = [
             new Filter({
               path: "path",
               operator: "Contains",
-              value1: newValue,
+              value1: path,
             }),
           ];
 
@@ -301,7 +307,7 @@ sap.ui.define(
               : bundle.getText("createAppointment")
           );
 
-          // this._bindHierarchyInputs(appointment);
+          this._filterHierarchyByPath(appointment.parentPath);
 
           dialog.bindElement(path);
           dialog.open();
@@ -525,6 +531,11 @@ sap.ui.define(
           model.setProperty("/categoriesNested", categoriesNested);
           model.setProperty("/categoriesFlat", categories);
           model.setProperty("/busy", false);
+        },
+
+        _fillParentPaths() {
+          const model = this.getModel();
+          const { categoriesFlat, appointments } = model.getData();
         },
 
         _getUser() {
