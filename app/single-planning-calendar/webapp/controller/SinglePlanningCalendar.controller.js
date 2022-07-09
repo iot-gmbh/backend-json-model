@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-
 /* eslint-disable camelcase */
+
 const nest = (items, ID = null, link = "parent_ID") =>
   items
     .filter((item) => item[link] === ID)
@@ -15,26 +15,20 @@ sap.ui.define(
     "./ErrorParser",
     "sap/ui/model/Filter",
     "../model/formatter",
-    "sap/ui/core/Item",
     "sap/ui/model/json/JSONModel",
-    "sap/m/Label",
     "../model/legendItems",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/m/Select",
   ],
   (
     BaseController,
     ErrorParser,
     Filter,
     formatter,
-    Item,
     JSONModel,
-    Label,
     legendItems,
     MessageBox,
-    MessageToast,
-    Select
+    MessageToast
   ) => {
     function addDays(date, days) {
       const result = new Date(date);
@@ -86,8 +80,6 @@ sap.ui.define(
               this._loadAppointments(),
               this._loadHierarchy(),
             ]);
-
-            this._fillParentPaths();
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
@@ -163,24 +155,6 @@ sap.ui.define(
           const path = event.getSource().getBindingContext().getPath();
 
           this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
-        },
-
-        // Stub atm
-        onSuggestHierachy(event) {
-          const searchField = event.getSource();
-          const value = event.getParameter("suggestValue");
-          if (!value) return;
-
-          const filters = [
-            new Filter({ path: "path", operator: "Contains", value1: value }),
-          ];
-
-          const binding = searchField.getBinding("suggestionItems");
-
-          binding.filter(filters);
-          searchField.suggest();
-          // If suggestionItems are bound agains ODataModel (with async filter):
-          // binding.attachEventOnce("dataReceived", () => searchField.suggest());
         },
 
         onDisplayLegend() {
@@ -530,11 +504,6 @@ sap.ui.define(
           model.setProperty("/categoriesNested", categoriesNested);
           model.setProperty("/categoriesFlat", categories);
           model.setProperty("/busy", false);
-        },
-
-        _fillParentPaths() {
-          const model = this.getModel();
-          const { categoriesFlat, appointments } = model.getData();
         },
 
         _getUser() {

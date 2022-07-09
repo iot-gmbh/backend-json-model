@@ -45,6 +45,26 @@
 														<Input value="{title}"/>
 													</f:fields>
 												</f:FormElement>
+												<f:FormElement label="{i18n>WorkItems.hierarchy}">
+													<f:fields>
+														<Input id="hierarchySearch" value="{parentPath}" showSuggestion="false" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+													</f:fields>
+												</f:FormElement>
+												<f:FormElement>
+													<f:fields>
+														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+															<StandardTreeItem title="{title}"/>
+														</Tree>
+													</f:fields>
+												</f:FormElement>
+											</f:formElements>
+										</f:FormContainer>
+										<f:FormContainer>
+											<f:formElements>
 												<f:FormElement label="{i18n>WorkItems.tags}">
 													<f:fields>
 														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
@@ -69,26 +89,6 @@
 												<f:FormElement label="{i18n>WorkItems.completedDate}">
 													<f:fields>
 														<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-													</f:fields>
-												</f:FormElement>
-											</f:formElements>
-										</f:FormContainer>
-										<f:FormContainer>
-											<f:formElements>
-												<f:FormElement label="{i18n>WorkItems.hierarchy}">
-													<f:fields>
-														<Input id="hierarchySearch" value="{parentPath}" showSuggestion="false" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy">
-															<suggestionItems>
-																<core:Item text="{path}" key="{ID}"/>
-															</suggestionItems>
-														</Input>
-													</f:fields>
-												</f:FormElement>
-												<f:FormElement>
-													<f:fields>
-														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-															<StandardTreeItem title="{title}"/>
-														</Tree>
 													</f:fields>
 												</f:FormElement>
 											</f:formElements>
