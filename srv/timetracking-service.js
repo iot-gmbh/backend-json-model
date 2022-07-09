@@ -74,6 +74,11 @@ module.exports = cds.service.impl(async function () {
       // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
       // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
       // TODO: Make it work on SQLite
+      /* 
+      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_users2categories 
+      parentCTE: get all parents of my categories
+      pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
+      */
       `
       WITH RECURSIVE 
         childrenCTE AS (
@@ -101,11 +106,11 @@ module.exports = cds.service.impl(async function () {
               ON children.parent_ID = this.ID
           ),
         pathCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
+          SELECT cat.ID, cat.title, cat.parent_ID, cat.title as path
           FROM iot_planner_categories AS cat
           WHERE cat.parent_ID is null
           UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
+          SELECT this.ID, this.title, this.parent_ID, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
           FROM pathCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
@@ -117,6 +122,7 @@ module.exports = cds.service.impl(async function () {
         SELECT * 
         FROM pathCTE
         JOIN parentCTE on pathCTE.ID = parentCTE.ID
+        ORDER BY hierarchyLevel ASC
         ;`
     );
 
