@@ -6,9 +6,18 @@ sap.ui.define(
     "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/FilterType",
     "sap/m/Token",
   ],
-  (BaseController, JSONModel, formatter, Filter, FilterOperator, Token) =>
+  (
+    BaseController,
+    JSONModel,
+    formatter,
+    Filter,
+    FilterOperator,
+    FilterType,
+    Token
+  ) =>
     BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
@@ -90,26 +99,6 @@ sap.ui.define(
           history.go(-1);
         },
 
-        onSearch(oEvent) {
-          if (oEvent.getParameters().refreshButtonPressed) {
-            // Search field's 'refresh' button has been pressed.
-            // This is visible if you select any main list item.
-            // In this case no new search is triggered, we only
-            // refresh the list binding.
-            this.onRefresh();
-          } else {
-            let aTableSearchState = [];
-            const sQuery = oEvent.getParameter("query");
-
-            if (sQuery && sQuery.length > 0) {
-              aTableSearchState = [
-                new Filter("title", FilterOperator.Contains, sQuery),
-              ];
-            }
-            this._applySearch(aTableSearchState);
-          }
-        },
-
         /**
          * Event handler for refresh event. Keeps filter, sort
          * and group settings and refreshes the list binding.
@@ -154,6 +143,22 @@ sap.ui.define(
               this.getResourceBundle().getText("worklistNoDataWithSearchText")
             );
           }
+        },
+
+        onSearch(event) {
+          const { query } = event.getParameters();
+
+          const filters = [
+            new Filter({
+              path: "title",
+              operator: "Contains",
+              value1: query,
+            }),
+          ];
+
+          this.byId("treeTable")
+            .getBinding("rows")
+            .filter(filters, FilterType.Application);
         },
 
         onCreateToken(event) {
