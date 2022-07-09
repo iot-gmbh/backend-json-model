@@ -96,9 +96,9 @@ module.exports = cds.service.impl(async function () {
             and user2cat.user_userPrincipalName = '${req.user.id}'
           UNION 
           SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-          FROM parentCTE AS prior 
+          FROM parentCTE AS children 
           INNER JOIN iot_planner_categories AS this 
-            ON this.ID = prior.parent_ID
+              ON children.parent_ID = this.ID
           ),
         pathCTE AS (
           SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
@@ -112,11 +112,11 @@ module.exports = cds.service.impl(async function () {
         )
         SELECT * 
         FROM pathCTE
-        INNER JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
-        UNION 
+        JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
+        UNION
         SELECT * 
-        FROM parentCTE
-        INNER JOIN childrenCTE on pathCTE.ID = parentCTE.ID
+        FROM pathCTE
+        JOIN parentCTE on pathCTE.ID = parentCTE.ID
         ;`
     );
 
