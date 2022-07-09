@@ -60,11 +60,7 @@ sap.ui.define(
 			this.oJSONModelStub.setData(oModelData);
 
 			// initial assumption
-			assert.strictEqual(
-				this.oJSONModelStub.getObject('/todos').length,
-				1,
-				'There is one item.'
-			);
+			assert.strictEqual(this.oJSONModelStub.getObject('/todos').length, 1, 'There is one item.');
 			assert.strictEqual(
 				this.oJSONModelStub.getProperty('/itemsLeftCount'),
 				1,
@@ -101,11 +97,7 @@ sap.ui.define(
 			this.oJSONModelStub.setData(oModelData);
 
 			// initial assumption
-			assert.strictEqual(
-				this.oJSONModelStub.getObject('/todos').length,
-				2,
-				'There are two items.'
-			);
+			assert.strictEqual(this.oJSONModelStub.getObject('/todos').length, 2, 'There are two items.');
 			assert.strictEqual(
 				this.oJSONModelStub.getProperty('/itemsLeftCount'),
 				1,
@@ -129,35 +121,28 @@ sap.ui.define(
 			);
 		});
 
-		QUnit.test(
-			'Should update items left count when no todos are loaded, yet',
-			function (assert) {
-				// Arrange
-				const oModelData = {};
-				this.oJSONModelStub.setData(oModelData);
+		QUnit.test('Should update items left count when no todos are loaded, yet', function (assert) {
+			// Arrange
+			const oModelData = {};
+			this.oJSONModelStub.setData(oModelData);
 
-				// initial assumption
-				assert.strictEqual(
-					this.oJSONModelStub.getObject('/todos'),
-					undefined,
-					'There are no items.'
-				);
-				assert.strictEqual(
-					this.oJSONModelStub.getProperty('/itemsLeftCount'),
-					undefined,
-					'Items left is not set'
-				);
+			// initial assumption
+			assert.strictEqual(this.oJSONModelStub.getObject('/todos'), undefined, 'There are no items.');
+			assert.strictEqual(
+				this.oJSONModelStub.getProperty('/itemsLeftCount'),
+				undefined,
+				'Items left is not set'
+			);
 
-				// Act
-				this.oAppController.updateItemsLeftCount();
+			// Act
+			this.oAppController.updateItemsLeftCount();
 
-				// Assumption
-				assert.strictEqual(
-					this.oJSONModelStub.getProperty('/itemsLeftCount'),
-					0,
-					'There is no item left.'
-				);
-			}
-		);
+			// Assumption
+			assert.strictEqual(
+				this.oJSONModelStub.getProperty('/itemsLeftCount'),
+				0,
+				'There is no item left.'
+			);
+		});
 	}
 );

@@ -24,9 +24,7 @@ sap.ui.require(
 		const sSearchTodoItemsInputId = 'searchTodoItemsInput';
 		const sItemListId = 'todoList';
 		const sToolbarId = Device.browser.mobile ? 'toolbar-footer' : 'toolbar';
-		const sClearCompletedId = Device.browser.mobile
-			? 'clearCompleted-footer'
-			: 'clearCompleted';
+		const sClearCompletedId = Device.browser.mobile ? 'clearCompleted-footer' : 'clearCompleted';
 
 		Opa5.createPageObjects({
 			onTheAppPage: {
@@ -56,10 +54,7 @@ sap.ui.require(
 							actions: [
 								function (oList) {
 									const iLength = oList.getItems().length;
-									const oListItem = oList
-										.getItems()
-										[iLength - 1].getContent()[0]
-										.getItems()[0];
+									const oListItem = oList.getItems()[iLength - 1].getContent()[0].getItems()[0];
 									this._triggerCheckboxSelection(oListItem, bSelected);
 								}.bind(this)
 							],
@@ -132,10 +127,7 @@ sap.ui.require(
 												actions: new Press()
 											});
 										} else {
-											Opa5.assert.ok(
-												true,
-												'The overflow toggle button is not present'
-											);
+											Opa5.assert.ok(true, 'The overflow toggle button is not present');
 										}
 									}
 								});
@@ -183,10 +175,7 @@ sap.ui.require(
 							matchers: [
 								function (oControl) {
 									const iLength = oControl.getItems().length;
-									const oCheckbox = oControl
-										.getItems()
-										[iLength - 1].getContent()[0]
-										.getItems()[0];
+									const oCheckbox = oControl.getItems()[iLength - 1].getContent()[0].getItems()[0];
 									return (
 										(bSelected && oCheckbox.getSelected()) ||
 										(!bSelected && !oCheckbox.getSelected())
@@ -209,11 +198,7 @@ sap.ui.require(
 									length: 1
 								}),
 								function (oControl) {
-									const oInput = oControl
-										.getItems()[0]
-										.getContent()[0]
-										.getItems()[1]
-										.getItems()[0];
+									const oInput = oControl.getItems()[0].getContent()[0].getItems()[1].getItems()[0];
 									return new PropertyStrictEquals({
 										name: 'text',
 										value: sLastItemText
@@ -221,10 +206,7 @@ sap.ui.require(
 								}
 							],
 							success() {
-								Opa5.assert.ok(
-									true,
-									`The table has 1 item, with '${sLastItemText}' as Last item`
-								);
+								Opa5.assert.ok(true, `The table has 1 item, with '${sLastItemText}' as Last item`);
 							},
 							errorMessage: `List does not have expected entry '${sLastItemText}'.`
 						});

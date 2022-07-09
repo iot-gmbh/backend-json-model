@@ -42,9 +42,7 @@ sap.ui.define(
 			Given.iStartMyApp();
 
 			// Actions
-			When.onTheAppPage
-				.iEnterTextForNewItemAndPressEnter('my test')
-				.and.iSelectTheLastItem(true);
+			When.onTheAppPage.iEnterTextForNewItemAndPressEnter('my test').and.iSelectTheLastItem(true);
 
 			// Assertions
 			Then.onTheAppPage.iShouldSeeTheLastItemBeingCompleted(true);

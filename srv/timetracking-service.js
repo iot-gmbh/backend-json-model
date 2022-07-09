@@ -64,57 +64,82 @@ module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
-  const { Categories, Tags, Users, WorkItems } = db.entities("iot.planner");
+  const { Categories, Users, WorkItems } = db.entities("iot.planner");
+  const { MyCategories } = this.entities;
 
   this.on("READ", "MyCategories", async (req) => {
+    // const categoryID = req.params[0] || "%";
     const results = await db.run(
       // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
       // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
       // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
       // TODO: Make it work on SQLite
+      /* 
+      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_users2categories 
+      parentCTE: get all parents of my categories
+      pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
+      */
       `
       WITH RECURSIVE 
         childrenCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
             and user2cat.user_userPrincipalName = '${req.user.id}'
           UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
-          FROM childrenCTE AS prior 
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM childrenCTE AS parent 
+          INNER JOIN iot_planner_categories AS this 
+              ON this.parent_ID = parent.ID
+          ),
+        parentCTE AS (
+          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+          FROM iot_planner_categories AS cat
+          INNER JOIN iot_planner_users2categories as user2cat
+            on cat.ID = user2cat.category_ID
+            and user2cat.user_userPrincipalName = '${req.user.id}'
+          UNION 
+          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+          FROM parentCTE AS children 
+          INNER JOIN iot_planner_categories AS this 
+              ON children.parent_ID = this.ID
+          ),
+        pathCTE AS (
+          SELECT cat.ID, cat.title, cat.parent_ID, cat.title as path
+          FROM iot_planner_categories AS cat
+          WHERE cat.parent_ID is null
+          UNION 
+          SELECT this.ID, this.title, this.parent_ID, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
+          FROM pathCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
-        ),
-        parentCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel, cat.title as path
-          FROM iot_planner_categories AS cat
-          INNER JOIN iot_planner_users2categories as user2cat
-            on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel, CAST(CONCAT(this.title, ' > ', prior.path) as varchar(5000)) as path 
-          FROM parentCTE AS prior 
-          INNER JOIN iot_planner_categories AS this 
-            ON this.ID = prior.parent_ID
-        ) 
+        )
         SELECT * 
-        FROM childrenCTE
-        UNION 
+        FROM pathCTE
+        JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
+        UNION
         SELECT * 
-        FROM parentCTE;`
+        FROM pathCTE
+        JOIN parentCTE on pathCTE.ID = parentCTE.ID
+        ORDER BY hierarchyLevel ASC
+        ;`
     );
 
-    const categories = results.map(
-      ({ id, parent_id, hierarchylevel, ...data }) => ({
+    const categories = results
+      // .filter(({ id }) => {
+      //   if (!categoryID) return true;
+      //   return id === categoryID;
+      // })
+      .map(({ id, parent_id, hierarchylevel, ...data }) => ({
         ID: id,
         parent_ID: parent_id,
         hierarchyLevel: hierarchylevel,
         ...data,
-      })
-    );
-
+      }));
     return categories;
+
+    // return categoryID ? categories[0] : categories;
   });
 
   this.on("READ", "MyUser", async (req) => {
@@ -242,26 +267,30 @@ module.exports = cds.service.impl(async function () {
       },
     } = req;
 
-    const categories = SELECT.from(Categories);
-
-    const [devOpsWorkItems, localWorkItems, MSGraphEvents] = await Promise.all([
-      // AzDevOpsSrv.tx(req)
-      //   .read("WorkItems", columns)
-      //   .where(where)
-      //   .orderBy(orderBy)
-      //   .limit(limit),
-      [],
-      db.tx(req).run(req.query),
-      // [],
-      MSGraphSrv.tx(req)
-        .read("Events", "*")
-        .where(where)
-        .orderBy(orderBy)
-        .limit(limit),
-    ]);
+    const [devOpsWorkItems, localWorkItems, MSGraphEvents, myCategories] =
+      await Promise.all([
+        // AzDevOpsSrv.tx(req)
+        //   .read("WorkItems", columns)
+        //   .where(where)
+        //   .orderBy(orderBy)
+        //   .limit(limit),
+        [],
+        db.tx(req).run(req.query),
+        // [],
+        MSGraphSrv.tx(req)
+          .read("Events", "*")
+          .where(where)
+          .orderBy(orderBy)
+          .limit(limit),
+        this.tx(req).run(SELECT.from(MyCategories)),
+      ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({ ...event, user: req.user.id, categories })
+      transformEventToWorkItem({
+        ...event,
+        user: req.user.id,
+        categories: myCategories,
+      })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
@@ -279,7 +308,12 @@ module.exports = cds.service.impl(async function () {
       .filter((itm) => itm)
       .filter(({ ID, completedDate }) => !!ID && !!completedDate)
       .reduce((acc, curr) => {
-        const accUpdt = { ...acc, [curr.ID]: curr };
+        // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
+        const parent = myCategories.find(({ ID }) => ID === curr.parent_ID);
+        const accUpdt = {
+          ...acc,
+          [curr.ID]: { ...curr, parentPath: parent?.path },
+        };
         return accUpdt;
       }, {});
 

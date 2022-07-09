@@ -1,10 +1,9 @@
-sap.ui.define([], () => sap.ui.controller(
-  "iot.planner.workitemsalp.ext.AnalyticalListPageExt",
-  {
+sap.ui.define([], () =>
+  sap.ui.controller("iot.planner.workitemsalp.ext.AnalyticalListPageExt", {
     async onBeforeRendering() {
       // Get reference to SmartFilterBar
       const smartFilterBar = this.getView().byId(
-        "iot.planner.workitemsalp::sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage::WorkItems--template::SmartFilterBar",
+        "iot.planner.workitemsalp::sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage::WorkItems--template::SmartFilterBar"
       );
 
       await smartFilterBar.getModel().metadataLoaded();
@@ -41,5 +40,5 @@ sap.ui.define([], () => sap.ui.controller(
       // Default the Global filter values
       // setTimeout(() => smartFilterBar.setFilterData(defaultFilter), 20);
     },
-  },
-));
+  })
+);
