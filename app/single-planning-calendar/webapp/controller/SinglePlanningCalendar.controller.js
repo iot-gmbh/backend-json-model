@@ -489,15 +489,11 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const [{ results: categories }, { results: CategoryLevels }] =
-            await Promise.all([
-              this.read({
-                path: "/MyCategories",
-              }),
-              this.read({
-                path: "/CategoryLevels",
-              }),
-            ]);
+          const [{ results: categories }] = await Promise.all([
+            this.read({
+              path: "/MyCategories",
+            }),
+          ]);
 
           const categoriesNested = nest(categories);
 

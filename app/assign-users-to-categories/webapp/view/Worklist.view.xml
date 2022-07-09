@@ -33,7 +33,7 @@
                                     path: '/Tags',
                                     templateShareable: false,
                                     sorter: { path: 'title' }
-                                }" showValueHelp="false" tokenUpdate="onTagsUpdate" change="onCreateToken">
+                                }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
                             <suggestionItems>
                                 <core:Item key="{title}" text="{title}"/>
                             </suggestionItems>
