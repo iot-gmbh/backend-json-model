@@ -267,7 +267,7 @@ module.exports = cds.service.impl(async function () {
       },
     } = req;
 
-    const [devOpsWorkItems, localWorkItems, MSGraphEvents, myCategories] =
+    const [devOpsWorkItems, MSGraphEvents, localWorkItems, myCategories] =
       await Promise.all([
         // AzDevOpsSrv.tx(req)
         //   .read("WorkItems", columns)
@@ -275,14 +275,14 @@ module.exports = cds.service.impl(async function () {
         //   .orderBy(orderBy)
         //   .limit(limit),
         [],
-        db.tx(req).run(req.query),
         // [],
         MSGraphSrv.tx(req)
           .read("Events", "*")
           .where(where)
           .orderBy(orderBy)
           .limit(limit),
-        this.tx(req).run(SELECT.from(MyCategories)),
+        cds.run(req.query),
+        cds.run(SELECT.from(MyCategories)),
       ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>

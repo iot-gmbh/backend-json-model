@@ -343,6 +343,7 @@ sap.ui.define(
             }
 
             appointmentSync.parentPath = appointment.parentPath;
+            appointmentSync.tags = appointment.tags;
             appointments[appointmentSync.ID] = appointmentSync;
             appointments.NEW = {};
 
