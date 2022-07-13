@@ -110,7 +110,7 @@ module.exports = cds.service.impl(async function () {
           FROM iot_planner_categories AS cat
           WHERE cat.parent_ID is null
           UNION 
-          SELECT this.ID, this.title, this.parent_ID, CAST(CONCAT(prior.path, ' > ', this.title) as varchar(5000)) as path 
+          SELECT this.ID, this.title, this.parent_ID, CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
           FROM pathCTE AS prior 
           INNER JOIN iot_planner_categories AS this 
               ON this.parent_ID = prior.ID
