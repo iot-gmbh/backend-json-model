@@ -39,7 +39,7 @@ node_modules/
 *.mtar
 dist/
 # ui_dist/
-package-lock.json
+# package-lock.json
 mta_archives/
 deployer/resources/
 Makefile*

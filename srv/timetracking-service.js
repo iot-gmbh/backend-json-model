@@ -4,6 +4,25 @@ const cds = require("@sap/cds");
 // Test gitmoji 2
 require("dotenv").config();
 
+// Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
+// REVISIT: Remove as soon as the CDS-adapter supports recursive selects
+const readFromSQLite = (query) => {
+  // eslint-disable-next-line import/no-extraneous-dependencies, global-require
+  const sqlite3 = require("sqlite3");
+  const sqliteDB = new sqlite3.Database("./sqlite.db", sqlite3.OPEN_READONLY);
+
+  return new Promise((resolve, reject) => {
+    sqliteDB.all(query, (error, results) => {
+      if (error != null) {
+        reject(error);
+      }
+
+      resolve(results);
+      sqliteDB.close();
+    });
+  });
+};
+
 function transformEventToWorkItem({
   id,
   subject,
@@ -65,81 +84,77 @@ module.exports = cds.service.impl(async function () {
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const { Categories, Users, WorkItems } = db.entities("iot.planner");
-  const { MyCategories } = this.entities;
 
   this.on("READ", "MyCategories", async (req) => {
-    // const categoryID = req.params[0] || "%";
-    const results = await db.run(
-      // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
-      // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
-      // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
-      // TODO: Make it work on SQLite
-      /* 
-      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_users2categories 
+    // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
+    // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
+    // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
+    // TODO: Make it work on SQLite
+    /* 
+      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_Users2Categories 
       parentCTE: get all parents of my categories
       pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
       */
-      `
-      WITH RECURSIVE 
-        childrenCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
-          FROM iot_planner_categories AS cat
-          INNER JOIN iot_planner_users2categories as user2cat
-            on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-          FROM childrenCTE AS parent 
-          INNER JOIN iot_planner_categories AS this 
-              ON this.parent_ID = parent.ID
-          ),
-        parentCTE AS (
-          SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
-          FROM iot_planner_categories AS cat
-          INNER JOIN iot_planner_users2categories as user2cat
-            on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
-          SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-          FROM parentCTE AS children 
-          INNER JOIN iot_planner_categories AS this 
-              ON children.parent_ID = this.ID
-          ),
-        pathCTE AS (
-          SELECT cat.ID, cat.title, cat.parent_ID, cat.title as path
-          FROM iot_planner_categories AS cat
-          WHERE cat.parent_ID is null
-          UNION 
-          SELECT this.ID, this.title, this.parent_ID, CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
-          FROM pathCTE AS prior 
-          INNER JOIN iot_planner_categories AS this 
-              ON this.parent_ID = prior.ID
-        )
-        SELECT * 
-        FROM pathCTE
-        JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
-        UNION
-        SELECT * 
-        FROM pathCTE
-        JOIN parentCTE on pathCTE.ID = parentCTE.ID
-        ORDER BY hierarchyLevel ASC
-        ;`
-    );
+    const recursiveQuery = `WITH RECURSIVE 
+    childrenCTE AS (
+      SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+      FROM iot_planner_Categories AS cat
+      INNER JOIN iot_planner_Users2Categories as user2cat
+        on cat.ID = user2cat.category_ID
+        and user2cat.user_userPrincipalName = 'Benedikt.Hoelker@iot-online.de'
+      UNION 
+      SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+      FROM childrenCTE AS parent 
+      INNER JOIN iot_planner_Categories AS this 
+          ON this.parent_ID = parent.ID
+      ),
+    parentCTE AS (
+      SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
+      FROM iot_planner_Categories AS cat
+      INNER JOIN iot_planner_Users2Categories as user2cat
+        on cat.ID = user2cat.category_ID
+        and user2cat.user_userPrincipalName = 'Benedikt.Hoelker@iot-online.de'
+      UNION 
+      SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
+      FROM parentCTE AS children 
+      INNER JOIN iot_planner_Categories AS this 
+          ON children.parent_ID = this.ID
+      ),
+    pathCTE AS (
+      SELECT cat.ID, cat.title, cat.parent_ID, cat.title as path
+      FROM iot_planner_Categories AS cat
+      WHERE cat.parent_ID IS NULL
+      UNION 
+      SELECT this.ID, this.title, this.parent_ID, CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
+      FROM pathCTE AS prior 
+      INNER JOIN iot_planner_Categories AS this 
+          ON this.parent_ID = prior.ID
+    )
+    SELECT * 
+    FROM pathCTE
+    JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
+    UNION
+    SELECT * 
+    FROM pathCTE
+    JOIN parentCTE on pathCTE.ID = parentCTE.ID
+    ORDER BY hierarchyLevel ASC;`;
 
-    const categories = results
-      // .filter(({ id }) => {
-      //   if (!categoryID) return true;
-      //   return id === categoryID;
-      // })
-      .map(({ id, parent_id, hierarchylevel, ...data }) => ({
+    // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
+    // REVISIT: Remove as soon as the CDS-adapter supports recursive selects
+    const results =
+      db.kind === "sqlite"
+        ? await readFromSQLite(recursiveQuery)
+        : await db.run(recursiveQuery);
+
+    const categories = results.map(
+      ({ id, parent_id, hierarchylevel, ...data }) => ({
         ID: id,
         parent_ID: parent_id,
         hierarchyLevel: hierarchylevel,
         ...data,
-      }));
+      })
+    );
     return categories;
-
-    // return categoryID ? categories[0] : categories;
   });
 
   this.on("READ", "MyUser", async (req) => {
@@ -282,7 +297,7 @@ module.exports = cds.service.impl(async function () {
           .orderBy(orderBy)
           .limit(limit),
         cds.run(req.query),
-        cds.run(SELECT.from(MyCategories)),
+        this.run(SELECT.from("MyCategories")),
       ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>

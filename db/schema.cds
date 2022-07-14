@@ -105,7 +105,8 @@ view MatchCategory2WorkItem as
         )           as noOfMatchingTags : Integer
   }
   group by
-    t2w.workItem.ID;
+    category.ID,
+    workItem.ID;
 
 entity WorkItems : managed, relevance {
   key ID                  : String @odata.Type : 'Edm.String';
