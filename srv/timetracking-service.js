@@ -86,8 +86,8 @@ module.exports = cds.service.impl(async function () {
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
+            and user2cat.user_userPrincipalName ilike '${req.user.id}'
+          UNION
           SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
           FROM childrenCTE AS parent 
           INNER JOIN iot_planner_categories AS this 
@@ -98,8 +98,8 @@ module.exports = cds.service.impl(async function () {
           FROM iot_planner_categories AS cat
           INNER JOIN iot_planner_users2categories as user2cat
             on cat.ID = user2cat.category_ID
-            and user2cat.user_userPrincipalName = '${req.user.id}'
-          UNION 
+            and user2cat.user_userPrincipalName ilike '${req.user.id}'
+          UNION
           SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
           FROM parentCTE AS children 
           INNER JOIN iot_planner_categories AS this 
