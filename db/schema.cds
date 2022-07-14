@@ -89,6 +89,25 @@ entity Tags2WorkItems : cuid {
   workItem : Association to WorkItems;
 }
 
+view MatchCategory2WorkItem as
+  select from Tags2WorkItems as t2w
+  join Tags2Categories as t2c
+    on t2w.tag = t2c.tag
+  {
+    key workItem.ID as workitemID       : String,
+        category.ID as categoryID       : String,
+        rank(
+          ) over(
+          partition by category.ID order by
+            count(
+              *
+            ) desc
+        )           as noOfMatchingTags : Integer
+  }
+  group by
+    category.ID,
+    workItem.ID;
+
 entity WorkItems : managed, relevance {
   key ID                  : String @odata.Type : 'Edm.String';
       tags                : Composition of many Tags2WorkItems

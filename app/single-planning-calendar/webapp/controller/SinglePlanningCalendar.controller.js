@@ -73,6 +73,17 @@ sap.ui.define(
 
           this.setModel(model);
 
+          // REVISIT: Inspired by suggestion-sample. Yet this function is not called
+          // Goal: Filter for substrings and not the entire query
+          // this.byId("hierarchySearch").setFilterFunction((query, item) => {
+          //   if (!query) return false;
+          //   const path = item.getBindingContext().getProperty("path");
+          //   const substrings = query.split(" ");
+          //   return substrings
+          //     .map((sub) => sub.toUpperCase())
+          //     .every((sub) => path.includes(sub));
+          // });
+
           await this.getModel("OData").metadataLoaded();
 
           try {
@@ -135,12 +146,17 @@ sap.ui.define(
           this._filterHierarchyByPath(newValue);
         },
 
-        _filterHierarchyByPath(path) {
+        _filterHierarchyByPath(query) {
           const filters = [
             new Filter({
               path: "path",
-              operator: "Contains",
-              value1: path,
+              test: (path) => {
+                if (!query) return false;
+                const substrings = query.split(" ");
+                return substrings
+                  .map((sub) => sub.toUpperCase())
+                  .every((sub) => path.includes(sub));
+              },
             }),
           ];
 
@@ -343,6 +359,7 @@ sap.ui.define(
             }
 
             appointmentSync.parentPath = appointment.parentPath;
+            appointmentSync.tags = appointment.tags;
             appointments[appointmentSync.ID] = appointmentSync;
             appointments.NEW = {};
 
