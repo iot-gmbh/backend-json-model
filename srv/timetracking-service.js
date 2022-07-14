@@ -85,6 +85,9 @@ module.exports = cds.service.impl(async function () {
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const { Categories, Users, WorkItems } = db.entities("iot.planner");
 
+  // REVISIT: comparator dependent on DB-type
+  const comparator = db.kind === "sqlite" ? "=" : "ilike";
+
   this.on("READ", "MyCategories", async (req) => {
     // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
     // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
@@ -101,7 +104,7 @@ module.exports = cds.service.impl(async function () {
       FROM iot_planner_Categories AS cat
       INNER JOIN iot_planner_Users2Categories as user2cat
         on cat.ID = user2cat.category_ID
-        and user2cat.user_userPrincipalName = 'Benedikt.Hoelker@iot-online.de'
+        and user2cat.user_userPrincipalName ${comparator} '${req.user.id}'
       UNION 
       SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
       FROM childrenCTE AS parent 
@@ -113,7 +116,7 @@ module.exports = cds.service.impl(async function () {
       FROM iot_planner_Categories AS cat
       INNER JOIN iot_planner_Users2Categories as user2cat
         on cat.ID = user2cat.category_ID
-        and user2cat.user_userPrincipalName = 'Benedikt.Hoelker@iot-online.de'
+        and user2cat.user_userPrincipalName ${comparator} '${req.user.id}'
       UNION 
       SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
       FROM parentCTE AS children 
