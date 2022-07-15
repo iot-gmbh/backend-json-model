@@ -11,38 +11,45 @@
   "engines": {
     "node": "16"
   },
+  "workspaces": {
+    "packages": [
+      "custom_packages/cds-dbm",
+      "custom_packages/cds-msal-auth"
+    ]
+  },
   "dependencies": {
-    "@azure/msal-node": "^1.10.0",
+    "@azure/msal-node": "^1.11.0",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
-    "@sap/cds": "^5.9.8",
-    "@sap/cds-odata-v2-adapter-proxy": "1.8.21",
+    "@sap/cds": "^6.0.3",
+    "@sap/cds-mtxs": "^1.0.1",
+    "@sap/cds-odata-v2-adapter-proxy": "1.9.1",
     "axios": "^0.27.2",
-    "azure-devops-node-api": "^11.1.1",
+    "azure-devops-node-api": "^11.2.0",
     "cds-dbm": "file:./custom_packages/cds-dbm",
     "cds-msal-auth": "file:./custom_packages/cds-msal-auth",
-    "cds-pg": "0.1.29",
+    "cds-pg": "^0.1.29",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@sap/eslint-plugin-cds": "^2.3.5",
-    "@sap/ux-specification": "^1.102.0",
+    "@sap/eslint-plugin-cds": "^2.4.1",
+    "@sap/ux-specification": "^1.102.1",
     "@ui5/cli": "^2.14.9",
     "cross-env": "^7.0.3",
-    "eslint": "^8.18.0",
+    "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.0",
-    "eslint-plugin-prettier": "^4.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "npm-run-all": "^4.1.5",
     "prettier": "2.7.1",
-    "sqlite3": "^5.0.8",
+    "sqlite3": "^5.0.9",
     "ui5-task-zipper": "^0.5.0"
   },
   "scripts": {

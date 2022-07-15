@@ -5,9 +5,8 @@ const msalAuth = require("cds-msal-auth/auth");
 require("dotenv").config();
 
 cds.on("bootstrap", (app) => {
-  app.use(proxy());
-
   msalAuth(app);
+  app.use(proxy());
 });
 
 module.exports = cds.server;

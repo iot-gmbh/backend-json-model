@@ -162,7 +162,7 @@ entity WorkItems : managed, relevance {
 
 entity CategoryLevels {
   key hierarchyLevel : Integer;
-      title          : localized String;
+      title          : String;
 }
 
 entity Travels : cuid, managed {
