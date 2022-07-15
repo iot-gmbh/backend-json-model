@@ -5,6 +5,7 @@
     }
   },
   "requires": {
+    "multitenancy": true,
     "auth": {
       "impl": "cds-msal-auth",
       "[development]": {
@@ -55,7 +56,10 @@
       "schema": {
         "default": "public",
         "clone": "_cdsdbm_clone",
-        "reference": "_cdsdbm_ref"
+        "reference": "_cdsdbm_ref",
+        "tenants": [
+          "_d439e362ecdf4d788fed86c7c639b131"
+        ]
       },
       "deploy": {
         "tmpFile": "tmp/_autodeploy.json",
