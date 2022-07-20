@@ -13,7 +13,7 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-dbm",
+      "custom_packages/cds-dbm-mx",
       "custom_packages/cds-msal-auth"
     ]
   },
@@ -26,7 +26,7 @@
     "@sap/cds-odata-v2-adapter-proxy": "1.9.1",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
-    "cds-dbm": "file:./custom_packages/cds-dbm",
+    "cds-dbm": "file:./custom_packages/cds-dbm-mx",
     "cds-msal-auth": "file:./custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.29",
     "dotenv": "^16.0.1",
