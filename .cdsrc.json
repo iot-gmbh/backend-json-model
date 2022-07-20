@@ -5,7 +5,7 @@
     }
   },
   "requires": {
-    "multitenancy": true,
+    "multitenancy": false,
     "auth": {
       "impl": "cds-msal-auth",
       "[development]": {
@@ -53,6 +53,7 @@
   },
   "migrations": {
     "db": {
+      "multitenant": true,
       "schema": {
         "default": "public",
         "clone": "_cdsdbm_clone",

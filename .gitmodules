@@ -4,3 +4,6 @@
 [submodule "custom_packages/cds-dbm"]
 	path = custom_packages/cds-dbm
 	url = https://github.com/BenediktHoelker/cds-dbm.git
+[submodule "custom_packages/cds-dbm-mx"]
+	path = custom_packages/cds-dbm-mx
+	url = https://github.com/austinkloske22/cds-dbm.git
