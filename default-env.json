@@ -4,7 +4,11 @@
       {
         "name": "postgres local",
         "label": "postgres local",
-        "tags": ["plain", "database", "relational", "postgres"],
+        "tags": [
+          "plain",
+          "database",
+          "postgres"
+        ],
         "credentials": {
           "host": "localhost",
           "port": "5432",
