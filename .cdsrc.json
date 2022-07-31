@@ -37,14 +37,7 @@
       "impl": "cds-pg",
       "model": [
         "srv"
-      ],
-      "credentials": {
-        "[production]": {
-          "ssl": {
-            "rejectUnauthorized": false
-          }
-        }
-      }
+      ]
     },
     "uaa": {
       "kind": "xsuaa"

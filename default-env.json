@@ -12,10 +12,9 @@
         "credentials": {
           "host": "localhost",
           "port": "5432",
-          "database": "planning",
+          "database": "original",
           "user": "postgres",
           "password": "postgres",
-          "schema": "public",
           "target": {
             "url": "postgresql://postgres:postgres@localhost:5432/original"
           },
