@@ -15,7 +15,13 @@
           "database": "planning",
           "user": "postgres",
           "password": "postgres",
-          "schema": "public"
+          "schema": "public",
+          "target": {
+            "url": "postgresql://postgres:postgres@localhost:5432/original"
+          },
+          "reference": {
+            "url": "postgresql://postgres:postgres@localhost:5432/reference"
+          }
         }
       }
     ]

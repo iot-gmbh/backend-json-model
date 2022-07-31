@@ -1,4 +1,4 @@
-using {iot.planner as my} from '../db/schema';
+using {iot.planner as my} from '../db/multitenancy';
 // using {AzureDevopsService as AzDevOps} from './azure-devops';
 // using {MSGraphService as MSGraph} from './msgraph-service';
 
@@ -17,6 +17,17 @@ service TimetrackingService @(requires : 'authenticated-user') {
   ])                            as projection on my.WorkItems;
 
   @cds.redirection.target
+  @(restrict : [
+    {
+      grant : 'READ',
+      to    : 'authenticated-user',
+      where : 'tenant = $user'
+    },
+    {
+      grant : 'WRITE',
+      to    : 'authenticated-user'
+    }
+  ])
   entity Categories             as projection on my.Categories;
 
   entity Users2Categories       as projection on my.Users2Categories;

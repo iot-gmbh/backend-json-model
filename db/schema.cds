@@ -26,8 +26,12 @@ aspect relevance {
   );
 };
 
+aspect multitenant {
+  tenant : String
+}
+
 @assert.unique : {friendlyID : [userPrincipalName, ]}
-entity Users {
+entity Users : multitenant {
   key userPrincipalName : String;
       displayName       : String;
       givenName         : String;
@@ -48,12 +52,13 @@ entity Users {
                             on travels.user = $self;
 };
 
-entity Users2Categories : cuid, managed {
+entity Users2Categories : cuid, managed, multitenant {
   user     : Association to Users;
   category : Association to Categories;
 }
 
 entity Categories : cuid, managed, relevance {
+  tenant         : String;
   title          : String;
   description    : String;
   hierarchyLevel : Integer;
@@ -73,18 +78,18 @@ entity Categories : cuid, managed, relevance {
                      on children.parent = $self;
 }
 
-entity Tags {
+entity Tags : multitenant {
   key title    : String;
       category : Association to Categories;
       workItem : Association to WorkItems;
 }
 
-entity Tags2Categories : cuid {
+entity Tags2Categories : cuid, multitenant {
   tag      : Association to Tags;
   category : Association to Categories;
 }
 
-entity Tags2WorkItems : cuid {
+entity Tags2WorkItems : cuid, multitenant {
   tag      : Association to Tags;
   workItem : Association to WorkItems;
 }
@@ -108,7 +113,7 @@ view MatchCategory2WorkItem as
     category.ID,
     workItem.ID;
 
-entity WorkItems : managed, relevance {
+entity WorkItems : managed, relevance, multitenant {
   key ID                  : String @odata.Type : 'Edm.String';
       tags                : Composition of many Tags2WorkItems
                               on tags.workItem = $self;
@@ -160,12 +165,12 @@ entity WorkItems : managed, relevance {
       parentPath          : String;
 };
 
-entity CategoryLevels {
+entity CategoryLevels : multitenant {
   key hierarchyLevel : Integer;
       title          : String;
 }
 
-entity Travels : cuid, managed {
+entity Travels : cuid, managed, multitenant {
   user   : Association to Users;
   parent : Association to Categories;
 }
