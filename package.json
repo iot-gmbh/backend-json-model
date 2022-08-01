@@ -68,9 +68,9 @@
     "build:ui:assign-users-to-categories": "rimraf dist/assign-users-to-categories && mkdirp -p ui_dist/assign-users-to-categories && npm run build --prefix app/assign-users-to-categories && cp -r app/assign-users-to-categories/dist/* ui_dist/assign-users-to-categories",
     "deploy": "cds-pg-migra",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
-    "env:dev": "bash ./set-env.sh development",
+    "env:dev": "bash ./set-env.sh dev",
     "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh production",
+    "env:prod": "bash ./set-env.sh prod",
     "watch-assign-users-to-categories": "cds watch --open assign-users-to-categories/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
