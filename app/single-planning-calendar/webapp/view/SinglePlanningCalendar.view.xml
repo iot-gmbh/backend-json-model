@@ -71,7 +71,7 @@
 															path: 'OData>/Tags',
 															templateShareable: false,
 															sorter: { path: 'title' }
-														}" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
+														}" showValueHelp="false" tokenUpdate="onUpdateTags">
 															<suggestionItems>
 																<core:Item key="{OData>title}" text="{OData>title}"/>
 															</suggestionItems>
@@ -79,6 +79,7 @@
 																<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
 															</tokens>
 														</MultiInput>
+														<Text text="{/hierarchySuggestion}"/>
 													</f:fields>
 												</f:FormElement>
 												<f:FormElement label="{i18n>WorkItems.activatedDate}">

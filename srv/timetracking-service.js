@@ -23,19 +23,33 @@ const readFromSQLite = (query) => {
   });
 };
 
+function removeDuplicates(arr) {
+  return [...new Set(arr)];
+}
+
 function transformEventToWorkItem({
   id,
   subject,
   start,
   end,
-  // categories: [customer_friendlyID],
+  categories,
   sensitivity,
   isAllDay,
   user,
 }) {
   return {
     ID: id,
-    title: subject,
+    title: subject.replace(/ #\w\w+\s?/g, ""),
+    tags: categories
+      .concat(
+        subject
+          .split(" ")
+          .filter((v) => v.startsWith("#"))
+          .map((x) => x.substr(1))
+      )
+      .map((tag_title) => ({
+        tag_title,
+      })),
     // customer_friendlyID,
     /*
       The original format is: '2022-06-23T14:30:00.0000000'
@@ -308,13 +322,12 @@ module.exports = cds.service.impl(async function () {
       transformEventToWorkItem({
         ...event,
         user: req.user.id,
-        categories: myCategories,
       })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
-    const map = [
+    const combined = [
       ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
@@ -325,20 +338,50 @@ module.exports = cds.service.impl(async function () {
         => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
         */
       .filter((itm) => itm)
-      .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((acc, curr) => {
-        // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
-        const parent = myCategories.find(({ ID }) => ID === curr.parent_ID);
-        const accUpdt = {
-          ...acc,
-          [curr.ID]: { ...curr, parentPath: parent?.path },
-        };
-        return accUpdt;
-      }, {});
+      .filter(({ ID, completedDate }) => !!ID && !!completedDate);
+
+    const map = {};
+    const srv = this;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const appointment of combined) {
+      // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
+      let parent = {};
+
+      if (appointment.parent_ID) {
+        parent = myCategories.find(({ ID }) => ID === appointment.parent_ID);
+      } else if (!appointment.title) {
+        parent = {};
+      } else {
+        const tags = [
+          appointment.title.split(" ")[0],
+          ...appointment.tags.map(({ tag_title }) => tag_title),
+        ];
+
+        const tagsDuplicateFree = removeDuplicates(tags);
+
+        if (tags.length > 0) {
+          const tagsQuery = `%${tagsDuplicateFree
+            .sort((a, b) => a.localeCompare(b))
+            .join("%")}%`;
+          // REVISIT: remove await from loop
+          // eslint-disable-next-line no-await-in-loop
+          const categorySuggestions = await srv.run(
+            `SELECT * FROM iot_planner_matchcategory2tags WHERE tags LIKE $1`,
+            [tagsQuery]
+          );
+
+          parent = myCategories.find(
+            // TODO: this expression is case-sensitive on Postgres
+            ({ ID }) => ID === categorySuggestions[0]?.categoryid
+          );
+        } else parent = {};
+      }
+
+      map[appointment.ID] = { ...appointment, parentPath: parent?.path };
+    }
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
-
-    const srv = this;
 
     // TODO: Schleifen-basierte SQL-Abfragen ersetzen
     // async function addExtraInfosTo(workItems) {

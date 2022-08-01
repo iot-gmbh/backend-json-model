@@ -14,17 +14,20 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                            as projection on my.WorkItems;
+  ])                        as projection on my.WorkItems;
 
   @cds.redirection.target
-  entity Categories             as projection on my.Categories;
+  entity Categories         as projection on my.Categories;
 
-  entity Users2Categories       as projection on my.Users2Categories;
-  entity MyCategories           as projection on my.Categories;
-  entity Tags                   as projection on my.Tags;
-  entity Tags2WorkItems         as projection on my.Tags2WorkItems;
-  entity Tags2Categories        as projection on my.Tags2Categories;
-  entity MatchCategory2WorkItem as projection on my.MatchCategory2WorkItem;
+  entity Users2Categories   as projection on my.Users2Categories;
+  entity MyCategories       as projection on my.Categories;
+  entity Tags               as projection on my.Tags;
+  entity Tags2WorkItems     as projection on my.Tags2WorkItems;
+
+  @cds.redirection.target
+  entity Tags2Categories    as projection on my.Tags2Categories;
+
+  entity MatchCategory2Tags as projection on my.MatchCategory2Tags;
 
   // entity WorkItemsToCategories  as
   //   select from my.WorkItems as workItems
@@ -37,6 +40,6 @@ service TimetrackingService @(requires : 'authenticated-user') {
   //         t2c.category.ID as categoryID
   //   };
 
-  entity CategoryLevels         as projection on my.CategoryLevels;
-  entity MyUser                 as projection on my.Users;
+  entity CategoryLevels     as projection on my.CategoryLevels;
+  entity MyUser             as projection on my.Users;
 }

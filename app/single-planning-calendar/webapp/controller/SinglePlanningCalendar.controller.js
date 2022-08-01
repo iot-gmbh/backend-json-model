@@ -57,6 +57,7 @@ sap.ui.define(
             appointments: { NEW: {} },
             busy: false,
             categories: {},
+            hierarchySuggestion: "",
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),
@@ -401,6 +402,26 @@ sap.ui.define(
             .map((token) => ({ tag_title: token.getKey() }));
 
           model.setProperty(`${path}/tags`, tags);
+
+          this._suggestCategory(tags);
+        },
+
+        async _suggestCategory(tags) {
+          const tagsSortedAndConcatenated = tags
+            .map(({ tag_title }) => tag_title)
+            .join(" ");
+
+          const { results: suggestions } = await this.read({
+            path: "/MatchCategory2Tags",
+            urlParameters: {
+              $search: tagsSortedAndConcatenated,
+            },
+          });
+
+          this.getModel().setProperty(
+            "/hierarchySuggestion",
+            suggestions[0] ? suggestions[0].categoryTitle : ""
+          );
         },
 
         _removeDuplicateTokens(multiInput) {

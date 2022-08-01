@@ -93,26 +93,29 @@ entity Tags2WorkItems : cuid, multitenant {
   workItem : Association to WorkItems;
 }
 
-view MatchCategory2WorkItem as
-  select from Tags2WorkItems as t2w
-  join Tags2Categories as t2c
-    on t2w.tag = t2c.tag
-  {
-    key workItem.ID as workitemID       : String,
-        category.ID as categoryID       : String,
-        t2w.tenant                      : String,
-        rank(
-          ) over(
-          partition by category.ID order by
-            count(
-              *
-            ) desc
-        )           as noOfMatchingTags : Integer
+view Categories2TagsOrderedByTags as
+  select from Tags2Categories {
+    tag.title      as tagTitle      : String,
+    category.ID    as categoryID    : String,
+    category.title as categoryTitle : String,
+    category.tenant
   }
-  group by
-    category.ID,
-    workItem.ID,
-    t2w.tenant;
+  order by
+    tagTitle asc;
+
+view MatchCategory2Tags as
+  select from Categories2TagsOrderedByTags {
+    key categoryID               : String,
+        categoryTitle            : String,
+        tenant                   : String,
+        // TODO: Make independent of DB (string_agg) is a postgres-function
+        string_agg(
+          tagTitle, ',') as tags : String,
+    }
+    group by
+      categoryID,
+      categoryTitle,
+      tenant;
 
 entity WorkItems : managed, relevance, multitenant {
   key ID                  : String @odata.Type : 'Edm.String';
