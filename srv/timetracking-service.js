@@ -294,6 +294,7 @@ module.exports = cds.service.impl(async function () {
         //   .limit(limit),
         [],
         // [],
+        // TODO: Breaks if no startdatetime and enddatetime are provided: Fix it!
         MSGraphSrv.tx(req)
           .read("Events", "*")
           .where(where)
