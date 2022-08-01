@@ -28,6 +28,7 @@
     "max-len": 0,
     "no-console": "off",
     "require-atomic-updates": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "@sap/cds/auth-valid-restrict-where": "off"
   }
 }

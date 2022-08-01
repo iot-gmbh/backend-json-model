@@ -17,11 +17,6 @@ service TimetrackingService @(requires : 'authenticated-user') {
   ])                            as projection on my.WorkItems;
 
   @cds.redirection.target
-  @(restrict : [{
-    grant : 'READ',
-    to    : 'any',
-    where : 'tenant = $user.tenant'
-  }])
   entity Categories             as projection on my.Categories;
 
   entity Users2Categories       as projection on my.Users2Categories;

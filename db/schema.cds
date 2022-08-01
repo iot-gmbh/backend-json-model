@@ -57,8 +57,7 @@ entity Users2Categories : cuid, managed, multitenant {
   category : Association to Categories;
 }
 
-entity Categories : cuid, managed, relevance {
-  tenant         : String;
+entity Categories : cuid, managed, relevance, multitenant {
   title          : String;
   description    : String;
   hierarchyLevel : Integer;
@@ -101,6 +100,7 @@ view MatchCategory2WorkItem as
   {
     key workItem.ID as workitemID       : String,
         category.ID as categoryID       : String,
+        t2w.tenant                      : String,
         rank(
           ) over(
           partition by category.ID order by
