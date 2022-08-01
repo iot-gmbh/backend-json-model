@@ -111,7 +111,8 @@ view MatchCategory2WorkItem as
   }
   group by
     category.ID,
-    workItem.ID;
+    workItem.ID,
+    t2w.tenant;
 
 entity WorkItems : managed, relevance, multitenant {
   key ID                  : String @odata.Type : 'Edm.String';
