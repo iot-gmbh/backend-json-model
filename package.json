@@ -61,8 +61,6 @@
     "build": "cds build --production",
     "build:ui": "rimraf ui_dist && npm-run-all build:ui:*",
     "build:ui:azdev-workitems": "rimraf dist/azdev-workitems && mkdirp -p ui_dist/azdev-workitems && npm run build --prefix app/azdev-workitems && cp -r app/azdev-workitems/dist/* ui_dist/azdev-workitems",
-    "build:ui:customers": "rimraf dist/customers && mkdirp -p ui_dist/customers && npm run build --prefix app/customers && cp -r app/customers/dist/* ui_dist/customers",
-    "build:ui:projects-odata-v2": "rimraf dist/projects-odata-v2 && mkdirp -p ui_dist/projects-odata-v2 && npm run build --prefix app/projects-odata-v2 && cp -r app/projects-odata-v2/dist/* ui_dist/projects-odata-v2",
     "build:ui:single-planning-calendar": "rimraf dist/single-planning-calendar && mkdirp -p ui_dist/single-planning-calendar && npm run build --prefix app/single-planning-calendar && cp -r app/single-planning-calendar/dist/* ui_dist/single-planning-calendar",
     "build:ui:users": "rimraf dist/users && mkdirp -p ui_dist/users && npm run build --prefix app/users && cp -r app/users/dist/* ui_dist/users",
     "build:ui:workitems-iot": "rimraf dist/workitems-iot && mkdirp -p ui_dist/workitems-iot && npm run build --prefix app/workitems-iot && cp -r app/workitems-iot/dist/* ui_dist/workitems-iot",
@@ -73,15 +71,11 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "env:dev": "bash ./set-env.sh dev",
     "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh prod",
-    "watch-assign-users-to-categories": "cds watch --open assign-users-to-categories/webapp/index.html?sap-ui-xx-viewCache=false"
+    "env:prod": "bash ./set-env.sh prod"
   },
   "files": [
     "db",
     "srv",
     "app"
-  ],
-  "sapux": [
-    "app/assign-users-to-categories"
   ]
 }
