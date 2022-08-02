@@ -1,4 +1,10 @@
 /* eslint-disable camelcase */
+
+const nest = (items, ID = null, link = "parent_ID") =>
+  items
+    .filter((item) => item[link] === ID)
+    .map((item) => ({ ...item, children: nest(items, item.ID) }));
+
 sap.ui.define(
   [
     "./BaseController",
@@ -31,7 +37,7 @@ sap.ui.define(
          * Called when the worklist controller is instantiated.
          * @public
          */
-        onInit() {
+        async onInit() {
           // keeps the search state
           this._aTableSearchState = [];
 
@@ -42,7 +48,28 @@ sap.ui.define(
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
           });
+
+          const localData = new JSONModel({
+            categories: [],
+          });
+
           this.setModel(viewModel, "worklistView");
+          this.setModel(localData);
+
+          const { results: categories } = await this.read({
+            path: "/Categories",
+            urlParameters: { $top: 100, $expand: "members,tags,members/user" },
+          });
+
+          const categoriesPure = categories.map((cat) => ({
+            ...cat,
+            members: cat.members.results,
+            tags: cat.tags.results,
+          }));
+          const categoriesNested = nest(categoriesPure);
+
+          localData.setProperty("/categoriesNested", categoriesNested);
+          localData.setProperty("/categories", categoriesPure);
         },
 
         /* =========================================================== */
@@ -79,20 +106,30 @@ sap.ui.define(
           );
         },
 
-        onPressAddCategory(event) {
+        async onPressAddCategory(event) {
+          const localData = this.getModel();
           const { ID } = event.getSource().getBindingContext().getObject();
-          const model = this.getModel();
-
-          model.createEntry("/Categories", {
-            properties: {
+          const newCategory = await this.create({
+            path: "/Categories",
+            data: {
               parent_ID: ID,
               title: "dummy",
             },
           });
 
-          model.submitChanges();
+          newCategory.members = [];
+          newCategory.tags = [];
 
-          model.refresh(true);
+          const categories = localData.getProperty("/categories");
+          categories.push(newCategory);
+
+          const categoriesNested = nest(categories);
+
+          localData.setProperty("/categoriesNested", categoriesNested);
+          localData.setProperty("/categories", categories);
+
+          // localData.refresh(true);
+          this.byId("treeTable").rerender();
         },
 
         /**
@@ -188,7 +225,7 @@ sap.ui.define(
         },
 
         onUpdateTags(event) {
-          const model = this.getModel();
+          const model = this.getModel("OData");
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
@@ -236,7 +273,7 @@ sap.ui.define(
         },
 
         onUpdateUsers2Categories(event) {
-          const model = this.getModel();
+          const model = this.getModel("OData");
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
@@ -266,7 +303,7 @@ sap.ui.define(
         onDeleteToken(event) {
           const path = event.getSource().getBindingContext().getPath();
 
-          this.getModel().remove(path);
+          this.getModel("OData").remove(path);
         },
       }
     )

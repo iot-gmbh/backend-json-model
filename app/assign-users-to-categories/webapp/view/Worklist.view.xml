@@ -9,7 +9,7 @@
 
     <Page title="{i18n>worklistTitle}">
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,tags,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
@@ -34,12 +34,12 @@
                 <t:Column label="{i18n>tags}" width="20%">
                     <t:template>
                         <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-                                    path: '/Tags',
+                                    path: 'OData>/Tags',
                                     templateShareable: false,
                                     sorter: { path: 'title' }
                                 }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
                             <suggestionItems>
-                                <core:Item key="{title}" text="{title}"/>
+                                <core:Item key="{OData>OData>title}" text="{OData>title}"/>
                             </suggestionItems>
                             <tokens>
                                 <Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
@@ -50,12 +50,12 @@
                 <t:Column label="{i18n>members}" width="30%">
                     <t:template>
                         <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
-                                    path: '/Users',
+                                    path: 'OData>/Users',
                                     templateShareable: false,
                                     sorter: { path: 'displayName' }
                                 }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
                             <suggestionItems>
-                                <core:Item key="{userPrincipalName}" text="{displayName}"/>
+                                <core:Item key="{OData>userPrincipalName}" text="{OData>displayName}"/>
                             </suggestionItems>
                             <tokens >
                                 <Token key="{user_userPrincipalName}" text="{user/displayName}" delete="onDeleteToken"/>
