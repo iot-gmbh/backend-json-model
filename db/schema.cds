@@ -93,28 +93,16 @@ entity Tags2WorkItems : cuid, multitenant {
   workItem : Association to WorkItems;
 }
 
-view Categories2TagsOrderedByTags as
+view CategoryTags as
   select from Tags2Categories {
-    tag.title      as tagTitle      : String,
-    category.ID    as categoryID    : String,
-    category.title as categoryTitle : String,
-    category.tenant
-  }
-  order by
-    tagTitle asc;
-
-view MatchCategory2Tags as
-  select from Categories2TagsOrderedByTags {
-    key categoryID               : String,
-        categoryTitle            : String,
-        tenant                   : String,
+    key category.ID       as categoryID : String,
+        tenant                          : String,
         // TODO: Make independent of DB (string_agg) is a postgres-function
         string_agg(
-          tagTitle, ',') as tags : String,
+          tag.title, ' ') as tags       : String,
     }
     group by
-      categoryID,
-      categoryTitle,
+      category.ID,
       tenant;
 
 entity WorkItems : managed, relevance, multitenant {

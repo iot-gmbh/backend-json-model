@@ -26,10 +26,6 @@ const readFromSQLite = (query) => {
   });
 };
 
-function removeDuplicates(arr) {
-  return [...new Set(arr)];
-}
-
 function transformEventToWorkItem({
   id,
   subject,
@@ -252,6 +248,7 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
+        // eslint-disable-next-line no-unused-vars
         SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
@@ -298,7 +295,6 @@ module.exports = cds.service.impl(async function () {
       .filter(({ ID, completedDate }) => !!ID && !!completedDate);
 
     const map = {};
-    const srv = this;
 
     // eslint-disable-next-line no-restricted-syntax
     for (const appointment of combined) {
@@ -315,6 +311,7 @@ module.exports = cds.service.impl(async function () {
         const categoryTexts = myCategories.map((cat) =>
           cat.path?.replaceAll(">", " ")
         );
+
         const { bestMatch } = stringSimilarity.findBestMatch(
           appointmentText,
           categoryTexts
@@ -331,42 +328,6 @@ module.exports = cds.service.impl(async function () {
     }
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
-
-    // TODO: Schleifen-basierte SQL-Abfragen ersetzen
-    // async function addExtraInfosTo(workItems) {
-    //   const [categories, tags2Categories, ] = await Promise.all(
-    //     srv.read(Categories),
-    //     srv.read(Tags)
-    //   );
-
-    //   workItems.filter(item => !!item.title).forEach(item => {
-    //     const titleSubstrings = item.title.split(" ");
-
-    //     if (!item.customer_ID) {
-    //       const query = [titleSubstrings, item.customer_friendlyID]
-    //         .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
-    //         .join(" OR ");
-
-    //       if (customer) {
-    //         item.customer_ID = customer.ID;
-    //       }
-    //     }
-
-    //     if (!item.project_ID) {
-    //       const query = titleSubstrings
-    //         .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
-    //         .join(" OR ");
-
-    //       const [project] = await srv.read(Projects).where(query);
-
-    //       if (project) {
-    //         item.project_ID = project.ID;
-    //       }
-    //     }
-    //   })
-    // }
-
-    // await addExtraInfosTo(results);
 
     results.$count = results.length;
     return results;
