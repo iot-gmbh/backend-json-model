@@ -1,4 +1,5 @@
-const { TfIdf, Vector, getDotProduct } = require("vector-object");
+const { Vector } = require("vector-object");
+const { TfIdf } = require("natural");
 
 /* Inspired by: https://dev.to/jimatjibba/build-a-content-based-recommendation-engine-in-js-2lpi */
 

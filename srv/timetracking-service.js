@@ -2,6 +2,7 @@ const uuid = require("uuid");
 const cds = require("@sap/cds");
 const fs = require("fs");
 const path = require("path");
+const stringSimilarity = require("string-similarity");
 
 // Test gitmoji 2
 require("dotenv").config();
@@ -105,15 +106,6 @@ module.exports = cds.service.impl(async function () {
   const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
   this.on("READ", "MyCategories", async (req) => {
-    // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
-    // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
-    // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
-    // TODO: Make it work on SQLite
-    /* 
-      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_Users2Categories 
-      parentCTE: get all parents of my categories
-      pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
-      */
     const recursiveQuery = fs
       .readFileSync(path.join(__dirname, "./my-categories-cte.sql"))
       .toString()
@@ -135,6 +127,7 @@ module.exports = cds.service.impl(async function () {
         ...data,
       })
     );
+
     return categories;
   });
 
@@ -314,35 +307,27 @@ module.exports = cds.service.impl(async function () {
 
       if (appointment.parent_ID) {
         parent = myCategories.find(({ ID }) => ID === appointment.parent_ID);
-      } else if (!appointment.title) {
-        parent = {};
       } else {
-        const tags = [
-          appointment.title.split(" ")[0],
-          ...appointment.tags.map(({ tag_title }) => tag_title),
-        ];
+        const appointmentText = `${appointment.title} ${appointment.tags
+          .map(({ tag_title }) => tag_title)
+          .join(" ")}`;
 
-        const tagsDuplicateFree = removeDuplicates(tags);
+        const categoryTexts = myCategories.map((cat) =>
+          cat.path?.replaceAll(">", " ")
+        );
+        const { bestMatch } = stringSimilarity.findBestMatch(
+          appointmentText,
+          categoryTexts
+        );
 
-        if (tags.length > 0) {
-          const tagsQuery = `%${tagsDuplicateFree
-            .sort((a, b) => a.localeCompare(b))
-            .join("%")}%`;
-          // REVISIT: remove await from loop
-          // eslint-disable-next-line no-await-in-loop
-          const categorySuggestions = await srv.run(
-            `SELECT * FROM iot_planner_matchcategory2tags WHERE tags LIKE $1`,
-            [tagsQuery]
-          );
-
+        if (bestMatch) {
           parent = myCategories.find(
-            // TODO: this expression is case-sensitive on Postgres
-            ({ ID }) => ID === categorySuggestions[0]?.categoryid
+            (cat) => cat.path?.replaceAll(">", " ") === bestMatch.target
           );
         } else parent = {};
-      }
 
-      map[appointment.ID] = { ...appointment, parentPath: parent?.path };
+        map[appointment.ID] = { ...appointment, parentPath: parent?.path };
+      }
     }
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
