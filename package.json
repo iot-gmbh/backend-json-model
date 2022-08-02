@@ -28,8 +28,11 @@
     "cds-pg": "^0.1.29",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "fs": "^0.0.1-security",
     "moment": "^2.29.4",
-    "uuid": "^8.3.2"
+    "path": "^0.12.7",
+    "uuid": "^8.3.2",
+    "vector-object": "^1.3.0"
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
