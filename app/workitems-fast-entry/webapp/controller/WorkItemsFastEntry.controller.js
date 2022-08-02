@@ -1,3 +1,8 @@
+const nest = (items, ID = null, link = 'parent_ID') =>
+	items
+		.filter((item) => item[link] === ID)
+		.map((item) => ({ ...item, children: nest(items, item.ID) }));
+
 sap.ui.define(
 	[
 		'./BaseController',
@@ -9,99 +14,211 @@ sap.ui.define(
 	],
 	(BaseController, Device, Filter, FilterOperator, JSONModel, MessageBox) =>
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
-			onInit() {
-				this.searchFilters = [];
+			async onInit() {
 				const model = new JSONModel({
-					customers: [],
-					projects: [],
-					newWorkItemText: '',
-					workItems: [
-						{
-							text: 'CAS HCOB, FSDM Business Glossar',
-							date: new Date('2022-06-28'),
-							startDate: new Date('2022-06-28T08:00Z'),
-							endDate: new Date('2022-06-28T10:00Z'),
-							extractedCustomer: 'CAS HCOB',
-							filteredProjects: [],
-							extractedProject: 'FSDM Business Glossar'
-						},
-						{
-							text: 'IOT GmbH, Pflege eigener Systeme',
-							date: new Date('2022-06-28'),
-							startDate: new Date('2022-06-28T10:00Z'),
-							endDate: new Date('2022-06-28T11:00Z'),
-							extractedCustomer: 'IOT GmbH',
-							filteredProjects: [],
-							extractedProject: 'Pflege eigener Systeme'
-						}
-					],
-					itemsRemovable: true
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
+					busy: false,
+					showHierarchyTreeForm: false,
+					showHierarchyTreeTable: false,
+					categoriesFlat: {},
+					categoriesNested: {},
+					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
+					workItems: this._loadMockData(),
+					newWorkItem: undefined
 				});
 
 				this.setModel(model);
-				this._loadCustomersAndProjects();
-			},
+				this.loadInitialFormData();
+				this._loadHierarchy();
+				this._filterHierarchyByPath('hierarchyTreeForm', '');
+				// this._filterHierarchyByPath('hierarchyTreeTable', '');
+				this.searchFilters = [];
 
-			async _loadCustomersAndProjects() {
-				const model = this.getModel();
-				const user = await this._getUserInfoService();
-
-				// TODO: Mailadresse entfernen
-				const email = user && user.getEmail() ? user.getEmail() : 'benedikt.hoelker@iot-online.de';
-
-				const { results: allProjects } = await this.read({
-					path: '/Users2Projects',
-					filters: [
-						new Filter({
-							path: 'user_userPrincipalName',
-							operator: 'EQ',
-							value1: email
-						})
-					],
-					urlParameters: { $expand: 'project/customer,project/workPackages' }
-				});
-
-				const customers = [];
-				const projects = [];
-
-				allProjects.forEach(({ project }) => {
-					projects.push(project);
-					customers.push(project.customer);
-				});
-
-				model.setProperty('/customers', [
-					...new Map(customers.map((customer) => [customer.ID, customer])).values()
-				]);
-				model.setProperty('/projects', projects);
-			},
-
-			_getUserInfoService() {
-				return new Promise((resolve) =>
-					// eslint-disable-next-line no-promise-executor-return
-					sap.ui.require(['sap/ushell/library'], (ushellLib) => {
-						const container = ushellLib.Container;
-						if (!container) return resolve();
-
-						const service = container.getServiceAsync('UserInfo'); // .getService is deprecated!
-						return resolve(service);
-					})
+				this.byId('hierarchySearchForm').setFilterFunction((term, item) =>
+					// A case-insensitive "string contains" style filter
+					item.getText().match(new RegExp(term, 'i'))
 				);
+
+				// TODO: Auslagern in control?
+				this.byId('hierarchySearchForm').attachBrowserEvent(
+					'focusout',
+					this.onFocusOutHierarchyTreeForm.bind(this)
+				);
+				this.byId('hierarchyTreeForm').attachBrowserEvent(
+					'focusin',
+					this.onFocusInHierarchyTreeForm.bind(this)
+				);
+				this.byId('hierarchyTreeForm').attachBrowserEvent(
+					'focusout',
+					this.onFocusOutHierarchyTreeForm.bind(this)
+				);
+
+				// // Doesn't work
+				// this.byId('hierarchySearchTable').attachBrowserEvent(
+				// 	'focusout',
+				// 	this.onFocusOutHierarchyTreeTable.bind(this)
+				// );
+				// this.byId('hierarchyTreeTable').attachBrowserEvent(
+				// 	'focusin',
+				// 	this.onFocusInHierarchyTreeTable.bind(this)
+				// );
+				// this.byId('hierarchyTreeTable').attachBrowserEvent(
+				// 	'focusout',
+				// 	this.onFocusOutHierarchyTreeTable.bind(this)
+				// );
 			},
 
-			filterProjects(event) {
-				const model = this.getModel();
-				const projects = model.getProperty('/projects');
-				const pathWorkItem = event.getSource().getBindingContext().getPath();
-				const selectedCustomerID = model.getProperty(`${pathWorkItem}/customer_ID`);
+			_loadMockData() {
+				return [
+					{
+						title: 'Projektaufschreibung Programmierung Neue Funktion',
+						parentPath: 'CAS HCOB > FSDM Businessglossar',
+						tags: '',
+						description: '',
+						date: new Date('2022-07-07'),
+						startDate: new Date('2022-07-07T06:00Z'),
+						endDate: new Date('2022-07-07T10:30Z'),
+						location: 'IOT',
+						completed: false
+					},
+					{
+						title: 'Projektaufschreibung Programmierung Neue Funktion',
+						parentPath: 'CAS HCOB > FSDM Businessglossar',
+						tags: '',
+						description: '',
+						date: new Date('2022-07-07'),
+						startDate: new Date('2022-07-07T10:30Z'),
+						endDate: new Date('2022-07-07T14:00Z'),
+						location: 'IOT',
+						completed: false
+					}
+				];
+			},
 
-				if (selectedCustomerID) {
-					model.setProperty(
-						`${pathWorkItem}/filteredProjects`,
-						projects.filter(({ customer_ID }) => customer_ID === selectedCustomerID)
-					);
-				}
+			loadInitialFormData() {
+				const model = this.getModel();
+				const initialWorkItem = {
+					title: '',
+					parentPath: '',
+					tags: '',
+					description: '',
+					date: new Date(),
+					startDate: this.calculateStartDate(),
+					endDate: new Date(),
+					location: '',
+					completed: false
+				};
+
+				model.setProperty('/newWorkItem', initialWorkItem);
 				model.updateBindings(true);
 			},
+
+			calculateStartDate() {
+				const model = this.getModel();
+				const workItems = model.getProperty('/workItems').map((workItem) => ({ ...workItem }));
+				const latestEndDate = workItems.reduce((endDate, workItem) => {
+					if (endDate === undefined) {
+						return workItem.endDate;
+					}
+					return workItem.endDate > endDate ? workItem.endDate : endDate;
+				}, undefined);
+
+				let nextStartDate = latestEndDate;
+				let currentDate = new Date();
+				// toDateString() returns a string consisting of the year, month and day only
+				if (nextStartDate.toDateString() !== currentDate.toDateString()) {
+					nextStartDate = currentDate;
+					nextStartDate.setHours(8, 30, 0);
+					if (currentDate.getTime() < nextStartDate.getTime()) {
+						nextStartDate = currentDate;
+					}
+				}
+
+				return nextStartDate;
+			},
+
+			async _loadHierarchy() {
+				const model = this.getModel();
+
+				model.setProperty('/busy', true);
+
+				const [{ results: categories }] = await Promise.all([
+					this.read({
+						path: '/MyCategories'
+					})
+				]);
+
+				const categoriesNested = nest(categories);
+
+				model.setProperty('/categoriesNested', categoriesNested);
+				model.setProperty('/categoriesFlat', categories);
+				model.setProperty('/busy', false);
+			},
+
+			onChangeHierarchy(event) {
+				let associatedHierarchyTreeID;
+				if (event.getParameter('id').endsWith('Form')) {
+					this.getModel().setProperty('/showHierarchyTreeForm', true);
+					associatedHierarchyTreeID = 'hierarchyTreeForm';
+				} else {
+					this.getModel().setProperty('/showHierarchyTreeTable', true);
+					associatedHierarchyTreeID = 'hierarchyTreeTable';
+				}
+				const { newValue } = event.getParameters();
+
+				this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
+			},
+
+			_filterHierarchyByPath(elementID, query) {
+				const filters = [
+					new Filter({
+						path: 'path',
+						test: (path) => {
+							if (!query) return false;
+							const substrings = query.split(' ');
+							return substrings.map((sub) => sub.toUpperCase()).every((sub) => path.includes(sub));
+						}
+					})
+				];
+
+				this.byId(elementID).getBinding('items').filter(filters);
+			},
+
+			onSelectHierarchy(event) {
+				if (event.getParameter('id').endsWith('Form')) {
+					const { listItem } = event.getParameters();
+					const hierarchyPath = listItem.getBindingContext().getProperty('path');
+
+					this.getModel().setProperty('/newWorkItem/parentPath', hierarchyPath);
+				} else {
+					const { listItem } = event.getParameters();
+					const hierarchyPath = listItem.getBindingContext().getProperty('path');
+					const path = event.getSource().getBindingContext().getPath();
+
+					this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
+				}
+			},
+
+			onFocusInHierarchyTreeForm() {
+				console.log('Focusin');
+				this.getModel().setProperty('/showHierarchyTreeForm', true);
+			},
+
+			onFocusOutHierarchyTreeForm() {
+				console.log('Focusout');
+				this.getModel().setProperty('/showHierarchyTreeForm', false);
+			},
+
+			// // Doesn't work
+			// onFocusInHierarchyTreeTable() {
+			// 	console.log('Focusin');
+			// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
+			// },
+
+			// onFocusOutHierarchyTreeTable() {
+			// 	console.log('Focusout');
+			// 	this.getModel().setProperty('/showHierarchyTreeTable', false);
+			// },
 
 			onSearch(event) {
 				this.searchFilters = [];
@@ -115,28 +232,33 @@ sap.ui.define(
 			},
 
 			addWorkItem() {
-				const model = this.getView().getModel();
-				const workItems = model.getProperty('/workItems').map((workItem) => ({ ...workItem }));
-				const latestEndDate = workItems.reduce((endDate, workItem) => {
-					if (endDate === undefined) {
-						return workItem.endDate;
-					}
-					return workItem.endDate > endDate ? workItem.endDate : endDate;
-				}, undefined);
+				const model = this.getModel();
+				const workItems = model.getProperty('/workItems');
+				const newWorkItem = model.getProperty('/newWorkItem');
 
-				workItems.push({
-					text: model.getProperty('/newWorkItemText'),
-					completed: false,
-					date: new Date(),
-					startDate: latestEndDate,
-					endDate: new Date(),
-					extractedCustomer: '',
-					filteredProjects: [],
-					extractedProject: ''
+				const location = this.byId('selectLocation').getValue();
+				model.setProperty('/newWorkItem/location', location);
+				this.checkCompleteness();
+
+				workItems.push(newWorkItem);
+				model.setProperty('/workItems', workItems);
+				model.updateBindings(true);
+				this.loadInitialFormData();
+			},
+
+			// TODO: Erweitern um weitere Pruefungen
+			checkCompleteness() {
+				let isCompleted = true;
+				const model = this.getModel();
+				newWorkItem = model.getProperty('/newWorkItem');
+
+				Object.values(newWorkItem).forEach((val) => {
+					if (val.toString().trim() === '') {
+						isCompleted = false;
+					}
 				});
 
-				model.setProperty('/workItems', workItems);
-				model.setProperty('/newWorkItemText', '');
+				model.setProperty('/newWorkItem/completed', isCompleted);
 			}
 		})
 );
