@@ -10,23 +10,27 @@
     <Page title="{i18n>worklistTitle}">
 
         <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 2, expand: 'members,tags,members/user'}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
-
+            <t:rowActionTemplate>
+                <t:RowAction>
+                    <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
+                </t:RowAction>
+            </t:rowActionTemplate>
             <t:extension>
                 <OverflowToolbar >
                     <SearchField search="onSearch" width="100%" />
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
-                <t:Column label="{i18n>title}" width="15%">
+                <t:Column label="{i18n>title}" width="30%">
                     <t:template>
-                        <ObjectIdentifier text="{title}"/>
+                        <ObjectIdentifier text="{title}" titleActive="true"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>description}" width="15%">
+                <!-- <t:Column width="5%">
                     <t:template>
-                        <Text text="{description}"/>
+                        <Button type="Ghost" icon="sap-icon://add" press="onPressAdd"/>
                     </t:template>
-                </t:Column>
+                </t:Column> -->
                 <t:Column label="{i18n>tags}" width="20%">
                     <t:template>
                         <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{

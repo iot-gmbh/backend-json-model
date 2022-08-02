@@ -79,6 +79,22 @@ sap.ui.define(
           );
         },
 
+        onPressAddCategory(event) {
+          const { ID } = event.getSource().getBindingContext().getObject();
+          const model = this.getModel();
+
+          model.createEntry("/Categories", {
+            properties: {
+              parent_ID: ID,
+              title: "dummy",
+            },
+          });
+
+          model.submitChanges();
+
+          model.refresh(true);
+        },
+
         /**
          * Event handler when a table item gets pressed
          * @param {sap.ui.base.Event} oEvent the table selectionChange event
