@@ -37,13 +37,7 @@ service AdminService @(requires : 'authenticated-user') {
   entity Tags             as projection on my.Tags;
   entity Tags2Categories  as projection on my.Tags2Categories;
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
-
-  @odata.create.enabled
-  @odata.update.enabled
-  entity Categories       as projection on my.Categories as Categories
-
-  @odata.create.enabled
-  @odata.update.enabled
+  entity Categories       as projection on my.Categories;
   entity Users2Categories as projection on my.Users2Categories
 
   @cds.search

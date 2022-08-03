@@ -4,7 +4,8 @@ annotate my.Categories with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -19,7 +20,8 @@ annotate my.CategoryLevels with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -34,7 +36,8 @@ annotate my.MatchCategory2WorkItem with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -49,7 +52,8 @@ annotate my.Tags with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -64,7 +68,8 @@ annotate my.Tags2Categories with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -79,7 +84,8 @@ annotate my.Travels with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -94,7 +100,8 @@ annotate my.Users with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -109,7 +116,8 @@ annotate my.Users2Categories with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'
@@ -124,7 +132,8 @@ annotate my.WorkItems with @(restrict : [
   {
     grant : [
       'READ',
-      'UPDATE'
+      'UPDATE',
+      'DELETE'
     ],
     to    : 'authenticated-user',
     where : 'tenant = $user.tenant'

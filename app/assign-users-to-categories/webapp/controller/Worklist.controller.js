@@ -37,7 +37,7 @@ sap.ui.define(
          * Called when the worklist controller is instantiated.
          * @public
          */
-        async onInit() {
+        onInit() {
           // keeps the search state
           this._aTableSearchState = [];
 
@@ -54,23 +54,26 @@ sap.ui.define(
           });
 
           this.setModel(viewModel, "worklistView");
-          this.setModel(localData);
+          // this.setModel(localData);
+        },
 
-          const { results: categories } = await this.read({
-            path: "/Categories",
-            urlParameters: { $top: 100, $expand: "members,tags,members/user" },
+        async onBeforeRendering() {
+          const localData = this.getModel("localData");
+          const categories = await this.getModel().load("/Categories", {
+            nest: true,
+            urlParameters: { $top: 100, $expand: "members,tags" },
           });
 
-          const categoriesPure = categories.map((cat) => ({
-            ...cat,
-            members: cat.members.results,
-            tags: cat.tags.results,
-          }));
+          // const categoriesPure = categories.map((cat) => ({
+          //   ...cat,
+          //   members: cat.members.results,
+          //   tags: cat.tags.results,
+          // }));
 
-          const categoriesNested = nest(categoriesPure);
+          // const categoriesNested = nest(categoriesPure);
 
-          localData.setProperty("/categoriesNested", categoriesNested);
-          localData.setProperty("/categories", categoriesPure);
+          // localData.setProperty("/categoriesNested", categoriesNested);
+          // localData.setProperty("/categories", categoriesPure);
         },
 
         /* =========================================================== */
@@ -107,30 +110,28 @@ sap.ui.define(
           );
         },
 
-        async onPressAddCategory(event) {
-          const localData = this.getModel();
+        onPressAddCategory(event) {
           const { ID } = event.getSource().getBindingContext().getObject();
-          const newCategory = await this.create({
-            path: "/Categories",
-            data: {
-              parent_ID: ID,
-              title: "dummy",
-            },
+
+          this.getModel().create("/Categories", {
+            parent_ID: ID,
+            title: "dummy",
           });
+        },
 
-          newCategory.members = [];
-          newCategory.tags = [];
+        onPressUpdateCategory(event) {
+          const obj = event.getSource().getBindingContext().getObject();
 
-          const categories = localData.getProperty("/categories");
-          categories.push(newCategory);
+          this.getModel().update({
+            ...obj,
+            title: "Jojojo",
+          });
+        },
 
-          const categoriesNested = nest(categories);
+        onPressDeleteCategory(event) {
+          const obj = event.getSource().getBindingContext().getObject();
 
-          localData.setProperty("/categoriesNested", categoriesNested);
-          localData.setProperty("/categories", categories);
-
-          // localData.refresh(true);
-          this.byId("treeTable").rerender();
+          this.getModel().remove(obj);
         },
 
         /**

@@ -9,10 +9,12 @@
 
     <Page title="{i18n>worklistTitle}">
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/CategoriesNested', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
+                    <t:RowActionItem type="Custom" icon="sap-icon://edit" press="onPressUpdateCategory"/>
+                    <t:RowActionItem type="Custom" icon="sap-icon://delete" press="onPressDeleteCategory"/>
                 </t:RowAction>
             </t:rowActionTemplate>
             <t:extension>
