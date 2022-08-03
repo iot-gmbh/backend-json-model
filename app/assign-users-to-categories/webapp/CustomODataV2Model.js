@@ -1,23 +1,26 @@
 sap.ui.define(["sap/ui/model/odata/v2/ODataModel"], (ODataModel) => {
-  function _promisify(oModel, sMethod, iParametersIndex) {
+  function _promisify(model, method, paramsIndex, ...args) {
     // return function () {
-    const aArguments = [].slice.call(arguments);
-    return new Promise((fnResolve, fnReject) => {
-      const mParameters = aArguments[iParametersIndex] || {};
+    // const args = [].slice.call(arguments);
 
-      aArguments[iParametersIndex] = Object.assign(mParameters, {
-        success(oData, oResponse) {
-          fnResolve({
-            data: oData,
-            response: oResponse,
+    return new Promise((resolve, reject) => {
+      const params = args[paramsIndex] || {};
+      const newArgs = [...args];
+
+      newArgs[paramsIndex] = {
+        ...params,
+        success(data, response) {
+          resolve({
+            data,
+            response,
           });
         },
-        error(oError) {
-          fnReject(new Error(oError.message));
+        error(error) {
+          reject(new Error(error.message));
         },
-      });
+      };
 
-      oModel[sMethod].apply(oModel, aArguments);
+      model[method](model, ...newArgs);
     });
     // };
   }
