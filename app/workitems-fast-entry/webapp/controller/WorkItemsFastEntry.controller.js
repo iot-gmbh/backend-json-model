@@ -9,9 +9,10 @@ sap.ui.define(
 		'sap/ui/Device',
 		'sap/ui/model/Filter',
 		'sap/ui/model/FilterOperator',
-		'sap/ui/model/json/JSONModel'
+		'sap/ui/model/json/JSONModel',
+		'sap/ui/core/Fragment'
 	],
-	(BaseController, Device, Filter, FilterOperator, JSONModel) =>
+	(BaseController, Device, Filter, FilterOperator, JSONModel, Fragment) =>
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			async onInit() {
 				const model = new JSONModel({
@@ -164,6 +165,18 @@ sap.ui.define(
 					associatedHierarchyTreeID = 'hierarchyTreeTable';
 				}
 				const { newValue } = event.getParameters();
+
+				// // Laden eines Popovers für den HierarchyTree
+				// if (!this.popover) {
+				// 	this.popover = Fragment.load({
+				// 		id: this.getView().getId(),
+				// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
+				// 		controller: this
+				// 	});
+				// }
+				// this.popover.then(function (popover) {
+				// 	popover.openBy(event.getSource());
+				// });
 
 				this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 			},
