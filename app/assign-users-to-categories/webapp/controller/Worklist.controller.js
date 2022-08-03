@@ -66,6 +66,7 @@ sap.ui.define(
             members: cat.members.results,
             tags: cat.tags.results,
           }));
+
           const categoriesNested = nest(categoriesPure);
 
           localData.setProperty("/categoriesNested", categoriesNested);
