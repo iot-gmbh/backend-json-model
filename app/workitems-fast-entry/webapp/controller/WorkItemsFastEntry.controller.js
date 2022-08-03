@@ -9,10 +9,9 @@ sap.ui.define(
 		'sap/ui/Device',
 		'sap/ui/model/Filter',
 		'sap/ui/model/FilterOperator',
-		'sap/ui/model/json/JSONModel',
-		'sap/m/MessageBox'
+		'sap/ui/model/json/JSONModel'
 	],
-	(BaseController, Device, Filter, FilterOperator, JSONModel, MessageBox) =>
+	(BaseController, Device, Filter, FilterOperator, JSONModel) =>
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			async onInit() {
 				const model = new JSONModel({
