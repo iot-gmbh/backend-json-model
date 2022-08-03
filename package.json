@@ -34,6 +34,11 @@
     "string-similarity": "^4.0.4",
     "uuid": "^8.3.2"
   },
+  "ui5": {
+    "dependencies": [
+      "ui5-cc-iot"
+    ]
+  },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
     "@sap/ux-specification": "^1.102.1",
