@@ -53,7 +53,7 @@ sap.ui.define(
 					this.onFocusOutHierarchyTreeForm.bind(this)
 				);
 
-				// // Doesn't work
+				// // Funktioniert nicht
 				// this.byId('hierarchySearchTable').attachBrowserEvent(
 				// 	'focusout',
 				// 	this.onFocusOutHierarchyTreeTable.bind(this)
@@ -105,7 +105,8 @@ sap.ui.define(
 					date: new Date(),
 					activatedDate: this.calculateActivatedDate(),
 					completedDate: new Date(),
-					location: '',
+					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
+					// location: '',
 					completed: false
 				};
 
@@ -160,25 +161,28 @@ sap.ui.define(
 				if (event.getParameter('id').endsWith('Form')) {
 					this.getModel().setProperty('/showHierarchyTreeForm', true);
 					associatedHierarchyTreeID = 'hierarchyTreeForm';
-				} else {
-					this.getModel().setProperty('/showHierarchyTreeTable', true);
-					associatedHierarchyTreeID = 'hierarchyTreeTable';
+					// // Momentan nicht funktionsfaehig für 'hierarchyTreeTable'
+					// }
+					// else {
+					// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
+					// 	associatedHierarchyTreeID = 'hierarchyTreeTable';
+					// }
+					const { newValue } = event.getParameters();
+
+					// // Laden eines Popover-Fragments für den HierarchyTree
+					// if (!this.popover) {
+					// 	this.popover = Fragment.load({
+					// 		id: this.getView().getId(),
+					// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
+					// 		controller: this
+					// 	});
+					// }
+					// this.popover.then(function (popover) {
+					// 	popover.openBy(event.getSource());
+					// });
+
+					this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 				}
-				const { newValue } = event.getParameters();
-
-				// // Laden eines Popovers für den HierarchyTree
-				// if (!this.popover) {
-				// 	this.popover = Fragment.load({
-				// 		id: this.getView().getId(),
-				// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
-				// 		controller: this
-				// 	});
-				// }
-				// this.popover.then(function (popover) {
-				// 	popover.openBy(event.getSource());
-				// });
-
-				this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 			},
 
 			_filterHierarchyByPath(elementID, query) {
@@ -192,7 +196,6 @@ sap.ui.define(
 						}
 					})
 				];
-
 				this.byId(elementID).getBinding('items').filter(filters);
 			},
 
@@ -212,16 +215,14 @@ sap.ui.define(
 			},
 
 			onFocusInHierarchyTreeForm() {
-				console.log('Focusin');
 				this.getModel().setProperty('/showHierarchyTreeForm', true);
 			},
 
 			onFocusOutHierarchyTreeForm() {
-				console.log('Focusout');
 				this.getModel().setProperty('/showHierarchyTreeForm', false);
 			},
 
-			// // Doesn't work
+			// // Funktioniert nicht
 			// onFocusInHierarchyTreeTable() {
 			// 	console.log('Focusin');
 			// 	this.getModel().setProperty('/showHierarchyTreeTable', true);

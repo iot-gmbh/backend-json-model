@@ -145,19 +145,19 @@
 											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'duration' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<VBox alignItems="Center">
-												<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy" width="24vw">
-													<suggestionItems>
-														<core:Item text="{path}" key="{ID}"/>
-													</suggestionItems>
-												</Input>
-												<c:If condition="{= ${/showHierarchyTreeTable} === true}">
+											<!-- <VBox alignItems="Center"> -->
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy" width="24vw">
+												<suggestionItems>
+													<core:Item text="{path}" key="{ID}"/>
+												</suggestionItems>
+											</Input>
+											<!-- <c:If condition="{= ${/showHierarchyTreeTable} === true}">
 													<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeTable" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" class="sapUiTinyMarginBegin" width="24vw">
 														<StandardTreeItem title="{title}"/>
 													</Tree>
 													<Tree visible="false"/>
-												</c:If>
-											</VBox>
+												</c:If> -->
+											<!-- </VBox> -->
 											<TextArea value="{tags}" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
 											<ComboBox id="selectLocationTable" items="{/locations}" selectedKey="{location}">
 												<items>
