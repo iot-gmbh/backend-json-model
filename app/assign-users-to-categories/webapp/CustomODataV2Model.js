@@ -1,6 +1,12 @@
+/* eslint-disable no-restricted-globals */
+
 sap.ui.define(
-  ["sap/ui/model/odata/v2/ODataModel", "sap/ui/model/json/JSONModel"],
-  (ODataModel, JSONModel) => {
+  [
+    "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/model/json/JSONModel",
+    "./dot-prop",
+  ],
+  (ODataModel, JSONModel, dotprop) => {
     function _promisify(model, method, paramsIndex) {
       return function (...args) {
         return new Promise((resolve, reject) => {
@@ -28,31 +34,15 @@ sap.ui.define(
         .filter((item) => item[link] === ID)
         .map((item) => ({ ...item, [nestName]: nest(items, item.ID) }));
 
-    const reduce = (array, isNest, nestPropertyName = "children") =>
-      array.reduce((acc, curr) => {
-        const accUpd = {
-          ...acc,
-          [curr.__metadata.uri]: {
-            ...curr,
-            key: curr.__metadata.uri,
-          },
-        };
-
-        if (isNest) {
-          acc[nestPropertyName] = reduce(curr[nestPropertyName]);
-        }
-
-        return accUpd;
-      }, {});
-
     return JSONModel.extend("iot.ODataModelV2", {
-      // eslint-disable-next-line object-shorthand
+      // eslint-disable-next-line object-shorthand, func-names
       constructor: function (serviceURL, ...args) {
         JSONModel.apply(this, ...args);
 
         const odataModel = new ODataModel(serviceURL);
-
         this.serviceURL = serviceURL;
+
+        this.shadowModel = new JSONModel();
 
         this.odata = {
           create: _promisify(odataModel, "create", 2),
@@ -64,14 +54,6 @@ sap.ui.define(
         };
       },
 
-      init(serviceURL, ...args) {
-        ODataModel.prototype.init.call(this, ...args);
-
-        const odataModel = new ODataModel(serviceURL);
-
-        this._promisifyODataModel(odataModel);
-      },
-
       async create(...args) {
         const result = await this.odata.create(...args);
         const [path] = args;
@@ -81,6 +63,7 @@ sap.ui.define(
         data.push(result);
 
         this.setProperty(path, data);
+        this.shadowModel.setProperty(path, data);
         this.nest(path, data, true);
       },
 
@@ -95,17 +78,17 @@ sap.ui.define(
         const [path] = args;
 
         this.setProperty(path, results);
+        this.shadowModel.setProperty(path, results);
         this.nest(path, results, true);
       },
 
       async update(obj) {
         const path = `/${obj.__metadata.uri
-          // eslint-disable-next-line no-restricted-globals
           .replace(location.origin, "")
           .replace(this.serviceURL, "")}`;
+        const entityName = path.split("(")[0];
 
         const result = await this.odata.update(path, obj);
-        const entityName = path.split("(")[0];
 
         const data = this.getProperty(entityName).map((entity) => {
           if (entity.__metadata.uri.includes(path)) return result;
@@ -113,31 +96,33 @@ sap.ui.define(
         });
 
         this.setProperty(path, data);
+        this.shadowModel.setProperty(path, data);
         this.nest(path, data, true);
       },
 
       async remove(obj) {
         const path = `/${obj.__metadata.uri
-          // eslint-disable-next-line no-restricted-globals
           .replace(location.origin, "")
           .replace(this.serviceURL, "")}`;
+        const entityName = path.split("(")[0];
 
         await this.odata.remove(path);
-        const entityName = path.split("(")[0];
 
         const data = this.getProperty(entityName).filter(
           (entity) => !entity.__metadata.uri.includes(path)
         );
 
         this.setProperty(entityName, data);
+        this.shadowModel.setProperty(path, data);
         this.nest(entityName, data, true);
       },
 
       nest(path, array, shallNest, nestName, link) {
         if (!shallNest) return;
         const nested = nest(array, nestName, link);
-        // const nestedMap = reduce(nested, true, nestName);
         this.setProperty(`${path}Nested`, nested);
+
+        console.log(dotprop.deepKeys(nested));
       },
     });
   }
