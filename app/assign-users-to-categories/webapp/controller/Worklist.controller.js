@@ -49,29 +49,13 @@ sap.ui.define(
               this.getResourceBundle().getText("tableNoDataText"),
           });
 
-          const localData = new JSONModel({
-            categories: [],
-          });
-
           this.setModel(viewModel, "worklistView");
-          // this.setModel(localData);
         },
 
         async onBeforeRendering() {
           await this.getModel().load("/Categories", {
             urlParameters: { $expand: "members,tags" },
           });
-
-          // const categoriesPure = categories.map((cat) => ({
-          //   ...cat,
-          //   members: cat.members.results,
-          //   tags: cat.tags.results,
-          // }));
-
-          // const categoriesNested = nest(categoriesPure);
-
-          // localData.setProperty("/categoriesNested", categoriesNested);
-          // localData.setProperty("/categories", categoriesPure);
         },
 
         /* =========================================================== */
