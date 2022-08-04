@@ -1,20 +1,20 @@
 using {iot.planner as my} from './schema';
 
-annotate my.Categories with @(restrict : [
-  {
-    grant : [
-      'READ',
-      'UPDATE',
-      'DELETE'
-    ],
-    to    : 'authenticated-user',
-    where : 'tenant = $user.tenant'
-  },
-  {
-    grant : 'CREATE',
-    to    : 'authenticated-user'
-  }
-]);
+// annotate my.Categories with @(restrict : [
+//   {
+//     grant : [
+//       'READ',
+//       'UPDATE',
+//       'DELETE'
+//     ],
+//     to    : 'authenticated-user',
+//     where : 'tenant = $user.tenant'
+//   },
+//   {
+//     grant : 'CREATE',
+//     to    : 'authenticated-user'
+//   }
+// ]);
 
 annotate my.CategoryLevels with @(restrict : [
   {

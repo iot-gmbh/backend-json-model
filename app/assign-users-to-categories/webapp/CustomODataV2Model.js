@@ -50,9 +50,7 @@ sap.ui.define(
       constructor: function (serviceURL, ...args) {
         JSONModel.apply(this, ...args);
 
-        const odataModel = new ODataModel(serviceURL, {
-          defaultCountMode: "None",
-        });
+        const odataModel = new ODataModel(serviceURL);
 
         this.serviceURL = serviceURL;
 
@@ -101,10 +99,10 @@ sap.ui.define(
       },
 
       async update(obj) {
-        const path = obj.__metadata.uri
+        const path = `/${obj.__metadata.uri
           // eslint-disable-next-line no-restricted-globals
-          .replace(location.origin)
-          .replace(this.serviceURL);
+          .replace(location.origin, "")
+          .replace(this.serviceURL, "")}`;
 
         const result = await this.odata.update(path, obj);
         const entityName = path.split("(")[0];
