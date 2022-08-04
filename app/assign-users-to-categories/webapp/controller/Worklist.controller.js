@@ -60,7 +60,6 @@ sap.ui.define(
         async onBeforeRendering() {
           const localData = this.getModel("localData");
           const categories = await this.getModel().load("/Categories", {
-            nest: true,
             urlParameters: { $top: 100, $expand: "members,tags" },
           });
 

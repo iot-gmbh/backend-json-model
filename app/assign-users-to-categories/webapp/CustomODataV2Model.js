@@ -1,13 +1,10 @@
 /* eslint-disable no-restricted-globals */
 
 sap.ui.define(
-  [
-    "sap/ui/model/odata/v2/ODataModel",
-    "sap/ui/model/json/JSONModel",
-    "./dot-prop",
-  ],
-  (ODataModel, JSONModel, dotprop) => {
+  ["sap/ui/model/odata/v2/ODataModel", "sap/ui/model/json/JSONModel"],
+  (ODataModel, JSONModel) => {
     function _promisify(model, method, paramsIndex) {
+      // eslint-disable-next-line func-names
       return function (...args) {
         return new Promise((resolve, reject) => {
           const params = args[paramsIndex] || {};
@@ -40,24 +37,32 @@ sap.ui.define(
               name,
               properties: property,
               relations: navigationProperty.map(
-                ({ name: navPropName, relationship, fromRole, toRole }) => ({
-                  name: navPropName,
-                  fromRole,
-                  toRole,
-                  refConstraints: this.associations
-                    .filter(
-                      ({ name: assocName }) =>
-                        `${this.schema.namespace}.${assocName}` === relationship
-                    )
-                    .flatMap(({ referentialConstraint }) => ({
-                      from: (referentialConstraint.dependent.role === fromRole
-                        ? referentialConstraint.dependent.propertyRef
-                        : referentialConstraint.principal.propertyRef)[0].name,
-                      to: (referentialConstraint.dependent.role === toRole
-                        ? referentialConstraint.dependent.propertyRef
-                        : referentialConstraint.principal.propertyRef)[0].name,
-                    })),
-                })
+                ({ name: navPropName, relationship, fromRole, toRole }) => {
+                  const association = this.associations.find(
+                    ({ name: assocName }) =>
+                      `${this.schema.namespace}.${assocName}` === relationship
+                  );
+
+                  const {
+                    referentialConstraint: { dependent, principal },
+                    end,
+                  } = association;
+
+                  return {
+                    name: navPropName,
+                    fromRole,
+                    toRole,
+                    cardinality: end.find((e) => e.role === toRole)
+                      .multiplicity,
+                    refConstraints: dependent.propertyRef.map((dep, index) => {
+                      const princ = principal.propertyRef[index];
+                      return {
+                        from: (dependent.role === fromRole ? dep : princ).name,
+                        to: (dependent.role === toRole ? dep : princ).name,
+                      };
+                    }),
+                  };
+                }
               ),
             })
           );
@@ -147,13 +152,18 @@ sap.ui.define(
               entityType.relations.forEach((relation) => {
                 Object.defineProperty(entity, relation.name, {
                   get: () => {
-                    const targetEntities = this.getData()[relation.toRole];
-                    if (!targetEntities) return [];
-                    return targetEntities.filter((related) =>
+                    const targetEntities =
+                      this.getData()[relation.toRole] || [];
+                    const results = targetEntities.filter((related) =>
                       relation.refConstraints.every(
                         ({ to, from }) => related[to] === entity[from]
                       )
                     );
+
+                    if (relation.cardinality.endsWith("1")) {
+                      return results[0];
+                    }
+                    return results;
                   },
                 });
               });
