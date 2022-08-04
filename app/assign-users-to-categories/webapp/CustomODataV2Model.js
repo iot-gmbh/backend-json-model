@@ -24,25 +24,46 @@ sap.ui.define(
       };
     }
 
-    const nest = (
-      items,
-      ID = null,
-      nestName = "children",
-      link = "parent_ID"
-    ) =>
-      items
-        .filter((item) => item[link] === ID)
-        .map((item) => ({ ...item, [nestName]: nest(items, item.ID) }));
-
     return JSONModel.extend("iot.ODataModelV2", {
       // eslint-disable-next-line object-shorthand, func-names
       constructor: function (serviceURL, ...args) {
         JSONModel.apply(this, ...args);
 
         const odataModel = new ODataModel(serviceURL);
-        this.serviceURL = serviceURL;
-
         this.shadowModel = new JSONModel();
+
+        odataModel.metadataLoaded().then(() => {
+          [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
+          this.associations = this.schema.association;
+          this.entityTypes = this.schema.entityType.map(
+            ({ name, property, navigationProperty }) => ({
+              name,
+              properties: property,
+              relations: navigationProperty.map(
+                ({ name: navPropName, relationship, fromRole, toRole }) => ({
+                  name: navPropName,
+                  fromRole,
+                  toRole,
+                  refConstraints: this.associations
+                    .filter(
+                      ({ name: assocName }) =>
+                        `${this.schema.namespace}.${assocName}` === relationship
+                    )
+                    .flatMap(({ referentialConstraint }) => ({
+                      from: (referentialConstraint.dependent.role === fromRole
+                        ? referentialConstraint.dependent.propertyRef
+                        : referentialConstraint.principal.propertyRef)[0].name,
+                      to: (referentialConstraint.dependent.role === toRole
+                        ? referentialConstraint.dependent.propertyRef
+                        : referentialConstraint.principal.propertyRef)[0].name,
+                    })),
+                })
+              ),
+            })
+          );
+        });
+
+        this.serviceURL = serviceURL;
 
         this.odata = {
           create: _promisify(odataModel, "create", 2),
@@ -63,8 +84,7 @@ sap.ui.define(
         data.push(result);
 
         this.setProperty(path, data);
-        this.shadowModel.setProperty(path, data);
-        this.nest(path, data, true);
+        this.nest();
       },
 
       async read(...args) {
@@ -77,9 +97,9 @@ sap.ui.define(
         const { results } = await this.odata.read(...args);
         const [path] = args;
 
+        // this.setProperty(path, results);
         this.setProperty(path, results);
-        this.shadowModel.setProperty(path, results);
-        this.nest(path, results, true);
+        this.nest();
       },
 
       async update(obj) {
@@ -96,8 +116,7 @@ sap.ui.define(
         });
 
         this.setProperty(path, data);
-        this.shadowModel.setProperty(path, data);
-        this.nest(path, data, true);
+        this.nest();
       },
 
       async remove(obj) {
@@ -113,16 +132,40 @@ sap.ui.define(
         );
 
         this.setProperty(entityName, data);
-        this.shadowModel.setProperty(path, data);
-        this.nest(entityName, data, true);
+        this.nest();
       },
 
-      nest(path, array, shallNest, nestName, link) {
-        if (!shallNest) return;
-        const nested = nest(array, nestName, link);
-        this.setProperty(`${path}Nested`, nested);
+      nest() {
+        const data = this.getData();
 
-        console.log(dotprop.deepKeys(nested));
+        this.entityTypes
+          // Only process entities that are loaded already
+          .filter(({ name }) => data[name])
+          .map((entityType) => ({
+            entityType,
+            entities: data[entityType.name].filter(Boolean).map((entity) => {
+              entityType.relations.forEach((relation) => {
+                Object.defineProperty(entity, relation.name, {
+                  get: () => {
+                    const targetEntities = this.getData()[relation.toRole];
+                    if (!targetEntities) return [];
+                    return targetEntities.filter((related) =>
+                      relation.refConstraints.every(
+                        ({ to, from }) => related[to] === entity[from]
+                      )
+                    );
+                  },
+                });
+              });
+              return {
+                entityType,
+                ...entity,
+              };
+            }),
+          }))
+          .forEach(({ entityType, entities }) => {
+            this.setProperty(`/${entityType.name}`, entities);
+          });
       },
     });
   }
