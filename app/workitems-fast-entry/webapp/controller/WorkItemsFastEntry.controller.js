@@ -79,7 +79,7 @@ sap.ui.define(
 						activatedDate: new Date('2022-07-07T06:00Z'),
 						completedDate: new Date('2022-07-07T10:30Z'),
 						location: 'IOT',
-						completed: false
+						state: 'incompleted'
 					},
 					{
 						title: 'Projektaufschreibung Programmierung Neue Funktion',
@@ -90,7 +90,7 @@ sap.ui.define(
 						activatedDate: new Date('2022-07-07T10:30Z'),
 						completedDate: new Date('2022-07-07T14:00Z'),
 						location: 'IOT',
-						completed: false
+						state: 'incompleted'
 					}
 				];
 			},
@@ -101,13 +101,14 @@ sap.ui.define(
 					title: '',
 					parentPath: '',
 					tags: '',
-					description: '',
-					date: new Date(),
+					// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
+					// description: '',
+					// date: new Date(),
 					activatedDate: this.calculateActivatedDate(),
 					completedDate: new Date(),
 					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
 					// location: '',
-					completed: false
+					state: 'incompleted'
 				};
 
 				model.setProperty('/newWorkItem', initialWorkItem);
@@ -249,8 +250,8 @@ sap.ui.define(
 				const workItems = model.getProperty('/workItems');
 				const newWorkItem = model.getProperty('/newWorkItem');
 
-				const location = this.byId('selectLocation').getValue();
-				model.setProperty('/newWorkItem/location', location);
+				// const location = this.byId('selectLocation').getValue();
+				// model.setProperty('/newWorkItem/location', location);
 				this.checkCompleteness();
 
 				workItems.push(newWorkItem);
@@ -265,13 +266,19 @@ sap.ui.define(
 				const model = this.getModel();
 				newWorkItem = model.getProperty('/newWorkItem');
 
+				for (const [key, value] of Object.entries(newWorkItem)) {
+					console.log('key:', key, 'value:', value);
+				}
+
 				Object.values(newWorkItem).forEach((val) => {
 					if (val.toString().trim() === '') {
 						isCompleted = false;
 					}
 				});
 
-				model.setProperty('/newWorkItem/completed', isCompleted);
+				isCompleted
+					? model.setProperty('/newWorkItem/state', 'completed')
+					: model.setProperty('/newWorkItem/state', 'incompleted');
 			}
 		})
 );

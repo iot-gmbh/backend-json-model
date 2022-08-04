@@ -57,14 +57,14 @@
 													<Input id="inputTags" value="{/newWorkItem/tags}"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTextAreaDescription}">
-													<TextArea id="textAreaDescription" value="{/newWorkItem/description}" rows="4" growing="true" growingMaxLines="6" width="100%"/>
+													<TextArea id="textAreaDescription" rows="4" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
 											</form:formElements>
 										</form:FormContainer>
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+													<DatePicker id="date" value="{ type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
 													<TimePicker value="{ path: '/newWorkItem/activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
@@ -165,7 +165,7 @@
 												</items>
 											</ComboBox>
 											<TextArea value="{description}" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
-											<c:If condition="{= ${completed} === true}">
+											<c:If condition="{= ${state} === 'completed'}">
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://sys-enter-2" state="Success"/>
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://alert" state="Warning"/>
 											</c:If>
