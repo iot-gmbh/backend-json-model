@@ -76,8 +76,8 @@ sap.ui.define(
 						tags: '',
 						description: '',
 						date: new Date('2022-07-07'),
-						startDate: new Date('2022-07-07T06:00Z'),
-						endDate: new Date('2022-07-07T10:30Z'),
+						activatedDate: new Date('2022-07-07T06:00Z'),
+						completedDate: new Date('2022-07-07T10:30Z'),
 						location: 'IOT',
 						completed: false
 					},
@@ -87,8 +87,8 @@ sap.ui.define(
 						tags: '',
 						description: '',
 						date: new Date('2022-07-07'),
-						startDate: new Date('2022-07-07T10:30Z'),
-						endDate: new Date('2022-07-07T14:00Z'),
+						activatedDate: new Date('2022-07-07T10:30Z'),
+						completedDate: new Date('2022-07-07T14:00Z'),
 						location: 'IOT',
 						completed: false
 					}
@@ -103,8 +103,8 @@ sap.ui.define(
 					tags: '',
 					description: '',
 					date: new Date(),
-					startDate: this.calculateStartDate(),
-					endDate: new Date(),
+					activatedDate: this.calculateActivatedDate(),
+					completedDate: new Date(),
 					location: '',
 					completed: false
 				};
@@ -113,28 +113,28 @@ sap.ui.define(
 				model.updateBindings(true);
 			},
 
-			calculateStartDate() {
+			calculateActivatedDate() {
 				const model = this.getModel();
 				const workItems = model.getProperty('/workItems').map((workItem) => ({ ...workItem }));
-				const latestEndDate = workItems.reduce((endDate, workItem) => {
-					if (endDate === undefined) {
-						return workItem.endDate;
+				const latestCompletedDate = workItems.reduce((completedDate, workItem) => {
+					if (completedDate === undefined) {
+						return workItem.completedDate;
 					}
-					return workItem.endDate > endDate ? workItem.endDate : endDate;
+					return workItem.completedDate > completedDate ? workItem.completedDate : completedDate;
 				}, undefined);
 
-				let nextStartDate = latestEndDate;
+				let nextActivatedDate = latestCompletedDate;
 				let currentDate = new Date();
 				// toDateString() returns a string consisting of the year, month and day only
-				if (nextStartDate.toDateString() !== currentDate.toDateString()) {
-					nextStartDate = currentDate;
-					nextStartDate.setHours(8, 30, 0);
-					if (currentDate.getTime() < nextStartDate.getTime()) {
-						nextStartDate = currentDate;
+				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
+					nextActivatedDate = currentDate;
+					nextActivatedDate.setHours(8, 30, 0);
+					if (currentDate.getTime() < nextActivatedDate.getTime()) {
+						nextActivatedDate = currentDate;
 					}
 				}
 
-				return nextStartDate;
+				return nextActivatedDate;
 			},
 
 			async _loadHierarchy() {

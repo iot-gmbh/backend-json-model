@@ -66,9 +66,9 @@
 												<form:FormElement label="{i18n>formDatePickerDate}">
 													<DatePicker id="date" value="{ path: '/newWorkItem/date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 												</form:FormElement>
-												<form:FormElement label="{i18n>formTimePickerStartAndEndDate}">
-													<TimePicker value="{ path: '/newWorkItem/startDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-													<TimePicker value="{ path: '/newWorkItem/endDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
+													<TimePicker value="{ path: '/newWorkItem/activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+													<TimePicker value="{ path: '/newWorkItem/completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
 													<ComboBox id="selectLocation" items="{/locations}">
@@ -89,7 +89,7 @@
 							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" items="{
 								path: '/workItems',
 								sorter: {
-									path: 'endDate',
+									path: 'completedDate',
 									descending: false
 								}
 							}">
@@ -112,10 +112,10 @@
 										<Text text="{i18n>tableColumnDate}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnStartDate}"/>
+										<Text text="{i18n>tableColumnActivatedDate}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnEndDate}"/>
+										<Text text="{i18n>tableColumnCompletedDate}"/>
 									</Column>
 									<Column>
 										<Text text="{i18n>tableColumnDuration}"/>
@@ -142,8 +142,8 @@
 										<cells>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="12vw"/>
 											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
-											<TimePicker value="{ path: 'startDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<TimePicker value="{ path: 'endDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'duration' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<VBox alignItems="Center">
 												<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy" width="24vw">
