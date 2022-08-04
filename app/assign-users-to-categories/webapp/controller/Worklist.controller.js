@@ -219,46 +219,33 @@ sap.ui.define(
           const multiInput = event.getSource();
           const { value } = event.getParameters();
           const newToken = new Token({ text: value });
-
           multiInput.addToken(newToken);
           multiInput.setValue();
           multiInput.fireTokenUpdate({ addedTokens: [newToken] });
         },
 
         onUpdateTags(event) {
-          const model = this.getModel("OData");
+          const model = this.getModel();
+          const category = event.getSource().getBindingContext().getObject();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
           this._removeDuplicateTokens(event.getSource());
 
-          addedTokens.forEach((token) => {
-            // const ID = token.getKey();
-            const title = token.getText();
-            // Suspicious: For added tokens, token.getBindingContext() gives the category - for removed tokens, it gives the token itself
-            const category_ID = token.getBindingContext().getProperty("ID");
+          category.tags = [
+            ...category.tags,
+            ...addedTokens.map((token) => ({
+              tag_title: token.getText(),
+            })),
+          ];
 
-            model.createEntry("/Tags", {
-              properties: {
-                title,
-              },
-            });
+          // removedTokens.forEach((token) => {
+          //   const path = token.getBindingContext().getPath();
 
-            model.createEntry("/Tags2Categories", {
-              properties: {
-                tag_title: title,
-                category_ID,
-              },
-            });
-          });
+          //   model.remove(path);
+          // });
 
-          removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
-
-            model.remove(path);
-          });
-
-          model.submitChanges();
+          // model.submitChanges();
         },
 
         _removeDuplicateTokens(multiInput) {

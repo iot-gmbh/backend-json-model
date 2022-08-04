@@ -33,8 +33,9 @@ sap.ui.define(
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
           this.associations = this.schema.association;
           this.entityTypes = this.schema.entityType.map(
-            ({ name, property, navigationProperty }) => ({
+            ({ name, property, key, navigationProperty }) => ({
               name,
+              keys: key.propertyRef.map((k) => k.name),
               properties: property,
               relations: navigationProperty.map(
                 ({ name: navPropName, relationship, fromRole, toRole }) => {
@@ -142,15 +143,50 @@ sap.ui.define(
 
       nest() {
         const data = this.getData();
+        const { entityTypes } = this;
 
-        this.entityTypes
+        entityTypes
           // Only process entities that are loaded already
           .filter(({ name }) => data[name])
           .map((entityType) => ({
             entityType,
             entities: data[entityType.name].filter(Boolean).map((entity) => {
               entityType.relations.forEach((relation) => {
+                const cardinality = relation.cardinality.endsWith("1")
+                  ? "1"
+                  : "n";
+
                 Object.defineProperty(entity, relation.name, {
+                  set: (values) => {
+                    const dataArray = Array.isArray(values) ? values : [values];
+                    const entities =
+                      this.getProperty(`/${relation.toRole}`) || [];
+                    const keyNames = entityTypes.find(
+                      (et) => et.name === relation.toRole
+                    ).keys;
+
+                    dataArray.forEach((obj) => {
+                      const indexOfExistingEntity = entities.findIndex((ent) =>
+                        keyNames.every((key) => ent[key] === obj[key])
+                      );
+
+                      let entry;
+
+                      if (indexOfExistingEntity >= 0) {
+                        entry = {
+                          ...entities[indexOfExistingEntity],
+                          ...obj,
+                        };
+
+                        this.setProperty(
+                          `/${relation.toRole}/${indexOfExistingEntity}`,
+                          entry
+                        );
+                      } else entry = obj;
+
+                      entities.push(entry);
+                    });
+                  },
                   get: () => {
                     const targetEntities =
                       this.getData()[relation.toRole] || [];
@@ -160,9 +196,10 @@ sap.ui.define(
                       )
                     );
 
-                    if (relation.cardinality.endsWith("1")) {
+                    if (cardinality === "1") {
                       return results[0];
                     }
+
                     return results;
                   },
                 });
