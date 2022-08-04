@@ -60,7 +60,7 @@
                                 <core:Item key="{OData>userPrincipalName}" text="{OData>displayName}"/>
                             </suggestionItems>
                             <tokens >
-                                <Token key="{user_userPrincipalName}" text="{user/displayName}" delete="onDeleteToken"/>
+                                <Token key="{user_userPrincipalName}" text="{displayName}" delete="onDeleteToken"/>
                             </tokens>
                         </MultiInput>
                     </t:template>

@@ -27,7 +27,6 @@ sap.ui.define(
         JSONModel.apply(this, ...args);
 
         const odataModel = new ODataModel(serviceURL);
-        this.shadowModel = new JSONModel();
 
         odataModel.metadataLoaded().then(() => {
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
@@ -67,6 +66,13 @@ sap.ui.define(
               ),
             })
           );
+
+          // Initialize with empty arrays
+          this.setData(
+            this.entityTypes
+              .map(({ name }) => name)
+              .reduce((acc, curr) => ({ ...acc, [curr]: [] }), {})
+          );
         });
 
         this.serviceURL = serviceURL;
@@ -101,27 +107,73 @@ sap.ui.define(
 
       async load(...args) {
         const { results } = await this.odata.read(...args);
-        const [path] = args;
+        const [path, params] = args;
+        const entityTypeName = path.slice(1);
+        const entityType = this.entityTypes.find(
+          ({ name }) => name === entityTypeName
+        );
+
+        const $expand = params?.urlParameters?.$expand;
+
+        if ($expand.includes("/")) {
+          throw new Error("Deep expand is not supported.");
+        }
+
+        if ($expand) {
+          const expands = $expand.split(",");
+          expands.forEach((exp) => {
+            const relation = entityType.relations.find(
+              ({ name }) => name === exp
+            );
+
+            const entityName = relation.toRole;
+            const existingData = this.getProperty(`/${entityName}`);
+            let newData = [];
+
+            results.forEach((res) => {
+              const expData =
+                relation.cardinality === "1" ? res[exp] : res[exp].results;
+
+              newData = [...newData, ...expData];
+            });
+
+            const uniqueData = [...new Set([...newData, ...existingData])];
+
+            this.setProperty(`/${entityName}`, uniqueData);
+          });
+        }
 
         // this.setProperty(path, results);
         this.setProperty(path, results);
         this.nest();
       },
 
-      async update(obj) {
-        const path = `/${obj.__metadata.uri
+      // create new obj => nav-Props will be deleted so don't use reference
+      async update({ ...obj }) {
+        const odataPath = `/${obj.__metadata.uri
           .replace(location.origin, "")
           .replace(this.serviceURL, "")}`;
-        const entityName = path.split("(")[0];
+        const entityTypeName = odataPath.split("(")[0].slice(1);
+        const entityType = this.entityTypes.find(
+          ({ name }) => name === entityTypeName
+        );
+        const existingData = this.getProperty(`/${entityTypeName}`);
 
-        const result = await this.odata.update(path, obj);
-
-        const data = this.getProperty(entityName).map((entity) => {
-          if (entity.__metadata.uri.includes(path)) return result;
-          return entity;
+        // nav-Props throw errors => delete them upfront
+        entityType.relations.forEach(({ name }) => {
+          // eslint-disable-next-line no-param-reassign
+          delete obj[name];
         });
 
-        this.setProperty(path, data);
+        const index = existingData.findIndex((entity) =>
+          entityType.keys.every((key) => entity[key] === obj[key])
+        );
+
+        const jsonPath = `/${entityTypeName}/${index}`;
+
+        await this.odata.update(odataPath, obj);
+
+        this.setProperty(jsonPath, obj);
         this.nest();
       },
 
@@ -157,36 +209,8 @@ sap.ui.define(
                   : "n";
 
                 Object.defineProperty(entity, relation.name, {
-                  set: (values) => {
-                    const dataArray = Array.isArray(values) ? values : [values];
-                    const entities =
-                      this.getProperty(`/${relation.toRole}`) || [];
-                    const keyNames = entityTypes.find(
-                      (et) => et.name === relation.toRole
-                    ).keys;
-
-                    dataArray.forEach((obj) => {
-                      const indexOfExistingEntity = entities.findIndex((ent) =>
-                        keyNames.every((key) => ent[key] === obj[key])
-                      );
-
-                      let entry;
-
-                      if (indexOfExistingEntity >= 0) {
-                        entry = {
-                          ...entities[indexOfExistingEntity],
-                          ...obj,
-                        };
-
-                        this.setProperty(
-                          `/${relation.toRole}/${indexOfExistingEntity}`,
-                          entry
-                        );
-                      } else entry = obj;
-
-                      entities.push(entry);
-                    });
-                  },
+                  configurable: true,
+                  // We don't implement a setter by design so each request has to be made via the OData-service explicitly
                   get: () => {
                     const targetEntities =
                       this.getData()[relation.toRole] || [];
@@ -204,10 +228,7 @@ sap.ui.define(
                   },
                 });
               });
-              return {
-                entityType,
-                ...entity,
-              };
+              return entity;
             }),
           }))
           .forEach(({ entityType, entities }) => {

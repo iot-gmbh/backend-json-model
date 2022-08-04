@@ -69,9 +69,11 @@ entity Categories : cuid, managed, relevance, multitenant {
                      on tags.category = $self;
   levelName      : Association to CategoryLevels
                      on hierarchyLevel = levelName.hierarchyLevel;
+  @assert.notNull : false
   manager        : Association to Users;
   members        : Association to many Users2Categories
                      on members.category = $self;
+  @assert.notNull : false
   parent         : Association to Categories;
   children       : Association to many Categories
                      on children.parent = $self;

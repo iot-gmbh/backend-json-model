@@ -38,7 +38,11 @@ service AdminService @(requires : 'authenticated-user') {
   entity Tags2Categories  as projection on my.Tags2Categories;
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
   entity Categories       as projection on my.Categories;
-  entity Users2Categories as projection on my.Users2Categories
+
+  entity Users2Categories as projection on my.Users2Categories {
+    *,
+    user.displayName
+  };
 
   @cds.search
   entity WorkItems @(restrict : [

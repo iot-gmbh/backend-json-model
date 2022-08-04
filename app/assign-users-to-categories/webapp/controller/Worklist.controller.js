@@ -58,9 +58,8 @@ sap.ui.define(
         },
 
         async onBeforeRendering() {
-          const localData = this.getModel("localData");
-          const categories = await this.getModel().load("/Categories", {
-            urlParameters: { $top: 100, $expand: "members,tags" },
+          await this.getModel().load("/Categories", {
+            urlParameters: { $expand: "members,tags" },
           });
 
           // const categoriesPure = categories.map((cat) => ({
@@ -219,6 +218,7 @@ sap.ui.define(
           const multiInput = event.getSource();
           const { value } = event.getParameters();
           const newToken = new Token({ text: value });
+
           multiInput.addToken(newToken);
           multiInput.setValue();
           multiInput.fireTokenUpdate({ addedTokens: [newToken] });
@@ -226,26 +226,32 @@ sap.ui.define(
 
         onUpdateTags(event) {
           const model = this.getModel();
-          const category = event.getSource().getBindingContext().getObject();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
           this._removeDuplicateTokens(event.getSource());
 
-          category.tags = [
-            ...category.tags,
-            ...addedTokens.map((token) => ({
-              tag_title: token.getText(),
-            })),
-          ];
+          addedTokens.forEach((token) => {
+            // const ID = token.getKey();
+            const title = token.getText();
+            // Suspicious: For added tokens, token.getBindingContext() gives the category - for removed tokens, it gives the token itself
+            const category_ID = token.getBindingContext().getProperty("ID");
 
-          // removedTokens.forEach((token) => {
-          //   const path = token.getBindingContext().getPath();
+            model.create("/Tags", {
+              title,
+            });
 
-          //   model.remove(path);
-          // });
+            model.create("/Tags2Categories", {
+              tag_title: title,
+              category_ID,
+            });
+          });
 
-          // model.submitChanges();
+          removedTokens.forEach((token) => {
+            const path = token.getBindingContext().getPath();
+
+            model.remove(path);
+          });
         },
 
         _removeDuplicateTokens(multiInput) {
@@ -261,7 +267,7 @@ sap.ui.define(
         },
 
         onUpdateUsers2Categories(event) {
-          const model = this.getModel("OData");
+          const model = this.getModel();
           const { addedTokens = [], removedTokens = [] } =
             event.getParameters();
 
@@ -271,11 +277,9 @@ sap.ui.define(
             const user_userPrincipalName = token.getKey();
             const category_ID = token.getBindingContext().getProperty("ID");
 
-            model.createEntry("/Users2Categories", {
-              properties: {
-                category_ID,
-                user_userPrincipalName,
-              },
+            model.create("/Users2Categories", {
+              category_ID,
+              user_userPrincipalName,
             });
           });
 
@@ -284,14 +288,12 @@ sap.ui.define(
 
             model.remove(path);
           });
-
-          model.submitChanges();
         },
 
         onDeleteToken(event) {
           const path = event.getSource().getBindingContext().getPath();
 
-          this.getModel("OData").remove(path);
+          this.getModel().remove(path);
         },
       }
     )
