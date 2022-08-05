@@ -1,5 +1,8 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
+const fs = require("fs");
+const path = require("path");
+const stringSimilarity = require("string-similarity");
 
 // Test gitmoji 2
 require("dotenv").config();
@@ -28,14 +31,24 @@ function transformEventToWorkItem({
   subject,
   start,
   end,
-  // categories: [customer_friendlyID],
+  categories,
   sensitivity,
   isAllDay,
   user,
 }) {
   return {
     ID: id,
-    title: subject,
+    title: subject.replace(/ #\w\w+\s?/g, ""),
+    tags: categories
+      .concat(
+        subject
+          .split(" ")
+          .filter((v) => v.startsWith("#"))
+          .map((x) => x.substr(1))
+      )
+      .map((tag_title) => ({
+        tag_title,
+      })),
     // customer_friendlyID,
     /*
       The original format is: '2022-06-23T14:30:00.0000000'
@@ -89,58 +102,11 @@ module.exports = cds.service.impl(async function () {
   const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
   this.on("READ", "MyCategories", async (req) => {
-    // Recursive CTE that returns descendants and ancestors of the categories that have been mapped to users, see https://stackoverflow.com/questions/17074950/recursive-cte-sql-to-return-all-decendants-and-ancestors
-    // The hierarchical data is stored as an adjacent list, see https://www.databasestar.com/hierarchical-data-sql/#c2
-    // Note: Recursive CTE's are not supported by HANA!: https://stackoverflow.com/questions/58090731/how-to-implement-recursion-in-hana-query
-    // TODO: Make it work on SQLite
-    /* 
-      childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_Users2Categories 
-      parentCTE: get all parents of my categories
-      pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
-      */
-    const recursiveQuery = `WITH RECURSIVE 
-    childrenCTE AS (
-      SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
-      FROM iot_planner_Categories AS cat
-      INNER JOIN iot_planner_Users2Categories as user2cat
-        on cat.ID = user2cat.category_ID
-        and user2cat.user_userPrincipalName ${comparator} '${req.user.id}'
-      UNION 
-      SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-      FROM childrenCTE AS parent 
-      INNER JOIN iot_planner_Categories AS this 
-          ON this.parent_ID = parent.ID
-      ),
-    parentCTE AS (
-      SELECT cat.ID, cat.title, cat.description, cat.parent_ID, cat.hierarchyLevel 
-      FROM iot_planner_Categories AS cat
-      INNER JOIN iot_planner_Users2Categories as user2cat
-        on cat.ID = user2cat.category_ID
-        and user2cat.user_userPrincipalName ${comparator} '${req.user.id}'
-      UNION 
-      SELECT this.ID, this.title, this.description, this.parent_ID, this.hierarchyLevel
-      FROM parentCTE AS children 
-      INNER JOIN iot_planner_Categories AS this 
-          ON children.parent_ID = this.ID
-      ),
-    pathCTE AS (
-      SELECT cat.ID, cat.title, cat.parent_ID, cat.title as path
-      FROM iot_planner_Categories AS cat
-      WHERE cat.parent_ID IS NULL
-      UNION 
-      SELECT this.ID, this.title, this.parent_ID, CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
-      FROM pathCTE AS prior 
-      INNER JOIN iot_planner_Categories AS this 
-          ON this.parent_ID = prior.ID
-    )
-    SELECT * 
-    FROM pathCTE
-    JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
-    UNION
-    SELECT * 
-    FROM pathCTE
-    JOIN parentCTE on pathCTE.ID = parentCTE.ID
-    ORDER BY hierarchyLevel ASC;`;
+    const recursiveQuery = fs
+      .readFileSync(path.join(__dirname, "./my-categories-cte.sql"))
+      .toString()
+      .replaceAll("$1", comparator)
+      .replaceAll("$2", `'${req.user.id}'`);
 
     // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
     // REVISIT: Remove as soon as the CDS-adapter supports recursive selects
@@ -157,6 +123,7 @@ module.exports = cds.service.impl(async function () {
         ...data,
       })
     );
+
     return categories;
   });
 
@@ -201,7 +168,7 @@ module.exports = cds.service.impl(async function () {
 
     if (item.resetEntry) {
       // RESET
-      if (item.type !== "Manual")
+      if (item.type === "Manual")
         throw Error("Reset is not allowed for entries of type 'Manual'");
 
       // eslint-disable-next-line no-unused-vars
@@ -209,7 +176,7 @@ module.exports = cds.service.impl(async function () {
 
       await tx.run(DELETE.from(WorkItems).where({ ID: item.ID }));
 
-      return item.type === "Manual" ? { ID: item.ID } : reducedItem;
+      return reducedItem;
     }
 
     const [entries, dummyCategories] = await Promise.all([
@@ -281,6 +248,7 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
+        // eslint-disable-next-line no-unused-vars
         SELECT: { where = "ID != null", columns, orderBy, limit },
       },
     } = req;
@@ -294,6 +262,7 @@ module.exports = cds.service.impl(async function () {
         //   .limit(limit),
         [],
         // [],
+        // TODO: Breaks if no startdatetime and enddatetime are provided: Fix it!
         MSGraphSrv.tx(req)
           .read("Events", "*")
           .where(where)
@@ -307,13 +276,12 @@ module.exports = cds.service.impl(async function () {
       transformEventToWorkItem({
         ...event,
         user: req.user.id,
-        categories: myCategories,
       })
     );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
-    const map = [
+    const combined = [
       ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
@@ -324,56 +292,42 @@ module.exports = cds.service.impl(async function () {
         => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
         */
       .filter((itm) => itm)
-      .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((acc, curr) => {
-        // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
-        const parent = myCategories.find(({ ID }) => ID === curr.parent_ID);
-        const accUpdt = {
-          ...acc,
-          [curr.ID]: { ...curr, parentPath: parent?.path },
-        };
-        return accUpdt;
-      }, {});
+      .filter(({ ID, completedDate }) => !!ID && !!completedDate);
+
+    const map = {};
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const appointment of combined) {
+      // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
+      let parent = {};
+
+      if (appointment.parent_ID) {
+        parent = myCategories.find(({ ID }) => ID === appointment.parent_ID);
+      } else {
+        const appointmentText = `${appointment.title} ${appointment.tags
+          .map(({ tag_title }) => tag_title)
+          .join(" ")}`;
+
+        const categoryTexts = myCategories.map((cat) =>
+          cat.path?.replaceAll(">", " ")
+        );
+
+        const { bestMatch } = stringSimilarity.findBestMatch(
+          appointmentText,
+          categoryTexts
+        );
+
+        if (bestMatch) {
+          parent = myCategories.find(
+            (cat) => cat.path?.replaceAll(">", " ") === bestMatch.target
+          );
+        } else parent = {};
+
+        map[appointment.ID] = { ...appointment, parentPath: parent?.path };
+      }
+    }
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
-
-    const srv = this;
-
-    // TODO: Schleifen-basierte SQL-Abfragen ersetzen
-    // async function addExtraInfosTo(workItems) {
-    //   const [categories, tags2Categories, ] = await Promise.all(
-    //     srv.read(Categories),
-    //     srv.read(Tags)
-    //   );
-
-    //   workItems.filter(item => !!item.title).forEach(item => {
-    //     const titleSubstrings = item.title.split(" ");
-
-    //     if (!item.customer_ID) {
-    //       const query = [titleSubstrings, item.customer_friendlyID]
-    //         .map((sub) => `friendlyID like '%${sub}%' or name like '%${sub}'`)
-    //         .join(" OR ");
-
-    //       if (customer) {
-    //         item.customer_ID = customer.ID;
-    //       }
-    //     }
-
-    //     if (!item.project_ID) {
-    //       const query = titleSubstrings
-    //         .map((sub) => `friendlyID like '%${sub}%' or title like '%${sub}'`)
-    //         .join(" OR ");
-
-    //       const [project] = await srv.read(Projects).where(query);
-
-    //       if (project) {
-    //         item.project_ID = project.ID;
-    //       }
-    //     }
-    //   })
-    // }
-
-    // await addExtraInfosTo(results);
 
     results.$count = results.length;
     return results;

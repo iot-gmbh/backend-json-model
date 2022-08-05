@@ -23,7 +23,10 @@ sap.ui.define(
          * @returns {sap.ui.model.Model} the model instance
          */
         getModel(sName) {
-          return this.getView().getModel(sName);
+          return (
+            this.getView().getModel(sName) ||
+            this.getOwnerComponent().getModel(sName)
+          );
         },
 
         /**
@@ -35,6 +38,25 @@ sap.ui.define(
          */
         setModel(oModel, sName) {
           return this.getView().setModel(oModel, sName);
+        },
+
+        async read({ path, ...params }) {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").read(path, {
+              ...params,
+              success: resolve,
+              error: reject,
+            });
+          });
+        },
+
+        async create({ path, data }) {
+          return new Promise((resolve, reject) => {
+            this.getModel("OData").create(path, data, {
+              success: resolve,
+              error: reject,
+            });
+          });
         },
 
         /**

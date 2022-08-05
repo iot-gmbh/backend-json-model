@@ -4,6 +4,11 @@ module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const { Tags, Tags2Categories } = db.entities("iot.planner");
 
+  this.before("CREATE", "*", async (req) => {
+    const { tenant } = req.user;
+    req.data.tenant = tenant;
+  });
+
   this.on("CREATE", "Tags", async (req, next) => {
     const tags = await this.read(Tags).where({ title: req.data.title });
     const tx = this.transaction(req);

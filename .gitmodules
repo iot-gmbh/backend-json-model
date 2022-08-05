@@ -1,6 +1,6 @@
 [submodule "custom_packages/cds-msal-auth"]
 	path = custom_packages/cds-msal-auth
 	url = https://github.com/BenediktHoelker/cds-msal-auth.git
-[submodule "custom_packages/cds-dbm"]
-	path = custom_packages/cds-dbm
-	url = https://github.com/BenediktHoelker/cds-dbm.git
+[submodule "custom_packages/cds-pg-migra"]
+	path = custom_packages/cds-pg-migra
+	url = https://github.com/BenediktHoelker/cds-pg-migra.git
