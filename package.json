@@ -26,7 +26,7 @@
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
-    "cds-pg": "^0.1.29",
+    "cds-pg": "^0.1.30",
     "cds-pg-migra": "file:custom_packages/cds-pg-migra",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",

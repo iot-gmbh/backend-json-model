@@ -1,4 +1,4 @@
-using {iot.planner as my} from '../db/schema';
+using {iot.planner as my} from '../db/multitenancy';
 
 service AdminService @(requires : 'authenticated-user') {
   // @odata.draft.enabled
@@ -60,5 +60,5 @@ service AdminService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])                     as projection on my.WorkItems as WorkItems
+  ])                      as projection on my.WorkItems as WorkItems
 };
