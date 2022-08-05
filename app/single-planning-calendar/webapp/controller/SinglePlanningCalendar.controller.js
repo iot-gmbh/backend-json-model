@@ -142,28 +142,6 @@ sap.ui.define(
           );
         },
 
-        onChangeHierarchy(event) {
-          const { newValue } = event.getParameters();
-          this._filterHierarchyByPath(newValue);
-        },
-
-        _filterHierarchyByPath(query) {
-          const filters = [
-            new Filter({
-              path: "path",
-              test: (path) => {
-                if (!query) return false;
-                const substrings = query.split(" ");
-                return substrings
-                  .map((sub) => sub.toUpperCase())
-                  .every((sub) => path.includes(sub));
-              },
-            }),
-          ];
-
-          this.byId("hierarchyTree").getBinding("items").filter(filters);
-        },
-
         onSelectHierarchy(event) {
           const { listItem } = event.getParameters();
           const hierarchyPath = listItem
@@ -301,6 +279,28 @@ sap.ui.define(
 
           dialog.bindElement(path);
           dialog.open();
+        },
+
+        onChangeHierarchy(event) {
+          const { newValue } = event.getParameters();
+          this._filterHierarchyByPath(newValue);
+        },
+
+        _filterHierarchyByPath(query) {
+          const filters = [
+            new Filter({
+              path: "path",
+              test: (path) => {
+                if (!query) return false;
+                const substrings = query.split(" ");
+                return substrings
+                  .map((sub) => sub.toUpperCase())
+                  .every((sub) => path.includes(sub));
+              },
+            }),
+          ];
+
+          this.byId("hierarchyTree").getBinding("items").filter(filters);
         },
 
         async onSubmitEntry() {
