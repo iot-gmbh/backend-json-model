@@ -13,7 +13,8 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-msal-auth"
+      "custom_packages/cds-msal-auth",
+      "custom_packages/cds-pg-migra"
     ]
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "azure-devops-node-api": "^11.2.0",
     "cds-msal-auth": "file:./custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.29",
+    "cds-pg-migra": "file:custom_packages/cds-pg-migra",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
@@ -33,11 +35,6 @@
     "path": "^0.12.7",
     "string-similarity": "^4.0.4",
     "uuid": "^8.3.2"
-  },
-  "ui5": {
-    "dependencies": [
-      "ui5-cc-iot"
-    ]
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
