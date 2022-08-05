@@ -1,10 +1,5 @@
 /* eslint-disable camelcase */
 
-const nest = (items, ID = null, link = "parent_ID") =>
-  items
-    .filter((item) => item[link] === ID)
-    .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 sap.ui.define(
   [
     "./BaseController",
@@ -47,15 +42,25 @@ sap.ui.define(
               this.getResourceBundle().getText("worklistTableTitle"),
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
+            newCategory: {},
           });
 
           this.setModel(viewModel, "worklistView");
         },
 
         async onBeforeRendering() {
+          const model = this.getModel();
           await this.getModel().load("/Categories", {
             urlParameters: { $expand: "members,tags" },
           });
+
+          const categories = model.getProperty("/Categories");
+
+          const categoriesLevel0 = categories.filter(
+            ({ parent_ID }) => !parent_ID
+          );
+
+          model.setProperty("/categoriesLevel0", categoriesLevel0);
         },
 
         /* =========================================================== */
@@ -93,21 +98,58 @@ sap.ui.define(
         },
 
         onPressAddCategory(event) {
-          const { ID } = event.getSource().getBindingContext().getObject();
+          const viewModel = this.getModel("worklistView");
+          const rowAction = event.getSource().getParent();
+          const parent_ID = rowAction.getBindingContext().getProperty("ID");
+          const popover = this.byId("editCategoryPopover");
 
-          this.getModel().create("/Categories", {
-            parent_ID: ID,
-            title: "dummy",
-          });
+          this.getModel().setProperty("/newCategory", { parent_ID });
+          viewModel.setProperty(
+            "/popoverTitle",
+            this.getResourceBundle().getText("popoverTitle.createCategory")
+          );
+
+          popover.bindElement("/newCategory");
+          popover.openBy(rowAction);
         },
 
         onPressUpdateCategory(event) {
-          const obj = event.getSource().getBindingContext().getObject();
+          const rowAction = event.getSource().getParent();
+          const popover = this.byId("editCategoryPopover");
 
-          this.getModel().update({
-            ...obj,
-            title: "Jojojo",
-          });
+          this.getModel("worklistView").setProperty(
+            "/popoverTitle",
+            this.getResourceBundle().getText("popoverTitle.editCategory")
+          );
+
+          popover.bindElement(rowAction.getBindingContext().getPath());
+          popover.openBy(rowAction);
+        },
+
+        async onPressSubmitCategory(event) {
+          const model = this.getModel();
+          const popover = event.getSource();
+          const category = popover.getBindingContext().getObject();
+
+          this._closePopover();
+
+          if (category.ID) {
+            // Update
+            await model.update(category);
+          } else {
+            // Create
+            await model.create("/Categories", category);
+          }
+        },
+
+        onPressClosePopover() {
+          this._closePopover();
+        },
+
+        _closePopover() {
+          const popover = this.byId("editCategoryPopover");
+          this.getModel().setProperty("/newCategory", {});
+          popover.close();
         },
 
         onPressDeleteCategory(event) {

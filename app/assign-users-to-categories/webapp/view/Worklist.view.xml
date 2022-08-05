@@ -8,8 +8,26 @@
     xmlns:semantic="sap.f.semantic">
 
     <Page title="{i18n>worklistTitle}">
+        <dependents>
+            <ResponsivePopover id="editCategoryPopover" placement="Left" initialFocus="titleInput" class="sapUiContentPadding">
+                <Input id="titleInput" value="{title}" />
+                <customHeader>
+                    <Bar>
+                        <contentMiddle>
+                            <Title text="{worklistView>/popoverTitle}" />
+                        </contentMiddle>
+                        <contentRight>
+                            <Button icon="sap-icon://decline" press="onPressClosePopover"/>
+                        </contentRight>
+                    </Bar>
+                </customHeader>
+                <endButton>
+                    <Button text="{i18n>OK}" press="onPressSubmitCategory"/>
+                </endButton>
+            </ResponsivePopover>
+        </dependents>
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
