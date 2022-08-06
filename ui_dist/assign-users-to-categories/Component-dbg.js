@@ -1,11 +1,12 @@
 sap.ui.define(
   [
     "sap/ui/core/UIComponent",
+    "./CustomODataV2Model",
     "sap/ui/Device",
     "./model/models",
     "./controller/ErrorHandler",
   ],
-  (UIComponent, Device, models, ErrorHandler) =>
+  (UIComponent, CustomODataV2Model, Device, models, ErrorHandler) =>
     UIComponent.extend("iot.planner.assignuserstocategories.Component", {
       metadata: {
         manifest: "json",
@@ -17,12 +18,14 @@ sap.ui.define(
        * @public
        * @override
        */
-      init() {
-        // call the base component's init function
-        UIComponent.prototype.init.apply(this, arguments);
+      init(...args) {
+        UIComponent.prototype.init.apply(this, ...args);
 
         // initialize the error handler with the component
         this._oErrorHandler = new ErrorHandler(this);
+
+        // call the base component's init function
+        this.setModel(new CustomODataV2Model("/v2/admin/"));
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
