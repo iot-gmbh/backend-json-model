@@ -110,7 +110,8 @@ module.exports = cds.service.impl(async function () {
       //   ? await readFromSQLite(query)
       //   :
       await db.run(
-        `SELECT * FROM iot_planner_my_categories where user_userPrincipalName ilike '${req.user.id}'`
+        SELECT.from("iot_planner_my_categories")
+          .where`user_userPrincipalName = ${req.user.id}`
       );
 
     const categories = results.map(
@@ -272,7 +273,8 @@ module.exports = cds.service.impl(async function () {
           .limit(limit),
         cds.run(req.query),
         db.run(
-          `SELECT * FROM iot_planner_my_categories where user_userPrincipalName ilike '${req.user.id}'`
+          SELECT.from("iot_planner_my_categories")
+            .where`user_userPrincipalName = ${req.user.id}`
         ),
       ]);
 
