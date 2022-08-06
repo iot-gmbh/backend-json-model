@@ -272,7 +272,7 @@ module.exports = cds.service.impl(async function () {
           .limit(limit),
         cds.run(req.query),
         db.run(
-          `SELECT * FROM iot_planner_my_categories_with_tags where user_userPrincipalName ilike '${req.user.id}'`
+          `SELECT * FROM iot_planner_my_categories where user_userPrincipalName ilike '${req.user.id}'`
         ),
       ]);
 
