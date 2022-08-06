@@ -60,6 +60,7 @@ entity Users2Categories : cuid, managed, multitenant {
 entity Categories : cuid, managed, relevance, multitenant {
   title          : String;
   description    : String;
+  reference      : String;
   hierarchyLevel : Integer;
   friendlyID     : String;
   mappingID      : String;

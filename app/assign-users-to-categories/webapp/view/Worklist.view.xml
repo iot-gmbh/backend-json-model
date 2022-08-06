@@ -27,11 +27,13 @@
             </ResponsivePopover>
         </dependents>
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
+        sorter: {path: 'title'},
+        parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
-                    <t:RowActionItem type="Custom" icon="sap-icon://edit" press="onPressUpdateCategory"/>
+                    <!-- <t:RowActionItem type="Custom" icon="sap-icon://edit" press="onPressUpdateCategory"/> -->
                     <t:RowActionItem type="Custom" icon="sap-icon://delete" press="onPressDeleteCategory"/>
                 </t:RowAction>
             </t:rowActionTemplate>
@@ -43,7 +45,12 @@
             <t:columns>
                 <t:Column label="{i18n>title}" width="30%">
                     <t:template>
-                        <ObjectIdentifier text="{title}" titleActive="true"/>
+                        <Input value="{title}" change="onChangeCategory"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>reference}" width="10%">
+                    <t:template>
+                        <Input value="{reference}" change="onChangeCategory"/>
                     </t:template>
                 </t:Column>
                 <!-- <t:Column width="5%">

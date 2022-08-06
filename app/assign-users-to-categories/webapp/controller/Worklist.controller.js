@@ -126,6 +126,11 @@ sap.ui.define(
           popover.openBy(rowAction);
         },
 
+        async onChangeCategory(event) {
+          const category = event.getSource().getBindingContext().getObject();
+          await this.getModel().update(category);
+        },
+
         async onPressSubmitCategory(event) {
           const model = this.getModel();
           const popover = event.getSource();

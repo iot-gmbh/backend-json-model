@@ -3,6 +3,7 @@ const cds = require("@sap/cds");
 const fs = require("fs");
 const path = require("path");
 const stringSimilarity = require("string-similarity");
+const levenary = require("levenary");
 
 // Test gitmoji 2
 require("dotenv").config();
@@ -102,18 +103,15 @@ module.exports = cds.service.impl(async function () {
   const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
   this.on("READ", "MyCategories", async (req) => {
-    const recursiveQuery = fs
-      .readFileSync(path.join(__dirname, "./my-categories-cte.sql"))
-      .toString()
-      .replaceAll("$1", comparator)
-      .replaceAll("$2", `'${req.user.id}'`);
-
     // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
     // REVISIT: Remove as soon as the CDS-adapter supports recursive selects
     const results =
-      db.kind === "sqlite"
-        ? await readFromSQLite(recursiveQuery)
-        : await db.run(recursiveQuery);
+      // db.kind === "sqlite"
+      //   ? await readFromSQLite(query)
+      //   :
+      await db.run(
+        `SELECT * FROM iot_planner_my_categories where user_userPrincipalName ilike '${req.user.id}'`
+      );
 
     const categories = results.map(
       ({ id, parent_id, hierarchylevel, ...data }) => ({
@@ -253,6 +251,10 @@ module.exports = cds.service.impl(async function () {
       },
     } = req;
 
+    // const myCategoriesWithTagsQuery = `SELECT sub.ID, sub.title, sub.parent_ID, sub.path, STRING_AGG(tag_title, ' ') as tags FROM (${myCategoriesQuery}) sub
+    //   left outer join iot_planner_Tags2Categories as t2c on sub.ID = t2c.category_ID
+    //   group by sub.ID, sub.title, sub.parent_ID, sub.path;`;
+
     const [devOpsWorkItems, MSGraphEvents, localWorkItems, myCategories] =
       await Promise.all([
         // AzDevOpsSrv.tx(req)
@@ -262,14 +264,16 @@ module.exports = cds.service.impl(async function () {
         //   .limit(limit),
         [],
         // [],
-        // TODO: Breaks if no startdatetime and enddatetime are provided: Fix it!
+        // TODO: Breaks if no start- and enddatetime are provided: Fix it!
         MSGraphSrv.tx(req)
           .read("Events", "*")
           .where(where)
           .orderBy(orderBy)
           .limit(limit),
         cds.run(req.query),
-        this.run(SELECT.from("MyCategories")),
+        db.run(
+          `SELECT * FROM iot_planner_my_categories_with_tags where user_userPrincipalName ilike '${req.user.id}'`
+        ),
       ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
@@ -304,24 +308,30 @@ module.exports = cds.service.impl(async function () {
       if (appointment.parent_ID) {
         parent = myCategories.find(({ ID }) => ID === appointment.parent_ID);
       } else {
-        const appointmentText = `${appointment.title} ${appointment.tags
-          .map(({ tag_title }) => tag_title)
-          .join(" ")}`;
+        // const tags = appointment.tags.map(({ tag_title }) => tag_title);
 
-        const categoryTexts = myCategories.map((cat) =>
-          cat.path?.replaceAll(">", " ")
+        const titleSubstrings = appointment.title.split(" ");
+
+        const categoriesByReference = myCategories.filter(
+          (cat) =>
+            cat.reference &&
+            titleSubstrings.some((sub) => sub === cat.reference)
         );
 
-        const { bestMatch } = stringSimilarity.findBestMatch(
-          appointmentText,
-          categoryTexts
-        );
-
-        if (bestMatch) {
-          parent = myCategories.find(
-            (cat) => cat.path?.replaceAll(">", " ") === bestMatch.target
+        if (categoriesByReference.length > 0) {
+          [parent] = categoriesByReference;
+        } else {
+          const bestMatch = levenary.default(
+            appointment.title,
+            myCategories.map((cat) => cat.path.replaceAll(" > ", " "))
           );
-        } else parent = {};
+
+          if (bestMatch) {
+            parent = myCategories.find(
+              (cat) => cat.path.replaceAll(" > ", " ") === bestMatch
+            );
+          } else parent = {};
+        }
 
         map[appointment.ID] = { ...appointment, parentPath: parent?.path };
       }
