@@ -65,6 +65,15 @@ sap.ui.define(
 						error: reject
 					});
 				});
+			},
+
+			async create({ path, data }) {
+				return new Promise((resolve, reject) => {
+					this.getModel('OData').create(path, data, {
+						success: resolve,
+						error: reject
+					});
+				});
 			}
 		})
 );
