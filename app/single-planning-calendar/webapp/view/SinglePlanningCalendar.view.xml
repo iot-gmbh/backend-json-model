@@ -71,7 +71,7 @@
 															path: 'OData>/Tags',
 															templateShareable: false,
 															sorter: { path: 'title' }
-														}" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
+														}" showValueHelp="false" tokenUpdate="onUpdateTags">
 															<suggestionItems>
 																<core:Item key="{OData>title}" text="{OData>title}"/>
 															</suggestionItems>
