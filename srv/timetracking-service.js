@@ -293,29 +293,29 @@ module.exports = cds.service.impl(async function () {
         //   .orderBy(orderBy)
         //   .limit(limit),
         [],
-        // [],
-        MSGraphSrv.tx(req)
-          .read("Events", "*")
-          .where(where)
-          .orderBy(orderBy)
-          .limit(limit),
+        [],
+        // MSGraphSrv.tx(req)
+        //   .read("Events", "*")
+        //   .where(where)
+        //   .orderBy(orderBy)
+        //   .limit(limit),
         cds.run(req.query),
-        this.run(SELECT.from("MyCategories")),
+        // this.run(SELECT.from("MyCategories")),
       ]);
 
-    const MSGraphWorkItems = MSGraphEvents.map((event) =>
-      transformEventToWorkItem({
-        ...event,
-        user: req.user.id,
-        categories: myCategories,
-      })
-    );
+    // const MSGraphWorkItems = MSGraphEvents.map((event) =>
+    //   transformEventToWorkItem({
+    //     ...event,
+    //     user: req.user.id,
+    //     categories: myCategories,
+    //   })
+    // );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
     const map = [
       ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
-      ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
+      // ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
       // .reduce((acc, item) => acc.concat(item), [])
@@ -324,16 +324,16 @@ module.exports = cds.service.impl(async function () {
         => Verhindert, dass lokale Ergänzungen geladen werden, die in MSGraph oder DevOps gelöscht wurden
         */
       .filter((itm) => itm)
-      .filter(({ ID, completedDate }) => !!ID && !!completedDate)
-      .reduce((acc, curr) => {
-        // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
-        const parent = myCategories.find(({ ID }) => ID === curr.parent_ID);
-        const accUpdt = {
-          ...acc,
-          [curr.ID]: { ...curr, parentPath: parent?.path },
-        };
-        return accUpdt;
-      }, {});
+      .filter(({ ID, completedDate }) => !!ID && !!completedDate);
+    // .reduce((acc, curr) => {
+    //   // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
+    //   const parent = myCategories.find(({ ID }) => ID === curr.parent_ID);
+    //   const accUpdt = {
+    //     ...acc,
+    //     [curr.ID]: { ...curr, parentPath: parent?.path },
+    //   };
+    //   return accUpdt;
+    // }, {})
 
     const results = Object.values(map).filter(({ deleted }) => !deleted);
 
