@@ -58,25 +58,27 @@ entity Users2Categories : cuid, managed, multitenant {
 }
 
 entity Categories : cuid, managed, relevance, multitenant {
-  title          : String;
-  description    : String;
-  reference      : String;
-  hierarchyLevel : Integer;
-  mappingID      : String;
-  drillDownState : String default 'expanded';
-  path           : String;
-  tags           : Association to many Tags2Categories
-                     on tags.category = $self;
-  levelName      : Association to CategoryLevels
-                     on hierarchyLevel = levelName.hierarchyLevel;
+  title           : String;
+  description     : String;
+  reference       : String;
+  mappingID       : String;
+  drillDownState  : String default 'expanded';
+  path            : String;
+  hierarchyLevel  : Integer;
+  levelSpecificID : String;
+  catNumber       : String;
+  level           : Association to CategoryLevels
+                      on hierarchyLevel = level.hierarchyLevel;
+  tags            : Association to many Tags2Categories
+                      on tags.category = $self;
   @assert.notNull : false
-  manager        : Association to Users;
-  members        : Association to many Users2Categories
-                     on members.category = $self;
+  manager         : Association to Users;
+  members         : Association to many Users2Categories
+                      on members.category = $self;
   @assert.notNull : false
-  parent         : Association to Categories;
-  children       : Association to many Categories
-                     on children.parent = $self;
+  parent          : Association to Categories;
+  children        : Association to many Categories
+                      on children.parent = $self;
 }
 
 entity Tags : multitenant {

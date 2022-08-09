@@ -12,7 +12,8 @@ AS SELECT sub.*, STRING_AGG(tag_title, ' ') as tags FROM (
     pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
 */
 
-WITH RECURSIVE 
+ 
+ WITH RECURSIVE 
     childrenCTE AS (
       SELECT cat.ID, cat.parent_ID, user2cat.user_userPrincipalName
       FROM iot_planner_Categories AS cat
@@ -36,11 +37,13 @@ WITH RECURSIVE
           ON children.parent_ID = this.ID
       ),
     pathCTE AS (
-      SELECT cat.ID, cat.title, cat.description, cat.reference, cat.parent_ID, cat.title as path
+      SELECT cat.ID, cat.title, cat.description, cat.reference, cat.parent_ID, cat.levelSpecificID as catNumber, cat.title as path
       FROM iot_planner_Categories AS cat
       WHERE cat.parent_ID IS NULL
       UNION 
-      SELECT this.ID, this.title, this.description, this.reference, this.parent_ID, CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
+      SELECT this.ID, this.title, this.description, this.reference, this.parent_ID, 
+      CAST((prior.catNumber || '-' || this.levelSpecificID) as varchar(5000)) as catNumber,
+      CAST((prior.path || ' > ' || this.title) as varchar(5000)) as path 
       FROM pathCTE AS prior 
       INNER JOIN iot_planner_Categories AS this 
           ON this.parent_ID = prior.ID
@@ -52,6 +55,7 @@ WITH RECURSIVE
     SELECT pathCTE.*, parentCTE.user_userPrincipalName 
     FROM pathCTE
     JOIN parentCTE on pathCTE.ID = parentCTE.ID
-    ) sub
-      left outer join iot_planner_tags2categories as t2c on sub.ID = t2c.category_ID
-      group by sub.ID, sub.title, sub.parent_ID, sub.description, sub.reference, sub.path, sub.user_userPrincipalName;
+    ) 
+  sub
+    left outer join iot_planner_tags2categories as t2c on sub.ID = t2c.category_ID
+    group by sub.ID, sub.title, sub.parent_ID, sub.description, sub.reference, sub.path, sub.catNumber, sub.user_userPrincipalName;

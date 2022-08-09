@@ -2,14 +2,50 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Tags, Tags2Categories } = db.entities("iot.planner");
+  const { Categories, Tags, Tags2Categories } = db.entities("iot.planner");
 
   this.before("CREATE", "*", async (req) => {
     const { tenant } = req.user;
     req.data.tenant = tenant;
   });
 
-  this.on("CREATE", "Tags", async (req, next) => {
+  this.before("CREATE", "Categories", async (req) => {
+    let siblings = [];
+    let parent = {};
+
+    if (req.data.parent_ID) {
+      siblings = await this.read(Categories).where({ ID: req.data.parent_ID });
+      [parent] = await this.read(Categories).where({
+        ID: req.data.parent_ID,
+      });
+    } else {
+      siblings = await this.read(Categories).where({ ID: null });
+    }
+
+    const levelSpecificNumber = (parseInt(siblings.length, 10) + 1).toString();
+
+    if (parent) {
+      req.data.catNumber = `${parent.catNumber}-${levelSpecificNumber}`;
+    }
+  });
+
+  this.on("READ", "Categories", async (req) => {
+    const results = await db.run(req.query);
+
+    // const categories = results.map(
+    //   ({ id, parent_id, hierarchylevel, catnumber, ...data }) => ({
+    //     ID: id,
+    //     parent_ID: parent_id,
+    //     hierarchyLevel: hierarchylevel,
+    //     catNumber: catnumber,
+    //     ...data,
+    //   })
+    // );
+
+    return results;
+  });
+
+  this.on("CREATE", "Tags", async (req) => {
     const tags = await this.read(Tags).where({ title: req.data.title });
     const tx = this.transaction(req);
     const newTag = { ...req.data };
@@ -20,7 +56,7 @@ module.exports = cds.service.impl(async function () {
     return tx.run(UPDATE(Tags, tags[0]).with(tags[0]));
   });
 
-  this.on("CREATE", "Tags2Categories", async (req, next) => {
+  this.on("CREATE", "Tags2Categories", async (req) => {
     const tags = await this.read(Tags2Categories).where({
       tag_title: req.data.tag_title,
       category_ID: req.data.category_ID,

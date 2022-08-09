@@ -289,14 +289,27 @@ sap.ui.define(
         _filterHierarchyByPath(query) {
           const filters = [
             new Filter({
-              path: "path",
-              test: (path) => {
-                if (!query) return false;
-                const substrings = query.split(" ");
-                return substrings
-                  .map((sub) => sub.toUpperCase())
-                  .every((sub) => path.includes(sub));
-              },
+              filters: [
+                new Filter({
+                  path: "path",
+                  test: (path) => {
+                    if (!query) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => path.includes(sub));
+                  },
+                }),
+                new Filter({
+                  path: "catNumber",
+                  test: (catNumber) => {
+                    if (!query) return false;
+                    if (!catNumber) return false;
+                    return catNumber.includes(query);
+                  },
+                }),
+              ],
+              and: false,
             }),
           ];
 

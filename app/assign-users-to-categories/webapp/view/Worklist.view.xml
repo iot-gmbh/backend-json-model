@@ -48,6 +48,11 @@
                         <Input value="{title}" change="onChangeCategory"/>
                     </t:template>
                 </t:Column>
+                <t:Column label="{i18n>catNumber}" width="10%">
+                    <t:template>
+                        <Text text="{catNumber}"/>
+                    </t:template>
+                </t:Column>
                 <t:Column label="{i18n>reference}" width="10%">
                     <t:template>
                         <Input value="{reference}" change="onChangeCategory"/>
