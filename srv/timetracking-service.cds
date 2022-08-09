@@ -17,16 +17,13 @@ service TimetrackingService @(requires : 'authenticated-user') {
   ])                      as projection on my.WorkItems;
 
   @cds.redirection.target
-  entity Categories       as projection on my.Categories;
-
-  entity Users2Categories as projection on my.Users2Categories;
   entity MyCategories     as projection on my.Categories;
+
+  entity Categories       as projection on my.Categories;
+  entity Users2Categories as projection on my.Users2Categories;
   entity Tags             as projection on my.Tags;
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
-
-  @cds.redirection.target
   entity Tags2Categories  as projection on my.Tags2Categories;
-
   entity CategoryLevels   as projection on my.CategoryLevels;
   entity MyUser           as projection on my.Users;
 }

@@ -6,6 +6,8 @@ service WorkItemsService @(requires : 'authenticated-user') {
   // entity AzDevWorkItems as projection on AzDevOps.WorkItems;
   // entity MSGraphEvents  as projection on MSGraph.Events;
 
+  entity Hierarchies as projection on my.hierarchies.Hierarchies;
+
   entity WorkItems @(restrict : [
     {
       grant : 'READ',
@@ -23,10 +25,18 @@ service WorkItemsService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])           as projection on my.WorkItems {
+  ])                 as projection on my.WorkItems {
     *,
     assignedTo.userPrincipalName         as assignedToUserPrincipalName,
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+    hierarchy.level0                     as customer,
+    hierarchy.level1                     as project,
+    hierarchy.level2                     as subProject,
+    hierarchy.level3                     as workPackage,
+    hierarchy.level0Title                as customerText,
+    hierarchy.level1Title                as projectText,
+    hierarchy.level2Title                as subProjectText,
+    hierarchy.level3Title                as workPackageText
   } where deleted is null
 
   @cds.redirection.target : true
@@ -47,7 +57,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])           as projection on my.WorkItems {
+  ])                 as projection on my.WorkItems {
     activatedDate                        as Datum        : String @(title : '{i18n>IOTWorkItems.Datum}'),
     completedDate                        as DatumBis     : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
     // Casting findet in work-items-service.js statt (mittels moment.js)
@@ -61,6 +71,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
     assignedTo.userPrincipalName         as Nutzer       : String @(title : '{i18n>IOTWorkItems.Nutzer}'),
     'GE'                                 as Einsatzort   : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
     title                                as Bemerkung    : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
+    tenant,
     @UI.Hidden
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
     ID
@@ -72,7 +83,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
   Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
    */
 
-  entity Users as projection on my.Users {
+  entity Users       as projection on my.Users {
     *,
     workItems : redirected to WorkItems
   };

@@ -35,11 +35,23 @@ annotate my.WorkItems with @(UI : {
     },
     {
       $Type : 'UI.DataField',
-      Value : invoiceRelevance,
+      Label : 'Customer',
+      Value : hierarchy.level0,
     },
     {
       $Type : 'UI.DataField',
-      Value : bonusRelevance,
+      Label : 'Project',
+      Value : hierarchy.level1,
+    },
+    {
+      $Type : 'UI.DataField',
+      Label : 'Subproject',
+      Value : hierarchy.level2,
+    },
+    {
+      $Type : 'UI.DataField',
+      Label : 'Workpackage',
+      Value : hierarchy.level3,
     },
   ],
   Facets              : [
@@ -57,6 +69,38 @@ annotate my.WorkItems with @(UI : {
 }) {
   ID @UI.Hidden;
 }
+
+annotate my.hierarchies.Hierarchies with {
+  level0 @(Common : {
+    Text         : {
+      $value                 : level0Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    FieldControl : #Mandatory
+  });
+  level1 @(Common : {
+    Text         : {
+      $value                 : level1Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    FieldControl : #Mandatory
+  });
+  level2 @(Common : {
+    Text         : {
+      $value                 : level2Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    FieldControl : #Mandatory
+  });
+  level3 @(Common : {
+    Text         : {
+      $value                 : level3Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    FieldControl : #Mandatory
+  });
+};
+
 
 @cds.odata.valuelist
 annotate my.Users with @(UI : {

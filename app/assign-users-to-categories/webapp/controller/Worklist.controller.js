@@ -100,10 +100,15 @@ sap.ui.define(
         onPressAddCategory(event) {
           const viewModel = this.getModel("worklistView");
           const rowAction = event.getSource().getParent();
-          const parent_ID = rowAction.getBindingContext().getProperty("ID");
+          const { ID: parent_ID, hierarchyLevel } = rowAction
+            .getBindingContext()
+            .getObject();
           const popover = this.byId("editCategoryPopover");
 
-          this.getModel().setProperty("/newCategory", { parent_ID });
+          this.getModel().setProperty("/newCategory", {
+            parent_ID,
+            hierarchyLevel: parseInt(hierarchyLevel, 10) + 1,
+          });
           viewModel.setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.createCategory")

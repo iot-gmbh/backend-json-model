@@ -62,7 +62,6 @@ entity Categories : cuid, managed, relevance, multitenant {
   description    : String;
   reference      : String;
   hierarchyLevel : Integer;
-  friendlyID     : String;
   mappingID      : String;
   drillDownState : String default 'expanded';
   path           : String;
@@ -155,7 +154,7 @@ entity WorkItems : managed, relevance, multitenant {
       confirmed           : Boolean;
       parent              : Association to Categories;
       hierarchy           : Association to Hierarchies
-                              on parent.ID = hierarchy.parent;
+                              on parent.ID = hierarchy.ID;
       // Used by the Frontend's hierarchy input-filter
       parentPath          : String;
 };
