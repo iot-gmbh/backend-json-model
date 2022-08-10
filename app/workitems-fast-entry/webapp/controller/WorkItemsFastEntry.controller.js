@@ -76,10 +76,9 @@ sap.ui.define(
 			loadMockData() {
 				return [
 					{
-						title: 'Projektaufschreibung Programmierung Neue Funktion',
+						description: 'Projektaufschreibung Programmierung Neue Funktion',
 						parentPath: 'CAS HCOB > FSDM Businessglossar',
 						tags: '',
-						description: '',
 						date: new Date('2022-07-07'),
 						activatedDate: new Date('2022-07-07T06:00Z'),
 						completedDate: new Date('2022-07-07T10:30Z'),
@@ -87,10 +86,9 @@ sap.ui.define(
 						state: 'incompleted'
 					},
 					{
-						title: 'Projektaufschreibung Programmierung Neue Funktion',
+						description: 'Projektaufschreibung Programmierung Neue Funktion',
 						parentPath: 'CAS HCOB > FSDM Businessglossar',
 						tags: '',
-						description: '',
 						date: new Date('2022-07-07'),
 						activatedDate: new Date('2022-07-07T10:30Z'),
 						completedDate: new Date('2022-07-07T14:00Z'),
@@ -103,11 +101,10 @@ sap.ui.define(
 			loadInitialFormData() {
 				const model = this.getModel();
 				const initialWorkItem = {
-					title: '',
-					parentPath: '',
-					// tags: '',
 					// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
 					// description: '',
+					parentPath: '',
+					// tags: '',
 					date: new Date(),
 					activatedDate: this.calculateActivatedDate(),
 					completedDate: new Date(),

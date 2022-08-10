@@ -23,10 +23,8 @@
 									<form:formContainers>
 										<form:FormContainer>
 											<form:formElements>
-												<form:FormElement label="{i18n>formInputTitle}">
-													<form:fields>
-														<Input id="titleForm" value="{/newWorkItem/title}"/>
-													</form:fields>
+												<form:FormElement label="{i18n>formTextAreaDescription}">
+													<TextArea id="textAreaDescription" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formInputHierarchy}">
 													<form:fields>
@@ -72,9 +70,6 @@
 														</MultiInput>
 													</form:fields>
 												</form:FormElement> -->
-												<form:FormElement label="{i18n>formTextAreaDescription}">
-													<TextArea id="textAreaDescription" rows="4" growing="true" growingMaxLines="6" width="100%"/>
-												</form:FormElement>
 											</form:formElements>
 										</form:FormContainer>
 										<form:FormContainer>
@@ -122,9 +117,6 @@
 
 								<columns>
 									<Column>
-										<Text text="{i18n>tableColumnTitle}"/>
-									</Column>
-									<Column>
 										<Text text="{i18n>tableColumnDate}"/>
 									</Column>
 									<Column>
@@ -156,7 +148,6 @@
 								<items>
 									<ColumnListItem press=".onPress">
 										<cells>
-											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="12vw"/>
 											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
