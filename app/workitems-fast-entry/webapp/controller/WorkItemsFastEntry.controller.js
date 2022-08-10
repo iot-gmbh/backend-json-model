@@ -3,19 +3,33 @@ const nest = (items, ID = null, link = 'parent_ID') =>
 		.filter((item) => item[link] === ID)
 		.map((item) => ({ ...item, children: nest(items, item.ID) }));
 
+function addMinutes(date, minutes) {
+	return new Date(date.getTime() + minutes * 60000);
+}
 sap.ui.define(
-	[
-		'./BaseController',
-		'sap/ui/Device',
-		'sap/ui/model/Filter',
-		'sap/ui/model/FilterOperator',
-		'sap/ui/model/json/JSONModel',
-		'sap/ui/core/Fragment'
-	],
-	(BaseController, Device, Filter, FilterOperator, JSONModel, Fragment) =>
+	['./BaseController', '../model/formatter', 'sap/ui/model/Filter', 'sap/ui/model/FilterOperator'],
+	(BaseController, formatter, Filter, FilterOperator) =>
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
+			formatter,
 			async onInit() {
-				const model = new JSONModel({
+				// this.setModel(model);
+
+				// this._loadHierarchy();
+				this._filterHierarchyByPath('hierarchyTreeForm', '');
+				// this._filterHierarchyByPath('hierarchyTreeTable', '');
+				this.searchFilters = [];
+			},
+
+			async onBeforeRendering() {
+				const model = this.getModel();
+				const loadFrom = new Date();
+				loadFrom.setHours(0, 0, 0, 0); // last midnight
+				const loadUntil = new Date();
+				loadUntil.setHours(24, 0, 0, 0); // last midnight
+				const newItemStartDate = new Date();
+				const newItemCompletedDate = addMinutes(new Date(), 15);
+
+				model.setData({
 					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					busy: false,
 					showHierarchyTreeForm: false,
@@ -23,120 +37,50 @@ sap.ui.define(
 					categoriesFlat: {},
 					categoriesNested: {},
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
-					workItems: this._loadMockData(),
-					newWorkItem: undefined
+					// workItems: this._loadMockData(),
+					newWorkItem: {
+						title: '',
+						parentPath: '',
+						tags: [],
+						// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
+						// description: '',
+						// date: new Date(),
+						activatedDate: newItemStartDate,
+						completedDate: newItemCompletedDate,
+						// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
+						// location: '',
+						state: 'incompleted'
+					}
 				});
 
-				this.setModel(model);
-				this.loadInitialFormData();
-				this._loadHierarchy();
-				this._filterHierarchyByPath('hierarchyTreeForm', '');
-				// this._filterHierarchyByPath('hierarchyTreeTable', '');
-				this.searchFilters = [];
+				await Promise.all([
+					model.load('/MyCategories'),
+					model.load('/MyWorkItems', {
+						filters: [
+							new Filter({
+								filters: [
+									new Filter({
+										path: 'completedDate',
+										operator: 'GE',
+										value1: loadFrom
+									}),
+									new Filter({
+										path: 'activatedDate',
+										operator: 'LE',
+										value1: loadUntil
+									})
+								],
+								and: true
+							})
+						]
+					})
+				]);
 
-				// this.byId('hierarchySearchForm').setFilterFunction((term, item) =>
-				// 	// A case-insensitive "string contains" style filter
-				// 	item.getText().match(new RegExp(term, 'i'))
-				// );
+				const categories = model.getProperty('/MyCategories');
+				// eslint-disable-next-line camelcase
+				const categoriesLevel0 = categories.filter(({ parent_ID }) => !parent_ID);
 
-				// // TODO: Auslagern in control?
-				// this.byId('hierarchySearchForm').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeForm.bind(this)
-				// );
-				// this.byId('hierarchyTreeForm').attachBrowserEvent(
-				// 	'focusin',
-				// 	this.onFocusInHierarchyTreeForm.bind(this)
-				// );
-				// this.byId('hierarchyTreeForm').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeForm.bind(this)
-				// );
-
-				// // Funktioniert nicht
-				// this.byId('hierarchySearchTable').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeTable.bind(this)
-				// );
-				// this.byId('hierarchyTreeTable').attachBrowserEvent(
-				// 	'focusin',
-				// 	this.onFocusInHierarchyTreeTable.bind(this)
-				// );
-				// this.byId('hierarchyTreeTable').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeTable.bind(this)
-				// );
-			},
-
-			_loadMockData() {
-				return [
-					{
-						title: 'Projektaufschreibung Programmierung Neue Funktion',
-						parentPath: 'CAS HCOB > FSDM Businessglossar',
-						tags: '',
-						description: '',
-						date: new Date('2022-07-07'),
-						activatedDate: new Date('2022-07-07T06:00Z'),
-						completedDate: new Date('2022-07-07T10:30Z'),
-						location: 'IOT',
-						state: 'incompleted'
-					},
-					{
-						title: 'Projektaufschreibung Programmierung Neue Funktion',
-						parentPath: 'CAS HCOB > FSDM Businessglossar',
-						tags: '',
-						description: '',
-						date: new Date('2022-07-07'),
-						activatedDate: new Date('2022-07-07T10:30Z'),
-						completedDate: new Date('2022-07-07T14:00Z'),
-						location: 'IOT',
-						state: 'incompleted'
-					}
-				];
-			},
-
-			loadInitialFormData() {
-				const model = this.getModel();
-				const initialWorkItem = {
-					title: '',
-					parentPath: '',
-					tags: '',
-					// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
-					// description: '',
-					// date: new Date(),
-					activatedDate: this.calculateActivatedDate(),
-					completedDate: new Date(),
-					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
-					// location: '',
-					state: 'incompleted'
-				};
-
-				model.setProperty('/newWorkItem', initialWorkItem);
-				model.updateBindings(true);
-			},
-
-			calculateActivatedDate() {
-				const model = this.getModel();
-				const workItems = model.getProperty('/workItems').map((workItem) => ({ ...workItem }));
-				const latestCompletedDate = workItems.reduce((completedDate, workItem) => {
-					if (completedDate === undefined) {
-						return workItem.completedDate;
-					}
-					return workItem.completedDate > completedDate ? workItem.completedDate : completedDate;
-				}, undefined);
-
-				let nextActivatedDate = latestCompletedDate;
-				const currentDate = new Date();
-				// toDateString() returns a string consisting of the year, month and day only
-				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
-					nextActivatedDate = currentDate;
-					nextActivatedDate.setHours(8, 30, 0);
-					if (currentDate.getTime() < nextActivatedDate.getTime()) {
-						nextActivatedDate = currentDate;
-					}
-				}
-
-				return nextActivatedDate;
+				model.setProperty('/categoriesLevel0', categoriesLevel0);
 			},
 
 			async _loadHierarchy() {
@@ -215,25 +159,6 @@ sap.ui.define(
 				}
 			},
 
-			// onFocusInHierarchyTreeForm() {
-			// 	this.getModel().setProperty('/showHierarchyTreeForm', true);
-			// },
-
-			// onFocusOutHierarchyTreeForm() {
-			// 	this.getModel().setProperty('/showHierarchyTreeForm', false);
-			// },
-
-			// // Funktioniert nicht
-			// onFocusInHierarchyTreeTable() {
-			// 	console.log('Focusin');
-			// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
-			// },
-
-			// onFocusOutHierarchyTreeTable() {
-			// 	console.log('Focusout');
-			// 	this.getModel().setProperty('/showHierarchyTreeTable', false);
-			// },
-
 			onSearch(event) {
 				this.searchFilters = [];
 				this.searchQuery = event.getSource().getValue();
@@ -245,19 +170,10 @@ sap.ui.define(
 				this.byId('table').getBinding('items').filter(this.searchFilters);
 			},
 
-			addWorkItem() {
+			async addWorkItem() {
 				const model = this.getModel();
-				const workItems = model.getProperty('/workItems');
 				const newWorkItem = model.getProperty('/newWorkItem');
-
-				// const location = this.byId('selectLocation').getValue();
-				// model.setProperty('/newWorkItem/location', location);
-				this.checkCompleteness();
-
-				workItems.push(newWorkItem);
-				model.setProperty('/workItems', workItems);
-				model.updateBindings(true);
-				this.loadInitialFormData();
+				await model.create('/MyWorkItems', newWorkItem);
 			},
 
 			// TODO: Erweitern um weitere Pruefungen

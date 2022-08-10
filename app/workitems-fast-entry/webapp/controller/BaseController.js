@@ -55,25 +55,25 @@ sap.ui.define(
 				} else {
 					this.getRouter().navTo('master', {}, true);
 				}
-			},
-
-			async read({ path, ...params }) {
-				return new Promise((resolve, reject) => {
-					this.getModel('OData').read(path, {
-						...params,
-						success: resolve,
-						error: reject
-					});
-				});
-			},
-
-			async create({ path, data }) {
-				return new Promise((resolve, reject) => {
-					this.getModel('OData').create(path, data, {
-						success: resolve,
-						error: reject
-					});
-				});
 			}
+
+			// async read({ path, ...params }) {
+			// 	return new Promise((resolve, reject) => {
+			// 		this.getModel('OData').read(path, {
+			// 			...params,
+			// 			success: resolve,
+			// 			error: reject
+			// 		});
+			// 	});
+			// },
+
+			// async create({ path, data }) {
+			// 	return new Promise((resolve, reject) => {
+			// 		this.getModel('OData').create(path, data, {
+			// 			success: resolve,
+			// 			error: reject
+			// 		});
+			// 	});
+			// }
 		})
 );
