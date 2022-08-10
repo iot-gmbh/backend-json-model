@@ -100,7 +100,7 @@ module.exports = cds.service.impl(async function () {
   const { Categories, Users, WorkItems } = db.entities("iot.planner");
 
   // REVISIT: comparator dependent on DB-type
-  const comparator = db.kind === "sqlite" ? "=" : "ilike";
+  // const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
   this.on("READ", "MyCategories", async (req) => {
     // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
@@ -292,7 +292,7 @@ module.exports = cds.service.impl(async function () {
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
     const combined = [
-      ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
+      // ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
@@ -343,7 +343,6 @@ module.exports = cds.service.impl(async function () {
 
       map[appointment.ID] = { ...appointment, parentPath: parent?.path };
     }
-
     const results = Object.values(map).filter(({ deleted }) => !deleted);
 
     results.$count = results.length;

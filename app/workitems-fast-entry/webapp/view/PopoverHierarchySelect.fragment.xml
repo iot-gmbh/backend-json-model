@@ -1,0 +1,12 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:c="iot.workitemsfastentry.control">
+    <c:If condition="{= ${/showHierarchyTreeForm} === true}">
+        <Popover id="popoverHierarchyTree" showHeader="false" contentWidth="30.8vw" placement="Bottom">
+            <Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+                <StandardTreeItem title="{title}"/>
+            </Tree>
+        </Popover>
+        <Tree visible="false"/>
+    </c:If>
+</core:FragmentDefinition>
