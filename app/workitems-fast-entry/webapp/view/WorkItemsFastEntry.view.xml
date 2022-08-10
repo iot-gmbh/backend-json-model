@@ -24,7 +24,7 @@
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formTextAreaDescription}">
-													<TextArea id="textAreaDescription" rows="1" growing="true" growingMaxLines="6" width="100%"/>
+													<TextArea id="textAreaDescription" value="{newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formInputHierarchy}">
 													<form:fields>
@@ -186,7 +186,7 @@
 													<core:Item key="{title}" text="{title}"/>
 												</items>
 											</ComboBox>
-											<TextArea value="{description}" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
 											<c:If condition="{= ${state} === 'completed'}">
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://sys-enter-2" state="Success"/>
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://alert" state="Warning"/>
