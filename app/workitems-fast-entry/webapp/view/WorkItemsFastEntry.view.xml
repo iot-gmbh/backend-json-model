@@ -114,7 +114,6 @@
 								<headerToolbar>
 									<OverflowToolbar>
 										<ToolbarSpacer/>
-										<Button text="{i18n>tableButtonCommit}"/>
 										<Button text="{i18n>tableButtonDelete}"/>
 										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
 										<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
