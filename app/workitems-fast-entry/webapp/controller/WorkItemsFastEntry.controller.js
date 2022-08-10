@@ -330,11 +330,12 @@ sap.ui.define(
 				const { results: workItemsBackend } = await this.read({
 					path: '/MyWorkItems',
 					urlParameters: { $top: 100, $expand: 'tags' },
+					// Currently loading all work items with a not empty string as state
 					filters: [
 						new Filter({
 							path: 'state',
-							operator: 'EQ',
-							value1: 'incompleted'
+							operator: 'NE',
+							value1: ''
 						})
 					]
 				});
