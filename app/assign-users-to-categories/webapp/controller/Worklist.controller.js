@@ -50,11 +50,10 @@ sap.ui.define(
 
         async onBeforeRendering() {
           const model = this.getModel();
-          await this.getModel().load("/Categories", {
+
+          const categories = await this.getModel().load("/Categories", {
             urlParameters: { $expand: "members,tags" },
           });
-
-          const categories = model.getProperty("/Categories");
 
           const categoriesLevel0 = categories.filter(
             ({ parent_ID }) => !parent_ID

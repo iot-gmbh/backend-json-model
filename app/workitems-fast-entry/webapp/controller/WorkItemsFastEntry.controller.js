@@ -1,22 +1,14 @@
-const nest = (items, ID = null, link = 'parent_ID') =>
-	items
-		.filter((item) => item[link] === ID)
-		.map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 function addMinutes(date, minutes) {
 	return new Date(date.getTime() + minutes * 60000);
 }
+
 sap.ui.define(
 	['./BaseController', '../model/formatter', 'sap/ui/model/Filter', 'sap/ui/model/FilterOperator'],
 	(BaseController, formatter, Filter, FilterOperator) =>
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			formatter,
 			async onInit() {
-				// this.setModel(model);
-
-				// this._loadHierarchy();
 				this._filterHierarchyByPath('hierarchyTreeForm', '');
-				// this._filterHierarchyByPath('hierarchyTreeTable', '');
 				this.searchFilters = [];
 			},
 
@@ -53,7 +45,7 @@ sap.ui.define(
 					}
 				});
 
-				await Promise.all([
+				const [categories] = await Promise.all([
 					model.load('/MyCategories'),
 					model.load('/MyWorkItems', {
 						filters: [
@@ -76,29 +68,10 @@ sap.ui.define(
 					})
 				]);
 
-				const categories = model.getProperty('/MyCategories');
 				// eslint-disable-next-line camelcase
 				const categoriesLevel0 = categories.filter(({ parent_ID }) => !parent_ID);
 
 				model.setProperty('/categoriesLevel0', categoriesLevel0);
-			},
-
-			async _loadHierarchy() {
-				const model = this.getModel();
-
-				model.setProperty('/busy', true);
-
-				const [{ results: categories }] = await Promise.all([
-					this.read({
-						path: '/MyCategories'
-					})
-				]);
-
-				const categoriesNested = nest(categories);
-
-				model.setProperty('/categoriesNested', categoriesNested);
-				model.setProperty('/categoriesFlat', categories);
-				model.setProperty('/busy', false);
 			},
 
 			onChangeHierarchy(event) {

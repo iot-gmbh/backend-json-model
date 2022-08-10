@@ -146,6 +146,8 @@ sap.ui.define(
         // this.setProperty(path, results);
         this.setProperty(path, results);
         this.nest();
+
+        return results;
       },
 
       // create new obj => nav-Props will be deleted so don't use reference
