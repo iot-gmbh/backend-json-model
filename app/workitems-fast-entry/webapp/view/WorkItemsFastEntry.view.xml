@@ -51,6 +51,13 @@
 										</form:FormContainer>
 										<form:FormContainer>
 											<form:formElements>
+												<form:FormElement label="{i18n>formSelectActivity}">
+													<Select id="selectActivityForm" items="{/activities}">
+														<items>
+															<core:Item key="{title}" text="{title}"/>
+														</items>
+													</Select>
+												</form:FormElement>
 												<form:FormElement label="{i18n>formInputTags}">
 													<Input id="inputTags"/>
 												</form:FormElement>
@@ -82,7 +89,7 @@
 													<TimePicker value="{ path: '/newWorkItem/completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
-													<ComboBox id="selectLocation" items="{/locations}">
+													<ComboBox id="selectLocationForm" items="{/locations}">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
@@ -132,6 +139,9 @@
 										<Text text="{i18n>tableColumnHierarchy}"/>
 									</Column>
 									<Column>
+										<Text text="{i18n>tableColumnActivity}"/>
+									</Column>
+									<Column>
 										<Text text="{i18n>tableColumnTags}"/>
 									</Column>
 									<Column>
@@ -165,6 +175,11 @@
 													<Tree visible="false"/>
 												</c:If> -->
 											<!-- </VBox> -->
+											<Select id="selectActivityTable" items="{/activities}">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</Select>
 											<TextArea value="" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
 											<ComboBox id="selectLocationTable" items="{/locations}" selectedKey="{location}">
 												<items>

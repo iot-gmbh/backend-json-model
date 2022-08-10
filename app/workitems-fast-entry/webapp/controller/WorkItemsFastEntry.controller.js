@@ -22,6 +22,11 @@ sap.ui.define(
 					showHierarchyTreeTable: false,
 					categoriesFlat: {},
 					categoriesNested: {},
+					activities: [
+						{ title: 'Durchführung' },
+						{ title: 'Reise-/Fahrzeit' },
+						{ title: 'Pendelfahrt Hotel/Einsatzort' }
+					],
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					workItems: this.loadMockData(),
 					newWorkItem: undefined
