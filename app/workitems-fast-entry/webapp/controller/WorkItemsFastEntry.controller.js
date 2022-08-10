@@ -23,15 +23,18 @@ sap.ui.define(
 					categoriesFlat: {},
 					categoriesNested: {},
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
-					workItems: this._loadMockData(),
+					workItems: this.loadMockData(),
 					newWorkItem: undefined
 				});
 
 				this.setModel(model);
+
+				model.setProperty('/busy', true);
 				this.loadInitialFormData();
+				this.updateTable();
 				this._loadHierarchy();
-				this._filterHierarchyByPath('hierarchyTreeForm', '');
-				// this._filterHierarchyByPath('hierarchyTreeTable', '');
+				this.filterHierarchyByPath('hierarchyTreeForm', '');
+				// this.filterHierarchyByPath('hierarchyTreeTable', '');
 				this.searchFilters = [];
 
 				this.byId('hierarchySearchForm').setFilterFunction((term, item) =>
@@ -53,6 +56,8 @@ sap.ui.define(
 					this.onFocusOutHierarchyTreeForm.bind(this)
 				);
 
+				model.setProperty('/busy', true);
+
 				// // Funktioniert nicht
 				// this.byId('hierarchySearchTable').attachBrowserEvent(
 				// 	'focusout',
@@ -68,7 +73,7 @@ sap.ui.define(
 				// );
 			},
 
-			_loadMockData() {
+			loadMockData() {
 				return [
 					{
 						title: 'Projektaufschreibung Programmierung Neue Funktion',
@@ -100,10 +105,10 @@ sap.ui.define(
 				const initialWorkItem = {
 					title: '',
 					parentPath: '',
-					tags: '',
+					// tags: '',
 					// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
 					// description: '',
-					// date: new Date(),
+					date: new Date(),
 					activatedDate: this.calculateActivatedDate(),
 					completedDate: new Date(),
 					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
@@ -182,11 +187,11 @@ sap.ui.define(
 					// 	popover.openBy(event.getSource());
 					// });
 
-					this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
+					this.filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 				}
 			},
 
-			_filterHierarchyByPath(elementID, query) {
+			filterHierarchyByPath(elementID, query) {
 				const filters = [
 					new Filter({
 						path: 'path',
@@ -234,6 +239,28 @@ sap.ui.define(
 			// 	this.getModel().setProperty('/showHierarchyTreeTable', false);
 			// },
 
+			onChangeDate(event) {
+				const model = this.getModel();
+				const date = model.getProperty('/newWorkItem/date');
+				const activatedDate = model.getProperty('/newWorkItem/activatedDate');
+				const completedDate = model.getProperty('/newWorkItem/completedDate');
+
+				model.setProperty('/newWorkItem/activatedDate', this.updateDate(activatedDate, date));
+				model.setProperty('/newWorkItem/completedDate', this.updateDate(completedDate, date));
+			},
+
+			updateDate(oldDate, date) {
+				// Copy values instead of changing the state of /newWorkItem/date
+				const newDate = new Date(date.getTime());
+				const newDateHours = oldDate.getHours();
+				const newDateMinutes = oldDate.getMinutes();
+				const newDateSeconds = oldDate.getSeconds();
+
+				newDate.setHours(newDateHours, newDateMinutes, newDateSeconds);
+
+				return newDate;
+			},
+
 			onSearch(event) {
 				this.searchFilters = [];
 				this.searchQuery = event.getSource().getValue();
@@ -245,7 +272,7 @@ sap.ui.define(
 				this.byId('table').getBinding('items').filter(this.searchFilters);
 			},
 
-			addWorkItem() {
+			onPressSubmitWorkItem() {
 				const model = this.getModel();
 				const workItems = model.getProperty('/workItems');
 				const newWorkItem = model.getProperty('/newWorkItem');
@@ -254,10 +281,7 @@ sap.ui.define(
 				// model.setProperty('/newWorkItem/location', location);
 				this.checkCompleteness();
 
-				workItems.push(newWorkItem);
-				model.setProperty('/workItems', workItems);
-				model.updateBindings(true);
-				this.loadInitialFormData();
+				this._submitWorkItem();
 			},
 
 			// TODO: Erweitern um weitere Pruefungen
@@ -265,10 +289,6 @@ sap.ui.define(
 				let isCompleted = true;
 				const model = this.getModel();
 				newWorkItem = model.getProperty('/newWorkItem');
-
-				for (const [key, value] of Object.entries(newWorkItem)) {
-					console.log('key:', key, 'value:', value);
-				}
 
 				Object.values(newWorkItem).forEach((val) => {
 					if (val.toString().trim() === '') {
@@ -279,6 +299,64 @@ sap.ui.define(
 				isCompleted
 					? model.setProperty('/newWorkItem/state', 'completed')
 					: model.setProperty('/newWorkItem/state', 'incompleted');
+			},
+
+			async _submitWorkItem() {
+				const model = this.getModel();
+				const workItem = model.getProperty('/newWorkItem');
+				delete workItem.date;
+
+				model.setProperty('/busy', true);
+
+				try {
+					await this.create({
+						path: '/MyWorkItems',
+						data: workItem
+					});
+				} catch (error) {
+					console.log(error);
+				}
+
+				this.updateTable();
+
+				model.setProperty('/busy', false);
+			},
+
+			async updateTable() {
+				const model = this.getModel();
+				let workItems = model.getProperty('/workItems');
+				const { results: workItemsBackend } = await this.read({
+					path: '/MyWorkItems',
+					urlParameters: { $top: 100, $expand: 'tags' },
+					filters: [
+						new Filter({
+							path: 'state',
+							operator: 'EQ',
+							value1: 'incompleted'
+						})
+					]
+				});
+
+				workItems = this.loadMockData();
+				workItemsBackend.forEach((workItemBackend) => {
+					workItemBackend.date = workItemBackend.activatedDate;
+					workItemBackend.duration = this.calcDurationInHoursAndMinutes(workItemBackend.duration);
+					workItems.push(workItemBackend);
+				});
+
+				model.setProperty('/workItems', workItems);
+				this.loadInitialFormData();
+			},
+
+			calcDurationInHoursAndMinutes(decimalDuration) {
+				const minutes = Math.round((decimalDuration % 1) * 60);
+				const hours = Math.floor(decimalDuration);
+
+				return this.addLeadingZero(hours) + ':' + this.addLeadingZero(minutes);
+			},
+
+			addLeadingZero(number) {
+				return number < 10 ? '0' + number : number;
 			}
 		})
 );

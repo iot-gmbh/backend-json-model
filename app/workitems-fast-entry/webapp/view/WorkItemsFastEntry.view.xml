@@ -6,7 +6,7 @@
 	xmlns:f="sap.f"
 	xmlns:c="iot.workitemsfastentry.control" controllerName="iot.workitemsfastentry.controller.WorkItemsFastEntry">
 	<Shell id="shell" appWidthLimited="false">
-		<App>
+		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<customHeader>
 					<f:ShellBar title="{i18n>title}"/>
@@ -54,8 +54,24 @@
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formInputTags}">
-													<Input id="inputTags" value="{/newWorkItem/tags}"/>
+													<Input id="inputTags"/>
 												</form:FormElement>
+												<!-- <form:FormElement label="{i18n>formInputTags}">
+													<form:fields>
+														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
+															path: 'OData>/Tags',
+															templateShareable: false,
+															sorter: { path: 'title' }
+														}" showValueHelp="false" tokenUpdate="onUpdateTags">
+															<suggestionItems>
+																<core:Item key="{OData>title}" text="{OData>title}"/>
+															</suggestionItems>
+															<tokens>
+																<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
+															</tokens>
+														</MultiInput>
+													</form:fields>
+												</form:FormElement> -->
 												<form:FormElement label="{i18n>formTextAreaDescription}">
 													<TextArea id="textAreaDescription" rows="4" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
@@ -64,7 +80,7 @@
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }" change=".onChangeDate"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
 													<TimePicker value="{ path: '/newWorkItem/activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
@@ -81,7 +97,7 @@
 										</form:FormContainer>
 									</form:formContainers>
 								</form:Form>
-								<Button text="{i18n>formButtonSubmit}" press=".addWorkItem" type="Emphasized"/>
+								<Button text="{i18n>formButtonSubmit}" press=".onPressSubmitWorkItem" type="Emphasized"/>
 							</f:DynamicPageHeader>
 						</f:header>
 
@@ -144,7 +160,7 @@
 											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<TimePicker value="{ path: 'duration' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<Input value="{duration}" editable="false"/>
 											<!-- <VBox alignItems="Center"> -->
 											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{/categoriesFlat}" liveChange="onChangeHierarchy" width="24vw">
 												<suggestionItems>
@@ -158,7 +174,7 @@
 													<Tree visible="false"/>
 												</c:If> -->
 											<!-- </VBox> -->
-											<TextArea value="{tags}" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
+											<TextArea value="" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
 											<ComboBox id="selectLocationTable" items="{/locations}" selectedKey="{location}">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
