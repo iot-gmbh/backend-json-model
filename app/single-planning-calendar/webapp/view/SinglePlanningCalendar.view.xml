@@ -70,7 +70,7 @@
 														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
 															path: 'OData>/Tags',
 															templateShareable: false,
-															sorter: { path: 'title' }
+															sorter: { path: 'catNumber' }
 														}" showValueHelp="false" tokenUpdate="onUpdateTags">
 															<suggestionItems>
 																<core:Item key="{OData>title}" text="{OData>title}"/>

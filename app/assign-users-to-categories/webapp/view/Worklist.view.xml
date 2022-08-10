@@ -28,7 +28,7 @@
         </dependents>
 
         <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
-        sorter: {path: 'title'},
+        sorter: {path: 'catNumber'},
         parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
