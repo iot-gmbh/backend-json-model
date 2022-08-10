@@ -29,22 +29,6 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.on("READ", "Categories", async (req) => {
-    const results = await db.run(req.query);
-
-    // const categories = results.map(
-    //   ({ id, parent_id, hierarchylevel, catnumber, ...data }) => ({
-    //     ID: id,
-    //     parent_ID: parent_id,
-    //     hierarchyLevel: hierarchylevel,
-    //     catNumber: catnumber,
-    //     ...data,
-    //   })
-    // );
-
-    return results;
-  });
-
   this.on("CREATE", "Tags", async (req) => {
     const tags = await this.read(Tags).where({ title: req.data.title });
     const tx = this.transaction(req);
