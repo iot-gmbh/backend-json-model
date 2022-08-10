@@ -9,8 +9,8 @@ annotate my.WorkItems with @(UI : {
     RequestAtLeast : [title]
   },
   HeaderInfo          : {
-    TypeName       : '{i18n>Customer}',
-    TypeNamePlural : '{i18n>Customers}',
+    TypeName       : '{i18n>WorkItem}',
+    TypeNamePlural : '{i18n>WorkItems}',
     Title          : {Value : title},
   },
   Identification      : [{Value : title}],

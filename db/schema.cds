@@ -110,55 +110,50 @@ view CategoryTags as
       tenant;
 
 entity WorkItems : managed, relevance, multitenant {
-  key ID                  : String @odata.Type : 'Edm.String';
-      tags                : Composition of many Tags2WorkItems
-                              on tags.workItem = $self;
-      activatedDate       : DateTime;
-      activatedDateMonth  : Integer;
-      activatedDateYear   : Integer;
-      activatedDateDay    : Integer;
-      completedDate       : DateTime;
-      completedDateMonth  : Integer;
-      completedDateYear   : Integer;
-      completedDateDay    : Integer;
-      assignedTo          : Association to Users;
-      changedDate         : DateTime;
-      assignedToName      : String;
-      createdDate         : DateTime;
-      reason              : String;
-      state               : String;
-      teamProject         : String;
-      title               : String;
-      workItemType        : String;
+  key ID                 : String @odata.Type : 'Edm.String';
+      tags               : Composition of many Tags2WorkItems
+                             on tags.workItem = $self;
+      activatedDate      : DateTime;
+      activatedDateMonth : Integer;
+      activatedDateYear  : Integer;
+      activatedDateDay   : Integer;
+      completedDate      : DateTime;
+      completedDateMonth : Integer;
+      completedDateYear  : Integer;
+      completedDateDay   : Integer;
+      assignedTo         : Association to Users;
+      changedDate        : DateTime;
+      assignedToName     : String;
+      createdDate        : DateTime;
+      reason             : String;
+      state              : String;
+      teamProject        : String;
+      title              : String;
+      workItemType       : String;
       // Scheduling
-      completedWork       : Decimal(2);
-      remainingWork       : Decimal(2);
-      originalEstimate    : Decimal(2);
+      completedWork      : Decimal(2);
+      remainingWork      : Decimal(2);
+      originalEstimate   : Decimal(2);
       // Documentation
-      resolvedDate        : DateTime;
-      closedDate          : DateTime;
-      customer_friendlyID : String;
-      customerName        : String;
-      private             : Boolean;
-      isAllDay            : Boolean;
+      resolvedDate       : DateTime;
+      closedDate         : DateTime;
+      private            : Boolean;
+      isAllDay           : Boolean;
       // Custom
-      project_friendlyID  : String;
-      projectTitle        : String;
-      ticket              : String;
-      type                : String enum {
+      type               : String enum {
         Manual;
         Event;
         WorkItem
       };
-      duration            : Decimal(2);
-      resetEntry          : Boolean;
-      deleted             : Boolean;
-      confirmed           : Boolean;
-      parent              : Association to Categories;
-      hierarchy           : Association to Hierarchies
-                              on parent.ID = hierarchy.ID;
+      duration           : Decimal(2);
+      resetEntry         : Boolean;
+      deleted            : Boolean;
+      confirmed          : Boolean;
+      parent             : Association to Categories;
+      hierarchy          : Association to Hierarchies
+                             on parent.ID = hierarchy.ID;
       // Used by the Frontend's hierarchy input-filter
-      parentPath          : String;
+      parentPath         : String;
 };
 
 entity CategoryLevels : multitenant {

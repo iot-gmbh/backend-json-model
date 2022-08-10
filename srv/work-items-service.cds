@@ -8,6 +8,9 @@ service WorkItemsService @(requires : 'authenticated-user') {
 
   entity Hierarchies as projection on my.hierarchies.Hierarchies;
 
+  @cds.redirection.target
+  entity Categories  as projection on my.Categories;
+
   entity WorkItems @(restrict : [
     {
       grant : 'READ',
@@ -29,14 +32,14 @@ service WorkItemsService @(requires : 'authenticated-user') {
     *,
     assignedTo.userPrincipalName         as assignedToUserPrincipalName,
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
-    hierarchy.level0                     as customer,
-    hierarchy.level1                     as project,
-    hierarchy.level2                     as subProject,
-    hierarchy.level3                     as workPackage,
-    hierarchy.level0Title                as customerText,
-    hierarchy.level1Title                as projectText,
-    hierarchy.level2Title                as subProjectText,
-    hierarchy.level3Title                as workPackageText
+  // hierarchy.level0                     as customer,
+  // hierarchy.level1                     as project,
+  // hierarchy.level2                     as subProject,
+  // hierarchy.level3                     as workPackage,
+  // hierarchy.level0Title                as customerText,
+  // hierarchy.level1Title                as projectText,
+  // hierarchy.level2Title                as subProjectText,
+  // hierarchy.level3Title                as workPackageText
   } where deleted is null
 
   @cds.redirection.target : true

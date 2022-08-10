@@ -1,4 +1,5 @@
-using {iot.planner as my} from '../db/schema';
+using {WorkItemsService as my} from './work-items-service';
+
 
 service AnalyticsService {
   @Aggregation.ApplySupported.PropertyRestrictions : true
@@ -19,17 +20,12 @@ service AnalyticsService {
       grant : 'READ',
       to    : 'admin',
     },
-  ])               as projection on my.WorkItems {
+  ])                as projection on my.WorkItems {
     key ID,
         @Analytics.Dimension : true
         assignedTo.displayName as assignedToName           @(title : '{i18n>WorkItemsAggr.assignedTo}'),
         @Analytics.Dimension : true
-        customer.name          as customerName             @(title : '{i18n>WorkItemsAggr.customer}'),
-        @Analytics.Dimension : true
-        project.title          as projectTitle             @(title : '{i18n>WorkItemsAggr.project}'),
-        @Analytics.Dimension : true
-    key workPackage.title      as packageTitle             @(title : '{i18n>WorkItemsAggr.package}'),
-
+        parent.title           as parentTitle              @(title : 'Parent'),
         @Analytics.Dimension : true
         activatedDate,
         @Analytics.Dimension : true
@@ -44,18 +40,11 @@ service AnalyticsService {
         round(
           duration, 2)         as duration : Decimal(9, 2) @(title : '{i18n>WorkItemsAggr.duration}'),
         @Analytics.Dimension : true
-        customer,
-        @Analytics.Dimension : true
-        project,
-        @Analytics.Dimension : true
-        subproject,
-        @Analytics.Dimension : true
-        workPackage,
+        parent,
         @Analytics.Dimension : true
         assignedTo,
   } where deleted is null;
 
-  entity Customers as projection on my.Customers;
-  entity Projects  as projection on my.Projects;
-  entity Users     as projection on my.Users;
+  entity Users      as projection on my.Users;
+  entity Categories as projection on my.Categories;
 }

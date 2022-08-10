@@ -21,7 +21,9 @@
         "uri": "/v2/analytics",
         "type": "OData",
         "settings": {
-          "annotations": ["annotation"],
+          "annotations": [
+            "annotation"
+          ],
           "localUri": "localService/metadata.xml",
           "odataVersion": "2.0"
         }
@@ -70,7 +72,10 @@
       "tablet": true,
       "phone": true
     },
-    "supportedThemes": ["sap_hcb", "sap_belize"]
+    "supportedThemes": [
+      "sap_hcb",
+      "sap_belize"
+    ]
   },
   "sap.ui5": {
     "resources": {
@@ -115,7 +120,7 @@
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
+          "defaultCountMode": "Request",
           "refreshAfterChange": false,
           "metadataUrlParams": {
             "sap-value-list": "none"
