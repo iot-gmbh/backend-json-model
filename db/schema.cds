@@ -145,7 +145,7 @@ entity WorkItems : managed, relevance, multitenant {
         Event;
         WorkItem
       };
-      duration           : Decimal(2);
+      duration           : Decimal(2) default 0;
       resetEntry         : Boolean;
       deleted            : Boolean;
       confirmed          : Boolean;
