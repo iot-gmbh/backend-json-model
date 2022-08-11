@@ -74,7 +74,7 @@ annotate my.WorkItems with @(UI : {
     ChartType           : #Column,
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : assignedTo_userPrincipalName,
+      Dimension : assignedToUserPrincipalName,
       Role      : #Series
     }, ],
     MeasureAttributes   : [{
@@ -123,11 +123,11 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  parent_ID                   @Common.ValueList : {
+  parentTitle                 @Common.ValueList : {
     CollectionPath               : 'Categories',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'parent_ID',
+      LocalDataProperty : 'parentTitle',
       ValueListProperty : 'ID'
     }],
     PresentationVariantQualifier : 'DurationByCategory'
@@ -151,3 +151,34 @@ annotate my.WorkItems with @(UI : {
     PresentationVariantQualifier : 'DurationByAssignedTo'
   }
 };
+
+annotate my.Categories with @(UI : {
+
+  // =====================================================
+  // Default
+  //
+  PresentationVariant : {
+    $Type          : 'UI.PresentationVariantType',
+    SortOrder      : [{
+      Descending : true,
+      Property   : duration,
+    }],
+    Visualizations : ['@UI.Chart'],
+  },
+  Chart               : {
+    $Type               : 'UI.ChartDefinitionType',
+    ChartType           : #Column,
+    DimensionAttributes : [{
+      $Type     : 'UI.ChartDimensionAttributeType',
+      Dimension : parentTitle,
+      Role      : #Category
+    }, ],
+    MeasureAttributes   : [{
+      $Type   : 'UI.ChartMeasureAttributeType',
+      Measure : duration,
+      Role    : #Axis1
+    }],
+    Dimensions          : [parentTitle],
+    Measures            : [duration],
+  },
+})
