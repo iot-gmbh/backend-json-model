@@ -73,11 +73,15 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "env:dev": "bash ./set-env.sh dev",
     "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh prod"
+    "env:prod": "bash ./set-env.sh prod",
+    "watch-workitems-alp-v4": "cds watch --open workitems-alp-v4/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
     "db",
     "srv",
     "app"
+  ],
+  "sapux": [
+    "app/workitems-alp-v4"
   ]
 }

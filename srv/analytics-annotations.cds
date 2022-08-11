@@ -1,10 +1,11 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
+
   // =====================================================
-  // Duration by Category
+  // Default
   //
-  PresentationVariant #DurationByCategory   : {
+  PresentationVariant                       : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
       Descending : true,
@@ -17,7 +18,7 @@ annotate my.WorkItems with @(UI : {
     ChartType           : #Column,
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : parent_ID,
+      Dimension : parentTitle,
       Role      : #Category
     }, ],
     MeasureAttributes   : [{
@@ -25,8 +26,20 @@ annotate my.WorkItems with @(UI : {
       Measure : duration,
       Role    : #Axis1
     }],
-    Dimensions          : [parent_ID],
+    Dimensions          : [parentTitle],
     Measures            : [duration],
+  },
+
+  // =====================================================
+  // Duration by Category
+  //
+  PresentationVariant #DurationByCategory   : {
+    $Type          : 'UI.PresentationVariantType',
+    SortOrder      : [{
+      Descending : true,
+      Property   : duration,
+    }],
+    Visualizations : ['@UI.Chart'],
   },
 
   // =====================================================
@@ -89,7 +102,7 @@ annotate my.WorkItems with @(UI : {
     completedDate,
     activatedDateMonth,
     assignedTo_userPrincipalName,
-    parent_ID,
+    parentTitle,
   ],
   LineItem                                  : [
     {
@@ -98,7 +111,7 @@ annotate my.WorkItems with @(UI : {
     },
     {
       $Type : 'UI.DataField',
-      Value : parent_ID,
+      Value : parentTitle,
     },
     {
       $Type : 'UI.DataField',
@@ -106,15 +119,15 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  parent_ID                    @Common.ValueList : {
-    CollectionPath               : 'Categories',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'parent_ID',
-      ValueListProperty : 'ID'
-    }],
-    PresentationVariantQualifier : 'DurationByCategory'
-  };
+  // parent_ID                    @Common.ValueList : {
+  //   CollectionPath               : 'Categories',
+  //   Parameters                   : [{
+  //     $Type             : 'Common.ValueListParameterInOut',
+  //     LocalDataProperty : 'parent_ID',
+  //     ValueListProperty : 'ID'
+  //   }],
+  //   PresentationVariantQualifier : 'DurationByCategory'
+  // };
   activatedDateMonth           @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{
