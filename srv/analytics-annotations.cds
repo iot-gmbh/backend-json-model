@@ -31,18 +31,6 @@ annotate my.WorkItems with @(UI : {
   },
 
   // =====================================================
-  // Duration by Category
-  //
-  PresentationVariant #DurationByCategory   : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{
-      Descending : true,
-      Property   : duration,
-    }],
-    Visualizations : ['@UI.Chart'],
-  },
-
-  // =====================================================
   // Duration by Month
   //
   PresentationVariant #DurationByMonth      : {
@@ -87,27 +75,43 @@ annotate my.WorkItems with @(UI : {
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
       Dimension : assignedTo_userPrincipalName,
-      Role      : #Category
+      Role      : #Series
     }, ],
     MeasureAttributes   : [{
       $Type   : 'UI.ChartMeasureAttributeType',
       Measure : duration,
       Role    : #Axis1
     }],
-    Dimensions          : [assignedTo_userPrincipalName],
+    Dimensions          : [assignedToUserPrincipalName],
     Measures            : [duration],
   },
+
+  // =====================================================
+  // Duration by Category
+  //
+  PresentationVariant #DurationByCategory   : {
+    $Type          : 'UI.PresentationVariantType',
+    SortOrder      : [{
+      Descending : true,
+      Property   : duration,
+    }],
+    Visualizations : ['@UI.Chart'],
+  },
+
+  // =====================================================
+  // Table config
+  //
   SelectionFields                           : [
     activatedDate,
     completedDate,
+    assignedToUserPrincipalName,
     activatedDateMonth,
-    assignedTo_userPrincipalName,
     parentTitle,
   ],
   LineItem                                  : [
     {
       $Type : 'UI.DataField',
-      Value : assignedTo_userPrincipalName,
+      Value : assignedToUserPrincipalName,
     },
     {
       $Type : 'UI.DataField',
@@ -119,16 +123,16 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  // parent_ID                    @Common.ValueList : {
-  //   CollectionPath               : 'Categories',
-  //   Parameters                   : [{
-  //     $Type             : 'Common.ValueListParameterInOut',
-  //     LocalDataProperty : 'parent_ID',
-  //     ValueListProperty : 'ID'
-  //   }],
-  //   PresentationVariantQualifier : 'DurationByCategory'
-  // };
-  activatedDateMonth           @Common.ValueList : {
+  parent_ID                   @Common.ValueList : {
+    CollectionPath               : 'Categories',
+    Parameters                   : [{
+      $Type             : 'Common.ValueListParameterInOut',
+      LocalDataProperty : 'parent_ID',
+      ValueListProperty : 'ID'
+    }],
+    PresentationVariantQualifier : 'DurationByCategory'
+  };
+  activatedDateMonth          @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
@@ -137,12 +141,12 @@ annotate my.WorkItems with @(UI : {
     }],
     PresentationVariantQualifier : 'DurationByMonth'
   };
-  assignedTo_userPrincipalName @Common.ValueList : {
+  assignedToUserPrincipalName @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'assignedTo_userPrincipalName',
-      ValueListProperty : 'assignedTo_userPrincipalName'
+      LocalDataProperty : 'assignedToUserPrincipalName',
+      ValueListProperty : 'assignedToUserPrincipalName'
     }],
     PresentationVariantQualifier : 'DurationByAssignedTo'
   }

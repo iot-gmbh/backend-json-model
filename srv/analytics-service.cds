@@ -66,6 +66,8 @@ service AnalyticsService {
     @Analytics.Dimension : true
     parent.title   as parentTitle,
     @Analytics.Dimension : true
+    parent,
+    @Analytics.Dimension : true
     assignedTo,
   } where deleted is null;
 
