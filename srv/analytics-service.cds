@@ -15,11 +15,13 @@ service AnalyticsService {
       Property : duration,
     }, ],
   }
-  // @Aggregation                : {RecursiveHierarchy : {
-  //   $Type                    : 'Aggregation.RecursiveHierarchyType',
-  //   NodeProperty             : ID,
-  //   ParentNavigationProperty : parent,
-  // }, }
+  @Aggregation                                     : {RecursiveHierarchy : {
+    $Type                    : 'Aggregation.RecursiveHierarchyType',
+    NodeProperty             : ID,
+    ParentNavigationProperty : parent,
+    DistanceFromRootProperty : hierarchyLevel,
+    IsLeafProperty           : drillDownState,
+  }, }
   @(Analytics.AggregatedProperties : [{
     Name                 : 'totalDuration',
     AggregationMethod    : 'sum',
@@ -27,31 +29,43 @@ service AnalyticsService {
     $Type                : 'Analytics.AggregatedPropertyType',
     ![@Common.Label]     : 'Total duration'
   }])
-  entity WorkItems  as projection on my.WorkItems {
-    @Analytics.Dimension : true
-    assignedToUserPrincipalName,
-    @Analytics.Dimension : true
-    activatedDate,
-    @Analytics.Dimension : true
-    completedDate,
-    @Analytics.Dimension : true
-    activatedDateMonth,
-    @Analytics.Dimension : true
-    activatedDateYear,
+  entity Categories as
+    select from my.Categories as cat
+    left outer join my.WorkItems as wi
+      on wi.parent.ID = cat.ID
+    {
+      @Analytics.Dimension           : true
+      cat.ID,
+      @Analytics.Dimension           : true
+      assignedToUserPrincipalName,
+      @Analytics.Dimension           : true
+      activatedDate,
+      @Analytics.Dimension           : true
+      completedDate,
+      @Analytics.Dimension           : true
+      activatedDateMonth,
+      @Analytics.Dimension           : true
+      activatedDateYear,
 
-    @Analytics.Measure   : true
-    @Aggregation.default : #SUM
-    round(
-      duration, 2) as duration : Decimal(9, 2) @(title : '{i18n>WorkItemsAggr.duration}'),
+      @Analytics.Measure             : true
+      @Aggregation.default           : #SUM
+      duration,
 
-    @Analytics.Dimension : true
-    parent.title   as parentTitle,
-    @Analytics.Dimension : true
-    parent,
-    @Analytics.Dimension : true
-    assignedTo,
-  } where deleted is null;
+      @Analytics.Dimension           : true
+      cat.title  as parentTitle,
+      @Analytics.Dimension           : true
+      cat.parent,
+      @Analytics.Dimension           : true
+      assignedTo,
+
+      @sap.hierarchy.drill.state.for : 'ID'
+      'expanded' as drillDownState : String,
+      cat.hierarchyLevel,
+      cat.tenant,
+    }
+    where
+      deleted is null;
 
   entity Users      as projection on my.Users;
-  entity Categories as projection on my.Categories;
+// entity Categories as projection on my.Categories;
 }

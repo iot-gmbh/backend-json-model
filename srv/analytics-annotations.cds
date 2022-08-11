@@ -1,6 +1,6 @@
 using {AnalyticsService as my} from './analytics-service';
 
-annotate my.WorkItems with @(UI : {
+annotate my.Categories with @(UI : {
 
   // =====================================================
   // Default
@@ -8,8 +8,8 @@ annotate my.WorkItems with @(UI : {
   PresentationVariant                       : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
-      Descending : true,
       Property   : duration,
+      Descending : true,
     }],
     Visualizations : ['@UI.Chart'],
   },
@@ -36,8 +36,8 @@ annotate my.WorkItems with @(UI : {
   PresentationVariant #DurationByMonth      : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
-      Descending : true,
       Property   : duration,
+      Descending : true,
     }],
     Visualizations : ['@UI.Chart#DurationByMonth', ],
   },
@@ -64,8 +64,8 @@ annotate my.WorkItems with @(UI : {
   PresentationVariant #DurationByAssignedTo : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
-      Descending : true,
       Property   : duration,
+      Descending : true,
     }],
     Visualizations : ['@UI.Chart#DurationByAssignedTo', ],
   },
@@ -92,8 +92,8 @@ annotate my.WorkItems with @(UI : {
   PresentationVariant #DurationByCategory   : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
-      Descending : true,
       Property   : duration,
+      Descending : true,
     }],
     Visualizations : ['@UI.Chart'],
   },
@@ -133,7 +133,7 @@ annotate my.WorkItems with @(UI : {
     PresentationVariantQualifier : 'DurationByCategory'
   };
   activatedDateMonth          @Common.ValueList : {
-    CollectionPath               : 'WorkItems',
+    CollectionPath               : 'Categories',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
       LocalDataProperty : 'activatedDateMonth',
@@ -142,7 +142,7 @@ annotate my.WorkItems with @(UI : {
     PresentationVariantQualifier : 'DurationByMonth'
   };
   assignedToUserPrincipalName @Common.ValueList : {
-    CollectionPath               : 'WorkItems',
+    CollectionPath               : 'Categories',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
       LocalDataProperty : 'assignedToUserPrincipalName',
@@ -152,33 +152,34 @@ annotate my.WorkItems with @(UI : {
   }
 };
 
-annotate my.Categories with @(UI : {
+// annotate my.Categories with @(UI : {
 
-  // =====================================================
-  // Default
-  //
-  PresentationVariant : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{
-      Descending : true,
-      Property   : duration,
-    }],
-    Visualizations : ['@UI.Chart'],
-  },
-  Chart               : {
-    $Type               : 'UI.ChartDefinitionType',
-    ChartType           : #Column,
-    DimensionAttributes : [{
-      $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : parentTitle,
-      Role      : #Category
-    }, ],
-    MeasureAttributes   : [{
-      $Type   : 'UI.ChartMeasureAttributeType',
-      Measure : duration,
-      Role    : #Axis1
-    }],
-    Dimensions          : [parentTitle],
-    Measures            : [duration],
-  },
-})
+//   // =====================================================
+//   // Default
+//   //
+//   PresentationVariant : {
+//     $Type          : 'UI.PresentationVariantType',
+//     SortOrder      : [{
+//       Descending : true,
+//       Property   : duration,
+//     }],
+//     Visualizations : ['@UI.Chart'],
+//   },
+//   Chart               : {
+//     $Type               : 'UI.ChartDefinitionType',
+//     ChartType           : #Column,
+//     DimensionAttributes : [{
+//       $Type     : 'UI.ChartDimensionAttributeType',
+//       Dimension : parentTitle,
+//       Role      : #Category
+//     }, ],
+//     MeasureAttributes   : [{
+//       $Type   : 'UI.ChartMeasureAttributeType',
+//       Measure : duration,
+//       Role    : #Axis1
+//     }],
+//     Dimensions          : [parentTitle],
+//     Measures            : [duration],
+//   },
+// })
+//

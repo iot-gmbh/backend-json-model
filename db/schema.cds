@@ -64,7 +64,7 @@ entity Categories : cuid, managed, relevance, multitenant {
   mappingID       : String;
   drillDownState  : String default 'expanded';
   path            : String;
-  hierarchyLevel  : Integer;
+  hierarchyLevel  : String;
   levelSpecificID : String;
   catNumber       : String;
   level           : Association to CategoryLevels
@@ -157,7 +157,7 @@ entity WorkItems : managed, relevance, multitenant {
 };
 
 entity CategoryLevels : multitenant {
-  key hierarchyLevel : Integer;
+  key hierarchyLevel : String;
       title          : String;
 }
 
