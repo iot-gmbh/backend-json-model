@@ -1,0 +1,22 @@
+<mvc:View xmlns:layout="sap.suite.ui.commons.networkgraph.layout" controllerName="iot.planner.assignuserstocategories.controller.Graph" displayBlock="true"
+    xmlns="sap.suite.ui.commons.networkgraph"
+    xmlns:m="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+
+    <m:Page title="{i18n>graph}">
+
+        <Graph nodes="{/Categories}" lines="{path: '/Categories', filters: [{path: 'parent_ID', operator: 'NE', value1: null}]}">
+            <layoutAlgorithm>
+                <!-- <layout:ForceDirectedLayout ></layout:ForceDirectedLayout> -->
+                <layout:ForceBasedLayout ></layout:ForceBasedLayout>
+            </layoutAlgorithm>
+            <nodes>
+                <Node title="{title}" key="{ID}"/>
+            </nodes>
+            <lines>
+                <Line from="{ID}" to="{parent_ID}"/>
+            </lines>
+        </Graph>
+    </m:Page>
+
+</mvc:View>

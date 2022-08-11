@@ -112,6 +112,13 @@
           "target": [
             "object"
           ]
+        },
+        {
+          "pattern": "graph",
+          "name": "graph",
+          "target": [
+            "graph"
+          ]
         }
       ],
       "targets": {
@@ -126,6 +133,12 @@
           "viewId": "object",
           "viewLevel": 2,
           "title": "{i18n>objectViewTitle}"
+        },
+        "graph": {
+          "viewName": "Graph",
+          "viewId": "graph",
+          "viewLevel": 1,
+          "title": "{i18n>graph}"
         },
         "objectNotFound": {
           "viewName": "ObjectNotFound",
