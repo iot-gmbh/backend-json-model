@@ -49,7 +49,7 @@ service AnalyticsService {
 
       @Analytics.Measure             : true
       @Aggregation.default           : #SUM
-      duration,
+      wi.duration,
 
       @Analytics.Dimension           : true
       cat.title  as parentTitle,

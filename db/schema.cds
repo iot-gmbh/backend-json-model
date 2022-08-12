@@ -67,6 +67,7 @@ entity Categories : cuid, managed, relevance, multitenant {
   hierarchyLevel  : String;
   levelSpecificID : String;
   catNumber       : String;
+  totalDuration   : Decimal;
   level           : Association to CategoryLevels
                       on hierarchyLevel = level.hierarchyLevel;
   tags            : Association to many Tags2Categories
@@ -81,19 +82,17 @@ entity Categories : cuid, managed, relevance, multitenant {
                       on children.parent = $self;
 }
 
-entity CategoriesAggr as projection on Categories {
+entity CategoriesCumulativeDurations as projection on Categories {
   key ID,
       tenant,
       title,
-      description,
-      reference,
       parent,
-      members,
-      tags,
+      // members,
+      // tags,
       children,
-      levelSpecificID as catNumber,
-      title           as path,
-      0               as totalDuration : Integer
+      // levelSpecificID as catNumber,
+      // title           as path,
+      totalDuration
 }
 
 entity Tags : multitenant {
@@ -146,9 +145,9 @@ entity WorkItems : managed, relevance, multitenant {
       title              : String;
       workItemType       : String;
       // Scheduling
-      completedWork      : Decimal(2);
-      remainingWork      : Decimal(2);
-      originalEstimate   : Decimal(2);
+      completedWork      : Decimal;
+      remainingWork      : Decimal;
+      originalEstimate   : Decimal;
       // Documentation
       resolvedDate       : DateTime;
       closedDate         : DateTime;
@@ -160,7 +159,7 @@ entity WorkItems : managed, relevance, multitenant {
         Event;
         WorkItem
       };
-      duration           : Decimal(2) default 0;
+      duration           : Decimal;
       resetEntry         : Boolean;
       deleted            : Boolean;
       confirmed          : Boolean;

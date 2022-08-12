@@ -50,24 +50,18 @@ FROM
       FROM
         parentCTE AS children
         INNER JOIN iot_planner_Categories AS this ON children.parent_ID = this.ID
-    ),
-    pathCTE AS (
-      SELECT
-        *
-      FROM
-        iot_planner_categories_cte
     )
     SELECT
       pathCTE.*,
       childrenCTE.user_userPrincipalName
     FROM
-      pathCTE
+      iot_planner_categories_cte as pathCTE
       JOIN childrenCTE on pathCTE.ID = childrenCTE.ID
     UNION
     SELECT
       pathCTE.*,
       parentCTE.user_userPrincipalName
     FROM
-      pathCTE
+      iot_planner_categories_cte as pathCTE
       JOIN parentCTE on pathCTE.ID = parentCTE.ID
   ) sub;
