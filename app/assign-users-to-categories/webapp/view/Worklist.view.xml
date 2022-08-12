@@ -58,11 +58,6 @@
                         <Input value="{reference}" change="onChangeCategory"/>
                     </t:template>
                 </t:Column>
-                <!-- <t:Column width="5%">
-                    <t:template>
-                        <Button type="Ghost" icon="sap-icon://add" press="onPressAdd"/>
-                    </t:template>
-                </t:Column> -->
                 <t:Column label="{i18n>tags}" width="20%">
                     <t:template>
                         <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{

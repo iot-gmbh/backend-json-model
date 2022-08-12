@@ -9,6 +9,14 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
+  this.on("READ", "Categories", async (req) => {
+    const results = await db.run(
+      SELECT.from("iot_planner_categories_aggregations")
+        .where`user_userPrincipalName = ${req.user.id}`
+    );
+    return results;
+  });
+
   this.before("CREATE", "Categories", async (req) => {
     let siblings = [];
     let parent = {};
