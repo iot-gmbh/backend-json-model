@@ -9,6 +9,7 @@ FROM
 group by
     cat.ID,
     cat.title,
+    cat.tenant,
     cat.parent_ID,
     cat.description,
     cat.reference,

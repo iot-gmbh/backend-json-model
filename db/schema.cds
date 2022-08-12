@@ -81,6 +81,21 @@ entity Categories : cuid, managed, relevance, multitenant {
                       on children.parent = $self;
 }
 
+entity CategoriesAggr as projection on Categories {
+  key ID,
+      tenant,
+      title,
+      description,
+      reference,
+      parent,
+      members,
+      tags,
+      children,
+      levelSpecificID as catNumber,
+      title           as path,
+      0               as totalDuration : Integer
+}
+
 entity Tags : multitenant {
   key title    : String;
       category : Association to Categories;

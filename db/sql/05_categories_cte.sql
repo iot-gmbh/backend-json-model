@@ -6,24 +6,26 @@ OR REPLACE VIEW iot_planner_categories_cte -- Recursive CTE that returns descend
 /* 
  childrenCTE: get all children of the categories, that have been assigned to my user via the n-m mapping table of iot_planner_Users2Categories 
  parentCTE: get all parents of my categories
- pathCTE: concat the titles along a path of the tree (from root) into a field named 'path'
+ cte: concat the titles along a path of the tree (from root) into a field named 'path'
  */
-AS WITH RECURSIVE pathCTE AS (
+AS WITH RECURSIVE cte AS (
     SELECT
-        cat.ID,
-        cat.title,
-        cat.description,
-        cat.reference,
-        cat.parent_ID,
-        cat.levelSpecificID as catNumber,
-        cat.title as path
+        ID,
+        tenant,
+        title,
+        description,
+        reference,
+        parent_ID,
+        levelSpecificID as catNumber,
+        title as path
     FROM
-        iot_planner_Categories AS cat
+        iot_planner_Categories
     WHERE
-        cat.parent_ID IS NULL
+        parent_ID IS NULL
     UNION
     SELECT
         this.ID,
+        this.tenant,
         this.title,
         this.description,
         this.reference,
@@ -35,10 +37,10 @@ AS WITH RECURSIVE pathCTE AS (
             (prior.path || ' > ' || this.title) as varchar(5000)
         ) as path
     FROM
-        pathCTE AS prior
+        cte AS prior
         INNER JOIN iot_planner_Categories AS this ON this.parent_ID = prior.ID
 )
 SELECT
-    pathCTE.*
+    cte.*
 FROM
-    pathCTE;
+    cte;

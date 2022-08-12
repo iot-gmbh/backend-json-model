@@ -16,6 +16,7 @@ FROM
     WITH RECURSIVE childrenCTE AS (
       SELECT
         cat.ID,
+        cat.tenant,
         cat.parent_ID,
         user2cat.user_userPrincipalName
       FROM
@@ -24,6 +25,7 @@ FROM
       UNION
       SELECT
         this.ID,
+        this.tenant,
         this.parent_ID,
         parent.user_userPrincipalName
       FROM
@@ -33,6 +35,7 @@ FROM
     parentCTE AS (
       SELECT
         cat.ID,
+        cat.tenant,
         cat.parent_ID,
         user2cat.user_userPrincipalName
       FROM
@@ -41,6 +44,7 @@ FROM
       UNION
       SELECT
         this.ID,
+        this.tenant,
         this.parent_ID,
         children.user_userPrincipalName
       FROM

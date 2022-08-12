@@ -37,7 +37,10 @@ service AdminService @(requires : 'authenticated-user') {
   entity Tags             as projection on my.Tags;
   entity Tags2Categories  as projection on my.Tags2Categories;
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
-  entity Categories       as projection on my.Categories;
+  // entity Categories       as projection on my.Categories;
+
+  @cds.redirection.target
+  entity CategoriesAggr   as projection on my.CategoriesAggr;
 
   entity Users2Categories as projection on my.Users2Categories {
     *,

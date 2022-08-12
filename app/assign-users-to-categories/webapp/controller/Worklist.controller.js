@@ -51,7 +51,7 @@ sap.ui.define(
         async onBeforeRendering() {
           const model = this.getModel();
 
-          const categories = await this.getModel().load("/Categories", {
+          const categories = await this.getModel().load("/CategoriesAggr", {
             urlParameters: { $expand: "members,tags" },
           });
 
@@ -147,7 +147,7 @@ sap.ui.define(
             await model.update(category);
           } else {
             // Create
-            await model.create("/Categories", category);
+            await model.create("/CategoriesAggr", category);
           }
         },
 

@@ -32,7 +32,7 @@ sap.ui.define(
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
           this.associations = this.schema.association;
           this.entityTypes = this.schema.entityType.map(
-            ({ name, property, key, navigationProperty }) => ({
+            ({ name, property, key, navigationProperty = [] }) => ({
               name,
               keys: key.propertyRef.map((k) => k.name),
               properties: property,
@@ -44,7 +44,10 @@ sap.ui.define(
                   );
 
                   const {
-                    referentialConstraint: { dependent, principal },
+                    referentialConstraint: { dependent, principal } = {
+                      dependent: { propertyRef: [] },
+                      principal: { propertyRef: [] },
+                    },
                     end,
                   } = association;
 
@@ -115,7 +118,7 @@ sap.ui.define(
 
         const $expand = params?.urlParameters?.$expand;
 
-        if ($expand.includes("/")) {
+        if ($expand?.includes("/")) {
           throw new Error("Deep expand is not supported.");
         }
 

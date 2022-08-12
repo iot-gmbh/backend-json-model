@@ -28,7 +28,7 @@
         </dependents>
 
         <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
-        sorter: {path: 'catNumber'},
+        sorter: {path: 'totalDuration', descending: true},
         parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
@@ -88,6 +88,11 @@
                                 <Token key="{user_userPrincipalName}" text="{displayName}" delete="onDeleteToken"/>
                             </tokens>
                         </MultiInput>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>totalDuration}" width="10%" hAlign="End">
+                    <t:template>
+                        <ObjectNumber number="{totalDuration}" textAlign="End"/>
                     </t:template>
                 </t:Column>
             </t:columns>

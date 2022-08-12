@@ -7,6 +7,7 @@ FROM
         WITH RECURSIVE cte AS (
             SELECT
                 ID,
+                tenant,
                 parent_ID,
                 totalDuration
             FROM
@@ -15,6 +16,7 @@ FROM
             ALL
             SELECT
                 this.ID,
+                this.tenant,
                 this.parent_ID,
                 this.totalDuration
             FROM
@@ -23,11 +25,13 @@ FROM
         )
         SELECT
             cte.ID,
+            cte.tenant,
             cte.parent_ID,
             sum(totalDuration) AS totalDuration
         FROM
             cte -- left outer join pathCTE on pathCTE.ID = cte.ID
         GROUP BY
             cte.ID,
+            cte.tenant,
             cte.parent_ID
     ) sub;
