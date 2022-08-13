@@ -1,7 +1,7 @@
 set check_function_bodies = off;
 
 CREATE OR REPLACE FUNCTION public.get_cumulative_category_durations(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, totalduration numeric)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, accumulatedduration numeric)
  LANGUAGE plpgsql
 AS $function$ #variable_conflict use_column
 begin RETURN QUERY
@@ -13,18 +13,22 @@ WITH RECURSIVE cte AS (
         tenant,
         parent_ID as parent,
         title,
-        totalDuration
+        hierarchyLevel,
+        totalDuration,
+        totalDuration as accumulatedDuration
     FROM
         get_durations(p_username, p_date_from, p_date_until)
     UNION
-    ALL
+	ALL
     SELECT
         c.ID,
         d.ID,
         c.tenant,
         c.parent,
         c.title,
-        d.totalDuration
+        c.hierarchyLevel,
+        c.totalDuration,
+        d.totalDuration as accumulatedDuration
     FROM
         cte c
         JOIN get_durations(p_username, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
@@ -34,70 +38,44 @@ SELECT
     tenant,
     parent as parent_ID,
     title,
-    sum(totalDuration) AS totalDuration
+    hierarchyLevel,
+    totalDuration,
+    sum(accumulatedDuration) AS accumulatedDuration
 FROM
     cte 
 GROUP BY
     ID,
     tenant,
     parent,
-    catNumber,
+    hierarchyLevel,
+    totalDuration,
     title;
 
 end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_cumulative_category_durations_with_path(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, totalduration numeric)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, accumulatedduration numeric, catnumber character varying)
  LANGUAGE plpgsql
 AS $function$ #variable_conflict use_column
 begin RETURN QUERY
-/* for reference: https://stackoverflow.com/questions/26660189/recursive-query-with-sum-in-postgres */
-WITH RECURSIVE cte AS (
-    SELECT
-        ID,
-        ID as parent_ID,
-        tenant,
-        parent_ID as parent,
-        title,
-        totalDuration
-    FROM
-        get_durations(p_username, p_date_from, p_date_until)
-    UNION
-    ALL
-    SELECT
-        c.ID,
-        d.ID,
-        c.tenant,
-        c.parent,
-        c.title,
-        d.totalDuration
-    FROM
-        cte c
-        JOIN get_durations(p_username, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
-)
 SELECT
-    cte.ID,
-    cte.tenant,
-    cte.parent as parent_ID,
-    cte.title,
-    pathCTE.catNumber,
-    sum(totalDuration) AS totalDuration
+    dur.ID,
+    dur.tenant,
+    dur.parent_ID,
+    dur.title,
+    dur.hierarchyLevel,
+    dur.totalDuration,
+    dur.accumulatedDuration,
+    pathCTE.catNumber
 FROM
-    cte 
-    JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = cte.ID
-GROUP BY
-    cte.ID,
-    cte.tenant,
-    cte.parent,
-    cte.title,
-    catNumber;
-
+    get_cumulative_category_durations(p_username, p_date_from, p_date_until) as dur
+    JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;
 end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_durations(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, totalduration numeric)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, datefrom timestamp with time zone, dateuntil timestamp with time zone)
  LANGUAGE plpgsql
 AS $function$ 
 #variable_conflict use_column
@@ -107,7 +85,10 @@ SELECT
     cat.tenant,
     cat.parent_ID,
     cat.title,
-    sum(wi.duration) as totalDuration
+    cat.hierarchyLevel,
+    sum(wi.duration) as totalDuration,
+    p_date_from as dateFrom,
+    p_date_until as dateUntil
 FROM
     iot_planner_categories as cat
     LEFT OUTER JOIN iot_planner_workitems as wi on wi.parent_ID = cat.ID
@@ -118,7 +99,8 @@ GROUP BY
     cat.ID,
     cat.tenant,
     cat.parent_ID,
-    cat.title;
+    cat.title,
+    cat.hierarchyLevel;
 
 end
 
