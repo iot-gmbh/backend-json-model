@@ -1,0 +1,26 @@
+{
+    "name": "Categories",
+    "keys": [
+        "ID"
+    ],
+    "properties": [
+        {
+            "name": "ID",
+            "type": "Edm.Guid"
+        }
+    ],
+    "relations": [
+        {
+            "name": "children",
+            "fromRole": "Categories1",
+            "toRole": "Categories",
+            "cardinality": "*",
+            "refConstraints": [
+                {
+                    "from": "ID",
+                    "to": "parent_ID"
+                }
+            ]
+        }
+    ]
+}

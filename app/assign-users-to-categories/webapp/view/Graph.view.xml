@@ -1,22 +1,35 @@
 <mvc:View xmlns:layout="sap.suite.ui.commons.networkgraph.layout" controllerName="iot.planner.assignuserstocategories.controller.Graph" displayBlock="true"
     xmlns="sap.suite.ui.commons.networkgraph"
     xmlns:m="sap.m"
+    xmlns:t="sap.ui.table"
     xmlns:mvc="sap.ui.core.mvc">
 
     <m:Page title="{i18n>graph}">
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/CategoriesCumulativeExpenses', 
         sorter: {path: 'totalDuration', descending: true},
-        parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 3, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+            <t:extension>
+                <m:Toolbar width="100%">
+                    <m:SearchField search="onSearch"/>
+                    <!-- <m:Text text="{i18>dateFrom}"/> -->
+
+                    <m:Label text="{i18n>dateFrom}:" width="5em" textAlign="End"/>
+                    <m:DatePicker value="{path: 'viewModel>/dateFrom', type: 'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    <m:Label text="{i18n>dateUntil}:" width="5em" textAlign="End"/>
+                    <m:DatePicker value="{path: 'viewModel>/dateUntil', type: 'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    <m:Button text="{i18n>refresh}" press="loadData"/>
+                </m:Toolbar>
+            </t:extension>
             <t:columns>
-                <t:Column label="{i18n>title}" width="30%">
+                <t:Column label="{i18n>title}">
                     <t:template>
-                        <Text value="{title}" change="onChangeCategory"/>
+                        <m:Text text="{title}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>catNumber}" width="10%">
+                <t:Column label="{i18n>totalDuration}" hAlign="End">
                     <t:template>
-                        <Text text="{catNumber}"/>
+                        <m:ObjectNumber number="{totalDuration}" textAlign="End"/>
                     </t:template>
                 </t:Column>
             </t:columns>

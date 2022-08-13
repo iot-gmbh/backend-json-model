@@ -90,6 +90,11 @@ sap.ui.define(
         };
       },
 
+      async callFunction(...args) {
+        const result = await this.odata.callFunction(...args);
+        return result;
+      },
+
       async create(...args) {
         const result = await this.odata.create(...args);
         const [path] = args;
@@ -108,14 +113,17 @@ sap.ui.define(
         return results;
       },
 
-      async load(...args) {
-        const { results } = await this.odata.read(...args);
-        const [path, params] = args;
-        const entityTypeName = path.slice(1);
-        const entityType = this.entityTypes.find(
-          ({ name }) => name === entityTypeName
-        );
-
+      store(
+        path,
+        data,
+        {
+          entityTypeName = path.slice(1),
+          entityType = this.entityTypes.find(
+            ({ name }) => name === entityTypeName
+          ),
+          ...params
+        }
+      ) {
         const $expand = params?.urlParameters?.$expand;
 
         if ($expand?.includes("/")) {
@@ -133,7 +141,7 @@ sap.ui.define(
             const existingData = this.getProperty(`/${entityName}`);
             let newData = [];
 
-            results.forEach((res) => {
+            data.forEach((res) => {
               const expData =
                 relation.cardinality === "1" ? res[exp] : res[exp].results;
 
@@ -147,8 +155,16 @@ sap.ui.define(
         }
 
         // this.setProperty(path, results);
-        this.setProperty(path, results);
+        this.setProperty(path, data);
         this.nest();
+      },
+
+      // = read + store
+      async load(...args) {
+        const { results } = await this.odata.read(...args);
+        const [path, params] = args;
+
+        this.store(path, results, params);
 
         return results;
       },

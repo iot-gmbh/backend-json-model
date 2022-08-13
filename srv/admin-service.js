@@ -9,16 +9,19 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  this.on("getCategoryExpenses", async (req) => {
+  this.on("getCumCategoryExpenses", async (req) => {
     const {
-      data: { dateFrom, dateUntil },
+      data: { dateFrom, dateUntil, includeEmpty },
       user,
     } = req;
 
-    const results = await db.run(
-      `SELECT * FROM get_category_expenses($1, $2, $3)`,
-      [user.id, dateFrom, dateUntil]
-    );
+    let query = `SELECT * FROM get_category_expenses($1, $2, $3)`;
+
+    if (includeEmpty) {
+      query += ` WHERE totalDuration is not null`;
+    }
+
+    const results = await db.run(query, [user.id, dateFrom, dateUntil]);
 
     const categories = results.map(
       ({ id, tenant, parent_id, totalduration, title }) => ({
