@@ -11,14 +11,15 @@ module.exports = cds.service.impl(async function () {
 
   this.on("getCumulativeCategoryDurations", async (req) => {
     const {
-      data: { dateFrom, dateUntil, includeEmpty },
+      data: { dateFrom, dateUntil, excludeEmptyDurations },
       user,
     } = req;
 
     let query = `SELECT * FROM get_cumulative_category_durations_with_path($1, $2, $3)`;
 
-    if (includeEmpty) {
-      query += ` WHERE totalDuration is not null`;
+    // Params in ODataV2 are sent as string => 'false' instead of false
+    if (excludeEmptyDurations || excludeEmptyDurations === "true") {
+      query += ` WHERE accumulatedDuration is not null`;
     }
 
     const results = await db.run(query, [user.id, dateFrom, dateUntil]);
@@ -28,13 +29,27 @@ module.exports = cds.service.impl(async function () {
     );
 
     const categories = results.map(
-      ({ id, tenant, parent_id, totalduration, title, catnumber }) => ({
+      ({
+        id,
+        tenant,
+        parent_id,
+        title,
+        hierarchylevel,
+        catnumber,
+        totalduration,
+        accumulatedduration,
+      }) => ({
         ID: id,
         tenant,
-        title,
         parent_ID: parent_id,
+        title,
+        hierarchyLevel: hierarchylevel,
         totalDuration: totalduration,
+        accumulatedDuration: accumulatedduration,
         relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
+        relativeAccDuration: Math.round(
+          (accumulatedduration * 100) / sum
+        ).toFixed(0),
         grandTotal: sum,
         catNumber: catnumber,
       })

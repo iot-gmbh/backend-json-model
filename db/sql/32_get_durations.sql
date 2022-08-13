@@ -8,6 +8,7 @@ or replace function get_durations(
     tenant VARCHAR,
     parent_ID VARCHAR,
     title VARCHAR,
+    hierarchyLevel VARCHAR,
     totalDuration numeric,
     dateFrom timestamp with time zone,
     dateUntil timestamp with time zone
@@ -19,6 +20,7 @@ SELECT
     cat.tenant,
     cat.parent_ID,
     cat.title,
+    cat.hierarchyLevel,
     sum(wi.duration) as totalDuration,
     p_date_from as dateFrom,
     p_date_until as dateUntil
@@ -32,7 +34,8 @@ GROUP BY
     cat.ID,
     cat.tenant,
     cat.parent_ID,
-    cat.title;
+    cat.title,
+    cat.hierarchyLevel;
 
 end
 

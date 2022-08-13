@@ -8,7 +8,7 @@
 
         <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/CategoriesCumulativeDurations', 
         sorter: {path: 'totalDuration', descending: true},
-        parameters: {numberOfExpandedLevels: 0, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort" rowsUpdated="onRowsUpdated">
             <t:extension>
                 <m:Toolbar width="100%">
                     <m:Button icon="sap-icon://collapse" press="collapseAll"/>
@@ -34,14 +34,19 @@
                         <m:Text text="{catNumber}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>relativeDuration}" hAlign="End">
+                <t:Column label="{i18n>relativeDuration}">
                     <t:template>
-                        <m:ProgressIndicator percentValue="{relativeDuration}" displayValue="{relativeDuration}%" showValue="true" state="None" />
+                        <m:ProgressIndicator showValue="true" state="None" />
                     </t:template>
                 </t:Column>
                 <t:Column label="{i18n>totalDuration}" hAlign="End">
                     <t:template>
-                        <m:ObjectNumber number="{path: 'totalDuration', formatter: '.formatter.toFixed2'}" unit="h" textAlign="End"/>
+                        <m:ObjectNumber number="{path: 'totalDuration', formatter: '.formatter.toFixed2'}" unit="{=${totalDuration} ? 'h' : ''}" textAlign="End"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>accumulatedDuration}" hAlign="End">
+                    <t:template>
+                        <m:ObjectNumber number="{path: 'accumulatedDuration', formatter: '.formatter.toFixed2'}" unit="{=${accumulatedDuration} ? 'h' : ''}" textAlign="End"/>
                     </t:template>
                 </t:Column>
             </t:columns>

@@ -11,4 +11,17 @@ sap.ui.define([], () => ({
     }
     return parseFloat(sValue).toFixed(2);
   },
+
+  getRelativeDuration(
+    relDuration,
+    relAccDuration,
+    hierarchyLevel,
+    expandToLevel
+  ) {
+    // eslint-disable-next-line eqeqeq
+    if (hierarchyLevel == expandToLevel) {
+      return relAccDuration;
+    }
+    return relDuration;
+  },
 }));

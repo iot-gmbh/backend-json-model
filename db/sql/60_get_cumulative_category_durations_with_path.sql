@@ -8,7 +8,9 @@ or replace function get_cumulative_category_durations_with_path(
     tenant VARCHAR,
     parent_ID VARCHAR,
     title VARCHAR,
-    totalDuration numeric,
+    hierarchyLevel VARCHAR,
+    totalDuration NUMERIC,
+    accumulatedDuration NUMERIC,
     catNumber VARCHAR
 ) language plpgsql as $$ #variable_conflict use_column
 begin RETURN QUERY
@@ -17,7 +19,9 @@ SELECT
     dur.tenant,
     dur.parent_ID,
     dur.title,
+    dur.hierarchyLevel,
     dur.totalDuration,
+    dur.accumulatedDuration,
     pathCTE.catNumber
 FROM
     get_cumulative_category_durations(p_username, p_date_from, p_date_until) as dur

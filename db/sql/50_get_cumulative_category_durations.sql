@@ -8,7 +8,9 @@ or replace function get_cumulative_category_durations(
     tenant VARCHAR,
     parent_ID VARCHAR,
     title VARCHAR,
-    totalDuration numeric
+    hierarchyLevel VARCHAR,
+    totalDuration NUMERIC,
+    accumulatedDuration NUMERIC
 ) language plpgsql as $$ #variable_conflict use_column
 begin RETURN QUERY
 /* for reference: https://stackoverflow.com/questions/26660189/recursive-query-with-sum-in-postgres */
@@ -19,18 +21,22 @@ WITH RECURSIVE cte AS (
         tenant,
         parent_ID as parent,
         title,
-        totalDuration
+        hierarchyLevel,
+        totalDuration,
+        totalDuration as accumulatedDuration
     FROM
         get_durations(p_username, p_date_from, p_date_until)
     UNION
-    ALL
+	ALL
     SELECT
         c.ID,
         d.ID,
         c.tenant,
         c.parent,
         c.title,
-        d.totalDuration
+        c.hierarchyLevel,
+        c.totalDuration,
+        d.totalDuration as accumulatedDuration
     FROM
         cte c
         JOIN get_durations(p_username, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
@@ -40,13 +46,17 @@ SELECT
     tenant,
     parent as parent_ID,
     title,
-    sum(totalDuration) AS totalDuration
+    hierarchyLevel,
+    totalDuration,
+    sum(accumulatedDuration) AS accumulatedDuration
 FROM
     cte 
 GROUP BY
     ID,
     tenant,
     parent,
+    hierarchyLevel,
+    totalDuration,
     title;
 
 end $$;

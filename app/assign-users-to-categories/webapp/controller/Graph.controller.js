@@ -41,7 +41,7 @@ sap.ui.define(
                 // dateUntil: "2023-01-05T15:16:23Z",
                 dateFrom,
                 dateUntil: dateUntil.toISOString(),
-                includeEmpty: false,
+                excludeEmptyDurations: true,
               },
             } // function import parameters
           );
@@ -60,8 +60,8 @@ sap.ui.define(
         },
 
         collapseAll() {
+          this.getModel("viewModel").setProperty("/expandToLevel", 0);
           this.byId("treeTable").collapseAll();
-          this.getModel().setProperty("/expandToLevel", 0);
         },
 
         onChangeNumberOfExpandedLevels() {
@@ -69,6 +69,27 @@ sap.ui.define(
           const { numberOfExpandedLevels } =
             this.getModel("viewModel").getData();
           treeTable.expandToLevel(numberOfExpandedLevels);
+        },
+
+        onRowsUpdated(event) {
+          const table = event.getSource();
+          const rows = table.getRows();
+
+          rows.forEach((row, index) => {
+            if (row.getCells().length === 0) return;
+            const progressIndicatorCell = row.getCells()[2];
+            const { relativeDuration, relativeAccDuration } = row
+              .getBindingContext()
+              .getObject();
+
+            if (table.isExpanded(index)) {
+              progressIndicatorCell.setPercentValue(relativeDuration);
+              progressIndicatorCell.setDisplayValue(`${relativeDuration}%`);
+            } else {
+              progressIndicatorCell.setPercentValue(relativeAccDuration);
+              progressIndicatorCell.setDisplayValue(`${relativeAccDuration}%`);
+            }
+          });
         },
       }
     )
