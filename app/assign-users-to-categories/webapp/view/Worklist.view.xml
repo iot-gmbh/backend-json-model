@@ -27,9 +27,9 @@
             </ResponsivePopover>
         </dependents>
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: {path: 'totalDuration', descending: true},
-        parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>

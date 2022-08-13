@@ -234,25 +234,30 @@ sap.ui.define(
                   ? "1"
                   : "n";
 
-                Object.defineProperty(entity, relation.name, {
-                  configurable: true,
-                  // We don't implement a setter by design so each request has to be made via the OData-service explicitly
-                  get: () => {
-                    const targetEntities =
-                      this.getData()[relation.toRole] || [];
-                    const results = targetEntities.filter((related) =>
-                      relation.refConstraints.every(
-                        ({ to, from }) => related[to] === entity[from]
-                      )
-                    );
+                if (cardinality === "n") {
+                  // eslint-disable-next-line no-param-reassign
+                  entity[relation.name] = entity[relation.name].results;
+                }
 
-                    if (cardinality === "1") {
-                      return results[0];
-                    }
+                // Object.defineProperty(entity, relation.name, {
+                //   configurable: true,
+                //   // We don't implement a setter by design so each request has to be made via the OData-service explicitly
+                //   get: () => {
+                //     const targetEntities =
+                //       this.getData()[relation.toRole] || [];
+                //     const results = targetEntities.filter((related) =>
+                //       relation.refConstraints.every(
+                //         ({ to, from }) => related[to] === entity[from]
+                //       )
+                //     );
 
-                    return results;
-                  },
-                });
+                //     if (cardinality === "1") {
+                //       return results[0];
+                //     }
+
+                //     return results;
+                // },
+                // });
               });
               return entity;
             }),

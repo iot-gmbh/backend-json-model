@@ -1,5 +1,10 @@
 /* eslint-disable camelcase */
 
+const nest = (items, ID = null, link = "parent_ID") =>
+  items
+    .filter((item) => item[link] === ID)
+    .map((item) => ({ ...item, children: nest(items, item.ID) }));
+
 sap.ui.define(
   [
     "./BaseController",
@@ -48,19 +53,21 @@ sap.ui.define(
           this.setModel(viewModel, "worklistView");
         },
 
-        async onBeforeRendering() {
-          const model = this.getModel();
+        // async onBeforeRendering() {
+        //   const model = this.getModel();
 
-          const categories = await this.getModel().load("/Categories", {
-            urlParameters: { $expand: "members,tags" },
-          });
+        //   const categories = await this.getModel().load("/Categories", {
+        //     // urlParameters: { $expand: "members,tags" },
+        //   });
 
-          const categoriesLevel0 = categories.filter(
-            ({ parent_ID }) => !parent_ID
-          );
+        //   const categoriesNested = nest(categories);
 
-          model.setProperty("/categoriesLevel0", categoriesLevel0);
-        },
+        //   // const categoriesLevel0 = categories.filter(
+        //   //   ({ parent_ID }) => !parent_ID
+        //   // );
+
+        //   model.setProperty("/categoriesLevel0", categoriesNested);
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */

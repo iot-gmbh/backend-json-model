@@ -69,7 +69,7 @@
           "bundleName": "iot.planner.assignuserstocategories.i18n.i18n"
         }
       },
-      "OData": {
+      "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {

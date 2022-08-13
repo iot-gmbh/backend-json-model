@@ -1,0 +1,3474 @@
+{
+    "d": {
+        "results": [
+            {
+                "ID": "013cea7a-9b20-4d5f-bf84-574dc82705d6",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "841-CAS2103-Debitel",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'013cea7a-9b20-4d5f-bf84-574dc82705d6')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'013cea7a-9b20-4d5f-bf84-574dc82705d6')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'013cea7a-9b20-4d5f-bf84-574dc82705d6')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'013cea7a-9b20-4d5f-bf84-574dc82705d6')"
+                }
+            },
+            {
+                "ID": "03d1d188-8959-416a-8c45-df3d9a06ba7e",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "867-MEN2101-IAL-MFS-Schulung",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'03d1d188-8959-416a-8c45-df3d9a06ba7e')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'03d1d188-8959-416a-8c45-df3d9a06ba7e')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'03d1d188-8959-416a-8c45-df3d9a06ba7e')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03d1d188-8959-416a-8c45-df3d9a06ba7e')"
+                }
+            },
+            {
+                "ID": "079e2767-42e4-4153-ae81-a7b5b52bdc7e",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "716-MEN1601-Support",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'079e2767-42e4-4153-ae81-a7b5b52bdc7e')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'079e2767-42e4-4153-ae81-a7b5b52bdc7e')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'079e2767-42e4-4153-ae81-a7b5b52bdc7e')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'079e2767-42e4-4153-ae81-a7b5b52bdc7e')"
+                }
+            },
+            {
+                "ID": "07e763f3-b21c-4c10-a3ba-4f3e9796678c",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "734-STE1601-Zeche-Haniel",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'07e763f3-b21c-4c10-a3ba-4f3e9796678c')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'07e763f3-b21c-4c10-a3ba-4f3e9796678c')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'07e763f3-b21c-4c10-a3ba-4f3e9796678c')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'07e763f3-b21c-4c10-a3ba-4f3e9796678c')"
+                }
+            },
+            {
+                "ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "759-FRA1704-ERP-AM",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "02d292e1-6bb4-4347-9a21-6123eeb7d098",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "4971 Neuer Buchungskreis Verwaltungs-GmbH",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'02d292e1-6bb4-4347-9a21-6123eeb7d098')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'02d292e1-6bb4-4347-9a21-6123eeb7d098')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'02d292e1-6bb4-4347-9a21-6123eeb7d098')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'02d292e1-6bb4-4347-9a21-6123eeb7d098')"
+                            }
+                        },
+                        {
+                            "ID": "03a0fdba-1bc2-44cb-9440-7f34cf50e196",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9027 Serialnummernandruck auf SAP Belegen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a0fdba-1bc2-44cb-9440-7f34cf50e196')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a0fdba-1bc2-44cb-9440-7f34cf50e196')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a0fdba-1bc2-44cb-9440-7f34cf50e196')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'03a0fdba-1bc2-44cb-9440-7f34cf50e196')"
+                            }
+                        },
+                        {
+                            "ID": "03a70062-6797-445e-9126-68d94ef3a96a",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10134-Wertlastschrift wird nicht verbucht",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a70062-6797-445e-9126-68d94ef3a96a')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a70062-6797-445e-9126-68d94ef3a96a')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'03a70062-6797-445e-9126-68d94ef3a96a')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'03a70062-6797-445e-9126-68d94ef3a96a')"
+                            }
+                        },
+                        {
+                            "ID": "04c3aa68-d3ef-4a4b-86e3-7da49259a8dc",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9065-Retourenadresse bei Versand aus RO",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04c3aa68-d3ef-4a4b-86e3-7da49259a8dc')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04c3aa68-d3ef-4a4b-86e3-7da49259a8dc')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04c3aa68-d3ef-4a4b-86e3-7da49259a8dc')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'04c3aa68-d3ef-4a4b-86e3-7da49259a8dc')"
+                            }
+                        },
+                        {
+                            "ID": "063a57f1-75b6-4dc0-9dac-58c5fe6df135",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9108-EAN Korrekturen / Meldungen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'063a57f1-75b6-4dc0-9dac-58c5fe6df135')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'063a57f1-75b6-4dc0-9dac-58c5fe6df135')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'063a57f1-75b6-4dc0-9dac-58c5fe6df135')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'063a57f1-75b6-4dc0-9dac-58c5fe6df135')"
+                            }
+                        },
+                        {
+                            "ID": "06cca7db-dc5a-4e19-9b52-3f8525a7685a",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9001-Nachnahme",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'06cca7db-dc5a-4e19-9b52-3f8525a7685a')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'06cca7db-dc5a-4e19-9b52-3f8525a7685a')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'06cca7db-dc5a-4e19-9b52-3f8525a7685a')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'06cca7db-dc5a-4e19-9b52-3f8525a7685a')"
+                            }
+                        },
+                        {
+                            "ID": "07947afc-82f0-43e1-ab9b-ee283e484e0e",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8917 Filialversand Logik",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'07947afc-82f0-43e1-ab9b-ee283e484e0e')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'07947afc-82f0-43e1-ab9b-ee283e484e0e')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'07947afc-82f0-43e1-ab9b-ee283e484e0e')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'07947afc-82f0-43e1-ab9b-ee283e484e0e')"
+                            }
+                        },
+                        {
+                            "ID": "095be02d-0680-4152-83b1-dc0fb7fd49c3",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8583-Löschung Lieferung (KunKo)",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'095be02d-0680-4152-83b1-dc0fb7fd49c3')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'095be02d-0680-4152-83b1-dc0fb7fd49c3')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'095be02d-0680-4152-83b1-dc0fb7fd49c3')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'095be02d-0680-4152-83b1-dc0fb7fd49c3')"
+                            }
+                        },
+                        {
+                            "ID": "09f5b7ae-876f-444b-8c04-9e604fbfc3ba",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9578-Transaktion für Aufträge mit Teillieferung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'09f5b7ae-876f-444b-8c04-9e604fbfc3ba')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'09f5b7ae-876f-444b-8c04-9e604fbfc3ba')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'09f5b7ae-876f-444b-8c04-9e604fbfc3ba')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'09f5b7ae-876f-444b-8c04-9e604fbfc3ba')"
+                            }
+                        },
+                        {
+                            "ID": "0a5cffc5-e3aa-473e-bef7-dd47a731bc13",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10252-Fehler in Paketnummern",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0a5cffc5-e3aa-473e-bef7-dd47a731bc13')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0a5cffc5-e3aa-473e-bef7-dd47a731bc13')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0a5cffc5-e3aa-473e-bef7-dd47a731bc13')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0a5cffc5-e3aa-473e-bef7-dd47a731bc13')"
+                            }
+                        },
+                        {
+                            "ID": "0b707d50-3f77-47f6-8c1c-9551eb92ffcc",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "05-Stahlschrank-Text in jedem Auftrag",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b707d50-3f77-47f6-8c1c-9551eb92ffcc')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b707d50-3f77-47f6-8c1c-9551eb92ffcc')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b707d50-3f77-47f6-8c1c-9551eb92ffcc')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0b707d50-3f77-47f6-8c1c-9551eb92ffcc')"
+                            }
+                        },
+                        {
+                            "ID": "0d1608c2-226b-42e9-a562-d3038cca520b",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8629 Abbuchungsavis",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0d1608c2-226b-42e9-a562-d3038cca520b')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0d1608c2-226b-42e9-a562-d3038cca520b')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0d1608c2-226b-42e9-a562-d3038cca520b')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0d1608c2-226b-42e9-a562-d3038cca520b')"
+                            }
+                        },
+                        {
+                            "ID": "0e0e92a3-9afe-4420-9c56-3627844dd28e",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "11004-Lieferterminanzeige Shop",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0e0e92a3-9afe-4420-9c56-3627844dd28e')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0e0e92a3-9afe-4420-9c56-3627844dd28e')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0e0e92a3-9afe-4420-9c56-3627844dd28e')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0e0e92a3-9afe-4420-9c56-3627844dd28e')"
+                            }
+                        },
+                        {
+                            "ID": "10905030-1b12-4c70-9f42-b0e6ee7beeee",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8027 Jungjägeranpassung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'10905030-1b12-4c70-9f42-b0e6ee7beeee')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'10905030-1b12-4c70-9f42-b0e6ee7beeee')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'10905030-1b12-4c70-9f42-b0e6ee7beeee')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'10905030-1b12-4c70-9f42-b0e6ee7beeee')"
+                            }
+                        },
+                        {
+                            "ID": "12991a22-4501-40a7-b625-0584620f7eee",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10976-Mahnsperre Ratepay",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12991a22-4501-40a7-b625-0584620f7eee')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12991a22-4501-40a7-b625-0584620f7eee')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12991a22-4501-40a7-b625-0584620f7eee')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'12991a22-4501-40a7-b625-0584620f7eee')"
+                            }
+                        },
+                        {
+                            "ID": "12f23c7f-d993-4ca3-88ca-c58287042980",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10802-GS Bestätigung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12f23c7f-d993-4ca3-88ca-c58287042980')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12f23c7f-d993-4ca3-88ca-c58287042980')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'12f23c7f-d993-4ca3-88ca-c58287042980')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'12f23c7f-d993-4ca3-88ca-c58287042980')"
+                            }
+                        },
+                        {
+                            "ID": "1455bd37-d318-4d5b-8cb7-62b61e927e0f",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10030-VKF Frankreich: eingespielte Warengruppen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1455bd37-d318-4d5b-8cb7-62b61e927e0f')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1455bd37-d318-4d5b-8cb7-62b61e927e0f')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1455bd37-d318-4d5b-8cb7-62b61e927e0f')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'1455bd37-d318-4d5b-8cb7-62b61e927e0f')"
+                            }
+                        },
+                        {
+                            "ID": "15662a73-bf62-4c79-b724-1e1b9f75f836",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9790-Anpassungen an Kundenkommunikationen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'15662a73-bf62-4c79-b724-1e1b9f75f836')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'15662a73-bf62-4c79-b724-1e1b9f75f836')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'15662a73-bf62-4c79-b724-1e1b9f75f836')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'15662a73-bf62-4c79-b724-1e1b9f75f836')"
+                            }
+                        },
+                        {
+                            "ID": "158550be-4101-4ace-bcda-01042dad055f",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9216 EWB Aucronia Retoure",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'158550be-4101-4ace-bcda-01042dad055f')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'158550be-4101-4ace-bcda-01042dad055f')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'158550be-4101-4ace-bcda-01042dad055f')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'158550be-4101-4ace-bcda-01042dad055f')"
+                            }
+                        },
+                        {
+                            "ID": "16210b80-c08f-4782-904f-de8c42593eff",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "7301-Rohmuli keine Artikelanlage möglich wg. Größenlauf",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'16210b80-c08f-4782-904f-de8c42593eff')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'16210b80-c08f-4782-904f-de8c42593eff')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'16210b80-c08f-4782-904f-de8c42593eff')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'16210b80-c08f-4782-904f-de8c42593eff')"
+                            }
+                        },
+                        {
+                            "ID": "17a29c0a-faab-43c8-8f17-54e2bc1a1427",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10106-Ratepay - auf Kundenkonto berechnet ohne DG Nummer",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a29c0a-faab-43c8-8f17-54e2bc1a1427')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a29c0a-faab-43c8-8f17-54e2bc1a1427')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a29c0a-faab-43c8-8f17-54e2bc1a1427')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'17a29c0a-faab-43c8-8f17-54e2bc1a1427')"
+                            }
+                        },
+                        {
+                            "ID": "17a70d79-b3be-42de-9cb5-2529c24b7e3d",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8914 Endnutzungserklärung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a70d79-b3be-42de-9cb5-2529c24b7e3d')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a70d79-b3be-42de-9cb5-2529c24b7e3d')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17a70d79-b3be-42de-9cb5-2529c24b7e3d')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'17a70d79-b3be-42de-9cb5-2529c24b7e3d')"
+                            }
+                        },
+                        {
+                            "ID": "18fb483a-972f-4658-bc92-aa65bb99d072",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "11307 Bereitstellung WSDL-Dateien",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'18fb483a-972f-4658-bc92-aa65bb99d072')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'18fb483a-972f-4658-bc92-aa65bb99d072')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'18fb483a-972f-4658-bc92-aa65bb99d072')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'18fb483a-972f-4658-bc92-aa65bb99d072')"
+                            }
+                        },
+                        {
+                            "ID": "19f23056-16ef-4f86-9197-05d6c439d786",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "6866-Händlerauszahlung von Ratepay",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'19f23056-16ef-4f86-9197-05d6c439d786')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'19f23056-16ef-4f86-9197-05d6c439d786')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'19f23056-16ef-4f86-9197-05d6c439d786')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'19f23056-16ef-4f86-9197-05d6c439d786')"
+                            }
+                        },
+                        {
+                            "ID": "1d792b4b-c341-405b-8ce2-0f8946114c80",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9222-Fehlende 20% bei RatePay Rechnungen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1d792b4b-c341-405b-8ce2-0f8946114c80')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1d792b4b-c341-405b-8ce2-0f8946114c80')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1d792b4b-c341-405b-8ce2-0f8946114c80')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'1d792b4b-c341-405b-8ce2-0f8946114c80')"
+                            }
+                        },
+                        {
+                            "ID": "1e9470a9-72b2-41b1-91aa-3d1af4edac96",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "8888 Info bei Storno",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1e9470a9-72b2-41b1-91aa-3d1af4edac96')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1e9470a9-72b2-41b1-91aa-3d1af4edac96')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1e9470a9-72b2-41b1-91aa-3d1af4edac96')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'1e9470a9-72b2-41b1-91aa-3d1af4edac96')"
+                            }
+                        },
+                        {
+                            "ID": "202f6789-baa6-4be6-b212-8b0242320e8c",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9013 Absender CH-Bestätigung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'202f6789-baa6-4be6-b212-8b0242320e8c')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'202f6789-baa6-4be6-b212-8b0242320e8c')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'202f6789-baa6-4be6-b212-8b0242320e8c')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'202f6789-baa6-4be6-b212-8b0242320e8c')"
+                            }
+                        },
+                        {
+                            "ID": "233726e7-6dd6-4811-8c9a-c35f3e971f33",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "11535-Falsche Shop-ID",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'233726e7-6dd6-4811-8c9a-c35f3e971f33')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'233726e7-6dd6-4811-8c9a-c35f3e971f33')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'233726e7-6dd6-4811-8c9a-c35f3e971f33')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'233726e7-6dd6-4811-8c9a-c35f3e971f33')"
+                            }
+                        },
+                        {
+                            "ID": "23a13fd4-6936-4459-b77a-67f1c838095c",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "9591-Fehlerhafte Anzeige der Händlerpreise",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ab3ac65-ab46-456c-af82-b5698d9b1667",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'23a13fd4-6936-4459-b77a-67f1c838095c')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'23a13fd4-6936-4459-b77a-67f1c838095c')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'23a13fd4-6936-4459-b77a-67f1c838095c')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'23a13fd4-6936-4459-b77a-67f1c838095c')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ab3ac65-ab46-456c-af82-b5698d9b1667')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ab3ac65-ab46-456c-af82-b5698d9b1667')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ab3ac65-ab46-456c-af82-b5698d9b1667')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0ab3ac65-ab46-456c-af82-b5698d9b1667')"
+                }
+            },
+            {
+                "ID": "0bbd99b1-fd46-463a-bc31-fa3b1f2bb030",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "854-IOT2104-Bachelorarbeit-Günther",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0bbd99b1-fd46-463a-bc31-fa3b1f2bb030')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0bbd99b1-fd46-463a-bc31-fa3b1f2bb030')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0bbd99b1-fd46-463a-bc31-fa3b1f2bb030')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0bbd99b1-fd46-463a-bc31-fa3b1f2bb030')"
+                }
+            },
+            {
+                "ID": "0d52da04-b5ff-49ad-9387-1c306f4fa05c",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "774-CAS1701-Douglas-FIORI-(2016/0210)",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0d52da04-b5ff-49ad-9387-1c306f4fa05c')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0d52da04-b5ff-49ad-9387-1c306f4fa05c')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0d52da04-b5ff-49ad-9387-1c306f4fa05c')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0d52da04-b5ff-49ad-9387-1c306f4fa05c')"
+                }
+            },
+            {
+                "ID": "0df05c9b-0435-4a4e-b2ba-8d89d61d3be6",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "750-IOT1701-Interne-Aufschreibung",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "24381a3a-e849-4dc3-ad93-58ea8a3b1f78",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "09-interne Besprechungen",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0df05c9b-0435-4a4e-b2ba-8d89d61d3be6",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'24381a3a-e849-4dc3-ad93-58ea8a3b1f78')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'24381a3a-e849-4dc3-ad93-58ea8a3b1f78')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'24381a3a-e849-4dc3-ad93-58ea8a3b1f78')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'24381a3a-e849-4dc3-ad93-58ea8a3b1f78')"
+                            }
+                        },
+                        {
+                            "ID": "2585dffe-b73e-47e1-95c5-378b5c2e42f2",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "01-Bestandszählung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0df05c9b-0435-4a4e-b2ba-8d89d61d3be6",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'2585dffe-b73e-47e1-95c5-378b5c2e42f2')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'2585dffe-b73e-47e1-95c5-378b5c2e42f2')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'2585dffe-b73e-47e1-95c5-378b5c2e42f2')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'2585dffe-b73e-47e1-95c5-378b5c2e42f2')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0df05c9b-0435-4a4e-b2ba-8d89d61d3be6')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0df05c9b-0435-4a4e-b2ba-8d89d61d3be6')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0df05c9b-0435-4a4e-b2ba-8d89d61d3be6')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0df05c9b-0435-4a4e-b2ba-8d89d61d3be6')"
+                }
+            },
+            {
+                "ID": "0ee614ba-b0d9-4824-81ec-2abf0c4d16d9",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "738-CAS1601-Dänisches-Bettenlager",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ee614ba-b0d9-4824-81ec-2abf0c4d16d9')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ee614ba-b0d9-4824-81ec-2abf0c4d16d9')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ee614ba-b0d9-4824-81ec-2abf0c4d16d9')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0ee614ba-b0d9-4824-81ec-2abf0c4d16d9')"
+                }
+            },
+            {
+                "ID": "0ef414f1-decc-4bb9-900f-c3d34a9ac831",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "749-INQ1601-Einführung-SAP-EWM",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "0b02b36c-3be6-4651-bb35-810b9cd5905a",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "07-Kommissionier Cockpit",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0ef414f1-decc-4bb9-900f-c3d34a9ac831",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b02b36c-3be6-4651-bb35-810b9cd5905a')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b02b36c-3be6-4651-bb35-810b9cd5905a')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0b02b36c-3be6-4651-bb35-810b9cd5905a')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0b02b36c-3be6-4651-bb35-810b9cd5905a')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ef414f1-decc-4bb9-900f-c3d34a9ac831')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ef414f1-decc-4bb9-900f-c3d34a9ac831')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0ef414f1-decc-4bb9-900f-c3d34a9ac831')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0ef414f1-decc-4bb9-900f-c3d34a9ac831')"
+                }
+            },
+            {
+                "ID": "0f709da0-36b5-497a-8616-a03b700e936b",
+                "createdAt": "/Date(1627191390987+0000)/",
+                "createdBy": "benedikt.hoelker@iot-onlinde.",
+                "modifiedAt": "/Date(1627191390987+0000)/",
+                "modifiedBy": "benedikt.hoelker@iot-onlinde.",
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "Stabilus",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": "15",
+                "catNumber": "15",
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "26374956-98fb-4850-b544-f757fe536e96",
+                            "createdAt": "/Date(1619952908091+0000)/",
+                            "createdBy": "benedikt.hoelker@iot-onlinde.",
+                            "modifiedAt": "/Date(1619952908091+0000)/",
+                            "modifiedBy": "anonymous",
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "PM Apps",
+                            "description": "Erfassung von Aufträgen und Nachschlagen von Ersatzteilverfügbarkeiten",
+                            "reference": null,
+                            "mappingID": "610-IOT1302-DUMMY",
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": "1",
+                            "catNumber": "15-1",
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "0f709da0-36b5-497a-8616-a03b700e936b",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'26374956-98fb-4850-b544-f757fe536e96')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'26374956-98fb-4850-b544-f757fe536e96')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'26374956-98fb-4850-b544-f757fe536e96')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'26374956-98fb-4850-b544-f757fe536e96')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0f709da0-36b5-497a-8616-a03b700e936b')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0f709da0-36b5-497a-8616-a03b700e936b')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'0f709da0-36b5-497a-8616-a03b700e936b')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0f709da0-36b5-497a-8616-a03b700e936b')"
+                }
+            },
+            {
+                "ID": "13836e5f-db2e-4f6c-b7a1-699a92a76912",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "835-IOT2101-Interne-Aufschreibung",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "04483cd1-6db8-46ff-b639-7079b774398b",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "10-Botengänge",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "13836e5f-db2e-4f6c-b7a1-699a92a76912",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04483cd1-6db8-46ff-b639-7079b774398b')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04483cd1-6db8-46ff-b639-7079b774398b')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'04483cd1-6db8-46ff-b639-7079b774398b')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'04483cd1-6db8-46ff-b639-7079b774398b')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'13836e5f-db2e-4f6c-b7a1-699a92a76912')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'13836e5f-db2e-4f6c-b7a1-699a92a76912')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'13836e5f-db2e-4f6c-b7a1-699a92a76912')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'13836e5f-db2e-4f6c-b7a1-699a92a76912')"
+                }
+            },
+            {
+                "ID": "14a9e969-724c-4e66-addc-b8c0d56f82c4",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "857-CAS2106-HCOB-Fiori-S/4-Migration",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "222a7c8e-4f26-4565-ac0b-52dffddd0b41",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "02-Vorbereitung ohne Lead",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "14a9e969-724c-4e66-addc-b8c0d56f82c4",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'222a7c8e-4f26-4565-ac0b-52dffddd0b41')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'222a7c8e-4f26-4565-ac0b-52dffddd0b41')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'222a7c8e-4f26-4565-ac0b-52dffddd0b41')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'222a7c8e-4f26-4565-ac0b-52dffddd0b41')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'14a9e969-724c-4e66-addc-b8c0d56f82c4')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'14a9e969-724c-4e66-addc-b8c0d56f82c4')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'14a9e969-724c-4e66-addc-b8c0d56f82c4')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'14a9e969-724c-4e66-addc-b8c0d56f82c4')"
+                }
+            },
+            {
+                "ID": "17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "843-IOT2103-Bachelorarbeit-Tcheuffa",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "1c7f1d0a-2ad0-424a-98e5-f732e2455e2e",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "06-Projektabschluss",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1c7f1d0a-2ad0-424a-98e5-f732e2455e2e')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1c7f1d0a-2ad0-424a-98e5-f732e2455e2e')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1c7f1d0a-2ad0-424a-98e5-f732e2455e2e')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'1c7f1d0a-2ad0-424a-98e5-f732e2455e2e')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'17ff0ee3-2d93-4e0c-8e68-8874b9e1bc61')"
+                }
+            },
+            {
+                "ID": "1bff8d12-1f06-4cb4-bc32-81190d4ec5f0",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "753-IAL1702-SAP-FIORI",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1bff8d12-1f06-4cb4-bc32-81190d4ec5f0')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1bff8d12-1f06-4cb4-bc32-81190d4ec5f0')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1bff8d12-1f06-4cb4-bc32-81190d4ec5f0')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1bff8d12-1f06-4cb4-bc32-81190d4ec5f0')"
+                }
+            },
+            {
+                "ID": "1c8bcfdb-172b-4120-9047-cca6be539254",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "771-ACC1701-SW-Maadesiel",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1c8bcfdb-172b-4120-9047-cca6be539254')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1c8bcfdb-172b-4120-9047-cca6be539254')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1c8bcfdb-172b-4120-9047-cca6be539254')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1c8bcfdb-172b-4120-9047-cca6be539254')"
+                }
+            },
+            {
+                "ID": "1dc43734-beef-4e25-81cd-63822ef303ab",
+                "createdAt": "/Date(1619960108091+0000)/",
+                "createdBy": "Benedikt.Hoelker@iot-online.de",
+                "modifiedAt": "/Date(1619960108091+0000)/",
+                "modifiedBy": "Benedikt.Hoelker@iot-online.de",
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "CAS AG",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": "14",
+                "catNumber": "14",
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "151d0142-afae-4dd8-bcc7-9402677c84fa",
+                            "createdAt": "/Date(1620283370069+0000)/",
+                            "createdBy": "Benedikt.Hoelker@iot-online.de",
+                            "modifiedAt": "/Date(1620283370069+0000)/",
+                            "modifiedBy": "Benedikt.Hoelker@iot-online.de",
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "CAS AG Fiori Unterstützung",
+                            "description": "Fiori @ CAS",
+                            "reference": null,
+                            "mappingID": "850-CAS2105-Fiori-Readiness-Check",
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": "1",
+                            "catNumber": "14-2",
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "1dc43734-beef-4e25-81cd-63822ef303ab",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": [
+                                    {
+                                        "ID": "2505675e-77ee-43f8-ab5d-54626891f35c",
+                                        "createdAt": "/Date(1619952908091+0000)/",
+                                        "createdBy": "Benedikt.Hoelker@iot-online.de",
+                                        "modifiedAt": "/Date(1619952908091+0000)/",
+                                        "modifiedBy": "Benedikt.Hoelker@iot-online.de",
+                                        "invoiceRelevance": null,
+                                        "bonusRelevance": null,
+                                        "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                                        "title": "FRC @ Klingele",
+                                        "description": "Fiori Readiness Check (Klingele)",
+                                        "reference": null,
+                                        "mappingID": null,
+                                        "drillDownState": "expanded",
+                                        "path": null,
+                                        "hierarchyLevel": "2",
+                                        "levelSpecificID": "1",
+                                        "catNumber": "14-2-1",
+                                        "totalDuration": null,
+                                        "accumulatedDuration": null,
+                                        "relativeDuration": null,
+                                        "relativeAccDuration": null,
+                                        "grandTotal": null,
+                                        "manager_userPrincipalName": null,
+                                        "parent_ID": "151d0142-afae-4dd8-bcc7-9402677c84fa",
+                                        "tags": {
+                                            "results": []
+                                        },
+                                        "members": {
+                                            "results": []
+                                        },
+                                        "children": {
+                                            "results": []
+                                        },
+                                        "level": {
+                                            "__deferred": {
+                                                "uri": "http://localhost:4004/v2/admin/Categories(guid'2505675e-77ee-43f8-ab5d-54626891f35c')/level"
+                                            }
+                                        },
+                                        "manager": {
+                                            "__deferred": {
+                                                "uri": "http://localhost:4004/v2/admin/Categories(guid'2505675e-77ee-43f8-ab5d-54626891f35c')/manager"
+                                            }
+                                        },
+                                        "parent": {
+                                            "__deferred": {
+                                                "uri": "http://localhost:4004/v2/admin/Categories(guid'2505675e-77ee-43f8-ab5d-54626891f35c')/parent"
+                                            }
+                                        },
+                                        "__metadata": {
+                                            "type": "AdminService.Categories",
+                                            "uri": "http://localhost:4004/v2/admin/Categories(guid'2505675e-77ee-43f8-ab5d-54626891f35c')"
+                                        }
+                                    }
+                                ]
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'151d0142-afae-4dd8-bcc7-9402677c84fa')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'151d0142-afae-4dd8-bcc7-9402677c84fa')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'151d0142-afae-4dd8-bcc7-9402677c84fa')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'151d0142-afae-4dd8-bcc7-9402677c84fa')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1dc43734-beef-4e25-81cd-63822ef303ab')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1dc43734-beef-4e25-81cd-63822ef303ab')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1dc43734-beef-4e25-81cd-63822ef303ab')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1dc43734-beef-4e25-81cd-63822ef303ab')"
+                }
+            },
+            {
+                "ID": "1ec5e099-2373-45a1-b937-aa81a0afd060",
+                "createdAt": "/Date(1619960108091+0000)/",
+                "createdBy": "anonymous",
+                "modifiedAt": "/Date(1619960108091+0000)/",
+                "modifiedBy": "anonymous",
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "Intorq",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": "3",
+                "catNumber": "3",
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "020db38e-6449-4f97-a9ff-176e962966e4",
+                            "createdAt": "/Date(1619952908091+0000)/",
+                            "createdBy": "anonymous",
+                            "modifiedAt": "/Date(1619952908091+0000)/",
+                            "modifiedBy": "anonymous",
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "Intorq Kommissioniercockpit",
+                            "description": "Fiori Entwicklung Kommi-Cockpit",
+                            "reference": null,
+                            "mappingID": "749-INQ1601-Einführung-SAP-EWM",
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": "1",
+                            "catNumber": "3-1",
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "1ec5e099-2373-45a1-b937-aa81a0afd060",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'020db38e-6449-4f97-a9ff-176e962966e4')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'020db38e-6449-4f97-a9ff-176e962966e4')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'020db38e-6449-4f97-a9ff-176e962966e4')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'020db38e-6449-4f97-a9ff-176e962966e4')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1ec5e099-2373-45a1-b937-aa81a0afd060')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1ec5e099-2373-45a1-b937-aa81a0afd060')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1ec5e099-2373-45a1-b937-aa81a0afd060')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1ec5e099-2373-45a1-b937-aa81a0afd060')"
+                }
+            },
+            {
+                "ID": "1f2d7cf0-b005-49bf-941b-854b99d980c9",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "712-FRA1506-Auktionsplattform",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "08f4770e-afca-440a-8de5-df060e7fdc39",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "04-Produktivsetzung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "1f2d7cf0-b005-49bf-941b-854b99d980c9",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'08f4770e-afca-440a-8de5-df060e7fdc39')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'08f4770e-afca-440a-8de5-df060e7fdc39')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'08f4770e-afca-440a-8de5-df060e7fdc39')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'08f4770e-afca-440a-8de5-df060e7fdc39')"
+                            }
+                        },
+                        {
+                            "ID": "167cdce5-0fdd-40b4-8a3c-a259f7ac3a56",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "02-Projektvorbereitung",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "1f2d7cf0-b005-49bf-941b-854b99d980c9",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'167cdce5-0fdd-40b4-8a3c-a259f7ac3a56')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'167cdce5-0fdd-40b4-8a3c-a259f7ac3a56')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'167cdce5-0fdd-40b4-8a3c-a259f7ac3a56')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'167cdce5-0fdd-40b4-8a3c-a259f7ac3a56')"
+                            }
+                        },
+                        {
+                            "ID": "1bc9bf98-7df7-47c6-8632-38fe5cc41ce7",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "01-Koodination",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "1f2d7cf0-b005-49bf-941b-854b99d980c9",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1bc9bf98-7df7-47c6-8632-38fe5cc41ce7')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1bc9bf98-7df7-47c6-8632-38fe5cc41ce7')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1bc9bf98-7df7-47c6-8632-38fe5cc41ce7')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'1bc9bf98-7df7-47c6-8632-38fe5cc41ce7')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1f2d7cf0-b005-49bf-941b-854b99d980c9')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1f2d7cf0-b005-49bf-941b-854b99d980c9')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'1f2d7cf0-b005-49bf-941b-854b99d980c9')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'1f2d7cf0-b005-49bf-941b-854b99d980c9')"
+                }
+            },
+            {
+                "ID": "24581658-8c50-4f6e-928a-1597a4385623",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "752-IOT1702-Masterarbeit-Runte",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": [
+                        {
+                            "ID": "0af81d84-1d55-4365-956d-c45cc0de552b",
+                            "createdAt": null,
+                            "createdBy": null,
+                            "modifiedAt": null,
+                            "modifiedBy": null,
+                            "invoiceRelevance": null,
+                            "bonusRelevance": null,
+                            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                            "title": "04-Dokumentation",
+                            "description": null,
+                            "reference": null,
+                            "mappingID": null,
+                            "drillDownState": "expanded",
+                            "path": null,
+                            "hierarchyLevel": "1",
+                            "levelSpecificID": null,
+                            "catNumber": null,
+                            "totalDuration": null,
+                            "accumulatedDuration": null,
+                            "relativeDuration": null,
+                            "relativeAccDuration": null,
+                            "grandTotal": null,
+                            "manager_userPrincipalName": null,
+                            "parent_ID": "24581658-8c50-4f6e-928a-1597a4385623",
+                            "tags": {
+                                "results": []
+                            },
+                            "members": {
+                                "results": []
+                            },
+                            "children": {
+                                "results": []
+                            },
+                            "level": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0af81d84-1d55-4365-956d-c45cc0de552b')/level"
+                                }
+                            },
+                            "manager": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0af81d84-1d55-4365-956d-c45cc0de552b')/manager"
+                                }
+                            },
+                            "parent": {
+                                "__deferred": {
+                                    "uri": "http://localhost:4004/v2/admin/Categories(guid'0af81d84-1d55-4365-956d-c45cc0de552b')/parent"
+                                }
+                            },
+                            "__metadata": {
+                                "type": "AdminService.Categories",
+                                "uri": "http://localhost:4004/v2/admin/Categories(guid'0af81d84-1d55-4365-956d-c45cc0de552b')"
+                            }
+                        }
+                    ]
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'24581658-8c50-4f6e-928a-1597a4385623')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'24581658-8c50-4f6e-928a-1597a4385623')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'24581658-8c50-4f6e-928a-1597a4385623')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'24581658-8c50-4f6e-928a-1597a4385623')"
+                }
+            },
+            {
+                "ID": "267c6e89-6552-41b3-82fc-60e9d1823d65",
+                "createdAt": null,
+                "createdBy": null,
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "invoiceRelevance": null,
+                "bonusRelevance": null,
+                "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+                "title": "754-FRA1701-Dispo",
+                "description": null,
+                "reference": null,
+                "mappingID": null,
+                "drillDownState": "expanded",
+                "path": null,
+                "hierarchyLevel": "0",
+                "levelSpecificID": null,
+                "catNumber": null,
+                "totalDuration": null,
+                "accumulatedDuration": null,
+                "relativeDuration": null,
+                "relativeAccDuration": null,
+                "grandTotal": null,
+                "manager_userPrincipalName": null,
+                "parent_ID": null,
+                "tags": {
+                    "results": []
+                },
+                "members": {
+                    "results": []
+                },
+                "children": {
+                    "results": []
+                },
+                "level": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'267c6e89-6552-41b3-82fc-60e9d1823d65')/level"
+                    }
+                },
+                "manager": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'267c6e89-6552-41b3-82fc-60e9d1823d65')/manager"
+                    }
+                },
+                "parent": {
+                    "__deferred": {
+                        "uri": "http://localhost:4004/v2/admin/Categories(guid'267c6e89-6552-41b3-82fc-60e9d1823d65')/parent"
+                    }
+                },
+                "__metadata": {
+                    "type": "AdminService.Categories",
+                    "uri": "http://localhost:4004/v2/admin/Categories(guid'267c6e89-6552-41b3-82fc-60e9d1823d65')"
+                }
+            }
+        ]
+    }
+}
