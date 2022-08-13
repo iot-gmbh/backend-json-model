@@ -8,7 +8,9 @@ or replace function get_durations(
     tenant VARCHAR,
     parent_ID VARCHAR,
     title VARCHAR,
-    totalDuration numeric
+    totalDuration numeric,
+    dateFrom timestamp with time zone,
+    dateUntil timestamp with time zone
 ) language plpgsql as $$ 
 #variable_conflict use_column
 begin RETURN QUERY
@@ -17,7 +19,9 @@ SELECT
     cat.tenant,
     cat.parent_ID,
     cat.title,
-    sum(wi.duration) as totalDuration
+    sum(wi.duration) as totalDuration,
+    p_date_from as dateFrom,
+    p_date_until as dateUntil
 FROM
     iot_planner_categories as cat
     LEFT OUTER JOIN iot_planner_workitems as wi on wi.parent_ID = cat.ID

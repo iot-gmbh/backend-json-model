@@ -5,7 +5,7 @@ sap.ui.define([], () => ({
    * @param {string} sValue the number string to be rounded
    * @returns {string} sValue with 2 digits rounded
    */
-  numberUnit(sValue) {
+  toFixed2(sValue) {
     if (!sValue) {
       return "";
     }

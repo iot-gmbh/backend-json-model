@@ -18,12 +18,14 @@ sap.ui.define(
           const viewModel = new JSONModel({
             dateFrom,
             dateUntil,
+            expandToLevel: 0,
           });
 
           this.setModel(viewModel, "viewModel");
         },
 
-        onBeforeRendering() {
+        async onBeforeRendering() {
+          await this.getModel().metadataLoaded();
           this.loadData();
         },
 
@@ -32,12 +34,12 @@ sap.ui.define(
           const { dateFrom, dateUntil } = this.getModel("viewModel").getData();
 
           const { results } = await model.callFunction(
-            `/getCumCategoryExpenses`,
+            `/getCumulativeCategoryDurations`,
             {
               urlParameters: {
                 // dateFrom: "2021-01-05T15:16:23Z",
                 // dateUntil: "2023-01-05T15:16:23Z",
-                dateFrom: dateFrom.toISOString(),
+                dateFrom,
                 dateUntil: dateUntil.toISOString(),
                 includeEmpty: false,
               },
@@ -46,7 +48,27 @@ sap.ui.define(
 
           const categoriesNested = nest(results);
 
-          model.setProperty("/CategoriesCumulativeExpenses", categoriesNested);
+          model.setProperty("/CategoriesCumulativeDurations", categoriesNested);
+        },
+
+        expand() {
+          const model = this.getModel("viewModel");
+          const { expandToLevel } = model.getData();
+
+          this.byId("treeTable").expandToLevel(expandToLevel + 1);
+          model.setProperty("/expandToLevel", expandToLevel + 1);
+        },
+
+        collapseAll() {
+          this.byId("treeTable").collapseAll();
+          this.getModel().setProperty("/expandToLevel", 0);
+        },
+
+        onChangeNumberOfExpandedLevels() {
+          const treeTable = this.byId("treeTable");
+          const { numberOfExpandedLevels } =
+            this.getModel("viewModel").getData();
+          treeTable.expandToLevel(numberOfExpandedLevels);
         },
       }
     )

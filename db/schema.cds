@@ -58,28 +58,30 @@ entity Users2Categories : cuid, managed, multitenant {
 }
 
 entity Categories : cuid, managed, relevance, multitenant {
-  title           : String;
-  description     : String;
-  reference       : String;
-  mappingID       : String;
-  drillDownState  : String default 'expanded';
-  path            : String;
-  hierarchyLevel  : String;
-  levelSpecificID : String;
-  catNumber       : String;
-  totalDuration   : Decimal;
-  level           : Association to CategoryLevels
-                      on hierarchyLevel = level.hierarchyLevel;
-  tags            : Association to many Tags2Categories
-                      on tags.category = $self;
+  title            : String;
+  description      : String;
+  reference        : String;
+  mappingID        : String;
+  drillDownState   : String default 'expanded';
+  path             : String;
+  hierarchyLevel   : String;
+  levelSpecificID  : String;
+  catNumber        : String;
+  totalDuration    : Decimal;
+  relativeDuration : Decimal;
+  grandTotal       : Decimal;
+  level            : Association to CategoryLevels
+                       on hierarchyLevel = level.hierarchyLevel;
+  tags             : Association to many Tags2Categories
+                       on tags.category = $self;
   @assert.notNull : false
-  manager         : Association to Users;
-  members         : Association to many Users2Categories
-                      on members.category = $self;
+  manager          : Association to Users;
+  members          : Association to many Users2Categories
+                       on members.category = $self;
   @assert.notNull : false
-  parent          : Association to Categories;
-  children        : Association to many Categories
-                      on children.parent = $self;
+  parent           : Association to Categories;
+  children         : Association to many Categories
+                       on children.parent = $self;
 }
 
 entity CategoriesCumulativeDurations as projection on Categories {

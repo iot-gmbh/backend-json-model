@@ -1,11 +1,64 @@
-drop function if exists "public"."get_durations"(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone);
+drop view if exists "public"."durations";
+
+drop function if exists "public"."get_category_expenses"(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone);
 
 set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_cumulative_category_durations(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, totalduration numeric)
+ LANGUAGE plpgsql
+AS $function$ #variable_conflict use_column
+begin RETURN QUERY
+/* for reference: https://stackoverflow.com/questions/26660189/recursive-query-with-sum-in-postgres */
+WITH RECURSIVE cte AS (
+    SELECT
+        ID,
+        ID as parent_ID,
+        tenant,
+        parent_ID as parent,
+        title,
+        totalDuration
+    FROM
+        get_durations(p_username, p_date_from, p_date_until)
+    UNION
+    ALL
+    SELECT
+        c.ID,
+        d.ID,
+        c.tenant,
+        c.parent,
+        c.title,
+        d.totalDuration
+    FROM
+        cte c
+        JOIN get_durations(p_username, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
+)
+SELECT
+    cte.ID,
+    cte.tenant,
+    cte.parent as parent_ID,
+    cte.title,
+    pathCTE.catNumber,
+    sum(totalDuration) AS totalDuration
+FROM
+    cte 
+    JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = cte.ID
+GROUP BY
+    cte.ID,
+    cte.tenant,
+    cte.parent,
+    cte.title,
+    catNumber;
+
+end $function$
+;
 
 CREATE OR REPLACE FUNCTION public.get_durations(p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
  RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, totalduration numeric)
  LANGUAGE plpgsql
-AS $function$ begin RETURN QUERY
+AS $function$ 
+#variable_conflict use_column
+begin RETURN QUERY
 SELECT
     cat.ID,
     cat.tenant,
@@ -15,7 +68,7 @@ SELECT
 FROM
     iot_planner_categories as cat
     LEFT OUTER JOIN iot_planner_workitems as wi on wi.parent_ID = cat.ID
-    and wi.assignedTo_userPrincipalName = p_username
+    and wi.assignedTo_userPrincipalName ilike p_username
     and wi.activateddate > p_date_from
     and wi.activateddate < p_date_until
 GROUP BY

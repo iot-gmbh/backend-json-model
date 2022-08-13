@@ -9,27 +9,34 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  this.on("getCumCategoryExpenses", async (req) => {
+  this.on("getCumulativeCategoryDurations", async (req) => {
     const {
       data: { dateFrom, dateUntil, includeEmpty },
       user,
     } = req;
 
-    let query = `SELECT * FROM get_category_expenses($1, $2, $3)`;
+    let query = `SELECT * FROM get_cumulative_category_durations_with_path($1, $2, $3)`;
 
     if (includeEmpty) {
       query += ` WHERE totalDuration is not null`;
     }
 
     const results = await db.run(query, [user.id, dateFrom, dateUntil]);
+    const [{ sum }] = await db.run(
+      `SELECT sum(totalDuration) FROM get_durations($1, $2, $3)`,
+      [user.id, dateFrom, dateUntil]
+    );
 
     const categories = results.map(
-      ({ id, tenant, parent_id, totalduration, title }) => ({
+      ({ id, tenant, parent_id, totalduration, title, catnumber }) => ({
         ID: id,
         tenant,
         title,
         parent_ID: parent_id,
         totalDuration: totalduration,
+        relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
+        grandTotal: sum,
+        catNumber: catnumber,
       })
     );
 

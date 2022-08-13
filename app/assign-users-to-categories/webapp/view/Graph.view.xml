@@ -6,11 +6,13 @@
 
     <m:Page title="{i18n>graph}">
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/CategoriesCumulativeExpenses', 
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/CategoriesCumulativeDurations', 
         sorter: {path: 'totalDuration', descending: true},
-        parameters: {numberOfExpandedLevels: 3, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
             <t:extension>
                 <m:Toolbar width="100%">
+                    <m:Button icon="sap-icon://collapse" press="collapseAll"/>
+                    <m:Button icon="sap-icon://expand" press="expand"/>
                     <m:SearchField search="onSearch"/>
                     <!-- <m:Text text="{i18>dateFrom}"/> -->
 
@@ -27,9 +29,19 @@
                         <m:Text text="{title}"/>
                     </t:template>
                 </t:Column>
+                <t:Column label="{i18n>catNumber}">
+                    <t:template>
+                        <m:Text text="{catNumber}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>relativeDuration}" hAlign="End">
+                    <t:template>
+                        <m:ProgressIndicator percentValue="{relativeDuration}" displayValue="{relativeDuration}%" showValue="true" state="None" />
+                    </t:template>
+                </t:Column>
                 <t:Column label="{i18n>totalDuration}" hAlign="End">
                     <t:template>
-                        <m:ObjectNumber number="{totalDuration}" textAlign="End"/>
+                        <m:ObjectNumber number="{path: 'totalDuration', formatter: '.formatter.toFixed2'}" unit="h" textAlign="End"/>
                     </t:template>
                 </t:Column>
             </t:columns>

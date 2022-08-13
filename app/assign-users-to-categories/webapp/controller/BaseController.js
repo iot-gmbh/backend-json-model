@@ -1,12 +1,18 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/core/UIComponent", "sap/m/library"],
-  (Controller, UIComponent, mobileLibrary) => {
+  [
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/core/UIComponent",
+    "sap/m/library",
+    "../model/formatter",
+  ],
+  (Controller, UIComponent, mobileLibrary, formatter) => {
     // shortcut for sap.m.URLHelper
     const { URLHelper } = mobileLibrary;
 
     return Controller.extend(
       "iot.planner.assignuserstocategories.controller.BaseController",
       {
+        formatter,
         /**
          * Convenience method for accessing the router.
          * @public

@@ -4,7 +4,7 @@ sap.ui.define(
   [
     "./BaseController",
     "sap/ui/model/json/JSONModel",
-    "../model/formatter",
+    // "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/FilterType",
@@ -13,7 +13,7 @@ sap.ui.define(
   (
     BaseController,
     JSONModel,
-    formatter,
+    // formatter,
     Filter,
     FilterOperator,
     FilterType,
@@ -22,7 +22,7 @@ sap.ui.define(
     BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
-        formatter,
+        // formatter,
 
         /* =========================================================== */
         /* lifecycle methods                                           */

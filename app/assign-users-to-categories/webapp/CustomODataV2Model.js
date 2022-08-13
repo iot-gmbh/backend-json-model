@@ -79,6 +79,7 @@ sap.ui.define(
         });
 
         this.serviceURL = serviceURL;
+        this.ODataModel = odataModel;
 
         this.odata = {
           create: _promisify(odataModel, "create", 2),
@@ -111,6 +112,10 @@ sap.ui.define(
         const { results } = await this.odata.read(...args);
 
         return results;
+      },
+
+      async metadataLoaded() {
+        return this.ODataModel.metadataLoaded();
       },
 
       store(

@@ -33,7 +33,7 @@ service AdminService @(requires : 'authenticated-user') {
     },
   ])                      as projection on my.Users;
 
-  function getCumCategoryExpenses(dateFrom : DateTime, dateUntil : DateTime, includeEmpty : Boolean) returns array of Categories;
+  function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, includeEmpty : Boolean) returns array of Categories;
   entity Travels          as projection on my.Travels;
   entity Tags             as projection on my.Tags;
   entity Tags2Categories  as projection on my.Tags2Categories;
