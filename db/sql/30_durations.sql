@@ -5,6 +5,9 @@ SELECT
     cat.tenant,
     cat.title,
     cat.parent_ID,
+    wi.activatedDate,
+    wi.completedDate,
+    wi.assignedTo_userPrincipalName,
     sum(wi.duration) as totalDuration
 FROM
     iot_planner_categories as cat
@@ -13,4 +16,7 @@ GROUP BY
     cat.ID,
     cat.tenant,
     cat.title,
-    cat.parent_ID;
+    cat.parent_ID,
+    wi.activatedDate,
+    wi.completedDate,
+    wi.assignedTo_userPrincipalName;

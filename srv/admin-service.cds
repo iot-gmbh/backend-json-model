@@ -31,19 +31,18 @@ service AdminService @(requires : 'authenticated-user') {
       ],
       to    : 'admin',
     },
-  ])                                   as projection on my.Users;
+  ])                      as projection on my.Users;
 
-  entity Travels                       as projection on my.Travels;
-  entity Tags                          as projection on my.Tags;
-  entity Tags2Categories               as projection on my.Tags2Categories;
-  entity Tags2WorkItems                as projection on my.Tags2WorkItems;
+  function getCategoryExpenses(dateFrom : DateTime, dateUntil : DateTime) returns array of Categories;
+  entity Travels          as projection on my.Travels;
+  entity Tags             as projection on my.Tags;
+  entity Tags2Categories  as projection on my.Tags2Categories;
+  entity Tags2WorkItems   as projection on my.Tags2WorkItems;
 
   @cds.redirection.target
-  entity Categories                    as projection on my.Categories;
+  entity Categories       as projection on my.Categories;
 
-  entity CategoriesCumulativeDurations as projection on my.CategoriesCumulativeDurations;
-
-  entity Users2Categories              as projection on my.Users2Categories {
+  entity Users2Categories as projection on my.Users2Categories {
     *,
     user.displayName
   };
@@ -64,5 +63,5 @@ service AdminService @(requires : 'authenticated-user') {
       grant : 'READ',
       to    : 'admin',
     },
-  ])                                   as projection on my.WorkItems as WorkItems
+  ])                      as projection on my.WorkItems as WorkItems
 };

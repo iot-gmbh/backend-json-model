@@ -5,18 +5,22 @@
 
     <m:Page title="{i18n>graph}">
 
-        <Graph nodes="{/Categories}" lines="{path: '/Categories', filters: [{path: 'parent_ID', operator: 'NE', value1: null}]}">
-            <layoutAlgorithm>
-                <!-- <layout:ForceDirectedLayout ></layout:ForceDirectedLayout> -->
-                <layout:ForceBasedLayout ></layout:ForceBasedLayout>
-            </layoutAlgorithm>
-            <nodes>
-                <Node title="{title}" key="{ID}"/>
-            </nodes>
-            <lines>
-                <Line from="{ID}" to="{parent_ID}"/>
-            </lines>
-        </Graph>
+        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/categoriesLevel0', 
+        sorter: {path: 'totalDuration', descending: true},
+        parameters: {numberOfExpandedLevels: 4, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+            <t:columns>
+                <t:Column label="{i18n>title}" width="30%">
+                    <t:template>
+                        <Text value="{title}" change="onChangeCategory"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>catNumber}" width="10%">
+                    <t:template>
+                        <Text text="{catNumber}"/>
+                    </t:template>
+                </t:Column>
+            </t:columns>
+        </t:TreeTable>
     </m:Page>
 
 </mvc:View>

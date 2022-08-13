@@ -85,8 +85,11 @@ entity Categories : cuid, managed, relevance, multitenant {
 entity CategoriesCumulativeDurations as projection on Categories {
   key ID,
       tenant,
-      title,
       parent,
+      title,
+      cast('2021-05-02 14:55:08.091' as DateTime) as activatedDate                : DateTime,
+      cast('2021-05-02 14:55:08.091' as DateTime) as completedDate                : DateTime,
+      cast('' as                        String)   as assignedTo_userPrincipalName : String,
       // members,
       // tags,
       children,

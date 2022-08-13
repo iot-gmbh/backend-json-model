@@ -9,13 +9,29 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  // this.on("READ", "Categories", async (req) => {
-  //   const results = await db.run(
-  //     SELECT.from("iot_planner_categories_aggregations").where(req.query)
-  //     // .where`user_userPrincipalName = ${req.user.id}`
-  //   );
-  //   return results;
-  // });
+  this.on("getCategoryExpenses", async (req) => {
+    const {
+      data: { dateFrom, dateUntil },
+      user,
+    } = req;
+
+    const results = await db.run(
+      `SELECT * FROM get_category_expenses($1, $2, $3)`,
+      [user.id, dateFrom, dateUntil]
+    );
+
+    const categories = results.map(
+      ({ id, tenant, parent_id, totalduration, title }) => ({
+        ID: id,
+        tenant,
+        title,
+        parent_ID: parent_id,
+        totalDuration: totalduration,
+      })
+    );
+
+    return categories;
+  });
 
   this.before("CREATE", "Categories", async (req) => {
     let siblings = [];
