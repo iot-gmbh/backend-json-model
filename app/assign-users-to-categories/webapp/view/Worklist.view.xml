@@ -10,7 +10,7 @@
 
     <Page title="{i18n>worklistTitle}">
         <dependents>
-            <ResponsivePopover id="editCategoryPopover" placement="Left" initialFocus="titleInput">
+            <Dialog id="editCategoryDialog" initialFocus="titleInput">
                 <f:SimpleForm>
                     <Label text="{i18n>title}"/>
                     <TextArea id="titleInput" value="{title}"/>
@@ -31,9 +31,8 @@
                         </tokens>
                     </MultiInput> -->
                     <Label text="{i18n>members}"/>
-                    <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
+                    <MultiInput tokens="{path: 'members'}" suggestionItems="{
                                     path: 'OData>/Users',
-                                    templateShareable: false,
                                     sorter: { path: 'displayName' }
                                 }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
                         <suggestionItems>
@@ -57,7 +56,7 @@
                 <endButton>
                     <Button text="{i18n>OK}" press="onPressSubmitCategory"/>
                 </endButton>
-            </ResponsivePopover>
+            </Dialog>
         </dependents>
 
         <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
@@ -81,6 +80,16 @@
                 <t:Column label="{i18n>title}" width="30%">
                     <t:template>
                         <Text text="{title}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>childrenLength}" width="5%" hAlign="End">
+                    <t:template>
+                        <Text text="{= ${children}.length}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>members}" width="5%" hAlign="End">
+                    <t:template>
+                        <Text text="{= ${members}.length}" />
                     </t:template>
                 </t:Column>
                 <t:Column label="{i18n>catNumber}" width="10%">

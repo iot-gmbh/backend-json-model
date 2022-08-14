@@ -13,6 +13,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/FilterType",
+    "sap/ui/model/Sorter",
     "sap/m/Token",
   ],
   (
@@ -22,6 +23,7 @@ sap.ui.define(
     Filter,
     FilterOperator,
     FilterType,
+    Sorter,
     Token
   ) =>
     BaseController.extend(
@@ -57,14 +59,16 @@ sap.ui.define(
           const model = this.getModel();
 
           const categories = await this.getModel().load("/Categories", {
-            // urlParameters: { $expand: "members,tags" },
+            sorters: [new Sorter("title")],
           });
 
-          const categoriesNested = nest(categories);
-
-          // const categoriesLevel0 = categories.filter(
-          //   ({ parent_ID }) => !parent_ID
-          // );
+          const categoriesNested = nest(
+            categories.map((cat) => {
+              cat.members = [];
+              cat.tags = [];
+              return cat;
+            })
+          );
 
           model.setProperty("/Categories", categoriesNested);
         },
@@ -105,7 +109,7 @@ sap.ui.define(
 
         onPressAddCategory(event) {
           const viewModel = this.getModel("worklistView");
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
 
           const rowAction = event.getSource().getParent();
           const {
@@ -129,24 +133,32 @@ sap.ui.define(
             this.getResourceBundle().getText("popoverTitle.createCategory")
           );
 
-          popover.bindElement("/newCategory");
-          popover.openBy(rowAction);
+          dialog.bindElement("/newCategory");
+          dialog.open(rowAction);
         },
 
-        onPressUpdateCategory(event) {
+        async onPressUpdateCategory(event) {
+          const model = this.getModel();
           const rowAction = event.getSource().getParent();
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
           const path = rowAction.getBindingContext().getPath();
+          const category = rowAction.getBindingContext().getObject();
+          const ODataPath = model.getODataPathFrom(category);
+
+          await model.load(`${ODataPath}/members`, {
+            into: `${path}/members`,
+            sorters: [new Sorter("user_userPrincipalName")],
+          });
 
           this.getModel("worklistView").setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.editCategory")
           );
 
-          this.getModel().setProperty(`${path}/localPath`, path);
+          model.setProperty(`${path}/localPath`, path);
 
-          popover.bindElement(path);
-          popover.openBy(rowAction);
+          dialog.bindElement(path);
+          dialog.open(rowAction);
         },
 
         async onChangeCategory(event) {
@@ -156,8 +168,8 @@ sap.ui.define(
 
         async onPressSubmitCategory(event) {
           const model = this.getModel();
-          const popover = event.getSource();
-          const category = popover.getBindingContext().getObject();
+          const dialog = event.getSource();
+          const category = dialog.getBindingContext().getObject();
 
           this._closePopover();
 
@@ -175,9 +187,9 @@ sap.ui.define(
         },
 
         _closePopover() {
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
           this.getModel().setProperty("/newCategory", {});
-          popover.close();
+          dialog.close();
         },
 
         onPressDeleteCategory(event) {
@@ -278,6 +290,52 @@ sap.ui.define(
           multiInput.fireTokenUpdate({ addedTokens: [newToken] });
         },
 
+        onUpdateUsers2Categories(event) {
+          const model = this.getModel();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
+
+          this._removeDuplicateTokens(event.getSource());
+
+          addedTokens.forEach((token) => {
+            const user_userPrincipalName = token.getKey();
+            const category_ID = token.getBindingContext().getProperty("ID");
+            const localPath = `${token
+              .getBindingContext()
+              .getPath()}/members/X`;
+
+            model.create("/Users2Categories", {
+              category_ID,
+              user_userPrincipalName,
+              localPath,
+            });
+          });
+
+          removedTokens.forEach((token) => {
+            const path = token.getBindingContext().getPath();
+
+            model.remove(path);
+          });
+        },
+
+        _removeDuplicateTokens(multiInput) {
+          const tokens = multiInput.getTokens();
+          const tokensMap = {};
+
+          tokens.forEach((token) => {
+            const title = token.getText();
+            tokensMap[title] = token;
+          });
+
+          multiInput.setTokens(Object.values(tokensMap));
+        },
+
+        onDeleteToken(event) {
+          const path = event.getSource().getBindingContext().getPath();
+
+          this.getModel().remove(path);
+        },
+
         onUpdateTags(event) {
           const model = this.getModel();
           const { addedTokens = [], removedTokens = [] } =
@@ -306,48 +364,6 @@ sap.ui.define(
 
             model.remove(path);
           });
-        },
-
-        _removeDuplicateTokens(multiInput) {
-          const tokens = multiInput.getTokens();
-          const tokensMap = {};
-
-          tokens.forEach((token) => {
-            const title = token.getText();
-            tokensMap[title] = token;
-          });
-
-          multiInput.setTokens(Object.values(tokensMap));
-        },
-
-        onUpdateUsers2Categories(event) {
-          const model = this.getModel();
-          const { addedTokens = [], removedTokens = [] } =
-            event.getParameters();
-
-          this._removeDuplicateTokens(event.getSource());
-
-          addedTokens.forEach((token) => {
-            const user_userPrincipalName = token.getKey();
-            const category_ID = token.getBindingContext().getProperty("ID");
-
-            model.create("/Users2Categories", {
-              category_ID,
-              user_userPrincipalName,
-            });
-          });
-
-          removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
-
-            model.remove(path);
-          });
-        },
-
-        onDeleteToken(event) {
-          const path = event.getSource().getBindingContext().getPath();
-
-          this.getModel().remove(path);
         },
       }
     )

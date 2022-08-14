@@ -105,6 +105,10 @@ sap.ui.define(
       // = read + store
       async load(...args) {
         const { results } = await this.odata.read(...args);
+        const [path, { into }] = args;
+        const loadInto = into || path;
+
+        this.setProperty(loadInto, results);
 
         return results;
       },
@@ -116,7 +120,7 @@ sap.ui.define(
 
         const data = this.getProperty(parentPath);
 
-        data.push(object);
+        data.push({ ...result, ...object });
 
         this.setProperty(parentPath, data);
         // this.nest();
