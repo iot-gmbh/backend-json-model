@@ -53,21 +53,21 @@ sap.ui.define(
           this.setModel(viewModel, "worklistView");
         },
 
-        // async onBeforeRendering() {
-        //   const model = this.getModel();
+        async onBeforeRendering() {
+          const model = this.getModel();
 
-        //   const categories = await this.getModel().load("/Categories", {
-        //     // urlParameters: { $expand: "members,tags" },
-        //   });
+          const categories = await this.getModel().load("/Categories", {
+            // urlParameters: { $expand: "members,tags" },
+          });
 
-        //   const categoriesNested = nest(categories);
+          const categoriesNested = nest(categories);
 
-        //   // const categoriesLevel0 = categories.filter(
-        //   //   ({ parent_ID }) => !parent_ID
-        //   // );
+          // const categoriesLevel0 = categories.filter(
+          //   ({ parent_ID }) => !parent_ID
+          // );
 
-        //   model.setProperty("/categoriesLevel0", categoriesNested);
-        // },
+          model.setProperty("/Categories", categoriesNested);
+        },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -105,16 +105,25 @@ sap.ui.define(
 
         onPressAddCategory(event) {
           const viewModel = this.getModel("worklistView");
-          const rowAction = event.getSource().getParent();
-          const { ID: parent_ID, hierarchyLevel } = rowAction
-            .getBindingContext()
-            .getObject();
           const popover = this.byId("editCategoryPopover");
+
+          const rowAction = event.getSource().getParent();
+          const {
+            ID: parent_ID,
+            hierarchyLevel,
+            children,
+          } = rowAction.getBindingContext().getObject();
+
+          const localPath = `${rowAction
+            .getBindingContext()
+            .getPath()}/children/${children.length}`;
 
           this.getModel().setProperty("/newCategory", {
             parent_ID,
-            hierarchyLevel: parseInt(hierarchyLevel, 10) + 1,
+            hierarchyLevel: (parseInt(hierarchyLevel, 10) + 1).toString(),
+            localPath,
           });
+
           viewModel.setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.createCategory")
@@ -127,13 +136,16 @@ sap.ui.define(
         onPressUpdateCategory(event) {
           const rowAction = event.getSource().getParent();
           const popover = this.byId("editCategoryPopover");
+          const path = rowAction.getBindingContext().getPath();
 
           this.getModel("worklistView").setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.editCategory")
           );
 
-          popover.bindElement(rowAction.getBindingContext().getPath());
+          this.getModel().setProperty(`${path}/localPath`, path);
+
+          popover.bindElement(path);
           popover.openBy(rowAction);
         },
 

@@ -9,13 +9,14 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  // this.on("READ", "Categories", async (req) => {
-  //   const results = await db.run(req.query);
+  this.on("READ", "Categories", async (req) => {
+    req.query.SELECT.limit.rows.val = 8000;
+    const results = await db.run(req.query);
 
-  //   const nestedResults = nest(results);
+    // const nestedResults = nest(results);
 
-  //   return nestedResults;
-  // });
+    return results;
+  });
 
   this.on("getCumulativeCategoryDurations", async (req) => {
     const {

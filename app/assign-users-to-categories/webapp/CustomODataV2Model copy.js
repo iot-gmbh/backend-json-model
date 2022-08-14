@@ -96,40 +96,111 @@ sap.ui.define(
         return result;
       },
 
+      async create(...args) {
+        const result = await this.odata.create(...args);
+        const [path] = args;
+
+        const data = this.getProperty(path);
+
+        data.push(result);
+
+        this.setProperty(path, data);
+        this.nest();
+      },
+
       async read(...args) {
         const { results } = await this.odata.read(...args);
 
         return results;
       },
 
+      async metadataLoaded() {
+        return this.ODataModel.metadataLoaded();
+      },
+
+      store(
+        path,
+        data,
+        {
+          entityTypeName = path.slice(1),
+          entityType = this.entityTypes.find(
+            ({ name }) => name === entityTypeName
+          ),
+          ...params
+        }
+      ) {
+        const $expand = params?.urlParameters?.$expand;
+
+        if ($expand?.includes("/")) {
+          throw new Error("Deep expand is not supported.");
+        }
+
+        if ($expand) {
+          const expands = $expand.split(",");
+          expands.forEach((exp) => {
+            const relation = entityType.relations.find(
+              ({ name }) => name === exp
+            );
+
+            const entityName = relation.toRole;
+            const existingData = this.getProperty(`/${entityName}`);
+            let newData = [];
+
+            data.forEach((res) => {
+              const expData =
+                relation.cardinality === "1" ? res[exp] : res[exp].results;
+
+              newData = [...newData, ...expData];
+            });
+
+            const uniqueData = [...new Set([...newData, ...existingData])];
+
+            this.setProperty(`/${entityName}`, uniqueData);
+          });
+        }
+
+        // this.setProperty(path, results);
+        this.setProperty(path, data);
+        // this.nest();
+      },
+
       // = read + store
       async load(...args) {
         const { results } = await this.odata.read(...args);
+        const [path, params] = args;
+
+        // this.store(path, results, params);
 
         return results;
       },
 
-      async create(...args) {
-        const [path, { localPath, ...object }] = args;
-        const result = await this.odata.create(path, object);
-        const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
-
-        const data = this.getProperty(parentPath);
-
-        data.push(object);
-
-        this.setProperty(parentPath, data);
-        // this.nest();
-      },
-
       // create new obj => nav-Props will be deleted so don't use reference
-      async update({ localPath, ...obj }) {
-        const odataPath = this.getODataPathFrom(obj);
-        const data = this.removeNavPropsFrom(obj);
+      async update({ ...obj }) {
+        const odataPath = `/${obj.__metadata.uri
+          .replace(location.origin, "")
+          .replace(this.serviceURL, "")}`;
+        const entityTypeName = odataPath.split("(")[0].slice(1);
+        const entityType = this.entityTypes.find(
+          ({ name }) => name === entityTypeName
+        );
+        const existingData = this.getProperty(`/${entityTypeName}`);
 
-        await this.odata.update(odataPath, data);
+        // nav-Props throw errors => delete them upfront
+        entityType.relations.forEach(({ name }) => {
+          // eslint-disable-next-line no-param-reassign
+          delete obj[name];
+        });
 
-        this.setProperty(localPath, { ...obj, ...data });
+        const index = existingData.findIndex((entity) =>
+          entityType.keys.every((key) => entity[key] === obj[key])
+        );
+
+        const jsonPath = `/${entityTypeName}/${index}`;
+
+        await this.odata.update(odataPath, obj);
+
+        this.setProperty(jsonPath, obj);
+        this.nest();
       },
 
       async remove(obj) {
@@ -194,33 +265,6 @@ sap.ui.define(
           .forEach(({ entityType, entities }) => {
             this.setProperty(`/${entityType.name}`, entities);
           });
-      },
-
-      getODataPathFrom(obj) {
-        const odataPath = `/${obj.__metadata.uri
-          .replace(location.origin, "")
-          .replace(this.serviceURL, "")}`;
-        return odataPath;
-      },
-
-      removeNavPropsFrom({ ...obj }) {
-        const odataPath = this.getODataPathFrom(obj);
-        const entityTypeName = odataPath.split("(")[0].slice(1);
-        const entityType = this.entityTypes.find(
-          ({ name }) => name === entityTypeName
-        );
-
-        // nav-Props throw errors => delete them upfront
-        entityType.relations.forEach(({ name }) => {
-          // eslint-disable-next-line no-param-reassign
-          delete obj[name];
-        });
-
-        return obj;
-      },
-
-      async metadataLoaded() {
-        return this.ODataModel.metadataLoaded();
       },
     });
   }
