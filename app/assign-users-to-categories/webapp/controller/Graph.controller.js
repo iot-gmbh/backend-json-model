@@ -1,12 +1,12 @@
-const nest = (items, ID = null, link = "parent_ID") =>
-  items
-    .filter((item) => item[link] === ID)
-    .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 sap.ui.define(
   ["./BaseController", "sap/ui/model/json/JSONModel"],
-  (BaseController, JSONModel) =>
-    BaseController.extend(
+  (BaseController, JSONModel) => {
+    const nest = (items, ID = null, link = "parent_ID") =>
+      items
+        .filter((item) => item[link] === ID)
+        .map((item) => ({ ...item, children: nest(items, item.ID) }));
+
+    return BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Graph",
       {
         onInit() {
@@ -92,5 +92,6 @@ sap.ui.define(
           });
         },
       }
-    )
+    );
+  }
 );

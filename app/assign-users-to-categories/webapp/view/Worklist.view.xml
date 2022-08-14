@@ -59,9 +59,12 @@
             </Dialog>
         </dependents>
 
-        <t:TreeTable id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
+        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="0" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: {path: 'totalDuration', descending: true},
-        parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" enableBusyIndicator="true" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
+            <t:noData>
+                <Text text=""></Text>
+            </t:noData>
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>

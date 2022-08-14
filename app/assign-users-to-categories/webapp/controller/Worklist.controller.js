@@ -1,10 +1,5 @@
 /* eslint-disable camelcase */
 
-const nest = (items, ID = null, link = "parent_ID") =>
-  items
-    .filter((item) => item[link] === ID)
-    .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 sap.ui.define(
   [
     "./BaseController",
@@ -25,8 +20,13 @@ sap.ui.define(
     FilterType,
     Sorter,
     Token
-  ) =>
-    BaseController.extend(
+  ) => {
+    const nest = (items, ID = null, link = "parent_ID") =>
+      items
+        .filter((item) => item[link] === ID)
+        .map((item) => ({ ...item, children: nest(items, item.ID) }));
+
+    return BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
         // formatter,
@@ -50,6 +50,7 @@ sap.ui.define(
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
             newCategory: {},
+            busy: true,
           });
 
           this.setModel(viewModel, "worklistView");
@@ -58,8 +59,32 @@ sap.ui.define(
         async onBeforeRendering() {
           const model = this.getModel();
 
+          this.getModel("worklistView").setProperty("/busy", true);
           const categories = await this.getModel().load("/Categories", {
             sorters: [new Sorter("title")],
+            // filters: [new Filter("hierarchyLevel", "EQ", "0")],
+          });
+
+          const categoriesNested = nest(
+            categories.map((cat) => {
+              cat.members = [];
+              cat.tags = [];
+              return cat;
+            })
+          );
+
+          model.setProperty("/Categories", categoriesNested);
+          this.getModel("worklistView").setProperty("/busy", false);
+        },
+
+        async onToggleOpenState(event) {
+          const { rowContext, expanded } = event.getParameters();
+          if (!expanded) return;
+
+          const parent_ID = rowContext.getProperty("ID");
+          const categories = await this.getModel().load("/Categories", {
+            sorters: [new Sorter("title")],
+            filters: [new Filter("parent_ID", "EQ", parent_ID)],
           });
 
           const categoriesNested = nest(
@@ -366,5 +391,6 @@ sap.ui.define(
           });
         },
       }
-    )
+    );
+  }
 );
