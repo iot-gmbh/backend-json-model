@@ -95,9 +95,9 @@
                         <Text text="{= ${members}.length}" />
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>catNumber}" width="10%">
+                <t:Column label="{i18n>deepReference}" width="10%">
                     <t:template>
-                        <Text text="{catNumber}"/>
+                        <Text text="{deepReference}"/>
                     </t:template>
                 </t:Column>
                 <t:Column label="{i18n>reference}" width="10%">

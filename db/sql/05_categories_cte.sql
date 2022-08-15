@@ -16,7 +16,7 @@ AS WITH RECURSIVE cte AS (
         description,
         reference,
         parent_ID,
-        levelSpecificID as catNumber,
+        shallowReference as deepReference,
         title as path
     FROM
         iot_planner_Categories
@@ -31,8 +31,8 @@ AS WITH RECURSIVE cte AS (
         this.reference,
         this.parent_ID,
         CAST(
-            (prior.catNumber || '-' || this.levelSpecificID) as varchar(5000)
-        ) as catNumber,
+            (prior.deepReference || '-' || this.shallowReference) as varchar(5000)
+        ) as deepReference,
         CAST(
             (prior.path || ' > ' || this.title) as varchar(5000)
         ) as path

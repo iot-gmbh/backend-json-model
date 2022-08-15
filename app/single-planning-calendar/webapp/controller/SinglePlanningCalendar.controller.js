@@ -301,11 +301,11 @@ sap.ui.define(
                   },
                 }),
                 new Filter({
-                  path: "catNumber",
-                  test: (catNumber) => {
+                  path: "deepReference",
+                  test: (deepReference) => {
                     if (!query) return false;
-                    if (!catNumber) return false;
-                    return catNumber.includes(query);
+                    if (!deepReference) return false;
+                    return deepReference.includes(query);
                   },
                 }),
               ],

@@ -115,11 +115,11 @@ module.exports = cds.service.impl(async function () {
       );
 
     const categories = results.map(
-      ({ id, parent_id, hierarchylevel, catnumber, ...data }) => ({
+      ({ id, parent_id, hierarchylevel, deepreference, ...data }) => ({
         ID: id,
         parent_ID: parent_id,
         hierarchyLevel: hierarchylevel,
-        catNumber: catnumber,
+        deepReference: deepreference,
         ...data,
       })
     );

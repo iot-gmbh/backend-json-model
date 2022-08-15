@@ -54,7 +54,7 @@ create or replace view "public"."adminservice_categories" as  SELECT categories_
     categories_0.path,
     categories_0.hierarchylevel,
     categories_0.levelspecificid,
-    categories_0.catnumber,
+    categories_0.deepreference,
     categories_0.totalduration,
     categories_0.accumulatedduration,
     categories_0.relativeduration,
@@ -67,161 +67,296 @@ create or replace view "public"."adminservice_categories" as  SELECT categories_
 
 
 CREATE OR REPLACE FUNCTION public.get_categories(p_tenant character varying, p_root character varying DEFAULT NULL::character varying, p_date_from timestamp with time zone DEFAULT now(), p_date_until timestamp with time zone DEFAULT now())
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, description character varying, reference character varying, catnumber character varying, path character varying)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, description character varying, reference character varying, deepreference character varying, path character varying)
  LANGUAGE plpgsql
-AS $function$ #variable_conflict use_column
-begin RETURN QUERY WITH RECURSIVE cte AS (
-    SELECT
-        ID,
-        tenant,
-        parent_ID,
-        title,
-        hierarchyLevel,
-        description,
-        reference,
-        levelSpecificID as catNumber,
-        title as path
-    FROM
-        iot_planner_Categories
-    WHERE
-        -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "parent_ID IS NULL"
-        tenant = p_tenant
-        and (
-            p_root is null
-            and parent_ID is null
-            or parent_ID = p_root
-        )
-    UNION
-    SELECT
-        this.ID,
-        this.tenant,
-        this.parent_ID,
-        this.title,
-        this.hierarchyLevel,
-        this.description,
-        this.reference,
-        CAST(
-            (prior.catNumber || '-' || this.levelSpecificID) as varchar(5000)
-        ) as catNumber,
-        CAST(
-            (prior.path || ' > ' || this.title) as varchar(5000)
-        ) as path
-    FROM
-        cte AS prior
-        INNER JOIN iot_planner_Categories AS this ON this.parent_ID = prior.ID
-)
-SELECT
-    cte.*
-FROM
-    cte;
-
+AS $function$ #variable_conflict use_column
+
+begin RETURN QUERY WITH RECURSIVE cte AS (
+
+    SELECT
+
+        ID,
+
+        tenant,
+
+        parent_ID,deepReference
+
+        title,
+
+        hierarchyLevel,
+
+        description,
+
+        reference,
+
+        shallowReference as deepReference,
+
+        title as path
+
+    FROM
+
+        iot_planner_Categories
+
+    WHERE
+
+        -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "parent_ID IS NULL"
+
+        tenant = p_deepReference
+deepReference
+        and (
+
+            p_root is null
+
+            and parent_ID is null
+
+            or parent_ID = p_root
+
+        )
+
+    UNION
+
+    SELECT
+
+        this.ID,
+
+        this.tenant,
+
+        this.parent_ID,
+
+        this.title,
+
+        this.hierarchyLevel,
+
+        this.description,
+
+        this.reference,
+
+        CAST(
+
+            (prior.deepReference || '-' || this.shallowReference) as varchar(5000)
+
+        ) as deepReference,
+
+        CAST(
+
+            (prior.path || ' > ' || this.title) as varchar(5000)
+
+        ) as path
+
+    FROM
+
+        cte AS prior
+
+        INNER JOIN iot_planner_Categories AS this ON this.parent_ID = prior.ID
+
+)
+
+SELECT
+
+    cte.*
+
+FROM
+
+    cte;
+
+
+
 end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_cumulative_category_durations(p_tenant character varying, p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
  RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, accumulatedduration numeric)
  LANGUAGE plpgsql
-AS $function$ #variable_conflict use_column
-begin RETURN QUERY
-/* for reference: https://stackoverflow.com/questions/26660189/recursive-query-with-sum-in-postgres */
-WITH RECURSIVE cte AS (
-    SELECT
-        ID,
-        ID as parent_ID,
-        tenant,
-        parent_ID as parent,
-        title,
-        hierarchyLevel,
-        totalDuration,
-        totalDuration as accumulatedDuration
-    FROM
-        get_durations(p_username, p_tenant, p_date_from, p_date_until)
-    UNION
-	ALL
-    SELECT
-        c.ID,
-        d.ID,
-        c.tenant,
-        c.parent,
-        c.title,
-        c.hierarchyLevel,
-        c.totalDuration,
-        d.totalDuration as accumulatedDuration
-    FROM
-        cte c
-        JOIN get_durations(p_username, p_tenant, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
-)
-SELECT
-    ID,
-    tenant,
-    parent as parent_ID,
-    title,
-    hierarchyLevel,
-    totalDuration,
-    sum(accumulatedDuration) AS accumulatedDuration
-FROM
-    cte 
-GROUP BY
-    ID,
-    tenant,
-    parent,
-    hierarchyLevel,
-    totalDuration,
-    title;
-
+AS $function$ #variable_conflict use_column
+
+begin RETURN QUERY
+
+/* for reference: https://stackoverflow.com/questions/26660189/recursive-query-with-sum-in-postgres */
+
+WITH RECURSIVE cte AS (
+
+    SELECT
+
+        ID,
+
+        ID as parent_ID,
+
+        tenant,
+
+        parent_ID as parent,
+
+        titldeepReference
+
+        hierarchyLevel,
+
+        totalDuration,
+
+        totalDuration as accumulatedDuration
+
+    FROM
+
+        get_durations(p_username, p_tenant, p_date_from, p_date_until)
+
+    UNION
+
+	ALL
+
+    SELECT
+
+        c.ID,
+
+        d.ID,
+
+        c.tenant,
+
+        c.parent,
+
+        c.title,
+
+        c.hierarchyLevel,
+
+        c.totalDuration,
+
+        d.totalDuration as accumulatedDuration
+
+    FROM
+
+        cte c
+
+        JOIN get_durations(p_username, p_tenant, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
+
+)
+
+SELECT
+
+    ID,
+
+    tenant,
+
+    parent as parent_ID,
+
+    title,
+
+    hierarchyLevel,
+
+    totalDuration,
+
+    sum(accumulatedDuration) AS accumulatedDuration
+
+FROM
+
+    cte 
+
+GROUP BY
+
+    ID,
+
+    tenant,
+
+    parent,
+
+    hierarchyLevel,
+
+    totalDuration,
+
+    title;
+
+
+
 end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_cumulative_category_durations_with_path(p_tenant character varying, p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, accumulatedduration numeric, catnumber character varying)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, accumulatedduration numeric, deepreference character varying)
  LANGUAGE plpgsql
-AS $function$ #variable_conflict use_column
-begin RETURN QUERY
-SELECT
-    dur.ID,
-    dur.tenant,
-    dur.parent_ID,
-    dur.title,
-    dur.hierarchyLevel,
-    dur.totalDuration,
-    dur.accumulatedDuration,
-    pathCTE.catNumber
-FROM
-    get_cumulative_category_durations(p_username, p_tenant, p_date_from, p_date_until) as dur
-    JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;
+AS $function$ #variable_conflict use_column
+
+begin RETURN QUERY
+
+SELECT
+
+    dur.ID,
+
+    dur.tenant,
+
+    dur.parent_ID,
+
+    dur.title,
+
+    dur.hierarchyLevel,
+
+    dur.totalDuration,
+
+    dur.accumulatedDuration,
+
+    pathCTE.deepReference
+
+FROM
+
+    get_cumulative_category_durations(p_username, p_tenant, p_date_from, p_date_until) as dur
+
+    JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;
+
 end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_durations(p_tenant character varying, p_username character varying, p_date_from timestamp with time zone, p_date_until timestamp with time zone)
  RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, totalduration numeric, datefrom timestamp with time zone, dateuntil timestamp with time zone)
  LANGUAGE plpgsql
-AS $function$ #variable_conflict use_column
-begin RETURN QUERY
-SELECT
-    cat.ID,
-    cat.tenant,
-    cat.parent_ID,
-    cat.title,
-    cat.hierarchyLevel,
-    sum(wi.duration) as totalDuration,
-    p_date_from as dateFrom,
-    p_date_until as dateUntil
-FROM
-    iot_planner_categories as cat
-    LEFT OUTER JOIN iot_planner_workitems as wi on wi.parent_ID = cat.ID
-    and wi.tenant = cat.tenant
-    and wi.assignedTo_userPrincipalName ilike p_username
-    and wi.activateddate > p_date_from
-    and wi.activateddate < p_date_until
-where
-    wi.tenant = p_tenant
-GROUP BY
-    cat.ID,
-    cat.tenant,
-    cat.parent_ID,
-    cat.title,
-    cat.hierarchyLevel;
-
+AS $function$ #variable_conflict use_column
+
+begin RETURN QUERY
+
+SELECT
+
+    cat.ID,
+
+    cat.tenant,
+
+    cat.parent_ID,
+
+    cat.title,
+
+    cat.hierarchyLevel,
+
+    sum(wi.duration) as totalDuration,
+
+    p_date_from as dateFrom,
+
+    p_date_until as dateUntil
+
+FROM
+
+    iot_planner_categories as cat
+
+    LEFT OUTER JOIN iot_planner_workitems as wi on wi.parent_ID = cat.ID
+
+    and wi.tenant = cat.tenant
+
+    and wi.assignedTo_userPrincipalName ilike p_username
+
+    and wi.activateddate > p_date_from
+
+    and wi.activateddate < p_date_until
+
+where
+
+    wi.tenant = p_tenant
+
+GROUP BY
+
+    cat.ID,
+
+    cat.tenant,
+
+    cat.parent_ID,
+
+    cat.title,
+
+    cat.hierarchyLevel;
+
+
+
 end $function$
 ;
 
@@ -232,7 +367,7 @@ create or replace view "public"."iot_planner_categories_cte" as  WITH RECURSIVE 
             iot_planner_categories.description,
             iot_planner_categories.reference,
             iot_planner_categories.parent_id,
-            iot_planner_categories.levelspecificid AS catnumber,
+            iot_planner_categories.levelspecificid AS deepreference,
             iot_planner_categories.title AS path
            FROM iot_planner_categories
           WHERE (iot_planner_categories.parent_id IS NULL)
@@ -243,7 +378,7 @@ create or replace view "public"."iot_planner_categories_cte" as  WITH RECURSIVE 
             this.description,
             this.reference,
             this.parent_id,
-            ((((prior.catnumber)::text || '-'::text) || (this.levelspecificid)::text))::character varying(5000) AS catnumber,
+            ((((prior.deepreference)::text || '-'::text) || (this.levelspecificid)::text))::character varying(5000) AS deepreference,
             ((((prior.path)::text || ' > '::text) || (this.title)::text))::character varying(5000) AS path
            FROM (cte prior
              JOIN iot_planner_categories this ON (((this.parent_id)::text = (prior.id)::text)))
@@ -254,7 +389,7 @@ create or replace view "public"."iot_planner_categories_cte" as  WITH RECURSIVE 
     cte.description,
     cte.reference,
     cte.parent_id,
-    cte.catnumber,
+    cte.deepreference,
     cte.path
    FROM cte;
 
@@ -352,7 +487,7 @@ create or replace view "public"."iot_planner_my_categories" as  SELECT sub.id,
     sub.description,
     sub.reference,
     sub.parent_id,
-    sub.catnumber,
+    sub.deepreference,
     sub.path,
     sub.user_userprincipalname
    FROM ( WITH RECURSIVE childrencte AS (
@@ -390,7 +525,7 @@ create or replace view "public"."iot_planner_my_categories" as  SELECT sub.id,
             pathcte.description,
             pathcte.reference,
             pathcte.parent_id,
-            pathcte.catnumber,
+            pathcte.deepreference,
             pathcte.path,
             childrencte.user_userprincipalname
            FROM (iot_planner_categories_cte pathcte
@@ -402,7 +537,7 @@ create or replace view "public"."iot_planner_my_categories" as  SELECT sub.id,
             pathcte.description,
             pathcte.reference,
             pathcte.parent_id,
-            pathcte.catnumber,
+            pathcte.deepreference,
             pathcte.path,
             parentcte.user_userprincipalname
            FROM (iot_planner_categories_cte pathcte
@@ -415,13 +550,13 @@ create or replace view "public"."iot_planner_my_categories_with_tags" as  SELECT
     cat.description,
     cat.reference,
     cat.parent_id,
-    cat.catnumber,
+    cat.deepreference,
     cat.path,
     cat.user_userprincipalname,
     string_agg((t2c.tag_title)::text, ' '::text) AS tags
    FROM (iot_planner_my_categories cat
      LEFT JOIN iot_planner_tags2categories t2c ON (((cat.id)::text = (t2c.category_id)::text)))
-  GROUP BY cat.id, cat.title, cat.tenant, cat.parent_id, cat.description, cat.reference, cat.path, cat.catnumber, cat.user_userprincipalname;
+  GROUP BY cat.id, cat.title, cat.tenant, cat.parent_id, cat.description, cat.reference, cat.path, cat.deepreference, cat.user_userprincipalname;
 
 
 create or replace view "public"."timetrackingservice_categories" as  SELECT categories_0.id,
@@ -442,7 +577,7 @@ create or replace view "public"."timetrackingservice_categories" as  SELECT cate
     categories_0.path,
     categories_0.hierarchylevel,
     categories_0.levelspecificid,
-    categories_0.catnumber,
+    categories_0.deepreference,
     categories_0.totalduration,
     categories_0.accumulatedduration,
     categories_0.relativeduration,
@@ -472,7 +607,7 @@ create or replace view "public"."timetrackingservice_mycategories" as  SELECT ca
     categories_0.path,
     categories_0.hierarchylevel,
     categories_0.levelspecificid,
-    categories_0.catnumber,
+    categories_0.deepreference,
     categories_0.totalduration,
     categories_0.accumulatedduration,
     categories_0.relativeduration,
@@ -502,7 +637,7 @@ create or replace view "public"."workitemsservice_categories" as  SELECT categor
     categories_0.path,
     categories_0.hierarchylevel,
     categories_0.levelspecificid,
-    categories_0.catnumber,
+    categories_0.deepreference,
     categories_0.totalduration,
     categories_0.accumulatedduration,
     categories_0.relativeduration,

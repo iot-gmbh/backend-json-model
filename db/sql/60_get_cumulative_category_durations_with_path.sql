@@ -12,7 +12,7 @@ or replace function get_cumulative_category_durations_with_path(
     hierarchyLevel VARCHAR,
     totalDuration NUMERIC,
     accumulatedDuration NUMERIC,
-    catNumber VARCHAR
+    deepReference VARCHAR
 ) language plpgsql as $$ #variable_conflict use_column
 begin RETURN QUERY
 SELECT
@@ -23,7 +23,7 @@ SELECT
     dur.hierarchyLevel,
     dur.totalDuration,
     dur.accumulatedDuration,
-    pathCTE.catNumber
+    pathCTE.deepReference
 FROM
     get_cumulative_category_durations(p_username, p_tenant, p_date_from, p_date_until) as dur
     JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;

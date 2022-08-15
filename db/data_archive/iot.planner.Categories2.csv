@@ -1,4 +1,4 @@
-﻿createdAt;createdBy;modifiedAt;modifiedBy;tenant;ID;hierarchyLevel;levelSpecificID;catNumber;title;description;parent_ID;mappingID;manager_userPrincipalName;reference
+﻿createdAt;createdBy;modifiedAt;modifiedBy;tenant;ID;hierarchyLevel;shallowReference;deepReference;title;description;parent_ID;mappingID;manager_userPrincipalName;reference
 2021-05-02 12:55:08.091;anonymous;2021-05-02 12:55:08.091;anonymous;d439e362-ecdf-4d78-8fed-86c7c639b131;d846ed9f-fc4d-42a7-952f-0f52b02caf74;0;0;0;DELETED;DELETED;;;;
 2021-05-02 14:55:08.091;anonymous;2021-05-02 14:55:08.091;anonymous;d439e362-ecdf-4d78-8fed-86c7c639b131;48d9e826-e8e0-4740-9a06-9678289e7633;0;1;1;Manufactum;;;;;
 2021-05-02 14:55:08.091;anonymous;2021-05-28 13:28:42.083;Benedikt.Hoelker@iot-online.de;d439e362-ecdf-4d78-8fed-86c7c639b131;f7847ed4-1ea9-4e99-b2cb-b30d5afcce48;0;2;2;Frankonia;;;;;

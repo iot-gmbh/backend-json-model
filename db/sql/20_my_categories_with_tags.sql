@@ -14,5 +14,5 @@ group by
     cat.description,
     cat.reference,
     cat.path,
-    cat.catNumber,
+    cat.deepReference,
     cat.user_userPrincipalName;

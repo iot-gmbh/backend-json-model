@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+<edmx:Edmx Version="4.0"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
         <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
     </edmx:Reference>
@@ -19,7 +20,8 @@
         <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
     </edmx:Reference>
     <edmx:DataServices>
-        <Schema Namespace="AnalyticsService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Schema Namespace="AnalyticsService"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
             <EntityContainer Name="EntityContainer">
                 <EntitySet Name="WorkItems" EntityType="AnalyticsService.WorkItems">
                     <NavigationPropertyBinding Path="parent" Target="Categories"/>
@@ -97,8 +99,8 @@
                 <Property Name="drillDownState" Type="Edm.String" DefaultValue="expanded"/>
                 <Property Name="path" Type="Edm.String"/>
                 <Property Name="hierarchyLevel" Type="Edm.Int32"/>
-                <Property Name="levelSpecificID" Type="Edm.String"/>
-                <Property Name="catNumber" Type="Edm.String"/>
+                <Property Name="shallowReference" Type="Edm.String"/>
+                <Property Name="deepReference" Type="Edm.String"/>
                 <NavigationProperty Name="manager" Type="AnalyticsService.Users">
                     <ReferentialConstraint Property="manager_userPrincipalName" ReferencedProperty="userPrincipalName"/>
                 </NavigationProperty>
@@ -357,82 +359,82 @@
             <Annotations Target="AnalyticsService.WorkItems/assignedToName">
                 <Annotation Term="Analytics.Dimension" Bool="true"/>
                 <Annotation Term="Common.Label" String="{i18n>WorkItemsAggr.assignedTo}"/>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/parentTitle">
-                    <Annotation Term="Analytics.Dimension" Bool="true"/>
-                    <Annotation Term="Common.Label" String="Parent"/>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/activatedDate">
-                    <Annotation Term="Analytics.Dimension" Bool="true"/>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/completedDate">
-                    <Annotation Term="Analytics.Dimension" Bool="true"/>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/activatedDateMonth">
-                    <Annotation Term="Analytics.Dimension" Bool="true"/>
-                    <Annotation Term="Common.ValueList">
-                        <Record Type="Common.ValueListType">
-                            <PropertyValue Property="CollectionPath" String="WorkItems"/>
-                            <PropertyValue Property="Parameters">
-                                <Collection>
-                                    <Record Type="Common.ValueListParameterInOut">
-                                        <PropertyValue Property="LocalDataProperty" PropertyPath="activatedDateMonth"/>
-                                        <PropertyValue Property="ValueListProperty" String="activatedDateMonth"/>
-                                    </Record>
-                                </Collection>
-                            </PropertyValue>
-                            <PropertyValue Property="PresentationVariantQualifier" String="DurationByMonth"/>
-                        </Record>
-                    </Annotation>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/activatedDateYear">
-                    <Annotation Term="Analytics.Dimension" Bool="true"/>
-                </Annotations>
-                <Annotations Target="AnalyticsService.WorkItems/duration">
-                    <Annotation Term="Analytics.Measure" Bool="true"/>
-                    <Annotation Term="Core.Computed" Bool="true"/>
-                    <Annotation Term="Common.Label" String="{i18n>WorkItemsAggr.duration}"/>
-                    </Annotations>
-                    <Annotations Target="AnalyticsService.WorkItems/parent_ID">
-                        <Annotation Term="Analytics.Dimension" Bool="true"/>
-                    </Annotations>
-                    <Annotations Target="AnalyticsService.WorkItems/assignedTo_userPrincipalName">
-                        <Annotation Term="Analytics.Dimension" Bool="true"/>
-                    </Annotations>
-                    <Annotations Target="AnalyticsService.Categories/createdAt">
-                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
-                        <Annotation Term="Core.Immutable" Bool="true"/>
-                        <Annotation Term="Core.Computed" Bool="true"/>
-                        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
-                        </Annotations>
-                        <Annotations Target="AnalyticsService.Categories/createdBy">
-                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
-                            <Annotation Term="Core.Immutable" Bool="true"/>
-                            <Annotation Term="Core.Computed" Bool="true"/>
-                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
-                                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
-                                </Annotations>
-                                <Annotations Target="AnalyticsService.Categories/modifiedAt">
-                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
-                                    <Annotation Term="Core.Computed" Bool="true"/>
-                                    <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
-                                    </Annotations>
-                                    <Annotations Target="AnalyticsService.Categories/modifiedBy">
-                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
-                                        <Annotation Term="Core.Computed" Bool="true"/>
-                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
-                                            <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
-                                            </Annotations>
-                                            <Annotations Target="AnalyticsService.Categories/invoiceRelevance">
-                                                <Annotation Term="Common.Label" String="{i18n>relevance.invoiceRelevance}"/>
-                                                    <Annotation Term="Validation.Minimum" Int="0"/>
-                                                    <Annotation Term="Validation.Maximum" Int="1"/>
-                                                </Annotations>
-                                                <Annotations Target="AnalyticsService.Categories/bonusRelevance">
-                                                    <Annotation Term="Common.Label" String="{i18n>relevance.bonusRelevance}"/>
-                                                        <Annotation Term="Validation.Minimum" Int="0"/>
-                                                        <Annotation Term="Validation.Maximum" Int="1"/>
-                                                    </Annotations>
-                                                </Schema>
-                                            </edmx:DataServices>
-                                        </edmx:Edmx>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/parentTitle">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.Label" String="Parent"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/completedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDateMonth">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="WorkItems"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="activatedDateMonth"/>
+                                    <PropertyValue Property="ValueListProperty" String="activatedDateMonth"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="PresentationVariantQualifier" String="DurationByMonth"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDateYear">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/duration">
+                <Annotation Term="Analytics.Measure" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>WorkItemsAggr.duration}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/parent_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/invoiceRelevance">
+                <Annotation Term="Common.Label" String="{i18n>relevance.invoiceRelevance}"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/bonusRelevance">
+                <Annotation Term="Common.Label" String="{i18n>relevance.bonusRelevance}"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

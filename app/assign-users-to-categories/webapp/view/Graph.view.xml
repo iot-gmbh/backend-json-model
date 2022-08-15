@@ -29,9 +29,9 @@
                         <m:Text text="{title}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>catNumber}">
+                <t:Column label="{i18n>deepReference}">
                     <t:template>
-                        <m:Text text="{catNumber}"/>
+                        <m:Text text="{deepReference}"/>
                     </t:template>
                 </t:Column>
                 <t:Column label="{i18n>relativeDuration}">

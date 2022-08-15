@@ -11,7 +11,7 @@ or replace function get_categories(
     hierarchyLevel VARCHAR,
     description VARCHAR,
     reference VARCHAR,
-    catNumber VARCHAR,
+    deepReference VARCHAR,
     path VARCHAR
 ) language plpgsql as $$ #variable_conflict use_column
 begin RETURN QUERY WITH RECURSIVE cte AS (
@@ -23,7 +23,7 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         hierarchyLevel,
         description,
         reference,
-        levelSpecificID as catNumber,
+        shallowReference as deepReference,
         title as path
     FROM
         iot_planner_Categories
@@ -47,8 +47,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         this.description,
         this.reference,
         CAST(
-            (prior.catNumber || '-' || this.levelSpecificID) as varchar(5000)
-        ) as catNumber,
+            (prior.deepReference || '-' || this.shallowReference) as varchar(5000)
+        ) as deepReference,
         CAST(
             (prior.path || ' > ' || this.title) as varchar(5000)
         ) as path

@@ -186,8 +186,8 @@
                 <Property Name="drillDownState" Type="Edm.String"/>
                 <Property Name="path" Type="Edm.String"/>
                 <Property Name="hierarchyLevel" Type="Edm.String"/>
-                <Property Name="levelSpecificID" Type="Edm.String"/>
-                <Property Name="catNumber" Type="Edm.String"/>
+                <Property Name="shallowReference" Type="Edm.String"/>
+                <Property Name="deepReference" Type="Edm.String"/>
                 <Property Name="totalDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
                 <Property Name="accumulatedDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
                 <Property Name="relativeDuration" Type="Edm.Decimal" sap:variable-scale="true"/>

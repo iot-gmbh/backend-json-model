@@ -27,7 +27,7 @@ module.exports = cds.service.impl(async function () {
         title,
         description,
         hierarchylevel,
-        catnumber,
+        deepreference,
       }) => ({
         ID: id,
         tenant,
@@ -35,7 +35,7 @@ module.exports = cds.service.impl(async function () {
         title,
         description,
         hierarchyLevel: hierarchylevel,
-        catNumber: catnumber,
+        deepReference: deepreference,
       })
     );
 
@@ -74,7 +74,7 @@ module.exports = cds.service.impl(async function () {
         parent_id,
         title,
         hierarchylevel,
-        catnumber,
+        deepreference,
         totalduration,
         accumulatedduration,
       }) => ({
@@ -90,7 +90,7 @@ module.exports = cds.service.impl(async function () {
           (accumulatedduration * 100) / sum
         ).toFixed(0),
         grandTotal: sum,
-        catNumber: catnumber,
+        deepReference: deepreference,
       })
     );
 
@@ -113,7 +113,7 @@ module.exports = cds.service.impl(async function () {
     const levelSpecificNumber = (parseInt(siblings.length, 10) + 1).toString();
 
     if (parent) {
-      req.data.catNumber = `${parent.catNumber}-${levelSpecificNumber}`;
+      req.data.deepReference = `${parent.deepReference}-${levelSpecificNumber}`;
     }
   });
 

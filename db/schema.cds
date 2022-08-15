@@ -66,8 +66,8 @@ entity Categories : cuid, managed, relevance, multitenant {
   drillDownState      : String default 'expanded';
   path                : String;
   hierarchyLevel      : String;
-  levelSpecificID     : String;
-  catNumber           : String;
+  shallowReference    : String;
+  deepReference       : String;
   totalDuration       : Decimal;
   accumulatedDuration : Decimal;
   relativeDuration    : Decimal;
@@ -100,7 +100,7 @@ entity CategoriesCumulativeDurations as projection on Categories {
       // members,
       // tags,
       children,
-      // levelSpecificID as catNumber,
+      // shallowReference as deepReference,
       // title           as path,
       totalDuration
 }
