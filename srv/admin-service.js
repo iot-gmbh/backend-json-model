@@ -9,13 +9,37 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  this.on("READ", "Categories", async (req) => {
-    req.query.SELECT.limit.rows.val = 8000;
-    const results = await db.run(req.query);
+  this.on("getCategoriesByID", async (req) => {
+    const {
+      data: { root, dateFrom, dateUntil },
+      user,
+    } = req;
 
-    // const nestedResults = nest(results);
+    // TODO: implement filtering for user & tenant
+    const query = `SELECT * FROM get_categories($1, $2, $3)`;
+    const results = await db.run(query, [root, dateFrom, dateUntil]);
 
-    return results;
+    const categories = results.map(
+      ({
+        id,
+        tenant,
+        parent_id,
+        title,
+        description,
+        hierarchylevel,
+        catnumber,
+      }) => ({
+        ID: id,
+        tenant,
+        parent_ID: parent_id,
+        title,
+        description,
+        hierarchyLevel: hierarchylevel,
+        catNumber: catnumber,
+      })
+    );
+
+    return categories;
   });
 
   this.on("getCumulativeCategoryDurations", async (req) => {

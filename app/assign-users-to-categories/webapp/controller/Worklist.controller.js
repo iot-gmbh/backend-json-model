@@ -60,40 +60,45 @@ sap.ui.define(
           const model = this.getModel();
 
           this.getModel("worklistView").setProperty("/busy", true);
-          const categories = await this.getModel().load("/Categories", {
-            sorters: [new Sorter("title")],
-            // filters: [new Filter("hierarchyLevel", "EQ", "0")],
-          });
-
-          const categoriesNested = nest(
-            categories.map((cat) => {
-              cat.members = [];
-              cat.tags = [];
-              return cat;
-            })
+          // const categories = await this.getModel().load("/Categories", {
+          //   sorters: [new Sorter("title")],
+          //   // filters: [new Filter("hierarchyLevel", "EQ", "0")],
+          // });
+          const { results: categories } = await model.callFunction(
+            `/getCategoriesByID`,
+            {
+              urlParameters: {
+                dateFrom: "2021-01-05T15:16:23Z",
+                dateUntil: "2023-01-05T15:16:23Z",
+                root: null,
+              },
+            }
           );
+          const categoriesNested = nest(categories);
 
           model.setProperty("/Categories", categoriesNested);
+
           this.getModel("worklistView").setProperty("/busy", false);
         },
 
         async onToggleOpenState(event) {
+          const model = this.getModel();
           const { rowContext, expanded } = event.getParameters();
           if (!expanded) return;
 
-          const parent_ID = rowContext.getProperty("ID");
-          const categories = await this.getModel().load("/Categories", {
-            sorters: [new Sorter("title")],
-            filters: [new Filter("parent_ID", "EQ", parent_ID)],
-          });
-
-          const categoriesNested = nest(
-            categories.map((cat) => {
-              cat.members = [];
-              cat.tags = [];
-              return cat;
-            })
+          const ID = rowContext.getProperty("ID");
+          const { results: categories } = await model.callFunction(
+            `/getCategoriesByID`,
+            {
+              urlParameters: {
+                dateFrom: "2021-01-05T15:16:23Z",
+                dateUntil: "2023-01-05T15:16:23Z",
+                root: ID,
+              },
+            }
           );
+
+          const categoriesNested = nest(categories);
 
           model.setProperty("/Categories", categoriesNested);
         },
