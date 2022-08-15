@@ -1,5 +1,6 @@
 create
 or replace function get_cumulative_category_durations_with_path(
+    p_tenant varchar,
     p_username varchar,
     p_date_from timestamp with time zone,
     p_date_until timestamp with time zone
@@ -24,6 +25,6 @@ SELECT
     dur.accumulatedDuration,
     pathCTE.catNumber
 FROM
-    get_cumulative_category_durations(p_username, p_date_from, p_date_until) as dur
+    get_cumulative_category_durations(p_username, p_tenant, p_date_from, p_date_until) as dur
     JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;
 end $$;

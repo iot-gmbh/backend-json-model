@@ -16,8 +16,13 @@ module.exports = cds.service.impl(async function () {
     } = req;
 
     // TODO: implement filtering for user & tenant
-    const query = `SELECT * FROM get_categories($1, $2, $3)`;
-    const results = await db.run(query, [root, dateFrom, dateUntil]);
+    const query = `SELECT * FROM get_categories($1, $2, $3, $4)`;
+    const results = await db.run(query, [
+      user.tenant,
+      root,
+      dateFrom,
+      dateUntil,
+    ]);
 
     const categories = results.map(
       ({
@@ -48,17 +53,23 @@ module.exports = cds.service.impl(async function () {
       user,
     } = req;
 
-    let query = `SELECT * FROM get_cumulative_category_durations_with_path($1, $2, $3)`;
+    let query = `SELECT * FROM get_cumulative_category_durations_with_path($1, $2, $3, $4)`;
 
     // Params in ODataV2 are sent as string => 'false' instead of false
     if (excludeEmptyDurations || excludeEmptyDurations === "true") {
       query += ` WHERE accumulatedDuration is not null`;
     }
 
-    const results = await db.run(query, [user.id, dateFrom, dateUntil]);
+    const results = await db.run(query, [
+      user.tenant,
+      user.id,
+      dateFrom,
+      dateUntil,
+    ]);
+
     const [{ sum }] = await db.run(
-      `SELECT sum(totalDuration) FROM get_durations($1, $2, $3)`,
-      [user.id, dateFrom, dateUntil]
+      `SELECT sum(totalDuration) FROM get_durations($1, $2, $3, $4)`,
+      [user.tenant, user.id, dateFrom, dateUntil]
     );
 
     const categories = results.map(

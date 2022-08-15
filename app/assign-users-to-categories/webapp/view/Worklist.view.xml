@@ -59,7 +59,7 @@
             </Dialog>
         </dependents>
 
-        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="0" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
+        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: {path: 'totalDuration', descending: true},
         parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
             <t:noData>

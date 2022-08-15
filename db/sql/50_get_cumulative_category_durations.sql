@@ -1,5 +1,6 @@
 create
 or replace function get_cumulative_category_durations(
+    p_tenant varchar,
     p_username varchar,
     p_date_from timestamp with time zone,
     p_date_until timestamp with time zone
@@ -25,7 +26,7 @@ WITH RECURSIVE cte AS (
         totalDuration,
         totalDuration as accumulatedDuration
     FROM
-        get_durations(p_username, p_date_from, p_date_until)
+        get_durations(p_username, p_tenant, p_date_from, p_date_until)
     UNION
 	ALL
     SELECT
@@ -39,7 +40,7 @@ WITH RECURSIVE cte AS (
         d.totalDuration as accumulatedDuration
     FROM
         cte c
-        JOIN get_durations(p_username, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
+        JOIN get_durations(p_username, p_tenant, p_date_from, p_date_until) d on c.parent_ID = d.parent_ID
 )
 SELECT
     ID,

@@ -1,5 +1,6 @@
 create
 or replace function get_categories(
+    p_tenant varchar,
     p_root varchar default null,
     p_date_from timestamp with time zone default now(),
     p_date_until timestamp with time zone default now()
@@ -13,11 +14,8 @@ or replace function get_categories(
     reference VARCHAR,
     catNumber VARCHAR,
     path VARCHAR
-) language plpgsql as $$ 
-#variable_conflict use_column
-begin RETURN QUERY
-
-WITH RECURSIVE cte AS (
+) language plpgsql as $$ #variable_conflict use_column
+begin RETURN QUERY WITH RECURSIVE cte AS (
     SELECT
         ID,
         tenant,
@@ -32,7 +30,12 @@ WITH RECURSIVE cte AS (
         iot_planner_Categories
     WHERE
         -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "parent_ID IS NULL"
-		p_root is null and parent_ID is null or parent_ID = p_root
+        tenant = p_tenant
+        and (
+            p_root is null
+            and parent_ID is null
+            or parent_ID = p_root
+        )
     UNION
     SELECT
         this.ID,
