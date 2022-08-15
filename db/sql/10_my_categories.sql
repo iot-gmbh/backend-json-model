@@ -22,6 +22,9 @@ FROM
       FROM
         iot_planner_Categories AS cat
         INNER JOIN iot_planner_Users2Categories as user2cat on cat.ID = user2cat.category_ID
+      WHERE
+        validFrom <= now()
+        and validTo > now ()
       UNION
       SELECT
         this.ID,
@@ -31,6 +34,8 @@ FROM
       FROM
         childrenCTE AS parent
         INNER JOIN iot_planner_Categories AS this ON this.parent_ID = parent.ID
+        AND validFrom <= now()
+        and validTo > now ()
     ),
     parentCTE AS (
       SELECT
@@ -41,6 +46,9 @@ FROM
       FROM
         iot_planner_Categories AS cat
         INNER JOIN iot_planner_Users2Categories as user2cat on cat.ID = user2cat.category_ID
+      WHERE
+        validFrom <= now()
+        and validTo > now ()
       UNION
       SELECT
         this.ID,
@@ -50,6 +58,8 @@ FROM
       FROM
         parentCTE AS children
         INNER JOIN iot_planner_Categories AS this ON children.parent_ID = this.ID
+        and validFrom <= now()
+        and validTo > now ()
     )
     SELECT
       pathCTE.*,

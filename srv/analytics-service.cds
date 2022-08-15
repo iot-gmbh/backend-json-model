@@ -15,13 +15,13 @@ service AnalyticsService {
       Property : duration,
     }, ],
   }
-  @Aggregation                                     : {RecursiveHierarchy : {
-    $Type                    : 'Aggregation.RecursiveHierarchyType',
-    NodeProperty             : ID,
-    ParentNavigationProperty : parent,
-    DistanceFromRootProperty : hierarchyLevel,
-    IsLeafProperty           : drillDownState,
-  }, }
+  // @Aggregation                                     : {RecursiveHierarchy : {
+  //   $Type          : 'Aggregation.RecursiveHierarchyType',
+  //   NodeProperty   : ID,
+  //   // ParentNavigationProperty : parent,
+  //   // DistanceFromRootProperty : hierarchyLevel,
+  //   IsLeafProperty : drillDownState,
+  // }, }
   @(Analytics.AggregatedProperties : [{
     Name                 : 'totalDuration',
     AggregationMethod    : 'sum',
@@ -30,12 +30,12 @@ service AnalyticsService {
     ![@Common.Label]     : 'Total duration'
   }])
   entity Categories as
-    select from my.Categories as cat
-    left outer join my.WorkItems as wi
-      on wi.parent.ID = cat.ID
+    select from my.WorkItems as wi
+    // left outer join my.WorkItems as wi
+    //   on wi.parent.ID = cat.ID
     {
       @Analytics.Dimension           : true
-      cat.ID,
+      wi.ID,
       @Analytics.Dimension           : true
       assignedToUserPrincipalName,
       @Analytics.Dimension           : true
@@ -52,16 +52,16 @@ service AnalyticsService {
       wi.duration,
 
       @Analytics.Dimension           : true
-      cat.title  as parentTitle,
+      wi.title   as parentTitle,
       @Analytics.Dimension           : true
-      cat.parent,
+      ''         as parent         : UUID,
       @Analytics.Dimension           : true
       assignedTo,
 
       @sap.hierarchy.drill.state.for : 'ID'
       'expanded' as drillDownState : String,
-      cat.hierarchyLevel,
-      cat.tenant,
+      ''         as hierarchyLevel : String,
+      wi.tenant,
     }
     where
       deleted is null;

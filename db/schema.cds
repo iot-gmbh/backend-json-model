@@ -85,7 +85,7 @@ entity Categories : cuid, managed, relevance, multitenant {
                           on members.category = $self;
   @assert.notNull : false
   parent              : Association to Categories;
-  children            : Association to many Categories
+  children            : Composition of many Categories
                           on children.parent = $self;
 }
 

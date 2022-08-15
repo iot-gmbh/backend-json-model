@@ -111,7 +111,7 @@ module.exports = cds.service.impl(async function () {
       //   :
       await db.run(
         SELECT.from("iot_planner_my_categories")
-          .where`user_userPrincipalName = ${req.user.id}`
+          .where`user_userPrincipalName = ${req.user.id} and tenant = ${req.user.tenant}`
       );
 
     const categories = results.map(
