@@ -2,7 +2,8 @@ using {
   Currency,
   cuid,
   managed,
-  sap
+  sap,
+  temporal
 } from '@sap/cds/common';
 
 namespace iot.planner;
@@ -57,7 +58,8 @@ entity Users2Categories : cuid, managed, multitenant {
   category : Association to Categories;
 }
 
-entity Categories : cuid, managed, relevance, multitenant {
+@assert.unique : {ID : [ID]} // set explicit unique-constraint on ID. If we don't do this, Postgres will throw an error when upserting data ("es gibt keinen Unique-Constraint oder Exclusion-Constraint, der auf die ON-CONFLICT-Angabe passt"). See: https://stackoverflow.com/questions/42022362/no-unique-or-exclusion-constraint-matching-the-on-conflict
+entity Categories : cuid, managed, relevance, temporal, multitenant {
   title               : String;
   description         : String;
   reference           : String;
