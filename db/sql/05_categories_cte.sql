@@ -14,8 +14,9 @@ AS WITH RECURSIVE cte AS (
         tenant,
         title,
         description,
-        reference,
         parent_ID,
+        reference,
+        shallowReference,
         shallowReference as deepReference,
         title as path
     FROM
@@ -28,8 +29,9 @@ AS WITH RECURSIVE cte AS (
         this.tenant,
         this.title,
         this.description,
-        this.reference,
         this.parent_ID,
+        this.reference,
+        this.shallowReference,
         CAST(
             (prior.deepReference || '-' || this.shallowReference) as varchar(5000)
         ) as deepReference,

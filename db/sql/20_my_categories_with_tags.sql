@@ -15,4 +15,5 @@ group by
     cat.reference,
     cat.path,
     cat.deepReference,
+    cat.shallowReference,
     cat.user_userPrincipalName;

@@ -27,6 +27,8 @@ module.exports = cds.service.impl(async function () {
         title,
         description,
         hierarchylevel,
+        reference,
+        shallowreference,
         deepreference,
       }) => ({
         ID: id,
@@ -35,6 +37,8 @@ module.exports = cds.service.impl(async function () {
         title,
         description,
         hierarchyLevel: hierarchylevel,
+        reference,
+        shallowReference: shallowreference,
         deepReference: deepreference,
       })
     );
@@ -74,6 +78,8 @@ module.exports = cds.service.impl(async function () {
         parent_id,
         title,
         hierarchylevel,
+        reference,
+        shallowreference,
         deepreference,
         totalduration,
         accumulatedduration,
@@ -90,6 +96,8 @@ module.exports = cds.service.impl(async function () {
           (accumulatedduration * 100) / sum
         ).toFixed(0),
         grandTotal: sum,
+        reference,
+        shallowReference: shallowreference,
         deepReference: deepreference,
       })
     );
