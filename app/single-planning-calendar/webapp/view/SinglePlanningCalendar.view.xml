@@ -56,7 +56,7 @@
 												</f:FormElement>
 												<f:FormElement>
 													<f:fields>
-														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/categoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/categoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
 															<StandardTreeItem title="{parts: ['absoluteReference', 'shallowReference', 'title'], formatter: '.formatter.getReferenceAndText'}" />
 														</Tree>
 													</f:fields>

@@ -25,6 +25,6 @@ SELECT
     dur.accumulatedDuration,
     pathCTE.deepReference
 FROM
-    get_cumulative_category_durations(p_username, p_tenant, p_date_from, p_date_until) as dur
+    get_cumulative_category_durations(p_tenant, p_username, p_date_from, p_date_until) as dur
     JOIN iot_planner_categories_cte as pathCTE on pathCTE.ID = dur.ID;
 end $$;

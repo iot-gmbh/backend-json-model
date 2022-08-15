@@ -77,6 +77,7 @@ sap.ui.define(
 
           rows.forEach((row, index) => {
             if (row.getCells().length === 0) return;
+            if (!row.getBindingContext()) return;
             const progressIndicatorCell = row.getCells()[2];
             const { relativeDuration, relativeAccDuration } = row
               .getBindingContext()

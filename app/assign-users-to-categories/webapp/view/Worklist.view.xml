@@ -62,7 +62,7 @@
         </dependents>
 
         <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
-        sorter: {path: 'totalDuration', descending: true},
+        sorter: [{path: 'shallowReference'}], 
         parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
             <t:noData>
                 <Text text=""></Text>

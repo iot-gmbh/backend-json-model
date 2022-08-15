@@ -32,7 +32,7 @@ FROM
     and wi.activateddate > p_date_from
     and wi.activateddate < p_date_until
 where
-    wi.tenant = p_tenant
+    cat.tenant = p_tenant
 GROUP BY
     cat.ID,
     cat.tenant,

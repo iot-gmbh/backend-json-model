@@ -302,19 +302,13 @@ sap.ui.define(
                 }),
                 new Filter({
                   path: "deepReference",
-                  test: (deepReference) => {
-                    if (!query) return false;
-                    if (!deepReference) return false;
-                    return deepReference.includes(query);
-                  },
+                  operator: "Contains",
+                  value1: query,
                 }),
                 new Filter({
                   path: "absoluteReference",
-                  test: (absoluteReference) => {
-                    if (!query) return false;
-                    if (!absoluteReference) return false;
-                    return absoluteReference.includes(query);
-                  },
+                  operator: "Contains",
+                  value1: query,
                 }),
               ],
               and: false,
