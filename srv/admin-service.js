@@ -9,20 +9,20 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
+  this.on("READ", "Categories", async (req) => {
+    const results = await db.run(req.query);
+    return results;
+  });
+
   this.on("getCategoriesByID", async (req) => {
     const {
-      data: { root, dateFrom, dateUntil },
+      data: { root, validAt },
       user,
     } = req;
 
     // TODO: implement filtering for user & tenant
-    const query = `SELECT * FROM get_categories($1, $2, $3, $4)`;
-    const results = await db.run(query, [
-      user.tenant,
-      root,
-      dateFrom,
-      dateUntil,
-    ]);
+    const query = `SELECT * FROM get_categories($1, $2)`;
+    const results = await db.run(query, [user.tenant, root]);
 
     const categories = results.map(
       ({

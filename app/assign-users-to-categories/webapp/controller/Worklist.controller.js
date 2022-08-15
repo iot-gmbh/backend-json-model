@@ -68,8 +68,6 @@ sap.ui.define(
             `/getCategoriesByID`,
             {
               urlParameters: {
-                dateFrom: "2021-01-05T15:16:23Z",
-                dateUntil: "2023-01-05T15:16:23Z",
                 root: null,
               },
             }
@@ -91,8 +89,6 @@ sap.ui.define(
             `/getCategoriesByID`,
             {
               urlParameters: {
-                dateFrom: "2021-01-05T15:16:23Z",
-                dateUntil: "2023-01-05T15:16:23Z",
                 root: ID,
               },
             }

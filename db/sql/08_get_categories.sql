@@ -2,8 +2,7 @@ create
 or replace function get_categories(
     p_tenant varchar,
     p_root varchar default null,
-    p_date_from timestamp with time zone default now(),
-    p_date_until timestamp with time zone default now()
+    p_valid_at timestamp with time zone default now()
 ) returns table (
     ID VARCHAR,
     tenant VARCHAR,
@@ -31,6 +30,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
     WHERE
         -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "parent_ID IS NULL"
         tenant = p_tenant
+        and validFrom <= p_valid_at
+        and validTo > p_valid_at
         and (
             p_root is null
             and parent_ID is null
@@ -54,6 +55,9 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
     FROM
         cte AS prior
         INNER JOIN iot_planner_Categories AS this ON this.parent_ID = prior.ID
+        and this.tenant = p_tenant
+        and this.validFrom <= p_valid_at
+        and this.validTo > p_valid_at
 )
 SELECT
     cte.*
