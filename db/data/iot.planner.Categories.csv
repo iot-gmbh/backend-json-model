@@ -1,4 +1,4 @@
-﻿ID;parent_ID;hierarchyLevel;tenant;title;shallowReference;reference;ValidFrom;ValidTo
+﻿ID;parent_ID;hierarchyLevel;tenant;title;shallowReference;absoluteReference;ValidFrom;ValidTo
 d846ed9f-fc4d-42a7-952f-0f52b02caf74;;0;d439e362-ecdf-4d78-8fed-86c7c639b131;DELETED;DEL;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z
 48d9e826-e8e0-4740-9a06-9678289e7633;;0;d439e362-ecdf-4d78-8fed-86c7c639b131;Manufactum;MAN;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z
 f7847ed4-1ea9-4e99-b2cb-b30d5afcce48;;0;d439e362-ecdf-4d78-8fed-86c7c639b131;Frankonia;FRA;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z

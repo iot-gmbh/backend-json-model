@@ -180,7 +180,7 @@ annotate my.Categories with @(UI : {
     TypeName       : '{i18n>Category}',
     TypeNamePlural : '{i18n>Categories}',
     Title          : {Value : title},
-    Description    : {Value : reference},
+    Description    : {Value : absoluteReference},
   },
   FieldGroup #Hierarchy : {
     $Type : 'UI.FieldGroupType',
@@ -201,7 +201,7 @@ annotate my.Categories with @(UI : {
   },
   Identification        : [
     {Value : title},
-    {Value : reference},
+    {Value : absoluteReference},
   ],
   Facets                : [
     {
@@ -242,7 +242,7 @@ annotate my.Categories with @(UI : {
     // },
     {
       $Type : 'UI.DataField',
-      Value : reference,
+      Value : absoluteReference,
     },
     {
       $Type : 'UI.DataField',

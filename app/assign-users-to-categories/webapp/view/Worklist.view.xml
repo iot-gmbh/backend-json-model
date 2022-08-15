@@ -14,8 +14,10 @@
                 <f:SimpleForm>
                     <Label text="{i18n>title}"/>
                     <TextArea id="titleInput" value="{title}"/>
-                    <Label text="{i18n>reference}"/>
-                    <Input id="referenceInput" value="{reference}" />
+                    <Label text="{i18n>shallowReference}"/>
+                    <Input id="shallowReferenceInput" value="{shallowReference}" />
+                    <Label text="{i18n>absoluteReference}"/>
+                    <Input id="referenceInput" value="{absoluteReference}" />
 
                     <!-- <Label text="{i18n>tags}"/>
                     <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
@@ -95,14 +97,14 @@
                         <Text text="{= ${members}.length}" />
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>deepReference}" width="10%">
+                <t:Column label="{i18n>shallowReference}" width="10%">
                     <t:template>
-                        <Text text="{deepReference}"/>
+                        <Text text="{shallowReference}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>reference}" width="10%">
+                <t:Column label="{i18n>absoluteReference}" width="10%">
                     <t:template>
-                        <Text text="{reference}" />
+                        <Text text="{absoluteReference}" />
                     </t:template>
                 </t:Column>
                 <!-- <t:Column label="{i18n>tags}" width="20%">

@@ -10,7 +10,8 @@ or replace function get_categories(
     title VARCHAR,
     hierarchyLevel VARCHAR,
     description VARCHAR,
-    reference VARCHAR,
+    absoluteReference VARCHAR,
+    shallowReference VARCHAR,
     deepReference VARCHAR,
     path VARCHAR
 ) language plpgsql as $$ #variable_conflict use_column
@@ -22,7 +23,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         title,
         hierarchyLevel,
         description,
-        reference,
+        absoluteReference,
+        shallowReference,
         shallowReference as deepReference,
         title as path
     FROM
@@ -45,7 +47,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         this.title,
         this.hierarchyLevel,
         this.description,
-        this.reference,
+        this.absoluteReference,
+        this.shallowReference,
         CAST(
             (prior.deepReference || '-' || this.shallowReference) as varchar(5000)
         ) as deepReference,

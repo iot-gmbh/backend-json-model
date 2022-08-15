@@ -15,7 +15,7 @@ AS WITH RECURSIVE cte AS (
         title,
         description,
         parent_ID,
-        reference,
+        absoluteReference,
         shallowReference,
         shallowReference as deepReference,
         title as path
@@ -30,7 +30,7 @@ AS WITH RECURSIVE cte AS (
         this.title,
         this.description,
         this.parent_ID,
-        this.reference,
+        this.absoluteReference,
         this.shallowReference,
         CAST(
             (prior.deepReference || '-' || this.shallowReference) as varchar(5000)

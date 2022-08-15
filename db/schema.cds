@@ -61,7 +61,7 @@ entity Users2Categories : cuid, managed, multitenant {
 entity Categories : cuid, managed, relevance, multitenant {
   title               : String;
   description         : String;
-  reference           : String;
+  absoluteReference   : String;
   mappingID           : String;
   drillDownState      : String default 'expanded';
   path                : String;

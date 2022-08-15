@@ -12,7 +12,7 @@ group by
     cat.tenant,
     cat.parent_ID,
     cat.description,
-    cat.reference,
+    cat.absoluteReference,
     cat.path,
     cat.deepReference,
     cat.shallowReference,

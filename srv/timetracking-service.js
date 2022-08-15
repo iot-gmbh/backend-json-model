@@ -115,11 +115,21 @@ module.exports = cds.service.impl(async function () {
       );
 
     const categories = results.map(
-      ({ id, parent_id, hierarchylevel, deepreference, ...data }) => ({
+      ({
+        id,
+        parent_id,
+        hierarchylevel,
+        shallowreference,
+        deepreference,
+        absolutereference,
+        ...data
+      }) => ({
         ID: id,
         parent_ID: parent_id,
         hierarchyLevel: hierarchylevel,
         deepReference: deepreference,
+        shallowReference: shallowreference,
+        absoluteReference: absolutereference,
         ...data,
       })
     );
@@ -276,10 +286,7 @@ module.exports = cds.service.impl(async function () {
           .orderBy(orderBy)
           .limit(limit),
         cds.run(req.query),
-        db.run(
-          SELECT.from("iot_planner_my_categories")
-            .where`user_userPrincipalName = ${req.user.id}`
-        ),
+        this.run(SELECT.from("MyCategories")),
       ]);
 
     const MSGraphWorkItems = MSGraphEvents.map((event) =>
@@ -320,9 +327,13 @@ module.exports = cds.service.impl(async function () {
         const titleSubstrings = appointment.title.split(" ");
 
         const categoriesByReference = myCategories.filter(
-          (cat) =>
-            cat.reference &&
-            titleSubstrings.some((sub) => sub === cat.reference)
+          ({ shallowReference, deepReference, absoluteReference }) =>
+            (absoluteReference &&
+              titleSubstrings.some((sub) => sub === absoluteReference)) ||
+            (deepReference &&
+              titleSubstrings.some((sub) => sub === deepReference)) ||
+            (shallowReference &&
+              titleSubstrings.some((sub) => sub === shallowReference))
         );
 
         if (categoriesByReference.length > 0) {

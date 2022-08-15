@@ -20,8 +20,8 @@ sap.ui.define(["../model/legendItems"], (legendItems) => ({
     //   return `iotprojectplanning.iot.singleplanningcalendar/img/${customerID}.png`;
   },
 
-  getReferenceAndText(reference, shallowReference, text) {
-    if (reference) return `${reference}: ${text}`;
+  getReferenceAndText(absoluteReference, shallowReference, text) {
+    if (absoluteReference) return `${absoluteReference}: ${text}`;
     if (shallowReference) return `${shallowReference}: ${text}`;
     return text;
   },

@@ -308,6 +308,14 @@ sap.ui.define(
                     return deepReference.includes(query);
                   },
                 }),
+                new Filter({
+                  path: "absoluteReference",
+                  test: (absoluteReference) => {
+                    if (!query) return false;
+                    if (!absoluteReference) return false;
+                    return absoluteReference.includes(query);
+                  },
+                }),
               ],
               and: false,
             }),
