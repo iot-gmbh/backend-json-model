@@ -100,11 +100,19 @@
 									</form:formContainers>
 								</form:Form>
 								<Button text="{i18n>formButtonSubmit}" press=".onPressSubmitWorkItem" type="Emphasized"/>
+								<IconTabBar id="iconTabBar" select=".onFilterWorkItems">
+									<items>
+										<IconTabFilter key="all" showAll="true" count="{/countAll}" text="{i18n>tableFilterShowAll}"/>
+										<IconTabSeparator/>
+										<IconTabFilter key="completed" icon="sap-icon://message-success" iconColor="Positive" count="{/countCompleted}" text="{i18n>tableFilterCompleted}"/>
+										<IconTabFilter key="incompleted" icon="sap-icon://message-warning" iconColor="Critical" count="{/countIncompleted}" text="{i18n>tableFilterIncompleted}"/>
+									</items>
+								</IconTabBar>
 							</f:DynamicPageHeader>
 						</f:header>
 
 						<f:content>
-							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" items="{
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" updateFinished=".onUpdateFinished" items="{
 								path: '/workItems',
 								sorter: {
 									path: 'completedDate',

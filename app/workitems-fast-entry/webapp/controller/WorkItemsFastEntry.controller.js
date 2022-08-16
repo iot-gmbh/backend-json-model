@@ -29,7 +29,10 @@ sap.ui.define(
 					],
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					workItems: this.loadMockData(),
-					newWorkItem: undefined
+					newWorkItem: undefined,
+					countAll: undefined,
+					countCompleted: undefined,
+					countIncompleted: undefined
 				});
 
 				this.setModel(model);
@@ -61,6 +64,24 @@ sap.ui.define(
 					this.onFocusOutHierarchyTreeForm.bind(this)
 				);
 
+				this._filters = {
+					all: new Filter({
+						path: 'state',
+						operator: 'NE',
+						value1: ''
+					}),
+					completed: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'completed'
+					}),
+					incompleted: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'incompleted'
+					})
+				};
+
 				model.setProperty('/busy', true);
 
 				// // Funktioniert nicht
@@ -76,6 +97,48 @@ sap.ui.define(
 				// 	'focusout',
 				// 	this.onFocusOutHierarchyTreeTable.bind(this)
 				// );
+			},
+
+			async onUpdateFinished(event) {
+				const table = event.getSource();
+				const model = this.getModel();
+				const totalItems = event.getParameter('total');
+
+				if (totalItems && table.getBinding('items').isLengthFinal()) {
+					await this.getModel().read(
+						{
+							path: 'MyWorkItems',
+							filters: this._filters.all
+						},
+						{
+							success: (oData) => {
+								model.setProperty('/countAll');
+							}
+						}
+					);
+					// await this.getModel().read(
+					// 	{
+					// 		path: 'MyWorkItems',
+					// 		filters: this._filters.completed
+					// 	},
+					// 	{
+					// 		success: (oData) => {
+					// 			model.setProperty('/countCompleted');
+					// 		}
+					// 	}
+					// );
+					// await this.getModel().read(
+					// 	{
+					// 		path: 'MyWorkItems',
+					// 		filters: this._filters.incompleted
+					// 	},
+					// 	{
+					// 		success: (oData) => {
+					// 			model.setProperty('/countIncompleted');
+					// 		}
+					// 	}
+					// );
+				}
 			},
 
 			loadMockData() {
@@ -161,6 +224,12 @@ sap.ui.define(
 				model.setProperty('/categoriesNested', categoriesNested);
 				model.setProperty('/categoriesFlat', categories);
 				model.setProperty('/busy', false);
+			},
+
+			onFilterWorkItems(event) {
+				const binding = this.byId('tableWorkItems').getBinding('items');
+				const key = event.getParameter('selectedKey');
+				binding.filter(this._filters[key]);
 			},
 
 			onChangeHierarchy(event) {
