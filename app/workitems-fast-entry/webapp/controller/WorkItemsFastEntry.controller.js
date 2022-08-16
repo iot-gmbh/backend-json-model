@@ -3,8 +3,14 @@ function addMinutes(date, minutes) {
 }
 
 sap.ui.define(
-	['./BaseController', '../model/formatter', 'sap/ui/model/Filter', 'sap/ui/model/FilterOperator'],
-	(BaseController, formatter, Filter, FilterOperator) => {
+	[
+		'./BaseController',
+		'../model/formatter',
+		'sap/ui/model/Filter',
+		'sap/ui/model/FilterOperator',
+		'sap/m/MessageToast'
+	],
+	(BaseController, formatter, Filter, FilterOperator, MessageToast) => {
 		const nest = (items, ID = null, link = 'parent_ID') =>
 			items
 				.filter((item) => item[link] === ID)
@@ -152,7 +158,37 @@ sap.ui.define(
 			async addWorkItem() {
 				const model = this.getModel();
 				const newWorkItem = model.getProperty('/newWorkItem');
-				await model.create('/MyWorkItems', newWorkItem);
+				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
+			},
+
+			async updateWorkItem(event) {
+				const bindingContext = event.getSource().getBindingContext();
+				const localPath = bindingContext.getPath();
+				const workItem = bindingContext.getObject();
+				await this.getModel().update({ ...workItem, localPath });
+			},
+
+			async onPressDeleteWorkItems() {
+				const model = this.getModel();
+				const table = this.byId('tableWorkItems');
+				const workItemsToDelete = table.getSelectedContexts().map((context) => context.getObject());
+
+				await Promise.all(
+					workItemsToDelete.map((workItem) => model.update({ ...workItem, deleted: true }))
+				);
+
+				const data = model.getProperty('/MyWorkItems').filter((entity) => {
+					const keepItem = !workItemsToDelete
+						.map((wi) => wi.__metadata.uri)
+						.includes(entity.__metadata.uri);
+					return keepItem;
+				});
+
+				model.setProperty('/MyWorkItems', data);
+
+				table.removeSelections();
+
+				MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
 			},
 
 			// TODO: Erweitern um weitere Pruefungen

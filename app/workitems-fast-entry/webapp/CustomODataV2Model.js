@@ -148,7 +148,7 @@ sap.ui.define(
 				);
 
 				this.setProperty(entityName, data);
-				this.nest();
+				// this.nest();
 			},
 
 			nest() {

@@ -37,7 +37,7 @@
 											</form:FormElement>
 											<form:FormElement>
 												<form:fields>
-													<ScrollContainer height="12vw" vertical="true">
+													<ScrollContainer height="20vh" vertical="true">
 														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/categories', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
 															<StandardTreeItem title="{title}"/>
 														</Tree>
@@ -82,7 +82,7 @@
 								<OverflowToolbar>
 									<ToolbarSpacer/>
 									<Button text="{i18n>tableButtonCommit}"/>
-									<Button text="{i18n>tableButtonDelete}"/>
+									<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
 									<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
 									<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
 									<SearchField liveChange=".onSearch" width="20rem"/>
@@ -119,7 +119,7 @@
 							<items>
 								<ColumnListItem press=".onPress">
 									<cells>
-										<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="12vw"/>
+										<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="12vw" change="updateWorkItem"/>
 										<DatePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 										<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 										<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
