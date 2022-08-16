@@ -338,9 +338,9 @@ sap.ui.define(
           });
 
           removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
+            const obj = token.getBindingContext().getObject();
 
-            model.remove(path);
+            model.remove(obj);
           });
         },
 
@@ -357,9 +357,9 @@ sap.ui.define(
         },
 
         onDeleteToken(event) {
-          const path = event.getSource().getBindingContext().getPath();
+          const obj = event.getSource().getBindingContext().getObject();
 
-          this.getModel().remove(path);
+          this.getModel().remove(obj);
         },
 
         onUpdateTags(event) {
@@ -386,9 +386,9 @@ sap.ui.define(
           });
 
           removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
+            const obj = token.getBindingContext().getPath();
 
-            model.remove(path);
+            model.remove(obj);
           });
         },
       }

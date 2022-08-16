@@ -78,6 +78,7 @@ sap.ui.define(
 				});
 
 				this.serviceURL = serviceURL;
+				this.ODataModel = odataModel;
 
 				this.odata = {
 					create: _promisify(odataModel, 'create', 2),
@@ -89,16 +90,9 @@ sap.ui.define(
 				};
 			},
 
-			async create(...args) {
-				const result = await this.odata.create(...args);
-				const [path] = args;
-
-				const data = this.getProperty(path);
-
-				data.push(result);
-
-				this.setProperty(path, data);
-				this.nest();
+			async callFunction(...args) {
+				const result = await this.odata.callFunction(...args);
+				return result;
 			},
 
 			async read(...args) {
@@ -107,71 +101,38 @@ sap.ui.define(
 				return results;
 			},
 
+			// = read + store
 			async load(...args) {
 				const { results } = await this.odata.read(...args);
-				const [path, params] = args;
-				const entityTypeName = path.slice(1);
-				const entityType = this.entityTypes.find(({ name }) => name === entityTypeName);
+				const [path, { into } = {}] = args;
+				const loadInto = into || path;
 
-				const $expand = params?.urlParameters?.$expand;
-
-				if ($expand?.includes('/')) {
-					throw new Error('Deep expand is not supported.');
-				}
-
-				if ($expand) {
-					const expands = $expand.split(',');
-					expands.forEach((exp) => {
-						const relation = entityType.relations.find(({ name }) => name === exp);
-
-						const entityName = relation.toRole;
-						const existingData = this.getProperty(`/${entityName}`);
-						let newData = [];
-
-						results.forEach((res) => {
-							const expData = relation.cardinality === '1' ? res[exp] : res[exp].results;
-
-							newData = [...newData, ...expData];
-						});
-
-						const uniqueData = [...new Set([...newData, ...existingData])];
-
-						this.setProperty(`/${entityName}`, uniqueData);
-					});
-				}
-
-				// this.setProperty(path, results);
-				this.setProperty(path, results);
-				this.nest();
+				this.setProperty(loadInto, results);
 
 				return results;
 			},
 
+			async create(...args) {
+				const [path, { localPath, ...object }] = args;
+				const result = await this.odata.create(path, object);
+				const parentPath = localPath.substring(0, localPath.lastIndexOf('/'));
+
+				const data = this.getProperty(parentPath);
+
+				data.push({ ...result, ...object });
+
+				this.setProperty(parentPath, data);
+				// this.nest();
+			},
+
 			// create new obj => nav-Props will be deleted so don't use reference
-			async update({ ...obj }) {
-				const odataPath = `/${obj.__metadata.uri
-					.replace(location.origin, '')
-					.replace(this.serviceURL, '')}`;
-				const entityTypeName = odataPath.split('(')[0].slice(1);
-				const entityType = this.entityTypes.find(({ name }) => name === entityTypeName);
-				const existingData = this.getProperty(`/${entityTypeName}`);
+			async update({ localPath, ...obj }) {
+				const odataPath = this.getODataPathFrom(obj);
+				const data = this.removeNavPropsFrom(obj);
 
-				// nav-Props throw errors => delete them upfront
-				entityType.relations.forEach(({ name }) => {
-					// eslint-disable-next-line no-param-reassign
-					delete obj[name];
-				});
+				await this.odata.update(odataPath, data);
 
-				const index = existingData.findIndex((entity) =>
-					entityType.keys.every((key) => entity[key] === obj[key])
-				);
-
-				const jsonPath = `/${entityTypeName}/${index}`;
-
-				await this.odata.update(odataPath, obj);
-
-				this.setProperty(jsonPath, obj);
-				this.nest();
+				this.setProperty(localPath, { ...obj, ...data });
 			},
 
 			async remove(obj) {
@@ -203,22 +164,30 @@ sap.ui.define(
 							entityType.relations.forEach((relation) => {
 								const cardinality = relation.cardinality.endsWith('1') ? '1' : 'n';
 
-								Object.defineProperty(entity, relation.name, {
-									configurable: true,
-									// We don't implement a setter by design so each request has to be made via the OData-service explicitly
-									get: () => {
-										const targetEntities = this.getData()[relation.toRole] || [];
-										const results = targetEntities.filter((related) =>
-											relation.refConstraints.every(({ to, from }) => related[to] === entity[from])
-										);
+								if (cardinality === 'n') {
+									// eslint-disable-next-line no-param-reassign
+									entity[relation.name] = entity[relation.name].results;
+								}
 
-										if (cardinality === '1') {
-											return results[0];
-										}
+								// Object.defineProperty(entity, relation.name, {
+								//   configurable: true,
+								//   // We don't implement a setter by design so each request has to be made via the OData-service explicitly
+								//   get: () => {
+								//     const targetEntities =
+								//       this.getData()[relation.toRole] || [];
+								//     const results = targetEntities.filter((related) =>
+								//       relation.refConstraints.every(
+								//         ({ to, from }) => related[to] === entity[from]
+								//       )
+								//     );
 
-										return results;
-									}
-								});
+								//     if (cardinality === "1") {
+								//       return results[0];
+								//     }
+
+								//     return results;
+								// },
+								// });
 							});
 							return entity;
 						})
@@ -226,6 +195,31 @@ sap.ui.define(
 					.forEach(({ entityType, entities }) => {
 						this.setProperty(`/${entityType.name}`, entities);
 					});
+			},
+
+			getODataPathFrom(obj) {
+				const odataPath = `/${obj.__metadata.uri
+					.replace(location.origin, '')
+					.replace(this.serviceURL, '')}`;
+				return odataPath;
+			},
+
+			removeNavPropsFrom({ ...obj }) {
+				const odataPath = this.getODataPathFrom(obj);
+				const entityTypeName = odataPath.split('(')[0].slice(1);
+				const entityType = this.entityTypes.find(({ name }) => name === entityTypeName);
+
+				// nav-Props throw errors => delete them upfront
+				entityType.relations.forEach(({ name }) => {
+					// eslint-disable-next-line no-param-reassign
+					delete obj[name];
+				});
+
+				return obj;
+			},
+
+			async metadataLoaded() {
+				return this.ODataModel.metadataLoaded();
 			}
 		});
 	}

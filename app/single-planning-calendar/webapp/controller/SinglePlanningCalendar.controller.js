@@ -301,14 +301,24 @@ sap.ui.define(
                   },
                 }),
                 new Filter({
-                  path: "deepReference",
-                  operator: "Contains",
-                  value1: query,
+                  path: "path",
+                  test: (absoluteReference) => {
+                    if (!query) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => absoluteReference.includes(sub));
+                  },
                 }),
                 new Filter({
-                  path: "absoluteReference",
-                  operator: "Contains",
-                  value1: query,
+                  path: "deepReference",
+                  test: (deepReference) => {
+                    if (!query) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => deepReference.includes(sub));
+                  },
                 }),
               ],
               and: false,

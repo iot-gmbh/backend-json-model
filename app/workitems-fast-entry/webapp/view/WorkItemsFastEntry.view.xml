@@ -12,7 +12,6 @@
 			</customHeader>
 			<content>
 				<f:DynamicPage showFooter="true">
-
 					<f:header>
 						<f:DynamicPageHeader pinnable="true">
 							<form:Form id="formWorkItem" editable="true">
@@ -38,8 +37,8 @@
 											</form:FormElement>
 											<form:FormElement>
 												<form:fields>
-													<ScrollContainer height="9vw" vertical="true">
-														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/categoriesLevel0', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+													<ScrollContainer height="12vw" vertical="true">
+														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/categories', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
 															<StandardTreeItem title="{title}"/>
 														</Tree>
 													</ScrollContainer>
@@ -72,7 +71,7 @@
 					</f:header>
 
 					<f:content>
-						<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" mode="MultiSelect" fixedLayout="false" items="{
+						<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" items="{
 								path: '/MyWorkItems',
 								sorter: {
 									path: 'completedDate',

@@ -4,8 +4,13 @@ function addMinutes(date, minutes) {
 
 sap.ui.define(
 	['./BaseController', '../model/formatter', 'sap/ui/model/Filter', 'sap/ui/model/FilterOperator'],
-	(BaseController, formatter, Filter, FilterOperator) =>
-		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
+	(BaseController, formatter, Filter, FilterOperator) => {
+		const nest = (items, ID = null, link = 'parent_ID') =>
+			items
+				.filter((item) => item[link] === ID)
+				.map((item) => ({ ...item, children: nest(items, item.ID) }));
+
+		return BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			formatter,
 			async onInit() {
 				this._filterHierarchyByPath('hierarchyTreeForm', '');
@@ -24,6 +29,7 @@ sap.ui.define(
 				model.setData({
 					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					busy: false,
+					tableBusy: true,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
 					categoriesFlat: {},
@@ -68,10 +74,10 @@ sap.ui.define(
 					})
 				]);
 
-				// eslint-disable-next-line camelcase
-				const categoriesLevel0 = categories.filter(({ parent_ID }) => !parent_ID);
+				const categoriesNested = nest(categories);
 
-				model.setProperty('/categoriesLevel0', categoriesLevel0);
+				model.setProperty('/tableBusy', false);
+				model.setProperty('/categories', categoriesNested);
 			},
 
 			onChangeHierarchy(event) {
@@ -169,5 +175,6 @@ sap.ui.define(
 					? model.setProperty('/newWorkItem/state', 'completed')
 					: model.setProperty('/newWorkItem/state', 'incompleted');
 			}
-		})
+		});
+	}
 );
