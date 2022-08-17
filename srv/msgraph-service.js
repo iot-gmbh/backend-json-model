@@ -34,6 +34,8 @@ module.exports = async function (srv) {
     */
     const queryString = req.getUrlObject().query;
     const queryStringRepl = queryString
+      .replaceAll("ID", "id")
+      .replaceAll("title", "subject")
       .replaceAll("completedDate", "end")
       .replaceAll("activatedDate", "start")
       .replaceAll("&%24expand=tags", "");

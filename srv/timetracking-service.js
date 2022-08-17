@@ -274,7 +274,7 @@ module.exports = cds.service.impl(async function () {
         this.run(SELECT.from("MyCategories")),
       ]);
 
-    const MSGraphWorkItems = MSGraphEvents.map((event) =>
+    const MSGraphWorkItems = [MSGraphEvents].map((event) =>
       transformEventToWorkItem({
         ...event,
         user: req.user.id,

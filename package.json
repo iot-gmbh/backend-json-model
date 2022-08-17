@@ -13,8 +13,7 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-msal-auth",
-      "custom_packages/cds-pg-migra"
+      "custom_packages/cds-msal-auth"
     ]
   },
   "dependencies": {
@@ -40,6 +39,7 @@
     "@sap/eslint-plugin-cds": "^2.4.1",
     "@sap/ux-specification": "^1.102.1",
     "@ui5/cli": "^2.14.9",
+    "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
