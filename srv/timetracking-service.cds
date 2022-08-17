@@ -16,6 +16,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
     }
   ])                      as projection on my.WorkItems;
 
+  action removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
+  action resetToDraft(ID : String);
+
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;
 

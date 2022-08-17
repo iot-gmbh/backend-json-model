@@ -103,6 +103,37 @@ module.exports = cds.service.impl(async function () {
   // REVISIT: comparator dependent on DB-type
   // const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
+  this.on("removeDraft", async (req) => {
+    const {
+      data: { ID, activatedDate, completedDate },
+      user,
+    } = req;
+
+    await db.run(
+      INSERT.into(MyWorkItems).entries({
+        ID,
+        tenant: user.tenant,
+        deleted: true,
+        assignedTo_userPrincipalName: user.id,
+        activatedDate,
+        completedDate,
+      })
+    );
+  });
+
+  this.on("resetToDraft", async (req) => {
+    const {
+      data: { ID },
+    } = req;
+
+    const [item] = await db.read(MyWorkItems).where({ ID });
+    if (!item) throw Error("Item not found");
+    if (item.type === "Manual")
+      throw Error("Reset is not allowed for entries of type 'Manual'");
+
+    await db.run(DELETE.from(MyWorkItems).where({ ID }));
+  });
+
   this.on("READ", "MyCategories", async (req) => {
     // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
     // REVISIT: Remove as soon as the CDS-adapter supports recursive selects
@@ -153,60 +184,17 @@ module.exports = cds.service.impl(async function () {
     const entries = await db.read(MyWorkItems).where({ ID: item.ID });
 
     // Check whether it is a workitem that is persisted or whether it is a draft from a 3rd party source (MSGraph, ...)
-    if (entries.length > 0)
-      await db.run(DELETE.from(MyWorkItems).where({ ID: item.ID }));
+    if (entries.length === 0) throw Error("You can not delete a draft entity");
 
-    await db.run(
-      INSERT.into(MyWorkItems).entries({
-        ID: item.ID,
-        tenant: req.user.tenant,
-        assignedTo_userPrincipalName: req.user.id,
-        deleted: true,
-      })
-    );
+    await db.run(DELETE.from(MyWorkItems).where({ ID: item.ID }));
   });
 
   this.on("UPDATE", "MyWorkItems", async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
 
-    if (item.resetEntry) {
-      // RESET
-      if (item.type === "Manual")
-        throw Error("Reset is not allowed for entries of type 'Manual'");
-
-      // eslint-disable-next-line no-unused-vars
-      const { customer_friendlyID, project_friendlyID, ...reducedItem } = item;
-
-      await tx.run(DELETE.from(MyWorkItems).where({ ID: item.ID }));
-
-      return reducedItem;
-    }
-
-    const entries = await db.read(MyWorkItems).where({ ID: item.ID });
-
-    if (item.deleted) {
-      // DELETE
-      if (entries.length > 0) {
-        await db.run(DELETE.from(WorkItems).where({ ID: item.ID }));
-      } else {
-        await tx.run(
-          INSERT.into(MyWorkItems).entries({
-            ID: item.ID,
-            tenant: req.user.tenant,
-            deleted: true,
-            assignedTo_userPrincipalName: req.user.id,
-            activatedDate: item.activatedDate,
-            completedDate: item.completedDate,
-          })
-        );
-      }
-
-      return item;
-    }
-
-    // UPDATE
     item.confirmed = true;
+    item.tenant = req.user.tenant;
     item.duration = calcDurationInH({
       start: item.activatedDate,
       end: item.completedDate,
@@ -215,16 +203,7 @@ module.exports = cds.service.impl(async function () {
     const dates = calcDates(item);
     Object.assign(item, dates);
 
-    let itm = item;
-    item.tenant = req.user.tenant;
-
-    if (entries.length === 0) {
-      itm = await tx.run(INSERT.into(MyWorkItems).entries(item));
-    } else {
-      itm = await tx.run(UPDATE(MyWorkItems, item.ID).with(item));
-    }
-
-    return itm;
+    return tx.run(UPDATE(MyWorkItems, item.ID).with(item));
   });
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {

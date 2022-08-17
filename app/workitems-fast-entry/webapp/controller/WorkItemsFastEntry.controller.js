@@ -174,7 +174,17 @@ sap.ui.define(
 				const workItemsToDelete = table.getSelectedContexts().map((context) => context.getObject());
 
 				await Promise.all(
-					workItemsToDelete.map((workItem) => model.update({ ...workItem, deleted: true }))
+					workItemsToDelete.map((workItem) => {
+						if (workItem.type === 'Manual') return model.remove(workItem);
+						return model.callFunction('/removeDraft', {
+							method: 'POST',
+							urlParameters: {
+								ID: workItem.ID,
+								activatedDate: workItem.activatedDate,
+								completedDate: workItem.completedDate
+							}
+						});
+					})
 				);
 
 				const data = model.getProperty('/MyWorkItems').filter((entity) => {

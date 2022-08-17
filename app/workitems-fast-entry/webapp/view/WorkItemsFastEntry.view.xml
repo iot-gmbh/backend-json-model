@@ -124,7 +124,7 @@
 										<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 										<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 										<!-- <TimePicker value="{ path: 'duration' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/> -->
-										<Text text="{path: 'duration', formatter: '.formatter.duration'}" />
+										<Text text="{path: 'duration', formatter: '.formatter.duration'}" wrapping="false" />
 										<!-- <VBox alignItems="Center"> -->
 										<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
 											<suggestionItems>

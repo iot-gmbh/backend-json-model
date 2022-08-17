@@ -92,8 +92,7 @@ sap.ui.define(
       },
 
       async callFunction(...args) {
-        const result = await this.odata.callFunction(...args);
-        return result;
+        return this.odata.callFunction(...args);
       },
 
       async read(...args) {
