@@ -265,11 +265,11 @@ module.exports = cds.service.impl(async function () {
         [],
         // [],
         // TODO: Breaks if no start- and enddatetime are provided: Fix it!
-        MSGraphSrv.tx(req)
-          .read("Events", "*")
-          .where(where)
-          .orderBy(orderBy)
-          .limit(limit),
+        MSGraphSrv.tx(req),
+        // .read("Events", "*")
+        // .where(where)
+        // .orderBy(orderBy)
+        // .limit(limit),
         cds.run(req.query),
         this.run(SELECT.from("MyCategories")),
       ]);

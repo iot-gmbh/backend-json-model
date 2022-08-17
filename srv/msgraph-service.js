@@ -15,18 +15,28 @@ function parseQueryParams(select) {
   // 1:'2021-05-09T22:00:00Z'
 
   const [
-    startdatetime = new Date().toISOString(),
-    enddatetime = new Date().toISOString(),
+    startdatetime = "2022-08-14T22:00:00Z",
+    enddatetime = "2022-08-19T22:00:00Z",
   ] = values;
   return { startdatetime, enddatetime };
 }
 
 module.exports = async function (srv) {
   srv.on("READ", "Events", async (req) => {
-    const query = parseQueryParams(req.query.SELECT);
-    const queryString = Object.entries(query)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+    // const query = parseQueryParams(req.query.SELECT);
+    // const queryString = Object.entries(query)
+    //   .map(([key, value]) => `${key}=${value}`)
+    //   .join("&");
+    /* 
+    REVISIT 
+    req.query.where contains additional restrictions due to authorizations which are not part of "req.getQueryOptions.query"
+    => in this case no problem, as we are accessing the "GRAPH_ME_ENDPOINT" only
+    */
+    const queryString = req.getUrlObject().query;
+    const queryStringRepl = queryString
+      .replaceAll("completedDate", "end")
+      .replaceAll("activatedDate", "start")
+      .replaceAll("&%24expand=tags", "");
 
     const selectFields = [
       "id",
@@ -41,9 +51,7 @@ module.exports = async function (srv) {
     const { value } = await fetch(
       `${
         auth.GRAPH_ME_ENDPOINT
-      }/calendarview?${queryString}&$top=1000&$select=${selectFields.join(
-        ","
-      )}`,
+      }/calendarview?${queryStringRepl}&$select=${selectFields.join(",")}`,
       req.user.accessToken
     );
     if (!value) return [];
