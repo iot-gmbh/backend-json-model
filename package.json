@@ -83,5 +83,16 @@
   ],
   "sapux": [
     "app/workitems-alp-v4"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "microsoft.graph": {
+        "kind": "odata",
+        "model": "srv\\external\\msgraph",
+        "credentials": {
+          "url": "https://graph.microsoft.com/v1.0/me"
+        }
+      }
+    }
+  }
 }

@@ -8,25 +8,6 @@ const levenary = require("levenary");
 // Test gitmoji 2
 require("dotenv").config();
 
-// Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
-// REVISIT: Remove as soon as the CDS-adapter supports recursive selects
-const readFromSQLite = (query) => {
-  // eslint-disable-next-line import/no-extraneous-dependencies, global-require
-  const sqlite3 = require("sqlite3");
-  const sqliteDB = new sqlite3.Database("./sqlite.db", sqlite3.OPEN_READONLY);
-
-  return new Promise((resolve, reject) => {
-    sqliteDB.all(query, (error, results) => {
-      if (error != null) {
-        reject(error);
-      }
-
-      resolve(results);
-      sqliteDB.close();
-    });
-  });
-};
-
 function transformEventToWorkItem({
   id,
   subject,
@@ -96,6 +77,7 @@ function calcDates({ activatedDate, completedDate }) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
+  const MSGraphSrv2 = await cds.connect.to("microsoft.graph");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const { Categories, Users, WorkItems } = db.entities("iot.planner");
   const { MyWorkItems } = this.entities();
@@ -255,11 +237,12 @@ module.exports = cds.service.impl(async function () {
     //   left outer join iot_planner_Tags2Categories as t2c on sub.ID = t2c.category_ID
     //   group by sub.ID, sub.title, sub.parent_ID, sub.path;`;
 
-    const MSGraphRequest = SELECT.from("Events", "*")
-      .where(req.getUrlObject().query)
-      .orderBy(orderBy)
-      .limit(limit);
+    // const MSGraphRequest = SELECT.from("Events", "*")
+    //   .where(req.getUrlObject().query)
+    //   .orderBy(orderBy)
+    //   .limit(limit);
 
+    const result = await MSGraphSrv2.get("/v1.0/me/calendarview?$top=10");
     // MSGraphRequest._urlObject = req.getUrlObject();
 
     const [devOpsWorkItems, MSGraphEvents, localWorkItems, myCategories] =

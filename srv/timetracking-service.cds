@@ -1,4 +1,5 @@
 using {iot.planner as my} from '../db/schema';
+using {microsoft.graph.events as events} from './external/msgraph';
 // using {AzureDevopsService as AzDevOps} from './azure-devops';
 // using {MSGraphService as MSGraph} from './msgraph-service';
 
@@ -22,6 +23,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;
 
+  entity Events           as projection on events;
   entity Categories       as projection on my.Categories;
   entity Users2Categories as projection on my.Users2Categories;
   entity Tags             as projection on my.Tags;
