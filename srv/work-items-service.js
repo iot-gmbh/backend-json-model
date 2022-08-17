@@ -1,4 +1,4 @@
-const cds = require("@sap/cds");
+ const cds = require("@sap/cds");
 const moment = require("moment");
 
 module.exports = cds.service.impl(async function () {

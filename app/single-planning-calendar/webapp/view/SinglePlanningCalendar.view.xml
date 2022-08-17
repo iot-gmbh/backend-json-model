@@ -20,7 +20,7 @@
 							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
 						</appointments>
 						<dependents>
-							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="400px" contentWidth="670px">
+							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="50vh" contentWidth="40vw">
 								<customHeader>
 									<Bar>
 										<contentLeft>

@@ -51,6 +51,17 @@ sap.ui.define(
         });
       },
 
+      async callFunction(...args) {
+        const [functionName, params] = args;
+        return new Promise((resolve, reject) => {
+          this.getModel("OData").callFunction(functionName, {
+            ...params,
+            success: resolve,
+            error: reject,
+          });
+        });
+      },
+
       async update({ path, data }) {
         return new Promise((resolve, reject) => {
           this.getModel("OData").update(path, data, {
@@ -82,26 +93,12 @@ sap.ui.define(
         });
       },
 
-      async remove({ path, data: { ID, activatedDate, completedDate } }) {
+      async remove({ path }) {
         return new Promise((resolve, reject) => {
-          this.getModel("OData").update(
-            path,
-            {
-              ID,
-              activatedDate,
-              completedDate,
-              // Dummy-GUIDs in order to prevent errors
-              // eslint-disable-next-line camelcase
-              // customer_ID: "af614f31-9823-47ca-b2c3-ab5dc7a10e5d",
-              // eslint-disable-next-line camelcase
-              // project_ID: "dd752480-c2af-47ad-84ab-cad44fc25f4 2",
-              deleted: true,
-            },
-            {
-              success: resolve,
-              error: reject,
-            }
-          );
+          this.getModel("OData").remove(path, {
+            success: resolve,
+            error: reject,
+          });
         });
       },
 

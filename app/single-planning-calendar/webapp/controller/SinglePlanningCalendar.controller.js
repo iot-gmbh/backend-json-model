@@ -207,10 +207,23 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            await this.remove({
-              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
-              data: appointment,
-            });
+            if (appointment.type === "Manual") {
+              await this.remove({
+                path: `/MyWorkItems(ID='${encodeURIComponent(
+                  appointment.ID
+                )}')`,
+                data: appointment,
+              });
+            } else {
+              await this.callFunction("/removeDraft", {
+                method: "POST",
+                urlParameters: {
+                  ID: appointment.ID,
+                  activatedDate: appointment.activatedDate,
+                  completedDate: appointment.completedDate,
+                },
+              });
+            }
 
             delete appointments[appointment.ID];
 
@@ -230,13 +243,16 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this.reset({
-              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
-              data: appointment,
+            const appointmentSync = await this.callFunction("/resetToDraft", {
+              method: "POST",
+              urlParameters: {
+                ID: appointment.ID,
+              },
             });
 
             appointments[appointmentSync.ID] = appointmentSync;
-            await this._loadAppointments();
+            model.setProperty("/appointments", appointments);
+            // await this._loadAppointments();
 
             this._closeDialog("createItemDialog");
           } catch (error) {

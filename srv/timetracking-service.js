@@ -132,6 +132,22 @@ module.exports = cds.service.impl(async function () {
       throw Error("Reset is not allowed for entries of type 'Manual'");
 
     await db.run(DELETE.from(MyWorkItems).where({ ID }));
+
+    // Reset to draft
+    // REVISIT: atm we're resetting to MSGraph draft-types only. Better perform a read on MyWorkItems
+    const result = {
+      ID: item.ID,
+      title: item.title,
+      tags: item.tags,
+      activatedDate: item.activatedDate,
+      completedDate: item.completedDate,
+      assignedTo_userPrincipalName: item.assignedTo_userPrincipalName,
+      private: item.private,
+      isAllDay: item.isAllDay,
+      type: item.type,
+    };
+
+    return [result];
   });
 
   this.on("READ", "MyCategories", async (req) => {
@@ -203,7 +219,9 @@ module.exports = cds.service.impl(async function () {
     const dates = calcDates(item);
     Object.assign(item, dates);
 
-    return tx.run(UPDATE(MyWorkItems, item.ID).with(item));
+    delete item.tags;
+
+    return tx.run(UPDATE(WorkItems, item).with(item));
   });
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
@@ -224,6 +242,7 @@ module.exports = cds.service.impl(async function () {
     return next();
   });
 
+  // TODO: Read WorkItems by ID
   this.on("READ", "MyWorkItems", async (req) => {
     const {
       query: {
