@@ -32,7 +32,7 @@ module.exports = async function (srv) {
     req.query.where contains additional restrictions due to authorizations which are not part of "req.getQueryOptions.query"
     => in this case no problem, as we are accessing the "GRAPH_ME_ENDPOINT" only
     */
-    const queryString = req.getUrlObject().query;
+    const queryString = req.SELECT.where;
     const queryStringRepl = queryString
       .replaceAll("ID", "id")
       .replaceAll("title", "subject")

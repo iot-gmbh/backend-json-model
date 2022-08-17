@@ -255,6 +255,13 @@ module.exports = cds.service.impl(async function () {
     //   left outer join iot_planner_Tags2Categories as t2c on sub.ID = t2c.category_ID
     //   group by sub.ID, sub.title, sub.parent_ID, sub.path;`;
 
+    const MSGraphRequest = SELECT.from("Events", "*")
+      .where(req.getUrlObject().query)
+      .orderBy(orderBy)
+      .limit(limit);
+
+    // MSGraphRequest._urlObject = req.getUrlObject();
+
     const [devOpsWorkItems, MSGraphEvents, localWorkItems, myCategories] =
       await Promise.all([
         // AzDevOpsSrv.tx(req)
@@ -265,7 +272,8 @@ module.exports = cds.service.impl(async function () {
         [],
         // [],
         // TODO: Breaks if no start- and enddatetime are provided: Fix it!
-        MSGraphSrv.tx(req),
+
+        MSGraphSrv.run(MSGraphRequest),
         // .read("Events", "*")
         // .where(where)
         // .orderBy(orderBy)
