@@ -7,7 +7,7 @@ function transformEventToWorkItem({
   title,
   start,
   end,
-  categories,
+  tags,
   sensitivity,
   isAllDay,
   user,
@@ -15,16 +15,17 @@ function transformEventToWorkItem({
   return {
     ID,
     title,
-    tags: categories
-      .concat(
-        title
-          .split(" ")
-          .filter((v) => v.startsWith("#"))
-          .map((x) => x.substr(1))
-      )
-      .map((tag_title) => ({
-        tag_title,
-      })),
+    tags,
+    // categories
+    //   .concat(
+    //     title
+    //       .split(" ")
+    //       .filter((v) => v.startsWith("#"))
+    //       .map((x) => x.substr(1))
+    //   )
+    //   .map((tag_title) => ({
+    //     tag_title,
+    //   })),
     // customer_friendlyID,
     /*
       The original format is: '2022-06-23T14:30:00.0000000'
@@ -214,6 +215,8 @@ module.exports = cds.service.impl(async function () {
     return next();
   });
 
+  this.on("READ", "MSGraphWorkItems", async (req) => MSGraphSrv.run(req.query));
+
   // TODO: Read WorkItems by ID
   this.on("READ", "MyWorkItems", async (req) => {
     const {
@@ -237,7 +240,7 @@ module.exports = cds.service.impl(async function () {
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv
         // .run(req.query),
-        .read("Events", "*")
+        .read("Events")
         .where(where)
         .orderBy(orderBy)
         .limit(limit),
@@ -245,12 +248,13 @@ module.exports = cds.service.impl(async function () {
       this.run(SELECT.from("MyCategories")),
     ]);
 
-    const MSGraphWorkItems = [MSGraphEvents].map((event) =>
-      transformEventToWorkItem({
-        ...event,
-        user: req.user.id,
-      })
-    );
+    const MSGraphWorkItems = MSGraphEvents;
+    // [MSGraphEvents].map((event) =>
+    //   transformEventToWorkItem({
+    //     ...event,
+    //     user: req.user.id,
+    //   })
+    // );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.

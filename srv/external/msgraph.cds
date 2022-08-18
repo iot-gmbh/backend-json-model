@@ -31,8 +31,11 @@ entity microsoft.graph.events : microsoft.graph.outlookItem {
   seriesMasterId             :      LargeString;
   showAs                     :      LargeString;
   end                        :      LargeString;
+  // end                        :      Association to microsoft.graph.dateTimeTimeZone;
   enddatetime                :      LargeString;
+  // startDeep                  :      Association to test;
   start                      :      LargeString;
+  // start                      :      Association to microsoft.graph.dateTimeTimeZone;
   startdatetime              :      LargeString;
   subject                    :      LargeString;
   transactionId              :      LargeString;
@@ -42,10 +45,12 @@ entity microsoft.graph.events : microsoft.graph.outlookItem {
   action cancel(Comment : LargeString);
 };
 
-type microsoft.graph.dateTimeTimeZone {
-  dateTime : LargeString;
-  timeZone : LargeString;
-};
+@cds.autoexpose
+entity microsoft.graph.dateTimeTimeZone {
+  key ID       : String;
+      dateTime : LargeString;
+      timeZone : LargeString;
+}
 
 @cds.persistence.skip : true
 entity microsoft.graph.entity {

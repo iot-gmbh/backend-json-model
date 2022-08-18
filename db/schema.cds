@@ -162,6 +162,7 @@ entity WorkItems : managed, relevance, multitenant {
       resolvedDate       : DateTime;
       closedDate         : DateTime;
       private            : Boolean;
+      isPrivate          : Boolean;
       isAllDay           : Boolean;
       // Custom
       type               : String enum {
