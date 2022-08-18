@@ -20,8 +20,8 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity MSGraphWorkItems as projection on MSGraphService.Events {
     key ID,
         title,
-        start      as activatedDate,
-        end        as completedDate,
+        activatedDate,
+        completedDate,
         isPrivate,
         categories as tags,
         isAllDay,

@@ -5,21 +5,30 @@ module.exports = async function (srv) {
     const data = entity;
     delete data["calendar@odata.associationLink"];
     delete data["calendar@odata.navigationLink"];
-    data.start = data.start.dateTime;
-    data.end = data.end.dateTime;
+    data.activatedDate = data.activatedDate.dateTime;
+    data.completedDate = data.completedDate.dateTime;
     return data;
   };
 
   srv.on("READ", "Events", async (req) => {
-    req.query.SELECT.orderBy = [{ ref: ["subject"], sort: "asc" }];
-    req.query.SELECT.where = [
-      { ref: ["start", "dateTime"] },
-      "<=",
-      { val: "2022-08-18T07:40:56.316Z" },
-    ];
+    const query = JSON.parse(JSON.stringify(req.query));
+    query.SELECT.orderBy = [{ ref: ["subject"], sort: "asc" }];
+
+    query.SELECT.where = query.SELECT.where?.map((cond) => {
+      if (cond && cond.ref && Array.isArray(cond.ref)) {
+        if (cond.ref[0] === "activatedDate") {
+          // eslint-disable-next-line no-param-reassign
+          cond.ref = ["start", "dateTime"];
+        } else if (cond.ref[0] === "completedDate") {
+          // eslint-disable-next-line no-param-reassign
+          cond.ref = ["end", "dateTime"];
+        }
+      }
+      return cond;
+    });
 
     const events = await msGraphSrv.send({
-      query: req.query,
+      query,
       headers: {
         Authorization: `Bearer ${req.user.accessToken}`,
       },

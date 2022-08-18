@@ -20,8 +20,8 @@ service MSGraphService @(requires : 'authenticated-user') {
   entity Events as projection on msgraph.events {
     key id      as ID,
         subject as title,
-        start                : DateTime,
-        end                  : DateTime,
+        start   as activatedDate,
+        end     as completedDate,
         sensitivity,
         case
           when

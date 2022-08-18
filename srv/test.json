@@ -1,0 +1,27 @@
+[
+  {
+    "func": "contains",
+    "args": [
+      {
+        "ref": [
+          "title"
+        ]
+      },
+      {
+        "val": "Manufactum"
+      }
+    ]
+  },
+  "and",
+  "(",
+  {
+    "ref": [
+      "assignedTo_userPrincipalName"
+    ]
+  },
+  "=",
+  {
+    "val": "Benedikt.Hoelker@iot-online.de"
+  },
+  ")"
+]

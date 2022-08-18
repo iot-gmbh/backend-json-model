@@ -237,18 +237,35 @@ module.exports = cds.service.impl(async function () {
 
     // MSGraphRequest._urlObject = req.getUrlObject();
 
+    const MSGraphQueryWhere = [...req.query.SELECT.where];
+    /* remove the last 5 array entries as they contain the authorization-filter which we don't need for MSGraph
+    Example: '[{"func":"contains","args":[{"ref":["title"]},{"val":"Manufactum"}]},"and","(",{"ref":["assignedTo_userPrincipalName"]},"=",{"val":"Benedikt.Hoelker@iot-online.de"},")"]'
+    */
+    MSGraphQueryWhere?.splice(
+      MSGraphQueryWhere.length > 5
+        ? MSGraphQueryWhere.length - 6
+        : MSGraphQueryWhere.length - 5
+    );
+    // const MSGraphEvents = await MSGraphSrv
+    //   // .run(req.query),
+    //   .read("Events")
+    //   .where(MSGraphQueryWhere)
+    //   .orderBy(orderBy)
+    //   .limit(limit);
+    // const localWorkItems = await cds.run(req.query);
+    // const myCategories = await this.run(SELECT.from("MyCategories"));
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv
         // .run(req.query),
         .read("Events")
-        .where(where)
+        .where(MSGraphQueryWhere)
         .orderBy(orderBy)
         .limit(limit),
       cds.run(req.query),
       this.run(SELECT.from("MyCategories")),
     ]);
 
-    const MSGraphWorkItems = MSGraphEvents;
+    // const MSGraphWorkItems = MSGraphEvents;
     // [MSGraphEvents].map((event) =>
     //   transformEventToWorkItem({
     //     ...event,
@@ -260,7 +277,7 @@ module.exports = cds.service.impl(async function () {
     // TODO: Durch explizite Sortierung absichern.
     const combined = [
       // ...devOpsWorkItems.map((itm) => ({ ...itm, confirmed: false })),
-      ...MSGraphWorkItems.map((itm) => ({ ...itm, confirmed: false })),
+      ...MSGraphEvents.map((itm) => ({ ...itm, confirmed: false })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
       // .reduce((acc, item) => acc.concat(item), [])
