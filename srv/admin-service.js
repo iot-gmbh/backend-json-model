@@ -105,26 +105,6 @@ module.exports = cds.service.impl(async function () {
     return categories;
   });
 
-  this.before("CREATE", "Categories", async (req) => {
-    let siblings = [];
-    let parent = {};
-
-    if (req.data.parent_ID) {
-      siblings = await this.read(Categories).where({ ID: req.data.parent_ID });
-      [parent] = await this.read(Categories).where({
-        ID: req.data.parent_ID,
-      });
-    } else {
-      siblings = await this.read(Categories).where({ ID: null });
-    }
-
-    const levelSpecificNumber = (parseInt(siblings.length, 10) + 1).toString();
-
-    if (parent) {
-      req.data.deepReference = `${parent.deepReference}-${levelSpecificNumber}`;
-    }
-  });
-
   this.on("CREATE", "Tags", async (req) => {
     const tags = await this.read(Tags).where({ title: req.data.title });
     const tx = this.transaction(req);

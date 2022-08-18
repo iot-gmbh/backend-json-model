@@ -18,7 +18,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
   ])                      as projection on my.WorkItems;
 
   entity MSGraphWorkItems as projection on MSGraphService.Events {
-    key ID,
+    key ID : String @odata.Type : 'Edm.String',
         title,
         activatedDate,
         completedDate,

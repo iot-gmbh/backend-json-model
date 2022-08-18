@@ -100,6 +100,7 @@ module.exports = cds.service.impl(async function () {
     } = req;
 
     const [item] = await db.read(MyWorkItems).where({ ID });
+
     if (!item) throw Error("Item not found");
     if (item.type === "Manual")
       throw Error("Reset is not allowed for entries of type 'Manual'");
@@ -184,6 +185,7 @@ module.exports = cds.service.impl(async function () {
 
     item.confirmed = true;
     item.tenant = req.user.tenant;
+    item.assignedTo_userPrincipalName = req.user.id;
     item.duration = calcDurationInH({
       start: item.activatedDate,
       end: item.completedDate,
@@ -194,7 +196,13 @@ module.exports = cds.service.impl(async function () {
 
     delete item.tags;
 
-    return tx.run(UPDATE(WorkItems, item).with(item));
+    const [entry] = await db.read(WorkItems).where({ ID: item.ID });
+
+    if (entry) {
+      return tx.run(UPDATE(WorkItems, item.ID).with(item));
+    }
+
+    return tx.run(INSERT.into(WorkItems).entries(item));
   });
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
@@ -246,14 +254,7 @@ module.exports = cds.service.impl(async function () {
         ? MSGraphQueryWhere.length - 6
         : MSGraphQueryWhere.length - 5
     );
-    // const MSGraphEvents = await MSGraphSrv
-    //   // .run(req.query),
-    //   .read("Events")
-    //   .where(MSGraphQueryWhere)
-    //   .orderBy(orderBy)
-    //   .limit(limit);
-    // const localWorkItems = await cds.run(req.query);
-    // const myCategories = await this.run(SELECT.from("MyCategories"));
+
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv
         // .run(req.query),

@@ -309,7 +309,7 @@ sap.ui.define(
                 new Filter({
                   path: "path",
                   test: (path) => {
-                    if (!query) return false;
+                    if (!query || !path) return false;
                     const substrings = query.split(" ");
                     return substrings
                       .map((sub) => sub.toUpperCase())
@@ -319,7 +319,7 @@ sap.ui.define(
                 new Filter({
                   path: "path",
                   test: (absoluteReference) => {
-                    if (!query) return false;
+                    if (!query || !absoluteReference) return false;
                     const substrings = query.split(" ");
                     return substrings
                       .map((sub) => sub.toUpperCase())
@@ -329,7 +329,7 @@ sap.ui.define(
                 new Filter({
                   path: "deepReference",
                   test: (deepReference) => {
-                    if (!query) return false;
+                    if (!query || !deepReference) return false;
                     const substrings = query.split(" ");
                     return substrings
                       .map((sub) => sub.toUpperCase())
@@ -385,7 +385,7 @@ sap.ui.define(
           try {
             // Update
             if (appointment.ID) {
-              const path = `/MyWorkItems(ID='${encodeURIComponent(
+              const path = `/MyWorkItems('${encodeURIComponent(
                 appointment.ID
               )}')`;
 

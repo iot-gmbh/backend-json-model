@@ -152,6 +152,8 @@ sap.ui.define(
             parent_ID,
             hierarchyLevel: (parseInt(hierarchyLevel, 10) + 1).toString(),
             localPath,
+            validFrom: new Date(),
+            validTo: new Date(2024, 10, 30),
           });
 
           viewModel.setProperty(
