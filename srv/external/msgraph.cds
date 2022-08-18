@@ -31,13 +31,20 @@ entity microsoft.graph.events : microsoft.graph.outlookItem {
   seriesMasterId             :      LargeString;
   showAs                     :      LargeString;
   end                        :      LargeString;
+  enddatetime                :      LargeString;
   start                      :      LargeString;
+  startdatetime              :      LargeString;
   subject                    :      LargeString;
   transactionId              :      LargeString;
   type                       :      LargeString;
   webLink                    :      LargeString;
 } actions {
   action cancel(Comment : LargeString);
+};
+
+type microsoft.graph.dateTimeTimeZone {
+  dateTime : LargeString;
+  timeZone : LargeString;
 };
 
 @cds.persistence.skip : true
@@ -97,11 +104,6 @@ type microsoft.graph.location {
   uniqueId             : LargeString;
 };
 
-type microsoft.graph.dateTimeTimeZone {
-  dateTime : LargeString;
-  timeZone : LargeString;
-};
-
 type microsoft.graph.patternedRecurrence {
   pattern : microsoft.graph.recurrencePattern;
   range   : microsoft.graph.recurrenceRange;
@@ -147,6 +149,6 @@ entity microsoft.graph.users : microsoft.graph.directoryObjects {
 
 @cds.external : true
 service microsoft.graph {
-  entity Events as projection on microsoft.graph.events
-  entity Users  as projection on microsoft.graph.users
+  entity Events as projection on microsoft.graph.events;
+  entity Users  as projection on microsoft.graph.users;
 };

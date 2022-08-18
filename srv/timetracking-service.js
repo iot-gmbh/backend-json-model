@@ -1,16 +1,10 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
-const fs = require("fs");
-const path = require("path");
-const stringSimilarity = require("string-similarity");
 const levenary = require("levenary");
 
-// Test gitmoji 2
-require("dotenv").config();
-
 function transformEventToWorkItem({
-  id,
-  subject,
+  ID,
+  title,
   start,
   end,
   categories,
@@ -19,11 +13,11 @@ function transformEventToWorkItem({
   user,
 }) {
   return {
-    ID: id,
-    title: subject.replace(/ #\w\w+\s?/g, ""),
+    ID,
+    title,
     tags: categories
       .concat(
-        subject
+        title
           .split(" ")
           .filter((v) => v.startsWith("#"))
           .map((x) => x.substr(1))
@@ -77,13 +71,9 @@ function calcDates({ activatedDate, completedDate }) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
-  const MSGraphSrv2 = await cds.connect.to("microsoft.graph");
   // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
-  const { Categories, Users, WorkItems } = db.entities("iot.planner");
+  const { Users, WorkItems } = db.entities("iot.planner");
   const { MyWorkItems } = this.entities();
-
-  // REVISIT: comparator dependent on DB-type
-  // const comparator = db.kind === "sqlite" ? "=" : "ilike";
 
   this.on("removeDraft", async (req) => {
     const {
@@ -242,28 +232,18 @@ module.exports = cds.service.impl(async function () {
     //   .orderBy(orderBy)
     //   .limit(limit);
 
-    const result = await MSGraphSrv2.get("/v1.0/me/calendarview?$top=10");
     // MSGraphRequest._urlObject = req.getUrlObject();
 
-    const [devOpsWorkItems, MSGraphEvents, localWorkItems, myCategories] =
-      await Promise.all([
-        // AzDevOpsSrv.tx(req)
-        //   .read("WorkItems", columns)
-        //   .where(where)
-        //   .orderBy(orderBy)
-        //   .limit(limit),
-        [],
-        // [],
-        // TODO: Breaks if no start- and enddatetime are provided: Fix it!
-
-        MSGraphSrv.run(MSGraphRequest),
-        // .read("Events", "*")
-        // .where(where)
-        // .orderBy(orderBy)
-        // .limit(limit),
-        cds.run(req.query),
-        this.run(SELECT.from("MyCategories")),
-      ]);
+    const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
+      MSGraphSrv
+        // .run(req.query),
+        .read("Events", "*")
+        .where(where)
+        .orderBy(orderBy)
+        .limit(limit),
+      cds.run(req.query),
+      this.run(SELECT.from("MyCategories")),
+    ]);
 
     const MSGraphWorkItems = [MSGraphEvents].map((event) =>
       transformEventToWorkItem({
