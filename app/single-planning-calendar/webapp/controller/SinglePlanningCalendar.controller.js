@@ -53,26 +53,8 @@ sap.ui.define(
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
 
-          const model = new JSONModel({
-            appointments: { NEW: {} },
-            busy: false,
-            categories: {},
-            hierarchySuggestion: "",
-            legendItems: Object.entries(legendItems.getItems()).map(
-              ([key, { type }]) => ({
-                text: bundle.getText(`legendItems.${key}`),
-                type,
-              })
-            ),
-          });
-
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
-
-          // Otherwise new entries won't be displayed in the calendar
-          model.setSizeLimit(300);
-
-          this.setModel(model);
 
           // REVISIT: Inspired by suggestion-sample. Yet this function is not called
           // Goal: Filter for substrings and not the entire query
@@ -140,6 +122,27 @@ sap.ui.define(
             // A case-insensitive "string contains" style filter
             item.getText().match(new RegExp(term, "i"))
           );
+        },
+
+        onBeforeRendering() {
+          const bundle = this.getResourceBundle();
+          const model = this.getModel();
+
+          model.setData({
+            appointments: { NEW: {} },
+            busy: false,
+            categories: {},
+            hierarchySuggestion: "",
+            legendItems: Object.entries(legendItems.getItems()).map(
+              ([key, { type }]) => ({
+                text: bundle.getText(`legendItems.${key}`),
+                type,
+              })
+            ),
+          });
+
+          // Otherwise new entries won't be displayed in the calendar
+          model.setSizeLimit(300);
         },
 
         onSelectHierarchy(event) {
