@@ -117,9 +117,11 @@ sap.ui.define(
         const result = await this.odata.create(path, object);
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
+        const resultWithoutNavProps = this.removeNavPropsFrom(result);
+
         const data = this.getProperty(parentPath);
 
-        data.push({ ...result, ...object });
+        data.push({ ...resultWithoutNavProps, ...object });
 
         this.setProperty(parentPath, data);
         // this.nest();

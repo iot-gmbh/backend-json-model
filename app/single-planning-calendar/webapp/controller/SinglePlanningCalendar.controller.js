@@ -56,17 +56,6 @@ sap.ui.define(
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
 
-          // REVISIT: Inspired by suggestion-sample. Yet this function is not called
-          // Goal: Filter for substrings and not the entire query
-          // this.byId("hierarchySearch").setFilterFunction((query, item) => {
-          //   if (!query) return false;
-          //   const path = item.getBindingContext().getProperty("path");
-          //   const substrings = query.split(" ");
-          //   return substrings
-          //     .map((sub) => sub.toUpperCase())
-          //     .every((sub) => path.includes(sub));
-          // });
-
           await this.getModel("OData").metadataLoaded();
 
           try {
@@ -515,8 +504,7 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const { results: appointments } = await this.read({
-            path: "/MyWorkItems",
+          const appointments = await model.read("/MyWorkItems", {
             urlParameters: { $top: 100, $expand: "tags" },
             filters: [
               new Filter({
@@ -571,16 +559,10 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const [{ results: categories }] = await Promise.all([
-            this.read({
-              path: "/MyCategories",
-            }),
-          ]);
-
-          const categoriesNested = nest(categories);
+          const myCategories = await model.load("/MyCategories");
+          const categoriesNested = nest(myCategories);
 
           model.setProperty("/categoriesNested", categoriesNested);
-          model.setProperty("/categoriesFlat", categories);
           model.setProperty("/busy", false);
         },
 
