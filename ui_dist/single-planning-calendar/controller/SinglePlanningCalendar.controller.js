@@ -221,7 +221,7 @@ sap.ui.define(
         },
         async _submitEntry(t) {
           const s = this.getModel();
-          const { appointments: a, categoriesFlat: n } = s.getData();
+          const { appointments: a, MyCategories: n } = s.getData();
           const { hierarchy: o, ...i } = t;
           const c = n.find((e) => e.path === t.parentPath);
           i.parentPath = undefined;

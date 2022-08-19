@@ -38,7 +38,7 @@ sap.ui.define(
 					tableBusy: true,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
-					categoriesFlat: {},
+					MyCategories: {},
 					categoriesNested: {},
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					// workItems: this._loadMockData(),
@@ -159,6 +159,8 @@ sap.ui.define(
 				const model = this.getModel();
 				const newWorkItem = model.getProperty('/newWorkItem');
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
+
+				model.setProperty('/newWorkItem', {});
 			},
 
 			async updateWorkItem(event) {
