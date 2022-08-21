@@ -375,10 +375,7 @@ sap.ui.define(
             if (appointment.ID) {
               await model.update(data);
             } else {
-              await model.create("/MyWorkItems", {
-                localPath: "/MyWorkItems/X",
-                ...data,
-              });
+              await model.create("/MyWorkItems", data);
 
               model.setProperty("/MyWorkItems/NEW", {});
             }
@@ -544,10 +541,10 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const myCategories = await model.load("/MyCategories");
-          const categoriesNested = nest(myCategories);
+          await model.load("/MyCategories", {
+            nest: true,
+          });
 
-          model.setProperty("/categoriesNested", categoriesNested);
           model.setProperty("/busy", false);
         },
 
