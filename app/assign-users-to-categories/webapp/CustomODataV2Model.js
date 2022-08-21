@@ -92,7 +92,8 @@ sap.ui.define(
       },
 
       async callFunction(...args) {
-        return this.odata.callFunction(...args);
+        const result = await this.odata.callFunction(...args);
+        return result;
       },
 
       async read(...args) {
@@ -104,22 +105,46 @@ sap.ui.define(
       // = read + store
       async load(...args) {
         const { results } = await this.odata.read(...args);
-        const [path, { into }] = args;
-        const loadInto = into || path;
+        const [path, { into = path, nest } = {}] = args;
 
-        this.setProperty(loadInto, results);
+        if (nest) {
+          const nestedResults = this.nest({ items: results, ...nest });
+          this.setProperty(`${into}Nested`, nestedResults);
+        }
+
+        this.setProperty(into, results);
 
         return results;
       },
 
+      nest({
+        items,
+        ID = null,
+        navigationProperty = "children",
+        identifierName = "ID",
+        link = "parent_ID",
+      }) {
+        return items
+          .filter((item) => item[link] === ID)
+          .map((item) => ({
+            ...item,
+            [navigationProperty]: this.nest({
+              items,
+              ID: item[identifierName],
+              navigationProperty,
+              identifierName,
+              link,
+            }),
+          }));
+      },
+
       async create(...args) {
-        const [path, { localPath, ...object }] = args;
+        const [path, { localPath = `${path}/X`, ...object } = {}] = args;
         const result = await this.odata.create(path, object);
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
-        const resultWithoutNavProps = this.removeNavPropsFrom(result);
-
         const data = this.getProperty(parentPath);
+        const resultWithoutNavProps = this.removeNavPropsFrom(result);
 
         data.push({ ...resultWithoutNavProps, ...object });
 
@@ -150,55 +175,7 @@ sap.ui.define(
         );
 
         this.setProperty(entityName, data);
-        this.nest();
-      },
-
-      nest() {
-        const data = this.getData();
-        const { entityTypes } = this;
-
-        entityTypes
-          // Only process entities that are loaded already
-          .filter(({ name }) => data[name])
-          .map((entityType) => ({
-            entityType,
-            entities: data[entityType.name].filter(Boolean).map((entity) => {
-              entityType.relations.forEach((relation) => {
-                const cardinality = relation.cardinality.endsWith("1")
-                  ? "1"
-                  : "n";
-
-                if (cardinality === "n") {
-                  // eslint-disable-next-line no-param-reassign
-                  entity[relation.name] = entity[relation.name].results;
-                }
-
-                // Object.defineProperty(entity, relation.name, {
-                //   configurable: true,
-                //   // We don't implement a setter by design so each request has to be made via the OData-service explicitly
-                //   get: () => {
-                //     const targetEntities =
-                //       this.getData()[relation.toRole] || [];
-                //     const results = targetEntities.filter((related) =>
-                //       relation.refConstraints.every(
-                //         ({ to, from }) => related[to] === entity[from]
-                //       )
-                //     );
-
-                //     if (cardinality === "1") {
-                //       return results[0];
-                //     }
-
-                //     return results;
-                // },
-                // });
-              });
-              return entity;
-            }),
-          }))
-          .forEach(({ entityType, entities }) => {
-            this.setProperty(`/${entityType.name}`, entities);
-          });
+        // this.nest();
       },
 
       getODataPathFrom(obj) {

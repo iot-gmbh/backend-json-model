@@ -108,7 +108,6 @@ sap.ui.define(
         const [path, { into = path, nest } = {}] = args;
 
         if (nest) {
-          // const nestParams = typeof nest === "object" ? nest : {};
           const nestedResults = this.nest({ items: results, ...nest });
           this.setProperty(`${into}Nested`, nestedResults);
         }
@@ -145,8 +144,9 @@ sap.ui.define(
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
         const data = this.getProperty(parentPath);
+        const resultWithoutNavProps = this.removeNavPropsFrom(result);
 
-        data.push({ ...result, ...object });
+        data.push({ ...resultWithoutNavProps, ...object });
 
         this.setProperty(parentPath, data);
         // this.nest();

@@ -38,7 +38,7 @@
 											<form:FormElement>
 												<form:fields>
 													<ScrollContainer height="20vh" vertical="true">
-														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/categories', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+														<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
 															<StandardTreeItem title="{title}"/>
 														</Tree>
 													</ScrollContainer>

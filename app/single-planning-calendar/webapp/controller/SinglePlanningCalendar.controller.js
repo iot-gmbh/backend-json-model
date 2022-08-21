@@ -1,11 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
-const nest = (items, ID = null, link = "parent_ID") =>
-  items
-    .filter((item) => item[link] === ID)
-    .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 

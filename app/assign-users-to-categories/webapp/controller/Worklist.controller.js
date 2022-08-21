@@ -20,13 +20,8 @@ sap.ui.define(
     FilterType,
     Sorter,
     Token
-  ) => {
-    const nest = (items, ID = null, link = "parent_ID") =>
-      items
-        .filter((item) => item[link] === ID)
-        .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
-    return BaseController.extend(
+  ) =>
+    BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
         // formatter,
@@ -72,7 +67,8 @@ sap.ui.define(
               },
             }
           );
-          const categoriesNested = nest(categories);
+
+          const categoriesNested = model.nest({ items: categories });
 
           model.setProperty("/Categories", categoriesNested);
 
@@ -94,8 +90,7 @@ sap.ui.define(
             }
           );
 
-          const categoriesNested = nest(categories);
-
+          const categoriesNested = model.nest({ items: categories });
           model.setProperty("/Categories", categoriesNested);
         },
 
@@ -394,6 +389,5 @@ sap.ui.define(
           });
         },
       }
-    );
-  }
+    )
 );
