@@ -12,10 +12,13 @@ module.exports = cds.service.impl(async function () {
         title,
         path,
         hierarchylevel,
+        description,
+        validfrom,
+        validto,
+        totalduration,
         absolutereference,
         shallowreference,
         deepreference,
-        totalduration,
         accumulatedduration,
       }) => ({
         ID: id,
@@ -24,6 +27,9 @@ module.exports = cds.service.impl(async function () {
         title,
         path,
         hierarchyLevel: hierarchylevel,
+        description,
+        validFrom: validfrom,
+        validTo: validto,
         totalDuration: totalduration,
         accumulatedDuration: accumulatedduration,
         relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
@@ -59,8 +65,8 @@ module.exports = cds.service.impl(async function () {
     } = req;
 
     // TODO: implement filtering for user & tenant
-    const query = `SELECT * FROM get_categories($1, $2)`;
-    const results = await db.run(query, [user.tenant, root]);
+    const query = `SELECT * FROM get_categories($1, $2, $3)`;
+    const results = await db.run(query, [user.tenant, root, validAt]);
 
     return transformCategories(results);
   });

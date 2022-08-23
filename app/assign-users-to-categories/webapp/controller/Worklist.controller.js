@@ -38,6 +38,8 @@ sap.ui.define(
           // keeps the search state
           this._aTableSearchState = [];
 
+          const validAt = new Date();
+
           // Model used to manipulate control states
           const viewModel = new JSONModel({
             worklistTableTitle:
@@ -46,21 +48,33 @@ sap.ui.define(
               this.getResourceBundle().getText("tableNoDataText"),
             newCategory: {},
             busy: true,
+            filters: { validAt, search: "" },
           });
 
           this.setModel(viewModel, "worklistView");
         },
 
-        async onBeforeRendering() {
-          const model = this.getModel();
+        async onSearch() {
+          await this._loadCategories();
+        },
 
-          this.getModel("worklistView").setProperty("/busy", true);
+        async onBeforeRendering() {
+          await this._loadCategories();
+        },
+
+        async _loadCategories() {
+          const model = this.getModel();
+          const viewModel = this.getModel("worklistView");
+          const validAt = viewModel.getProperty("/filters/validAt");
+
+          viewModel.setProperty("/busy", true);
 
           const { results: categories } = await model.callFunction(
             `/getCategoryTree`,
             {
               urlParameters: {
                 root: null,
+                validAt: validAt.toISOString(),
               },
             }
           );
@@ -68,28 +82,26 @@ sap.ui.define(
           const categoriesNested = model.nest({ items: categories });
 
           model.setProperty("/Categories", categoriesNested);
-
-          this.getModel("worklistView").setProperty("/busy", false);
+          viewModel.setProperty("/busy", false);
         },
+        // async onToggleOpenState(event) {
+        //   const model = this.getModel();
+        //   const { rowContext, expanded } = event.getParameters();
+        //   if (!expanded) return;
 
-        async onToggleOpenState(event) {
-          const model = this.getModel();
-          const { rowContext, expanded } = event.getParameters();
-          if (!expanded) return;
+        //   const ID = rowContext.getProperty("ID");
+        //   const { results: categories } = await model.callFunction(
+        //     `/getCategoryTree`,
+        //     {
+        //       urlParameters: {
+        //         root: ID,
+        //       },
+        //     }
+        //   );
 
-          const ID = rowContext.getProperty("ID");
-          const { results: categories } = await model.callFunction(
-            `/getCategoryTree`,
-            {
-              urlParameters: {
-                root: ID,
-              },
-            }
-          );
-
-          const categoriesNested = model.nest({ items: categories });
-          model.setProperty("/Categories", categoriesNested);
-        },
+        //   const categoriesNested = model.nest({ items: categories });
+        //   model.setProperty("/Categories", categoriesNested);
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -284,21 +296,21 @@ sap.ui.define(
           }
         },
 
-        onSearch(event) {
-          const { query } = event.getParameters();
+        // onSearch(event) {
+        //   const { query } = event.getParameters();
 
-          const filters = [
-            new Filter({
-              path: "title",
-              operator: "Contains",
-              value1: query,
-            }),
-          ];
+        //   const filters = [
+        //     new Filter({
+        //       path: "title",
+        //       operator: "Contains",
+        //       value1: query,
+        //     }),
+        //   ];
 
-          this.byId("treeTable")
-            .getBinding("rows")
-            .filter(filters, FilterType.Application);
-        },
+        //   this.byId("treeTable")
+        //     .getBinding("rows")
+        //     .filter(filters, FilterType.Application);
+        // },
 
         onCreateToken(event) {
           const multiInput = event.getSource();
