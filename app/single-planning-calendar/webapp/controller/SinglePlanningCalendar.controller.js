@@ -474,59 +474,35 @@ sap.ui.define(
         async _loadAppointments() {
           const model = this.getModel();
           const calendar = this.byId("SPCalendar");
-          const appointmentsOld = model.getProperty("/MyWorkItems");
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
 
           model.setProperty("/busy", true);
 
-          // const MyWorkItems =
-          await model.load("/MyWorkItems", {
-            urlParameters: { $top: 100, $expand: "tags" },
-            filters: [
-              new Filter({
-                filters: [
-                  new Filter({
-                    path: "completedDate",
-                    operator: "GT",
-                    value1: startDate,
-                  }),
-                  new Filter({
-                    path: "activatedDate",
-                    operator: "LE",
-                    value1: endDate,
-                  }),
-                ],
-                and: true,
-              }),
-            ],
-          });
+          const { results: workItems } = await model.callFunction(
+            "/getCalendarView",
+            {
+              urlParameters: {
+                startDateTime: startDate,
+                endDateTime: endDate,
+              },
+            }
+          );
 
-          // const appointmentsMap = MyWorkItems.reduce((map, appointment) => {
-          //   const tags = appointment.tags.results;
-          //   // eslint-disable-next-line no-param-reassign
-          //   map[appointment.ID] = {
-          //     /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
-          //       This leads to problems with UI5, because the events are repeated each day which is ugly
-          //       TODO: Find a better solution. Maybe this thread can help: https://answers.sap.com/questions/13324088/why-cap-shows-datetime-field-different-in-fiori-db.html
-          //     */
-          //     completedDate: appointment.isAllDay
-          //       ? appointment.completedDate.setHours(0)
-          //       : appointment.completedDate,
-          //     activatedDate: appointment.isAllDay
-          //       ? appointment.activatedDate.setHours(0)
-          //       : appointment.activatedDate,
-          //     ...appointment,
-          //     tags,
-          //   };
+          const appointments = workItems.map(
+            ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
+              ...appointment,
+              tags: appointment.tags.results,
+              completedDate: isAllDay
+                ? completedDate.setHours(0)
+                : completedDate,
+              activatedDate: isAllDay
+                ? activatedDate.setHours(0)
+                : activatedDate,
+            })
+          );
 
-          //   return map;
-          // }, {});
-
-          // model.setProperty("/MyWorkItems", {
-          //   ...appointmentsOld,
-          //   ...appointmentsMap,
-          // });
+          model.setProperty("/MyWorkItems", appointments);
 
           model.setProperty("/busy", false);
         },

@@ -2,52 +2,6 @@ const uuid = require("uuid");
 const cds = require("@sap/cds");
 const levenary = require("levenary");
 
-function transformEventToWorkItem({
-  ID,
-  title,
-  start,
-  end,
-  tags,
-  sensitivity,
-  isAllDay,
-  user,
-}) {
-  return {
-    ID,
-    title,
-    tags,
-    // categories
-    //   .concat(
-    //     title
-    //       .split(" ")
-    //       .filter((v) => v.startsWith("#"))
-    //       .map((x) => x.substr(1))
-    //   )
-    //   .map((tag_title) => ({
-    //     tag_title,
-    //   })),
-    // customer_friendlyID,
-    /*
-      The original format is: '2022-06-23T14:30:00.0000000'
-      OData needs a format like this: '2022-06-23T00:00:00Z'
-
-      All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
-      This leads to UI5 showing repeating them each single day instead of showing all-day events.
-      Thus we replace the time for all-day events
-      */
-    activatedDate: isAllDay
-      ? `${start.dateTime.substring(0, 11)}00:00:00Z`
-      : `${start.dateTime.substring(0, 19)}Z`,
-    completedDate: isAllDay
-      ? `${end.dateTime.substring(0, 11)}00:00:00Z`
-      : `${end.dateTime.substring(0, 19)}Z`,
-    assignedTo_userPrincipalName: user,
-    private: sensitivity === "private",
-    isAllDay,
-    type: "Event",
-  };
-}
-
 function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
   const durationInH = durationInMS / 1000 / 60 / 60;
@@ -105,21 +59,10 @@ module.exports = cds.service.impl(async function () {
     if (item.type === "Manual")
       throw Error("Reset is not allowed for entries of type 'Manual'");
 
-    await db.run(DELETE.from(MyWorkItems).where({ ID }));
-
-    // Reset to draft
-    // REVISIT: atm we're resetting to MSGraph draft-types only. Better perform a read on MyWorkItems
-    const result = {
-      ID: item.ID,
-      title: item.title,
-      tags: item.tags,
-      activatedDate: item.activatedDate,
-      completedDate: item.completedDate,
-      assignedTo_userPrincipalName: item.assignedTo_userPrincipalName,
-      private: item.private,
-      isAllDay: item.isAllDay,
-      type: item.type,
-    };
+    const [result] = await Promise.all([
+      MSGraphSrv.send("getWorkItemByID", { ID }),
+      db.run(DELETE.from(MyWorkItems).where({ ID })),
+    ]);
 
     return [result];
   });
@@ -226,53 +169,20 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MSGraphWorkItems", async (req) => MSGraphSrv.run(req.query));
 
   // TODO: Read WorkItems by ID
-  this.on("READ", "MyWorkItems", async (req) => {
+  this.on("getCalendarView", async (req) => {
     const {
-      query: {
-        // eslint-disable-next-line no-unused-vars
-        SELECT: { where = "ID != null", columns, orderBy, limit },
-      },
+      data: { startDateTime, endDateTime },
     } = req;
 
-    // const myCategoriesWithTagsQuery = `SELECT sub.ID, sub.title, sub.parent_ID, sub.path, STRING_AGG(tag_title, ' ') as tags FROM (${myCategoriesQuery}) sub
-    //   left outer join iot_planner_Tags2Categories as t2c on sub.ID = t2c.category_ID
-    //   group by sub.ID, sub.title, sub.parent_ID, sub.path;`;
-
-    // const MSGraphRequest = SELECT.from("Events", "*")
-    //   .where(req.getUrlObject().query)
-    //   .orderBy(orderBy)
-    //   .limit(limit);
-
-    // MSGraphRequest._urlObject = req.getUrlObject();
-
-    const MSGraphQueryWhere = [...req.query.SELECT.where];
-    /* remove the last 5 array entries as they contain the authorization-filter which we don't need for MSGraph
-    Example: '[{"func":"contains","args":[{"ref":["title"]},{"val":"Manufactum"}]},"and","(",{"ref":["assignedTo_userPrincipalName"]},"=",{"val":"Benedikt.Hoelker@iot-online.de"},")"]'
-    */
-    MSGraphQueryWhere?.splice(
-      MSGraphQueryWhere.length > 5
-        ? MSGraphQueryWhere.length - 6
-        : MSGraphQueryWhere.length - 5
-    );
-
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
-      MSGraphSrv
-        // .run(req.query),
-        .read("Events")
-        .where(MSGraphQueryWhere)
-        .orderBy(orderBy)
-        .limit(limit),
-      cds.run(req.query),
+      MSGraphSrv.send("getCalendarView", req.data),
+      cds.run(
+        SELECT.from(MyWorkItems).where(
+          `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
+        )
+      ),
       this.run(SELECT.from("MyCategories")),
     ]);
-
-    // const MSGraphWorkItems = MSGraphEvents;
-    // [MSGraphEvents].map((event) =>
-    //   transformEventToWorkItem({
-    //     ...event,
-    //     user: req.user.id,
-    //   })
-    // );
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.

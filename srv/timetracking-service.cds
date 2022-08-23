@@ -17,18 +17,20 @@ service TimetrackingService @(requires : 'authenticated-user') {
     }
   ])                      as projection on my.WorkItems;
 
-  entity MSGraphWorkItems as projection on MSGraphService.Events {
+  entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID : String @odata.Type : 'Edm.String',
         title,
         activatedDate,
         completedDate,
         isPrivate,
-        categories as tags,
+        tags,
         isAllDay,
   };
 
-  action removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
-  action resetToDraft(ID : String) returns MyWorkItems;
+  action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
+  action   resetToDraft(ID : String)                                         returns MyWorkItems;
+  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
+  function getWorkItemByID(ID : String)                                      returns MyWorkItems;
 
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;
