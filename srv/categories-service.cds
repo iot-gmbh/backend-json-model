@@ -5,7 +5,7 @@ service CategoriesService @(requires : 'authenticated-user') {
   entity Categories       as projection on my.Categories;
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
 
-  @(restrict : [{to : 'Admin'}])
+  @(restrict : [{to : 'admin'}])
   function getCategoryTree(root : UUID, validAt : DateTime)                                                           returns array of Categories;
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;
