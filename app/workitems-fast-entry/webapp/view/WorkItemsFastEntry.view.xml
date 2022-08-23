@@ -24,7 +24,7 @@
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formTextAreaDescription}">
-													<TextArea id="textAreaDescription" value="{newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
+													<TextArea id="textAreaDescription" value="{/newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formInputHierarchy}">
 													<form:fields>
@@ -114,6 +114,9 @@
 						<f:content>
 							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" updateFinished=".onUpdateFinished" items="{
 								path: '/workItems',
+								events: {
+            						updateFinished: '.onUpdateFinished'
+								},
 								sorter: {
 									path: 'completedDate',
 									descending: false
@@ -163,7 +166,7 @@
 								</columns>
 
 								<items>
-									<ColumnListItem press=".onPress">
+									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
 											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>

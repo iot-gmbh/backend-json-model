@@ -16,17 +16,18 @@ sap.ui.define(
 		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			async onInit() {
 				const model = new JSONModel({
-					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					busy: false,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
 					categoriesFlat: {},
 					categoriesNested: {},
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					activities: [
 						{ title: 'Durchführung' },
 						{ title: 'Reise-/Fahrzeit' },
 						{ title: 'Pendelfahrt Hotel/Einsatzort' }
 					],
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					workItems: this.loadMockData(),
 					newWorkItem: undefined,
@@ -42,7 +43,6 @@ sap.ui.define(
 				this.updateTable();
 				this._loadHierarchy();
 				this.filterHierarchyByPath('hierarchyTreeForm', '');
-				// this.filterHierarchyByPath('hierarchyTreeTable', '');
 				this.searchFilters = [];
 
 				this.byId('hierarchySearchForm').setFilterFunction((term, item) =>
@@ -82,63 +82,27 @@ sap.ui.define(
 					})
 				};
 
-				model.setProperty('/busy', true);
-
-				// // Funktioniert nicht
-				// this.byId('hierarchySearchTable').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeTable.bind(this)
-				// );
-				// this.byId('hierarchyTreeTable').attachBrowserEvent(
-				// 	'focusin',
-				// 	this.onFocusInHierarchyTreeTable.bind(this)
-				// );
-				// this.byId('hierarchyTreeTable').attachBrowserEvent(
-				// 	'focusout',
-				// 	this.onFocusOutHierarchyTreeTable.bind(this)
-				// );
+				model.setProperty('/busy', false);
 			},
 
 			async onUpdateFinished(event) {
-				const table = event.getSource();
 				const model = this.getModel();
-				const totalItems = event.getParameter('total');
 
-				if (totalItems && table.getBinding('items').isLengthFinal()) {
-					await this.getModel().read(
-						{
-							path: 'MyWorkItems',
-							filters: this._filters.all
-						},
-						{
-							success: (oData) => {
-								model.setProperty('/countAll');
-							}
-						}
-					);
-					// await this.getModel().read(
-					// 	{
-					// 		path: 'MyWorkItems',
-					// 		filters: this._filters.completed
-					// 	},
-					// 	{
-					// 		success: (oData) => {
-					// 			model.setProperty('/countCompleted');
-					// 		}
-					// 	}
-					// );
-					// await this.getModel().read(
-					// 	{
-					// 		path: 'MyWorkItems',
-					// 		filters: this._filters.incompleted
-					// 	},
-					// 	{
-					// 		success: (oData) => {
-					// 			model.setProperty('/countIncompleted');
-					// 		}
-					// 	}
-					// );
-				}
+				const countAll = model
+					.getProperty('/workItems')
+					.filter((workItem) => workItem.state !== '').length;
+
+				const countCompleted = model
+					.getProperty('/workItems')
+					.filter((workItem) => workItem.state === 'completed').length;
+
+				const countIncompleted = model
+					.getProperty('/workItems')
+					.filter((workItem) => workItem.state === 'incompleted').length;
+
+				model.setProperty('/countAll', countAll);
+				model.setProperty('/countCompleted', countCompleted);
+				model.setProperty('/countIncompleted', countIncompleted);
 			},
 
 			loadMockData() {
@@ -237,25 +201,7 @@ sap.ui.define(
 				if (event.getParameter('id').endsWith('Form')) {
 					this.getModel().setProperty('/showHierarchyTreeForm', true);
 					associatedHierarchyTreeID = 'hierarchyTreeForm';
-					// // Momentan nicht funktionsfaehig für 'hierarchyTreeTable'
-					// }
-					// else {
-					// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
-					// 	associatedHierarchyTreeID = 'hierarchyTreeTable';
-					// }
 					const { newValue } = event.getParameters();
-
-					// // Laden eines Popover-Fragments für den HierarchyTree
-					// if (!this.popover) {
-					// 	this.popover = Fragment.load({
-					// 		id: this.getView().getId(),
-					// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
-					// 		controller: this
-					// 	});
-					// }
-					// this.popover.then(function (popover) {
-					// 	popover.openBy(event.getSource());
-					// });
 
 					this.filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 				}
@@ -298,17 +244,6 @@ sap.ui.define(
 				this.getModel().setProperty('/showHierarchyTreeForm', false);
 			},
 
-			// // Funktioniert nicht
-			// onFocusInHierarchyTreeTable() {
-			// 	console.log('Focusin');
-			// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
-			// },
-
-			// onFocusOutHierarchyTreeTable() {
-			// 	console.log('Focusout');
-			// 	this.getModel().setProperty('/showHierarchyTreeTable', false);
-			// },
-
 			onChangeDate(event) {
 				const model = this.getModel();
 				const date = model.getProperty('/newWorkItem/date');
@@ -347,8 +282,6 @@ sap.ui.define(
 				const workItems = model.getProperty('/workItems');
 				const newWorkItem = model.getProperty('/newWorkItem');
 
-				// const location = this.byId('selectLocation').getValue();
-				// model.setProperty('/newWorkItem/location', location);
 				this.checkCompleteness();
 
 				this._submitWorkItem();
@@ -398,7 +331,7 @@ sap.ui.define(
 				const { results: workItemsBackend } = await this.read({
 					path: '/MyWorkItems',
 					urlParameters: { $top: 100, $expand: 'tags' },
-					// Currently loading all work items with a not empty string as state
+					// Currently loading top 100 work items with a not empty string as state
 					filters: [
 						new Filter({
 							path: 'state',
