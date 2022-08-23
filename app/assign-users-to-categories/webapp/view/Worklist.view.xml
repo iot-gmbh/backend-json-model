@@ -17,6 +17,14 @@
                         <SearchField value="{worklistView>/filters/search}"/>
                     </fb:control>
                 </fb:FilterGroupItem>
+                <fb:FilterGroupItem label="{i18n>scope}" groupName="scope" name="scope" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <Select selectedKey="{worklistView>/filters/scope}">
+                            <core:Item text="{i18n>scope.mine}" key="mine"/>
+                            <core:Item text="{i18n>scope.all}" key="all"/>
+                        </Select>
+                    </fb:control>
+                </fb:FilterGroupItem>
                 <fb:FilterGroupItem label="{i18n>validAt}" groupName="validity" name="validFrom" partOfCurrentVariant="true" visibleInFilterBar="true">
                     <fb:control>
                         <DatePicker value="{path: 'worklistView>/filters/validAt', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
@@ -50,12 +58,12 @@
                         <Text text="{title}" />
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>childrenLength}" width="5%" hAlign="End">
+                <t:Column label="{i18n>childrenLength}" width="8%" hAlign="End">
                     <t:template>
                         <Text text="{= ${children}.length}" />
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>members}" width="5%" hAlign="End">
+                <t:Column label="{i18n>members}" width="8%" hAlign="End">
                     <t:template>
                         <Text text="{= ${members}.length}" />
                     </t:template>

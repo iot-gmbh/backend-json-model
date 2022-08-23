@@ -100,7 +100,7 @@ module.exports = cds.service.impl(async function () {
 
     const [draft, myCategories] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
-      catService.send("getMyCategories", req.data),
+      catService.send("getMyCategoryTree", req.data),
       db.run(DELETE.from(MyWorkItems).where({ ID })),
     ]);
 
@@ -112,8 +112,8 @@ module.exports = cds.service.impl(async function () {
     return draft;
   });
 
-  this.on("getMyCategories", async (req) => {
-    const categories = await catService.send("getMyCategories", req.data);
+  this.on("getMyCategoryTree", async (req) => {
+    const categories = await catService.send("getMyCategoryTree", req.data);
 
     return categories;
   });
@@ -205,7 +205,7 @@ module.exports = cds.service.impl(async function () {
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )
       ),
-      catService.send("getMyCategories", req.data),
+      catService.send("getMyCategoryTree", req.data),
     ]);
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)

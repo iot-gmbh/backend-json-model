@@ -2,6 +2,7 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
+  const { Tags, Tags2Categories } = db.entities("iot.planner");
 
   function transformCategories(rawCategories, sum = 1) {
     return rawCategories.map(
@@ -49,7 +50,7 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  this.on("getMyCategories", async (req) => {
+  this.on("getMyCategoryTree", async (req) => {
     const results = await db.run(
       SELECT.from("iot_planner_my_categories")
         .where`user_userPrincipalName = ${req.user.id} and tenant = ${req.user.tenant}`
@@ -97,5 +98,30 @@ module.exports = cds.service.impl(async function () {
     );
 
     return transformCategories(results, sum);
+  });
+
+  this.on("CREATE", "Tags", async (req) => {
+    const tags = await this.read(Tags).where({ title: req.data.title });
+    const tx = this.transaction(req);
+    const newTag = { ...req.data };
+
+    if (tags.length === 0) {
+      return tx.run(INSERT(newTag).into(Tags));
+    }
+    return tx.run(UPDATE(Tags, tags[0]).with(tags[0]));
+  });
+
+  this.on("CREATE", "Tags2Categories", async (req) => {
+    const tags = await this.read(Tags2Categories).where({
+      tag_title: req.data.tag_title,
+      category_ID: req.data.category_ID,
+    });
+    const tx = this.transaction(req);
+    const newTag = { ...req.data };
+
+    if (tags.length === 0) {
+      return tx.run(INSERT(newTag).into(Tags2Categories));
+    }
+    return tx.run(UPDATE(Tags2Categories, tags[0]).with(tags[0]));
   });
 });

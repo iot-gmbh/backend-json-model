@@ -48,7 +48,7 @@ sap.ui.define(
               this.getResourceBundle().getText("tableNoDataText"),
             newCategory: {},
             busy: true,
-            filters: { validAt, search: "" },
+            filters: { validAt, search: "", scope: "mine" },
           });
 
           this.setModel(viewModel, "worklistView");
@@ -65,12 +65,12 @@ sap.ui.define(
         async _loadCategories() {
           const model = this.getModel();
           const viewModel = this.getModel("worklistView");
-          const validAt = viewModel.getProperty("/filters/validAt");
+          const { validAt, scope } = viewModel.getProperty("/filters");
 
           viewModel.setProperty("/busy", true);
 
           const { results: categories } = await model.callFunction(
-            `/getCategoryTree`,
+            scope === "mine" ? "/getMyCategoryTree" : "/getCategoryTree",
             {
               urlParameters: {
                 root: null,
@@ -210,7 +210,7 @@ sap.ui.define(
             await model.update(category);
           } else {
             // Create
-            await model.create("/Categories", category);
+            await model.create("/Categories", { ...category, children: [] });
           }
         },
 

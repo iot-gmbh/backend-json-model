@@ -144,21 +144,22 @@ sap.ui.define(
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
         const data = this.getProperty(parentPath);
-        const resultWithoutNavProps = this.removeNavPropsFrom(result);
+        const merge = { ...result, ...data };
 
-        data.push({ ...resultWithoutNavProps, ...object });
+        data.push(merge);
 
         this.setProperty(parentPath, data);
-        // this.nest();
       },
 
       // create new obj => nav-Props will be deleted so don't use reference
       async update({ localPath, ...obj }) {
         const odataPath = this.getODataPathFrom(obj);
         const data = this.removeNavPropsFrom(obj);
-        const update = await this.odata.update(odataPath, data);
+        const result = await this.odata.update(odataPath, data);
 
-        this.setProperty(localPath, { ...obj, ...update });
+        const merge = { ...result, ...obj };
+
+        this.setProperty(localPath, merge);
       },
 
       async remove(obj) {
@@ -174,7 +175,6 @@ sap.ui.define(
         );
 
         this.setProperty(entityName, data);
-        // this.nest();
       },
 
       getODataPathFrom(obj) {

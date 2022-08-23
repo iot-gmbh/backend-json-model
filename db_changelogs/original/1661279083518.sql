@@ -1,7 +1,13 @@
+drop view if exists "public"."iot_planner_my_categories_with_tags";
+
+drop view if exists "public"."iot_planner_my_categories";
+
+drop view if exists "public"."iot_planner_categories_cte";
+
 set check_function_bodies = off;
 
 CREATE OR REPLACE FUNCTION public.get_categories(p_tenant character varying, p_root character varying DEFAULT NULL::character varying, p_valid_at timestamp with time zone DEFAULT now())
- RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, description character varying, absolutereference character varying, shallowreference character varying, deepreference character varying, path character varying)
+ RETURNS TABLE(id character varying, tenant character varying, parent_id character varying, title character varying, hierarchylevel character varying, description character varying, validfrom timestamp with time zone, validto timestamp with time zone, absolutereference character varying, shallowreference character varying, deepreference character varying, path character varying)
  LANGUAGE plpgsql
 AS $function$ #variable_conflict use_column
 begin RETURN QUERY WITH RECURSIVE cte AS (
@@ -12,6 +18,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         title,
         hierarchyLevel,
         description,
+        validFrom,
+        validTo,
         absoluteReference,
         shallowReference,
         shallowReference as deepReference,
@@ -26,7 +34,7 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         and (
             p_root is null
             and parent_ID is null
-            or parent_ID = p_root
+            or ID = p_root
         )
     UNION
     SELECT
@@ -36,6 +44,8 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         this.title,
         this.hierarchyLevel,
         this.description,
+        this.validFrom,
+        this.validTo,
         this.absoluteReference,
         this.shallowReference,
         CAST(
@@ -165,6 +175,148 @@ GROUP BY
 
 end $function$
 ;
+
+create or replace view "public"."iot_planner_categories_cte" as  WITH RECURSIVE cte AS (
+         SELECT iot_planner_categories.id,
+            iot_planner_categories.tenant,
+            iot_planner_categories.parent_id,
+            iot_planner_categories.title,
+            iot_planner_categories.hierarchylevel,
+            iot_planner_categories.description,
+            iot_planner_categories.validfrom,
+            iot_planner_categories.validto,
+            iot_planner_categories.absolutereference,
+            iot_planner_categories.shallowreference,
+            iot_planner_categories.shallowreference AS deepreference,
+            iot_planner_categories.title AS path
+           FROM iot_planner_categories
+          WHERE (iot_planner_categories.parent_id IS NULL)
+        UNION
+         SELECT this.id,
+            this.tenant,
+            this.parent_id,
+            this.title,
+            this.hierarchylevel,
+            this.description,
+            this.validfrom,
+            this.validto,
+            this.absolutereference,
+            this.shallowreference,
+            ((((prior.deepreference)::text || '-'::text) || (this.shallowreference)::text))::character varying(5000) AS deepreference,
+            ((((prior.path)::text || ' > '::text) || (this.title)::text))::character varying(5000) AS path
+           FROM (cte prior
+             JOIN iot_planner_categories this ON (((this.parent_id)::text = (prior.id)::text)))
+        )
+ SELECT cte.id,
+    cte.tenant,
+    cte.parent_id,
+    cte.title,
+    cte.hierarchylevel,
+    cte.description,
+    cte.validfrom,
+    cte.validto,
+    cte.absolutereference,
+    cte.shallowreference,
+    cte.deepreference,
+    cte.path
+   FROM cte;
+
+
+create or replace view "public"."iot_planner_my_categories" as  SELECT sub.id,
+    sub.tenant,
+    sub.parent_id,
+    sub.title,
+    sub.hierarchylevel,
+    sub.description,
+    sub.validfrom,
+    sub.validto,
+    sub.absolutereference,
+    sub.shallowreference,
+    sub.deepreference,
+    sub.path,
+    sub.user_userprincipalname
+   FROM ( WITH RECURSIVE childrencte AS (
+                 SELECT cat.id,
+                    cat.tenant,
+                    cat.parent_id,
+                    user2cat.user_userprincipalname
+                   FROM (iot_planner_categories cat
+                     JOIN iot_planner_users2categories user2cat ON (((cat.id)::text = (user2cat.category_id)::text)))
+                  WHERE ((cat.validfrom <= now()) AND (cat.validto > now()))
+                UNION
+                 SELECT this.id,
+                    this.tenant,
+                    this.parent_id,
+                    parent.user_userprincipalname
+                   FROM (childrencte parent
+                     JOIN iot_planner_categories this ON ((((this.parent_id)::text = (parent.id)::text) AND (this.validfrom <= now()) AND (this.validto > now()))))
+                ), parentcte AS (
+                 SELECT cat.id,
+                    cat.tenant,
+                    cat.parent_id,
+                    user2cat.user_userprincipalname
+                   FROM (iot_planner_categories cat
+                     JOIN iot_planner_users2categories user2cat ON (((cat.id)::text = (user2cat.category_id)::text)))
+                  WHERE ((cat.validfrom <= now()) AND (cat.validto > now()))
+                UNION
+                 SELECT this.id,
+                    this.tenant,
+                    this.parent_id,
+                    children.user_userprincipalname
+                   FROM (parentcte children
+                     JOIN iot_planner_categories this ON ((((children.parent_id)::text = (this.id)::text) AND (this.validfrom <= now()) AND (this.validto > now()))))
+                )
+         SELECT pathcte.id,
+            pathcte.tenant,
+            pathcte.parent_id,
+            pathcte.title,
+            pathcte.hierarchylevel,
+            pathcte.description,
+            pathcte.validfrom,
+            pathcte.validto,
+            pathcte.absolutereference,
+            pathcte.shallowreference,
+            pathcte.deepreference,
+            pathcte.path,
+            childrencte.user_userprincipalname
+           FROM (iot_planner_categories_cte pathcte
+             JOIN childrencte ON (((pathcte.id)::text = (childrencte.id)::text)))
+        UNION
+         SELECT pathcte.id,
+            pathcte.tenant,
+            pathcte.parent_id,
+            pathcte.title,
+            pathcte.hierarchylevel,
+            pathcte.description,
+            pathcte.validfrom,
+            pathcte.validto,
+            pathcte.absolutereference,
+            pathcte.shallowreference,
+            pathcte.deepreference,
+            pathcte.path,
+            parentcte.user_userprincipalname
+           FROM (iot_planner_categories_cte pathcte
+             JOIN parentcte ON (((pathcte.id)::text = (parentcte.id)::text)))) sub;
+
+
+create or replace view "public"."iot_planner_my_categories_with_tags" as  SELECT cat.id,
+    cat.tenant,
+    cat.parent_id,
+    cat.title,
+    cat.hierarchylevel,
+    cat.description,
+    cat.validfrom,
+    cat.validto,
+    cat.absolutereference,
+    cat.shallowreference,
+    cat.deepreference,
+    cat.path,
+    cat.user_userprincipalname,
+    string_agg((t2c.tag_title)::text, ' '::text) AS tags
+   FROM (iot_planner_my_categories cat
+     LEFT JOIN iot_planner_tags2categories t2c ON (((cat.id)::text = (t2c.category_id)::text)))
+  GROUP BY cat.id, cat.title, cat.tenant, cat.parent_id, cat.hierarchylevel, cat.validfrom, cat.validto, cat.description, cat.absolutereference, cat.path, cat.deepreference, cat.shallowreference, cat.user_userprincipalname;
+
 
 create or replace view "public"."workitemsservice_iotworkitems" as  SELECT workitems_0.activateddate AS datum,
     workitems_0.completeddate AS datumbis,
