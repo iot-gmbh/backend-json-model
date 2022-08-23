@@ -1,7 +1,6 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
-const levenary = require("levenary");
-const categoriesService = require("./categories-service");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
@@ -43,22 +42,21 @@ module.exports = cds.service.impl(async function () {
       const titleSubstrings = workItem.title.split(" ");
 
       const categoriesByReference = categories.filter(
-        ({ shallowReference, deepReference, absoluteReference }) =>
-          (absoluteReference &&
-            titleSubstrings.some((sub) => sub === absoluteReference)) ||
-          (deepReference &&
-            titleSubstrings.some((sub) => sub === deepReference)) ||
-          (shallowReference &&
-            titleSubstrings.some((sub) => sub === shallowReference))
+        ({ absoluteReference }) =>
+          absoluteReference &&
+          titleSubstrings.some((sub) => sub === absoluteReference)
       );
 
       if (categoriesByReference.length > 0) {
         [category] = categoriesByReference;
       } else {
-        const bestMatch = levenary.default(
+        const allSortedMatches = didYouMean(
           workItem.title,
-          categories.map((cat) => cat.path.replaceAll(" > ", " "))
+          categories.map((cat) => cat.path.replaceAll(" > ", " ")),
+          { threshold: 0.4, returnType: ReturnTypeEnums.ALL_SORTED_MATCHES }
         );
+
+        const [bestMatch] = allSortedMatches;
 
         if (bestMatch) {
           category = categories.find(
