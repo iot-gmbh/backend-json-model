@@ -2,7 +2,8 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Categories, Tags, Tags2Categories } = db.entities("iot.planner");
+  const { Tags, Tags2Categories } = db.entities("iot.planner");
+  const catService = await cds.connect.to("CategoriesService");
 
   this.before("CREATE", "*", async (req) => {
     const { tenant } = req.user;
@@ -10,96 +11,15 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("getCategoriesByID", async (req) => {
-    const {
-      data: { root, validAt },
-      user,
-    } = req;
-
-    // TODO: implement filtering for user & tenant
-    const query = `SELECT * FROM get_categories($1, $2)`;
-    const results = await db.run(query, [user.tenant, root]);
-
-    const categories = results.map(
-      ({
-        id,
-        tenant,
-        parent_id,
-        title,
-        description,
-        hierarchylevel,
-        absolutereference,
-        shallowreference,
-        deepreference,
-      }) => ({
-        ID: id,
-        tenant,
-        parent_ID: parent_id,
-        title,
-        description,
-        hierarchyLevel: hierarchylevel,
-        absoluteReference: absolutereference,
-        shallowReference: shallowreference,
-        deepReference: deepreference,
-      })
-    );
+    const categories = await catService.send("getCategoriesByID", req.data);
 
     return categories;
   });
 
   this.on("getCumulativeCategoryDurations", async (req) => {
-    const {
-      data: { dateFrom, dateUntil, excludeEmptyDurations },
-      user,
-    } = req;
-
-    let query = `SELECT * FROM get_cumulative_category_durations_with_path($1, $2, $3, $4)`;
-
-    // Params in ODataV2 are sent as string => 'false' instead of false
-    if (excludeEmptyDurations || excludeEmptyDurations === "true") {
-      query += ` WHERE accumulatedDuration is not null`;
-    }
-
-    const results = await db.run(query, [
-      user.tenant,
-      user.id,
-      dateFrom,
-      dateUntil,
-    ]);
-
-    const [{ sum }] = await db.run(
-      `SELECT sum(totalDuration) FROM get_durations($1, $2, $3, $4)`,
-      [user.tenant, user.id, dateFrom, dateUntil]
-    );
-
-    const categories = results.map(
-      ({
-        id,
-        tenant,
-        parent_id,
-        title,
-        hierarchylevel,
-        absolutereference,
-        shallowreference,
-        deepreference,
-        totalduration,
-        accumulatedduration,
-      }) => ({
-        ID: id,
-        tenant,
-        parent_ID: parent_id,
-        title,
-        hierarchyLevel: hierarchylevel,
-        totalDuration: totalduration,
-        accumulatedDuration: accumulatedduration,
-        relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
-        relativeAccDuration: Math.round(
-          (accumulatedduration * 100) / sum
-        ).toFixed(0),
-        grandTotal: sum,
-        absoluteReference: absolutereference,
-        shallowReference: shallowreference,
-        deepReference: deepreference,
-      })
+    const categories = await catService.send(
+      "getCumulativeCategoryDurations",
+      req.data
     );
 
     return categories;

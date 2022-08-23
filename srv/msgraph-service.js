@@ -1,3 +1,5 @@
+const validator = require("validator");
+
 module.exports = async function (srv) {
   const msGraphSrv = await cds.connect.to("microsoft.graph");
 
@@ -83,8 +85,12 @@ module.exports = async function (srv) {
       data: { ID },
     } = req;
 
+    if (validator.isUUID(ID)) {
+      return {};
+    }
+
     const events = await msGraphSrv.send({
-      query: `/events?$filter=ID eq ${ID}$select=${select}`,
+      query: `/events('${ID}')?$select=${select}`,
       headers: {
         Authorization: `Bearer ${req.user.accessToken}`,
       },

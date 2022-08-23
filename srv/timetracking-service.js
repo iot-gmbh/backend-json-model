@@ -1,6 +1,7 @@
 const uuid = require("uuid");
 const cds = require("@sap/cds");
 const levenary = require("levenary");
+const categoriesService = require("./categories-service");
 
 function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
@@ -26,6 +27,7 @@ function calcDates({ activatedDate, completedDate }) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
+  const catService = await cds.connect.to("CategoriesService");
   const { Users, WorkItems } = db.entities("iot.planner");
   const { MyWorkItems } = this.entities();
 
@@ -66,37 +68,8 @@ module.exports = cds.service.impl(async function () {
     return [result];
   });
 
-  this.on("READ", "MyCategories", async (req) => {
-    // Helper method for using SQLite: the CDS-adapter does not allow recursive CTEs. Thus we talk to SQLite3 directly
-    // REVISIT: Remove as soon as the CDS-adapter supports recursive selects
-    const results =
-      // db.kind === "sqlite"
-      //   ? await readFromSQLite(query)
-      //   :
-      await db.run(
-        SELECT.from("iot_planner_my_categories")
-          .where`user_userPrincipalName = ${req.user.id} and tenant = ${req.user.tenant}`
-      );
-
-    const categories = results.map(
-      ({
-        id,
-        parent_id,
-        hierarchylevel,
-        shallowreference,
-        deepreference,
-        absolutereference,
-        ...data
-      }) => ({
-        ID: id,
-        parent_ID: parent_id,
-        hierarchyLevel: hierarchylevel,
-        deepReference: deepreference,
-        shallowReference: shallowreference,
-        absoluteReference: absolutereference,
-        ...data,
-      })
-    );
+  this.on("getMyCategories", async (req) => {
+    const categories = await catService.send("getMyCategories", req.data);
 
     return categories;
   });
@@ -171,14 +144,18 @@ module.exports = cds.service.impl(async function () {
     const {
       data: { ID },
     } = req;
-    const [MSGraphEvent, localWorkItem] = await Promise.all([
+    const [MSGraphEvent, [localWorkItem]] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
-      cds.run(SELECT.from(MyWorkItems).where(ID)),
+      cds.run(SELECT.from(MyWorkItems).where({ ID })),
     ]);
 
-    const workItem = {...MSGraphEvent, localWorkItem};
+    const parent = await catService.run(
+      SELECT.from("Categories").where({ ID: localWorkItem.parent_ID })
+    );
 
-    const parent = this.run
+    const workItem = { ...MSGraphEvent, ...localWorkItem, parent };
+
+    return workItem;
   });
 
   this.on("getCalendarView", async (req) => {
@@ -193,7 +170,7 @@ module.exports = cds.service.impl(async function () {
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )
       ),
-      this.run(SELECT.from("MyCategories")),
+      catService.send("getMyCategories", req.data),
     ]);
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)

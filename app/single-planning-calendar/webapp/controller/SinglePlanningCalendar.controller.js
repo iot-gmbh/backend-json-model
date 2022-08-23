@@ -511,10 +511,10 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          await model.load("/MyCategories", {
-            nest: true,
-          });
+          const categories = await model.callFunction("/getMyCategories");
+          const categoriesNested = model.nest(categories);
 
+          model.setProperty("/MyCategoriesNested", categoriesNested);
           model.setProperty("/busy", false);
         },
 
