@@ -51,7 +51,7 @@ module.exports = async function (srv) {
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,
-      type: "Event",
+      source: "MSGraphEvent",
     };
   }
 

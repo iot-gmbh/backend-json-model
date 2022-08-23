@@ -17,7 +17,8 @@
 							<Button id="displayLegend" text="{i18n>displayLegend.button.text}" press="onDisplayLegend" tooltip="{i18n>displayLegend.button.tooltip}" />
 						</actions>
 						<appointments>
-							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{ticket} {title}" text="{customer_friendlyID} {project_friendlyID}" type="{parts: ['type', 'project_friendlyID', 'status'], formatter: '.formatter.getDisplayType'}" icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" tentative="{= !${confirmed}}"/>
+							<unified:CalendarAppointment startDate="{activatedDate}" endDate="{completedDate}" title="{parent/absoluteReference} {title}" text="{parent/deepReference}" type="{parts: ['source', 'status'], formatter: '.formatter.getDisplayType'}" tentative="{= !${confirmed}}"/>
+							<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 						</appointments>
 						<dependents>
 							<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="50vh" contentWidth="40vw">
@@ -27,7 +28,7 @@
 											<Title text="{/createItemDialogTitle} {= !${confirmed} ? ${i18n>appointmentDialog.draftIndicator} : ''}"/>
 										</contentLeft>
 										<contentRight>
-											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= !!${confirmed} &amp;&amp; !${isAllDay}}"/>
+											<Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= ${source} !== 'Manual' &amp;&amp; !!${confirmed} &amp;&amp; !${isAllDay}}"/>
 											<Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" enabled="{= !${isAllDay}}"/>
 										</contentRight>
 									</Bar>

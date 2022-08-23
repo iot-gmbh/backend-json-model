@@ -26,7 +26,6 @@ function calcDates({ activatedDate, completedDate }) {
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
   const MSGraphSrv = await cds.connect.to("MSGraphService");
-  // const AzDevOpsSrv = await cds.connect.to("AzureDevopsService");
   const { Users, WorkItems } = db.entities("iot.planner");
   const { MyWorkItems } = this.entities();
 
@@ -56,8 +55,8 @@ module.exports = cds.service.impl(async function () {
     const [item] = await db.read(MyWorkItems).where({ ID });
 
     if (!item) throw Error("Item not found");
-    if (item.type === "Manual")
-      throw Error("Reset is not allowed for entries of type 'Manual'");
+    if (item.source === "Manual")
+      throw Error("Reset is only for items from 3rd party sources.");
 
     const [result] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
@@ -151,7 +150,7 @@ module.exports = cds.service.impl(async function () {
   this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
-    req.data.type = "Manual";
+    req.data.source = "Manual";
     req.data.confirmed = true;
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
@@ -168,7 +167,20 @@ module.exports = cds.service.impl(async function () {
 
   this.on("READ", "MSGraphWorkItems", async (req) => MSGraphSrv.run(req.query));
 
-  // TODO: Read WorkItems by ID
+  this.on("getWorkItemByID", async (req) => {
+    const {
+      data: { ID },
+    } = req;
+    const [MSGraphEvent, localWorkItem] = await Promise.all([
+      MSGraphSrv.send("getWorkItemByID", { ID }),
+      cds.run(SELECT.from(MyWorkItems).where(ID)),
+    ]);
+
+    const workItem = {...MSGraphEvent, localWorkItem};
+
+    const parent = this.run
+  });
+
   this.on("getCalendarView", async (req) => {
     const {
       data: { startDateTime, endDateTime },
@@ -240,8 +252,13 @@ module.exports = cds.service.impl(async function () {
         }
       } else parent = {};
 
-      map[appointment.ID] = { ...appointment, parentPath: parent?.path };
+      map[appointment.ID] = {
+        ...appointment,
+        parentPath: parent?.path,
+        parent,
+      };
     }
+
     const results = Object.values(map).filter(({ deleted }) => !deleted);
 
     results.$count = results.length;

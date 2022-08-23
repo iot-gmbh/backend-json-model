@@ -2,40 +2,40 @@
 sap.ui.define([], () => ({
   getItems() {
     return {
-      Manual_Allocated_Billed: {
+      "Manual.Allocated.Billed": {
         type: "Type01",
       },
-      Manual_Allocated_NotBilled: {
+      "Manual.Allocated.NotBilled": {
         type: "Type02",
       },
-      Manual_NotAllocated_Billed: {
+      "Manual.NotAllocated.Billed": {
         type: "Type03",
       },
-      Manual_NotAllocated_NotBilled: {
+      "Manual.NotAllocated.NotBilled": {
         type: "Type04",
       },
-      WorkItem_Allocated_Billed: {
+      "AzureDevOpsWorkItem.Allocated.Billed": {
         type: "Type05",
       },
-      WorkItem_Allocated_NotBilled: {
+      "AzureDevOpsWorkItem.Allocated.NotBilled": {
         type: "Type06",
       },
-      WorkItem_NotAllocated_Billed: {
+      "AzureDevOpsWorkItem.NotAllocated.Billed": {
         type: "Type07",
       },
-      WorkItem_NotAllocated_NotBilled: {
+      "AzureDevOpsWorkItem.NotAllocated.NotBilled": {
         type: "Type08",
       },
-      Event_Allocated_Billed: {
+      "MSGraphEvent.Allocated.Billed": {
         type: "Type09",
       },
-      Event_Allocated_NotBilled: {
+      "MSGraphEvent.Allocated.NotBilled": {
         type: "Type10",
       },
-      Event_NotAllocated_Billed: {
+      "MSGraphEvent.NotAllocated.Billed": {
         type: "Type11",
       },
-      Event_NotAllocated_NotBilled: {
+      "MSGraphEvent.NotAllocated.NotBilled": {
         type: "Type12",
       },
     };

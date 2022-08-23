@@ -18,13 +18,14 @@ service TimetrackingService @(requires : 'authenticated-user') {
   ])                      as projection on my.WorkItems;
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
-    key ID : String @odata.Type : 'Edm.String',
+    key ID                       : String @odata.Type : 'Edm.String',
         title,
         activatedDate,
         completedDate,
         isPrivate,
         tags,
         isAllDay,
+        'MSGraphEvent' as source : String
   };
 
   action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);

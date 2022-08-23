@@ -35,6 +35,7 @@ service AdminService @(requires : 'authenticated-user') {
 
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
   function getCategoriesByID(root : UUID)                                                                             returns array of Categories;
+  
   entity Travels          as projection on my.Travels;
   entity Tags             as projection on my.Tags;
   entity Tags2Categories  as projection on my.Tags2Categories;

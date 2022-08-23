@@ -192,7 +192,7 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            if (appointment.type === "Manual") {
+            if (appointment.source === "Manual") {
               await this.remove({
                 path: `/MyWorkItems(ID='${encodeURIComponent(
                   appointment.ID
@@ -361,8 +361,7 @@ sap.ui.define(
             (cat) => cat.path === appointment.parentPath
           );
 
-          // Dummy-property; make meaningless to avoid ambiguity
-          data.parentPath = undefined;
+          data.parentPath = parent.path;
           data.parent_ID = parent.ID;
 
           try {

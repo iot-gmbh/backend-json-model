@@ -22,10 +22,10 @@ service MSGraphService @(requires : 'authenticated-user') {
 
   entity WorkItems as projection on msgraph.events {
         @odata.Type : 'Edm.String'
-    key id         as ID,
-        subject    as title,
-        start      as activatedDate,
-        end        as completedDate,
+    key id             as ID,
+        subject        as title,
+        start          as activatedDate,
+        end            as completedDate,
         sensitivity,
         case
           when
@@ -34,8 +34,9 @@ service MSGraphService @(requires : 'authenticated-user') {
             true
           else
             false
-        end        as isPrivate : Boolean,
-        categories as tags,
+        end            as isPrivate : Boolean,
+        categories     as tags,
+        'MSGraphEvent' as source    : String,
         isAllDay,
   }
 };
