@@ -49,7 +49,7 @@
             <t:extension>
                 <OverflowToolbar >
                     <ToolbarSpacer/>
-                    <Button text="{i18n>delete}" press="onPressDeleteCategory"/>
+                    <Button text="{i18n>delete}" press="onPressDeleteCategories"/>
                 </OverflowToolbar>
             </t:extension>
             <t:columns>

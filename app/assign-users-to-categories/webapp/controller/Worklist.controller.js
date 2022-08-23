@@ -224,10 +224,13 @@ sap.ui.define(
           dialog.close();
         },
 
-        onPressDeleteCategory(event) {
-          const obj = event.getSource().getBindingContext().getObject();
+        onPressDeleteCategories(event) {
+          const itemsToDelete = event
+            .getSource()
+            .getSelectedItems()
+            .map((item) => item.getBindingContext().getObject());
 
-          this.getModel().remove(obj);
+          itemsToDelete.forEach((item) => this.getModel().remove(item));
         },
 
         /**
