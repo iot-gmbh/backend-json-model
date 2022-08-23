@@ -21,6 +21,23 @@ sap.ui.define(
 			async onInit() {
 				this._filterHierarchyByPath('hierarchyTreeForm', '');
 				this.searchFilters = [];
+				this._filters = {
+					all: new Filter({
+						path: 'state',
+						operator: 'NE',
+						value1: ''
+					}),
+					completed: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'completed'
+					}),
+					incompleted: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'incompleted'
+					})
+				};
 			},
 
 			async onBeforeRendering() {
@@ -42,6 +59,9 @@ sap.ui.define(
 					categoriesNested: {},
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					// workItems: this._loadMockData(),
+					countAll: undefined,
+					countCompleted: undefined,
+					countIncompleted: undefined,
 					newWorkItem: {
 						title: '',
 						parentPath: '',
@@ -84,6 +104,26 @@ sap.ui.define(
 
 				model.setProperty('/tableBusy', false);
 				model.setProperty('/categories', categoriesNested);
+			},
+
+			async onUpdateFinished(event) {
+				const model = this.getModel();
+
+				const countAll = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state !== '').length;
+
+				const countCompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'completed').length;
+
+				const countIncompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'incompleted').length;
+
+				model.setProperty('/countAll', countAll);
+				model.setProperty('/countCompleted', countCompleted);
+				model.setProperty('/countIncompleted', countIncompleted);
 			},
 
 			onChangeHierarchy(event) {
@@ -144,6 +184,34 @@ sap.ui.define(
 				}
 			},
 
+			onChangeDate(event) {
+				const model = this.getModel();
+				const date = model.getProperty('/newWorkItem/date');
+				const activatedDate = model.getProperty('/newWorkItem/activatedDate');
+				const completedDate = model.getProperty('/newWorkItem/completedDate');
+
+				model.setProperty('/newWorkItem/activatedDate', this.updateDate(activatedDate, date));
+				model.setProperty('/newWorkItem/completedDate', this.updateDate(completedDate, date));
+			},
+
+			updateDate(oldDate, date) {
+				// Copy values instead of changing the state of /newWorkItem/date
+				const newDate = new Date(date.getTime());
+				const newDateHours = oldDate.getHours();
+				const newDateMinutes = oldDate.getMinutes();
+				const newDateSeconds = oldDate.getSeconds();
+
+				newDate.setHours(newDateHours, newDateMinutes, newDateSeconds);
+
+				return newDate;
+			},
+
+			onFilterWorkItems(event) {
+				const binding = this.byId('tableWorkItems').getBinding('items');
+				const key = event.getParameter('selectedKey');
+				binding.filter(this._filters[key]);
+			},
+
 			onSearch(event) {
 				this.searchFilters = [];
 				this.searchQuery = event.getSource().getValue();
@@ -158,7 +226,33 @@ sap.ui.define(
 			async addWorkItem() {
 				const model = this.getModel();
 				const newWorkItem = model.getProperty('/newWorkItem');
+				model.setProperty('/busy', true);
+
+				this.checkCompleteness();
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
+
+				model.setProperty('/busy', false);
+			},
+
+			// TODO: Erweitern um weitere Pruefungen
+			checkCompleteness() {
+				let isCompleted = true;
+				const model = this.getModel();
+				newWorkItem = model.getProperty('/newWorkItem');
+
+				for (const [key, value] of Object.entries(newWorkItem)) {
+					console.log('key:', key, 'value:', value);
+				}
+
+				Object.values(newWorkItem).forEach((val) => {
+					if (val.toString().trim() === '') {
+						isCompleted = false;
+					}
+				});
+
+				isCompleted
+					? model.setProperty('/newWorkItem/state', 'completed')
+					: model.setProperty('/newWorkItem/state', 'incompleted');
 			},
 
 			async updateWorkItem(event) {
@@ -199,27 +293,6 @@ sap.ui.define(
 				table.removeSelections();
 
 				MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
-			},
-
-			// TODO: Erweitern um weitere Pruefungen
-			checkCompleteness() {
-				let isCompleted = true;
-				const model = this.getModel();
-				newWorkItem = model.getProperty('/newWorkItem');
-
-				for (const [key, value] of Object.entries(newWorkItem)) {
-					console.log('key:', key, 'value:', value);
-				}
-
-				Object.values(newWorkItem).forEach((val) => {
-					if (val.toString().trim() === '') {
-						isCompleted = false;
-					}
-				});
-
-				isCompleted
-					? model.setProperty('/newWorkItem/state', 'completed')
-					: model.setProperty('/newWorkItem/state', 'incompleted');
 			}
 		});
 	}
