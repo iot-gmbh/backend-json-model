@@ -10,8 +10,8 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
-  this.on("getCategoriesByID", async (req) => {
-    const categories = await catService.send("getCategoriesByID", req.data);
+  this.on("getCategoryTree", async (req) => {
+    const categories = await catService.send("getCategoryTree", req.data);
 
     return categories;
   });

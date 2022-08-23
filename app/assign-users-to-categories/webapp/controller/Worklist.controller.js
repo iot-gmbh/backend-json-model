@@ -55,12 +55,9 @@ sap.ui.define(
           const model = this.getModel();
 
           this.getModel("worklistView").setProperty("/busy", true);
-          // const categories = await this.getModel().load("/Categories", {
-          //   sorters: [new Sorter("title")],
-          //   // filters: [new Filter("hierarchyLevel", "EQ", "0")],
-          // });
+
           const { results: categories } = await model.callFunction(
-            `/getCategoriesByID`,
+            `/getCategoryTree`,
             {
               urlParameters: {
                 root: null,
@@ -82,7 +79,7 @@ sap.ui.define(
 
           const ID = rowContext.getProperty("ID");
           const { results: categories } = await model.callFunction(
-            `/getCategoriesByID`,
+            `/getCategoryTree`,
             {
               urlParameters: {
                 root: ID,

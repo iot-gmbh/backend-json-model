@@ -37,7 +37,7 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         and (
             p_root is null
             and parent_ID is null
-            or parent_ID = p_root
+            or ID = p_root
         )
     UNION
     SELECT

@@ -15,7 +15,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                      as projection on my.WorkItems;
+  ])                      as projection on my.WorkItems excluding {
+    hierarchy
+  };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
@@ -32,6 +34,8 @@ service TimetrackingService @(requires : 'authenticated-user') {
   action   resetToDraft(ID : String)                                         returns MyWorkItems;
   function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
   function getWorkItemByID(ID : String)                                      returns MyWorkItems;
+  function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
+  function getMyCategories()                                                 returns array of MyCategories;
 
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;

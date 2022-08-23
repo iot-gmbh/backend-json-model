@@ -151,7 +151,6 @@ sap.ui.define(
 
         async onEditAppointment(event) {
           const model = this.getModel();
-          const { categories } = model.getData();
           const { startDate, endDate, appointment, copy } =
             event.getParameters();
           const bindingContext = appointment.getBindingContext();
@@ -176,6 +175,7 @@ sap.ui.define(
             ...data,
             activatedDate: startDate,
             completedDate: endDate,
+            localPath: path,
           });
         },
 
@@ -192,15 +192,10 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            if (appointment.source === "Manual") {
-              await this.remove({
-                path: `/MyWorkItems(ID='${encodeURIComponent(
-                  appointment.ID
-                )}')`,
-                data: appointment,
-              });
-            } else {
-              await this.callFunction("/removeDraft", {
+            await model.remove(appointment);
+
+            if (appointment.source !== "Manual") {
+              await model.callFunction("/removeDraft", {
                 method: "POST",
                 urlParameters: {
                   ID: appointment.ID,
@@ -209,8 +204,6 @@ sap.ui.define(
                 },
               });
             }
-
-            delete MyWorkItems[appointment.ID];
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -229,7 +222,7 @@ sap.ui.define(
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this.callFunction("/resetToDraft", {
+            const appointmentSync = await model.callFunction("/resetToDraft", {
               method: "POST",
               urlParameters: {
                 ID: appointment.ID,
@@ -237,7 +230,6 @@ sap.ui.define(
             });
 
             model.setProperty(path, appointmentSync);
-            // await this._loadAppointments();
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -258,7 +250,6 @@ sap.ui.define(
           const appointment = {
             activatedDate: startDate,
             completedDate: endDate,
-            hierarchy: {},
           };
           model.setProperty("/MyWorkItems/NEW", appointment);
         },
@@ -335,6 +326,10 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
 
+          const path = this.byId("createItemDialog")
+            .getBindingContext()
+            .getPath();
+
           if (appointment.isAllDay) {
             MessageToast.show(
               this.getResourceBundle().getText(
@@ -346,6 +341,8 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
+          appointment.localPath = path;
+
           await this._submitEntry(appointment);
 
           model.setProperty("/dialogBusy", false);
@@ -355,18 +352,17 @@ sap.ui.define(
         async _submitEntry(appointment) {
           const model = this.getModel();
           const { MyCategories } = model.getData();
-          const { hierarchy, ...data } = appointment;
-
           const parent = MyCategories.find(
             (cat) => cat.path === appointment.parentPath
           );
+          const data = appointment;
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
 
           try {
             // Update
-            if (appointment.ID) {
+            if (data.ID) {
               await model.update(data);
             } else {
               await model.create("/MyWorkItems", data);
@@ -511,9 +507,10 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const categories = await model.callFunction("/getMyCategories");
-          const categoriesNested = model.nest(categories);
+          const { results } = await model.callFunction("/getMyCategories");
+          const categoriesNested = model.nest({ items: results });
 
+          model.setProperty("/MyCategories", results);
           model.setProperty("/MyCategoriesNested", categoriesNested);
           model.setProperty("/busy", false);
         },

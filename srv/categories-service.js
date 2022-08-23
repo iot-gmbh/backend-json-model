@@ -52,7 +52,7 @@ module.exports = cds.service.impl(async function () {
     return transformCategories(results);
   });
 
-  this.on("getCategoriesByID", async (req) => {
+  this.on("getCategoryTree", async (req) => {
     const {
       data: { root, validAt },
       user,

@@ -30,7 +30,7 @@
                     <Parameter Name="dateUntil" Type="Edm.DateTimeOffset" Mode="In" Nullable="true"/>
                     <Parameter Name="excludeEmptyDurations" Type="Edm.Boolean" Mode="In" Nullable="true"/>
                 </FunctionImport>
-                <FunctionImport Name="getCategoriesByID" EntitySet="Categories" ReturnType="Collection(AdminService.Categories)" m:HttpMethod="GET">
+                <FunctionImport Name="getCategoryTree" EntitySet="Categories" ReturnType="Collection(AdminService.Categories)" m:HttpMethod="GET">
                     <Parameter Name="root" Type="Edm.Guid" Mode="In" Nullable="true"/>
                 </FunctionImport>
                 <AssociationSet Name="Users_manager" Association="AdminService.Users_manager">

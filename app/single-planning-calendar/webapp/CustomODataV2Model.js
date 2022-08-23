@@ -156,10 +156,9 @@ sap.ui.define(
       async update({ localPath, ...obj }) {
         const odataPath = this.getODataPathFrom(obj);
         const data = this.removeNavPropsFrom(obj);
+        const update = await this.odata.update(odataPath, data);
 
-        await this.odata.update(odataPath, data);
-
-        this.setProperty(localPath, { ...obj, ...data });
+        this.setProperty(localPath, { ...obj, ...update });
       },
 
       async remove(obj) {
