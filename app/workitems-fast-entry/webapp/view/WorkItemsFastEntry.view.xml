@@ -13,7 +13,6 @@
 				</customHeader>
 				<content>
 					<f:DynamicPage showFooter="true">
-
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
 								<form:Form id="formWorkItem" editable="true">
@@ -107,12 +106,11 @@
 								</IconTabBar>
 							</f:DynamicPageHeader>
 						</f:header>
-
 						<f:content>
 							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateFinished" items="{
 								path: '/MyWorkItems',
 								events: {
-            						updateFinished: '.onUpdateFinished'
+            						updateFinished: '.setItemCountsFilters'
 								},
 								sorter: {
 									path: 'completedDate',
@@ -128,7 +126,6 @@
 										<SearchField liveChange=".onSearch" width="20rem"/>
 									</OverflowToolbar>
 								</headerToolbar>
-
 								<columns>
 									<Column>
 										<Text text="{i18n>tableColumnTitle}"/>
@@ -161,7 +158,6 @@
 										<Text text="{i18n>tableColumnStatus}"/>
 									</Column>
 								</columns>
-
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
@@ -194,7 +190,6 @@
 										</cells>
 									</ColumnListItem>
 								</items>
-
 							</Table>
 						</f:content>
 					</f:DynamicPage>

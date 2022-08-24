@@ -45,20 +45,31 @@ sap.ui.define(
 				const loadFrom = new Date();
 				loadFrom.setHours(0, 0, 0, 0); // last midnight
 				const loadUntil = new Date();
-				loadUntil.setHours(24, 0, 0, 0); // last midnight
+				loadUntil.setHours(24, 0, 0, 0); // next midnight
+				// const newItemDate = new Date();
 				const newItemStartDate = new Date();
-				const newItemCompletedDate = addMinutes(new Date(), 15);
+				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
+				// const newItemStartDate = this.calculateActivatedDate();
+				const newItemEndDate = addMinutes(new Date(), 15);
+				// // Code von Benedikt
+				// const newItemStartDate = new Date();
+				// const newItemEndDate = addMinutes(new Date(), 15);
 
 				model.setData({
-					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					busy: false,
 					tableBusy: true,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
 					categoriesFlat: {},
 					categoriesNested: {},
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
+					activities: [
+						{ title: 'Durchführung' },
+						{ title: 'Reise-/Fahrzeit' },
+						{ title: 'Pendelfahrt Hotel/Einsatzort' }
+					],
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
-					// workItems: this._loadMockData(),
 					countAll: undefined,
 					countCompleted: undefined,
 					countIncompleted: undefined,
@@ -66,11 +77,11 @@ sap.ui.define(
 						title: '',
 						parentPath: '',
 						tags: [],
-						// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
-						// description: '',
-						// date: new Date(),
+						// date: newItemDate,
 						activatedDate: newItemStartDate,
-						completedDate: newItemCompletedDate,
+						completedDate: newItemEndDate,
+						// TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
+						// activity: '',
 						// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
 						// location: '',
 						state: 'incompleted'
@@ -106,7 +117,31 @@ sap.ui.define(
 				model.setProperty('/categories', categoriesNested);
 			},
 
-			async onUpdateFinished(event) {
+			calculateActivatedDate() {
+				const model = this.getModel();
+				const workItems = model.getProperty('/MyWorkItems').map((workItem) => ({ ...workItem }));
+				const latestCompletedDate = workItems.reduce((completedDate, workItem) => {
+					if (completedDate === undefined) {
+						return workItem.completedDate;
+					}
+					return workItem.completedDate > completedDate ? workItem.completedDate : completedDate;
+				}, undefined);
+
+				let nextActivatedDate = latestCompletedDate;
+				let currentDate = new Date();
+				// toDateString() returns a string consisting of the year, month and day only
+				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
+					nextActivatedDate = currentDate;
+					nextActivatedDate.setHours(8, 30, 0);
+					if (currentDate.getTime() < nextActivatedDate.getTime()) {
+						nextActivatedDate = currentDate;
+					}
+				}
+
+				return nextActivatedDate;
+			},
+
+			async setItemCountsFilters(event) {
 				const model = this.getModel();
 
 				const countAll = model
@@ -131,25 +166,7 @@ sap.ui.define(
 				if (event.getParameter('id').endsWith('Form')) {
 					this.getModel().setProperty('/showHierarchyTreeForm', true);
 					associatedHierarchyTreeID = 'hierarchyTreeForm';
-					// // Momentan nicht funktionsfaehig für 'hierarchyTreeTable'
-					// }
-					// else {
-					// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
-					// 	associatedHierarchyTreeID = 'hierarchyTreeTable';
-					// }
 					const { newValue } = event.getParameters();
-
-					// // Laden eines Popover-Fragments für den HierarchyTree
-					// if (!this.popover) {
-					// 	this.popover = Fragment.load({
-					// 		id: this.getView().getId(),
-					// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
-					// 		controller: this
-					// 	});
-					// }
-					// this.popover.then(function (popover) {
-					// 	popover.openBy(event.getSource());
-					// });
 
 					this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 				}
@@ -239,10 +256,6 @@ sap.ui.define(
 				let isCompleted = true;
 				const model = this.getModel();
 				newWorkItem = model.getProperty('/newWorkItem');
-
-				for (const [key, value] of Object.entries(newWorkItem)) {
-					console.log('key:', key, 'value:', value);
-				}
 
 				Object.values(newWorkItem).forEach((val) => {
 					if (val.toString().trim() === '') {
