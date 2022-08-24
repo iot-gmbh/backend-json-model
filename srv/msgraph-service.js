@@ -70,8 +70,6 @@ module.exports = async function (srv) {
       data: { startDateTime, endDateTime },
     } = req;
 
-    delete query.SELECT.where;
-    console.log(req.user.accessToken);
     const events = await msGraphSrv.send({
       query: `/calendarview?startdatetime=${startDateTime}&enddatetime=${endDateTime}&$top=1000&$select=${select}`,
       headers: {

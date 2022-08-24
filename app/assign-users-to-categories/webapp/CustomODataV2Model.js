@@ -143,8 +143,9 @@ sap.ui.define(
         const result = await this.odata.create(path, object);
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
+        const resultWithoutNavProps = this.removeNavPropsFrom(result);
+        const merge = { ...resultWithoutNavProps, ...object };
         const data = this.getProperty(parentPath);
-        const merge = { ...result, ...data };
 
         data.push(merge);
 

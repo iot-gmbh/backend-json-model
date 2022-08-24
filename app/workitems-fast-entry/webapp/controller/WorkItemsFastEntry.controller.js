@@ -81,29 +81,41 @@ sap.ui.define(
 				});
 
 				await Promise.all([
-					model.load('/MyCategories', { nest: true }),
-					model.load('/MyWorkItems', {
-						filters: [
-							new Filter({
-								filters: [
-									new Filter({
-										path: 'completedDate',
-										operator: 'GE',
-										value1: loadFrom
-									}),
-									new Filter({
-										path: 'activatedDate',
-										operator: 'LE',
-										value1: loadUntil
-									})
-								],
-								and: true
-							})
-						]
-					})
+					this._loadWorkItems({ startDateTime: loadFrom, endDateTime: loadUntil }),
+					this._loadHierarchy()
 				]);
 
 				model.setProperty('/tableBusy', false);
+			},
+
+			async _loadWorkItems({ startDateTime, endDateTime }) {
+				const model = this.getModel();
+				const { results: workItems } = await model.callFunction('/getCalendarView', {
+					urlParameters: {
+						startDateTime,
+						endDateTime
+					}
+				});
+
+				const appointments = workItems.map(
+					({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
+						...appointment,
+						tags: appointment.tags.results,
+						completedDate: isAllDay ? completedDate.setHours(0) : completedDate,
+						activatedDate: isAllDay ? activatedDate.setHours(0) : activatedDate
+					})
+				);
+
+				model.setProperty('/MyWorkItems', appointments);
+			},
+
+			async _loadHierarchy() {
+				const model = this.getModel();
+				const { results } = await model.callFunction('/getMyCategoryTree');
+				const categoriesNested = model.nest({ items: results });
+
+				model.setProperty('/MyCategories', results);
+				model.setProperty('/MyCategoriesNested', categoriesNested);
 			},
 
 			calculateActivatedDate() {
@@ -117,7 +129,7 @@ sap.ui.define(
 				}, undefined);
 
 				let nextActivatedDate = latestCompletedDate;
-				let currentDate = new Date();
+				const currentDate = new Date();
 				// toDateString() returns a string consisting of the year, month and day only
 				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
 					nextActivatedDate = currentDate;
@@ -234,10 +246,11 @@ sap.ui.define(
 				const newWorkItem = model.getProperty('/newWorkItem');
 				model.setProperty('/busy', true);
 
-				this.checkCompleteness();
+				// this.checkCompleteness();
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
 
 				model.setProperty('/newWorkItem', {});
+				model.setProperty('/busy', false);
 			},
 
 			async updateWorkItem(event) {

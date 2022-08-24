@@ -498,7 +498,6 @@ sap.ui.define(
           );
 
           model.setProperty("/MyWorkItems", appointments);
-
           model.setProperty("/busy", false);
         },
 
@@ -507,7 +506,7 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const { results } = await model.callFunction("/getMyCategories");
+          const { results } = await model.callFunction("/getMyCategoryTree");
           const categoriesNested = model.nest({ items: results });
 
           model.setProperty("/MyCategories", results);

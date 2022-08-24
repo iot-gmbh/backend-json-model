@@ -148,10 +148,10 @@ module.exports = cds.service.impl(async function () {
 
     if (entry) {
       await tx.run(UPDATE(WorkItems, item.ID).with(item));
+      return item;
     }
 
     await tx.run(INSERT.into(WorkItems).entries(item));
-
     return item;
   });
 
