@@ -130,6 +130,76 @@ The idea for switching environment information via scripts is from a [blogpost](
 
 In production the `dist` folder is served where the UI5-apps have been copied to.
 
+## Connection to MSGraph
+
+When connecting to MSGraph data types have to be mapped. In cds there a standard-function that checks each value whether it is a timestamp. When it is a timestamp, it removes the quotes around the string. In this case MSGraph is throwing an error, because it needs the values to be quoted even though they contain timestamps. As a workaround we have overwritten the automatic timestamp-conversion in the standard cds-package (`node_modules\@sap\cds\libx\odata\utils.js`):
+
+```js
+const getSafeNumber = (str) => {
+  const n = Number(str);
+  return Number.isSafeInteger(n) || String(n) === str ? n : str;
+};
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const _PT = ([hh, mm, ss]) => `PT${hh}H${mm}M${ss}S`;
+const _isTimestamp = (val) =>
+  /^\d+-\d\d-\d\d(T\d\d:\d\d(:\d\d(\.\d+)?)?(Z|([+-]{1}\d\d:\d\d))?)?$/.test(
+    val
+  ) && !isNaN(Date.parse(val));
+
+const formatVal = (val, key, csnTarget, kind) => {
+  if (val === null || val === "null") return "null";
+  if (typeof val === "boolean") return val;
+  if (typeof val === "number") return getSafeNumber(val);
+  if (!csnTarget && typeof val === "string" && UUID.test(val))
+    return kind === "odata-v2" ? `guid'${val}'` : val;
+  const { type } = (csnTarget &&
+    csnTarget.elements &&
+    csnTarget.elements[key]) || { type: undefined };
+
+  if (kind === "odata-v2") {
+    switch (type) {
+      case "cds.Binary":
+      case "cds.LargeBinary":
+        return `binary'${val}'`;
+      case "cds.Date":
+        return `datetime'${val}T00:00:00'`;
+      case "cds.DateTime":
+        return `datetime'${val}'`;
+      case "cds.Time":
+        return `time'${_PT(val.split(":"))}'`;
+      case "cds.Timestamp":
+        return `datetimeoffset'${val}'`;
+      case "cds.UUID":
+        return `guid'${val}'`;
+      default:
+        return `'${val}'`;
+    }
+  } else {
+    switch (type) {
+      case "cds.Decimal":
+      case "cds.Integer64":
+        return getSafeNumber(val);
+      case "cds.Boolean":
+      case "cds.DateTime":
+      case "cds.Date":
+      case "cds.Timestamp":
+      case "cds.Time":
+      case "cds.UUID":
+        return val;
+      default:
+        return `'${val}'`;
+      // return _isTimestamp(val) ? val : `'${val}'` // Why are we checking strings for timestamps? --> expensive
+    }
+  }
+};
+
+module.exports = {
+  getSafeNumber,
+  formatVal,
+};
+```
+
 ## Analytics
 
 For analytic purposes, data can be analyzed with an analytic list page (see [/app/](/app/workitems-alp/)). This allows users to drill down through their work and derive reasoned decisions in the future.

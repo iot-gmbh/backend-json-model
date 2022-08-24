@@ -3,10 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>single-planning-calendar</title>
+    <title>{{appTitle}}</title>
+
+    <script>
+      window["sap-ushell-config"] = {
+        defaultRenderer: "fiori2",
+        applications: {
+          "fe-lrop-v4": {
+            title: "Display Categories",
+            description: "Find and display categories",
+            additionalInformation: "SAPUI5.Component=iot.categories",
+            applicationType: "URL",
+            url: "./",
+            navigationMode: "embedded",
+          },
+        },
+      };
+    </script>
+    <script src="https://ui5.sap.com/test-resources/sap/ushell/bootstrap/sandbox.js"></script>
     <script
       id="sap-ui-bootstrap"
-      src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+      src="https://ui5.sap.com/resources/sap-ui-core.js"
       data-sap-ui-theme="sap_fiori_3"
       data-sap-ui-resourceroots='{"iot.project.planner.users": "./"}'
       data-sap-ui-compatVersion="edge"

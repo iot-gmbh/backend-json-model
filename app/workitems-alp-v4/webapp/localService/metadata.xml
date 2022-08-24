@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
+        <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Analytics.xml">
+        <edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="AnalyticsService"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="WorkItems" EntityType="AnalyticsService.WorkItems">
+                    <NavigationPropertyBinding Path="parent" Target="Categories"/>
+                    <NavigationPropertyBinding Path="assignedTo" Target="Users"/>
+                </EntitySet>
+                <EntitySet Name="Users" EntityType="AnalyticsService.Users">
+                    <NavigationPropertyBinding Path="manager" Target="Users"/>
+                    <NavigationPropertyBinding Path="teamMembers" Target="Users"/>
+                    <NavigationPropertyBinding Path="workItems" Target="WorkItems"/>
+                </EntitySet>
+                <EntitySet Name="Categories" EntityType="AnalyticsService.Categories">
+                    <NavigationPropertyBinding Path="manager" Target="Users"/>
+                    <NavigationPropertyBinding Path="parent" Target="Categories"/>
+                    <NavigationPropertyBinding Path="children" Target="Categories"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="WorkItems">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="assignedToName" Type="Edm.String"/>
+                <Property Name="parentTitle" Type="Edm.String"/>
+                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="activatedDateMonth" Type="Edm.Int32"/>
+                <Property Name="activatedDateYear" Type="Edm.Int32"/>
+                <Property Name="duration" Type="Edm.Decimal" Scale="2" Precision="9"/>
+                <NavigationProperty Name="parent" Type="AnalyticsService.Categories">
+                    <ReferentialConstraint Property="parent_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="assignedTo" Type="AnalyticsService.Users" Partner="workItems">
+                    <ReferentialConstraint Property="assignedTo_userPrincipalName" ReferencedProperty="userPrincipalName"/>
+                </NavigationProperty>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Users">
+                <Key>
+                    <PropertyRef Name="userPrincipalName"/>
+                </Key>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="userPrincipalName" Type="Edm.String" Nullable="false"/>
+                <Property Name="displayName" Type="Edm.String"/>
+                <Property Name="givenName" Type="Edm.String"/>
+                <Property Name="jobTitle" Type="Edm.String"/>
+                <Property Name="mail" Type="Edm.String"/>
+                <Property Name="mobilePhone" Type="Edm.String"/>
+                <Property Name="officeLocation" Type="Edm.String"/>
+                <Property Name="preferredLanguage" Type="Edm.String"/>
+                <Property Name="surname" Type="Edm.String"/>
+                <NavigationProperty Name="manager" Type="AnalyticsService.Users" Partner="teamMembers">
+                    <ReferentialConstraint Property="manager_userPrincipalName" ReferencedProperty="userPrincipalName"/>
+                </NavigationProperty>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="teamMembers" Type="Collection(AnalyticsService.Users)" Partner="manager"/>
+                <NavigationProperty Name="workItems" Type="Collection(AnalyticsService.WorkItems)" Partner="assignedTo"/>
+            </EntityType>
+            <EntityType Name="Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="invoiceRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="bonusRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="description" Type="Edm.String"/>
+                <Property Name="reference" Type="Edm.String"/>
+                <Property Name="mappingID" Type="Edm.String"/>
+                <Property Name="drillDownState" Type="Edm.String" DefaultValue="expanded"/>
+                <Property Name="path" Type="Edm.String"/>
+                <Property Name="hierarchyLevel" Type="Edm.Int32"/>
+                <Property Name="shallowReference" Type="Edm.String"/>
+                <Property Name="deepReference" Type="Edm.String"/>
+                <NavigationProperty Name="manager" Type="AnalyticsService.Users">
+                    <ReferentialConstraint Property="manager_userPrincipalName" ReferencedProperty="userPrincipalName"/>
+                </NavigationProperty>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="parent" Type="AnalyticsService.Categories" Partner="children">
+                    <ReferentialConstraint Property="parent_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="children" Type="Collection(AnalyticsService.Categories)" Partner="parent"/>
+            </EntityType>
+            <Annotations Target="AnalyticsService.WorkItems">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <Path>ID</Path>
+                                <Path>assignedTo_userPrincipalName</Path>
+                                <Path>parentTitle</Path>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByCategory">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+                        <PropertyValue Property="DimensionAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartDimensionAttributeType">
+                                    <PropertyValue Property="Dimension" PropertyPath="parent_ID"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="MeasureAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartMeasureAttributeType">
+                                    <PropertyValue Property="Measure" PropertyPath="duration"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>parent_ID</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>duration</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByMonth">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#DurationByMonth</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="DurationByMonth">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+                        <PropertyValue Property="DimensionAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartDimensionAttributeType">
+                                    <PropertyValue Property="Dimension" PropertyPath="activatedDateMonth"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Series"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="MeasureAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartMeasureAttributeType">
+                                    <PropertyValue Property="Measure" PropertyPath="duration"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>activatedDateMonth</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>duration</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByAssignedTo">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#DurationByAssignedTo</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Chart" Qualifier="DurationByAssignedTo">
+                    <Record Type="UI.ChartDefinitionType">
+                        <PropertyValue Property="ChartType" EnumMember="UI.ChartType/Column"/>
+                        <PropertyValue Property="DimensionAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartDimensionAttributeType">
+                                    <PropertyValue Property="Dimension" PropertyPath="assignedTo_userPrincipalName"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartDimensionRoleType/Category"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="MeasureAttributes">
+                            <Collection>
+                                <Record Type="UI.ChartMeasureAttributeType">
+                                    <PropertyValue Property="Measure" PropertyPath="duration"/>
+                                    <PropertyValue Property="Role" EnumMember="UI.ChartMeasureRoleType/Axis1"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Dimensions">
+                            <Collection>
+                                <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Measures">
+                            <Collection>
+                                <PropertyPath>duration</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>activatedDate</PropertyPath>
+                        <PropertyPath>completedDate</PropertyPath>
+                        <PropertyPath>activatedDateMonth</PropertyPath>
+                        <PropertyPath>assignedTo_userPrincipalName</PropertyPath>
+                        <PropertyPath>parent_ID</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="assignedTo_userPrincipalName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="parent_ID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="duration"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.EntityContainer/WorkItems">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <Path>ID</Path>
+                                <Path>assignedTo_userPrincipalName</Path>
+                                <Path>parentTitle</Path>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByCategory">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByMonth">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#DurationByMonth</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.PresentationVariant" Qualifier="DurationByAssignedTo">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.Chart#DurationByAssignedTo</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/assignedToName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>WorkItemsAggr.assignedTo}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/parentTitle">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.Label" String="Parent"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/completedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDateMonth">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="WorkItems"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="activatedDateMonth"/>
+                                    <PropertyValue Property="ValueListProperty" String="activatedDateMonth"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="PresentationVariantQualifier" String="DurationByMonth"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/activatedDateYear">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/duration">
+                <Annotation Term="Analytics.Measure" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>WorkItemsAggr.duration}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/parent_ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/invoiceRelevance">
+                <Annotation Term="Common.Label" String="{i18n>relevance.invoiceRelevance}"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/bonusRelevance">
+                <Annotation Term="Common.Label" String="{i18n>relevance.bonusRelevance}"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

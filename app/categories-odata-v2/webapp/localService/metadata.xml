@@ -1,0 +1,1465 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="AdminService">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Users" EntityType="AdminService.Users"/>
+                <EntitySet Name="Travels" EntityType="AdminService.Travels"/>
+                <EntitySet Name="Tags" EntityType="AdminService.Tags"/>
+                <EntitySet Name="Tags2Categories" EntityType="AdminService.Tags2Categories"/>
+                <EntitySet Name="Tags2WorkItems" EntityType="AdminService.Tags2WorkItems"/>
+                <EntitySet Name="Categories" EntityType="AdminService.Categories"/>
+                <EntitySet Name="Users2Categories" EntityType="AdminService.Users2Categories"/>
+                <EntitySet Name="WorkItems" EntityType="AdminService.WorkItems"/>
+                <EntitySet Name="Hierarchies" EntityType="AdminService.Hierarchies"/>
+                <FunctionImport Name="getCumulativeCategoryDurations" EntitySet="Categories" ReturnType="Collection(AdminService.Categories)" m:HttpMethod="GET">
+                    <Parameter Name="dateFrom" Type="Edm.DateTimeOffset" Mode="In" Nullable="true"/>
+                    <Parameter Name="dateUntil" Type="Edm.DateTimeOffset" Mode="In" Nullable="true"/>
+                    <Parameter Name="excludeEmptyDurations" Type="Edm.Boolean" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="getCategoryTree" EntitySet="Categories" ReturnType="Collection(AdminService.Categories)" m:HttpMethod="GET">
+                    <Parameter Name="root" Type="Edm.Guid" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <AssociationSet Name="Users_manager" Association="AdminService.Users_manager">
+                    <End Role="Users" EntitySet="Users"/>
+                    <End Role="Users1" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="Travels_user" Association="AdminService.Travels_user">
+                    <End Role="Travels" EntitySet="Travels"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="Travels_parent" Association="AdminService.Travels_parent">
+                    <End Role="Travels" EntitySet="Travels"/>
+                    <End Role="Categories" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags_category" Association="AdminService.Tags_category">
+                    <End Role="Tags" EntitySet="Tags"/>
+                    <End Role="Categories" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags_workItem" Association="AdminService.Tags_workItem">
+                    <End Role="Tags" EntitySet="Tags"/>
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags2Categories_tag" Association="AdminService.Tags2Categories_tag">
+                    <End Role="Tags2Categories" EntitySet="Tags2Categories"/>
+                    <End Role="Tags" EntitySet="Tags"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags2Categories_category" Association="AdminService.Tags2Categories_category">
+                    <End Role="Tags2Categories" EntitySet="Tags2Categories"/>
+                    <End Role="Categories" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags2WorkItems_tag" Association="AdminService.Tags2WorkItems_tag">
+                    <End Role="Tags2WorkItems" EntitySet="Tags2WorkItems"/>
+                    <End Role="Tags" EntitySet="Tags"/>
+                </AssociationSet>
+                <AssociationSet Name="Tags2WorkItems_workItem" Association="AdminService.Tags2WorkItems_workItem">
+                    <End Role="Tags2WorkItems" EntitySet="Tags2WorkItems"/>
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                </AssociationSet>
+                <AssociationSet Name="Categories_manager" Association="AdminService.Categories_manager">
+                    <End Role="Categories" EntitySet="Categories"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="Categories_parent" Association="AdminService.Categories_parent">
+                    <End Role="Categories" EntitySet="Categories"/>
+                    <End Role="Categories1" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="Users2Categories_user" Association="AdminService.Users2Categories_user">
+                    <End Role="Users2Categories" EntitySet="Users2Categories"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="Users2Categories_category" Association="AdminService.Users2Categories_category">
+                    <End Role="Users2Categories" EntitySet="Users2Categories"/>
+                    <End Role="Categories" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_assignedTo" Association="AdminService.WorkItems_assignedTo">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Users" EntitySet="Users"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_parent" Association="AdminService.WorkItems_parent">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Categories" EntitySet="Categories"/>
+                </AssociationSet>
+                <AssociationSet Name="WorkItems_hierarchy" Association="AdminService.WorkItems_hierarchy">
+                    <End Role="WorkItems" EntitySet="WorkItems"/>
+                    <End Role="Hierarchies" EntitySet="Hierarchies"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="Users">
+                <Key>
+                    <PropertyRef Name="userPrincipalName"/>
+                </Key>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="userPrincipalName" Type="Edm.String" Nullable="false"/>
+                <Property Name="displayName" Type="Edm.String"/>
+                <Property Name="givenName" Type="Edm.String"/>
+                <Property Name="jobTitle" Type="Edm.String"/>
+                <Property Name="mail" Type="Edm.String"/>
+                <Property Name="mobilePhone" Type="Edm.String"/>
+                <Property Name="officeLocation" Type="Edm.String"/>
+                <Property Name="preferredLanguage" Type="Edm.String"/>
+                <Property Name="surname" Type="Edm.String"/>
+                <NavigationProperty Name="manager" Relationship="AdminService.Users_manager" FromRole="Users" ToRole="Users1"/>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="categories" Relationship="AdminService.Users2Categories_user" FromRole="Users" ToRole="Users2Categories"/>
+                <NavigationProperty Name="teamMembers" Relationship="AdminService.Users_manager" FromRole="Users1" ToRole="Users"/>
+                <NavigationProperty Name="workItems" Relationship="AdminService.WorkItems_assignedTo" FromRole="Users" ToRole="WorkItems"/>
+                <NavigationProperty Name="travels" Relationship="AdminService.Travels_user" FromRole="Users" ToRole="Travels"/>
+            </EntityType>
+            <EntityType Name="Travels">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <NavigationProperty Name="user" Relationship="AdminService.Travels_user" FromRole="Travels" ToRole="Users"/>
+                <Property Name="user_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="parent" Relationship="AdminService.Travels_parent" FromRole="Travels" ToRole="Categories"/>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Tags">
+                <Key>
+                    <PropertyRef Name="title"/>
+                </Key>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="category" Relationship="AdminService.Tags_category" FromRole="Tags" ToRole="Categories"/>
+                <Property Name="category_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="workItem" Relationship="AdminService.Tags_workItem" FromRole="Tags" ToRole="WorkItems"/>
+                <Property Name="workItem_ID" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Tags2Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <NavigationProperty Name="tag" Relationship="AdminService.Tags2Categories_tag" FromRole="Tags2Categories" ToRole="Tags"/>
+                <Property Name="tag_title" Type="Edm.String"/>
+                <NavigationProperty Name="category" Relationship="AdminService.Tags2Categories_category" FromRole="Tags2Categories" ToRole="Categories"/>
+                <Property Name="category_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Tags2WorkItems">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <NavigationProperty Name="tag" Relationship="AdminService.Tags2WorkItems_tag" FromRole="Tags2WorkItems" ToRole="Tags"/>
+                <Property Name="tag_title" Type="Edm.String"/>
+                <NavigationProperty Name="workItem" Relationship="AdminService.Tags2WorkItems_workItem" FromRole="Tags2WorkItems" ToRole="WorkItems"/>
+                <Property Name="workItem_ID" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="invoiceRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="bonusRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="description" Type="Edm.String"/>
+                <Property Name="reference" Type="Edm.String"/>
+                <Property Name="mappingID" Type="Edm.String"/>
+                <Property Name="drillDownState" Type="Edm.String"/>
+                <Property Name="path" Type="Edm.String"/>
+                <Property Name="hierarchyLevel" Type="Edm.String"/>
+                <Property Name="shallowReference" Type="Edm.String"/>
+                <Property Name="deepReference" Type="Edm.String"/>
+                <Property Name="totalDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="accumulatedDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="relativeDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="relativeAccDuration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="grandTotal" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="validFrom" Type="Edm.DateTimeOffset"/>
+                <Property Name="validTo" Type="Edm.DateTimeOffset"/>
+                <NavigationProperty Name="tags" Relationship="AdminService.Tags2Categories_category" FromRole="Categories" ToRole="Tags2Categories"/>
+                <NavigationProperty Name="manager" Relationship="AdminService.Categories_manager" FromRole="Categories" ToRole="Users"/>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="members" Relationship="AdminService.Users2Categories_category" FromRole="Categories" ToRole="Users2Categories"/>
+                <NavigationProperty Name="parent" Relationship="AdminService.Categories_parent" FromRole="Categories" ToRole="Categories1"/>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="children" Relationship="AdminService.Categories_parent" FromRole="Categories1" ToRole="Categories"/>
+            </EntityType>
+            <EntityType Name="Users2Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <NavigationProperty Name="user" Relationship="AdminService.Users2Categories_user" FromRole="Users2Categories" ToRole="Users"/>
+                <Property Name="user_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="category" Relationship="AdminService.Users2Categories_category" FromRole="Users2Categories" ToRole="Categories"/>
+                <Property Name="category_ID" Type="Edm.Guid"/>
+                <Property Name="displayName" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="WorkItems">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="invoiceRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="bonusRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="tags" Relationship="AdminService.Tags2WorkItems_workItem" FromRole="WorkItems" ToRole="Tags2WorkItems"/>
+                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="activatedDateMonth" Type="Edm.Int32"/>
+                <Property Name="activatedDateYear" Type="Edm.Int32"/>
+                <Property Name="activatedDateDay" Type="Edm.Int32"/>
+                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="completedDateMonth" Type="Edm.Int32"/>
+                <Property Name="completedDateYear" Type="Edm.Int32"/>
+                <Property Name="completedDateDay" Type="Edm.Int32"/>
+                <NavigationProperty Name="assignedTo" Relationship="AdminService.WorkItems_assignedTo" FromRole="WorkItems" ToRole="Users"/>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
+                <Property Name="changedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="assignedToName" Type="Edm.String"/>
+                <Property Name="createdDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="reason" Type="Edm.String"/>
+                <Property Name="state" Type="Edm.String"/>
+                <Property Name="teamProject" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="workItemType" Type="Edm.String"/>
+                <Property Name="completedWork" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="remainingWork" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="originalEstimate" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="resolvedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="closedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="private" Type="Edm.Boolean"/>
+                <Property Name="isAllDay" Type="Edm.Boolean"/>
+                <Property Name="type" Type="Edm.String"/>
+                <Property Name="duration" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="resetEntry" Type="Edm.Boolean"/>
+                <Property Name="deleted" Type="Edm.Boolean"/>
+                <Property Name="confirmed" Type="Edm.Boolean"/>
+                <NavigationProperty Name="parent" Relationship="AdminService.WorkItems_parent" FromRole="WorkItems" ToRole="Categories"/>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="hierarchy" Relationship="AdminService.WorkItems_hierarchy" FromRole="WorkItems" ToRole="Hierarchies"/>
+                <Property Name="parentPath" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Hierarchies">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="level0" Type="Edm.String"/>
+                <Property Name="level1" Type="Edm.String"/>
+                <Property Name="level2" Type="Edm.String"/>
+                <Property Name="level3" Type="Edm.String"/>
+                <Property Name="level0Title" Type="Edm.String"/>
+                <Property Name="level1Title" Type="Edm.String"/>
+                <Property Name="level2Title" Type="Edm.String"/>
+                <Property Name="level3Title" Type="Edm.String"/>
+                <Property Name="level0MappingID" Type="Edm.String"/>
+                <Property Name="level1MappingID" Type="Edm.String"/>
+                <Property Name="level2MappingID" Type="Edm.String"/>
+                <Property Name="level3MappingID" Type="Edm.String"/>
+            </EntityType>
+            <Association Name="Users_manager">
+                <End Role="Users" Type="AdminService.Users" Multiplicity="*"/>
+                <End Role="Users1" Type="AdminService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users1">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="Users">
+                        <PropertyRef Name="manager_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Travels_user">
+                <End Role="Travels" Type="AdminService.Travels" Multiplicity="*"/>
+                <End Role="Users" Type="AdminService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="Travels">
+                        <PropertyRef Name="user_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Travels_parent">
+                <End Role="Travels" Type="AdminService.Travels" Multiplicity="*"/>
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Categories">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Travels">
+                        <PropertyRef Name="parent_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags_category">
+                <End Role="Tags" Type="AdminService.Tags" Multiplicity="*"/>
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Categories">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Tags">
+                        <PropertyRef Name="category_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags_workItem">
+                <End Role="Tags" Type="AdminService.Tags" Multiplicity="*"/>
+                <End Role="WorkItems" Type="AdminService.WorkItems" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="WorkItems">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Tags">
+                        <PropertyRef Name="workItem_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags2Categories_tag">
+                <End Role="Tags2Categories" Type="AdminService.Tags2Categories" Multiplicity="*"/>
+                <End Role="Tags" Type="AdminService.Tags" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Tags">
+                        <PropertyRef Name="title"/>
+                    </Principal>
+                    <Dependent Role="Tags2Categories">
+                        <PropertyRef Name="tag_title"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags2Categories_category">
+                <End Role="Tags2Categories" Type="AdminService.Tags2Categories" Multiplicity="*"/>
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Categories">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Tags2Categories">
+                        <PropertyRef Name="category_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags2WorkItems_tag">
+                <End Role="Tags2WorkItems" Type="AdminService.Tags2WorkItems" Multiplicity="*"/>
+                <End Role="Tags" Type="AdminService.Tags" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Tags">
+                        <PropertyRef Name="title"/>
+                    </Principal>
+                    <Dependent Role="Tags2WorkItems">
+                        <PropertyRef Name="tag_title"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Tags2WorkItems_workItem">
+                <End Role="Tags2WorkItems" Type="AdminService.Tags2WorkItems" Multiplicity="*"/>
+                <End Role="WorkItems" Type="AdminService.WorkItems" Multiplicity="0..1">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <ReferentialConstraint>
+                    <Principal Role="WorkItems">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Tags2WorkItems">
+                        <PropertyRef Name="workItem_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Categories_manager">
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="*"/>
+                <End Role="Users" Type="AdminService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="Categories">
+                        <PropertyRef Name="manager_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Categories_parent">
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="*"/>
+                <End Role="Categories1" Type="AdminService.Categories" Multiplicity="0..1">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <ReferentialConstraint>
+                    <Principal Role="Categories1">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Categories">
+                        <PropertyRef Name="parent_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Users2Categories_user">
+                <End Role="Users2Categories" Type="AdminService.Users2Categories" Multiplicity="*"/>
+                <End Role="Users" Type="AdminService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="Users2Categories">
+                        <PropertyRef Name="user_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Users2Categories_category">
+                <End Role="Users2Categories" Type="AdminService.Users2Categories" Multiplicity="*"/>
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Categories">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Users2Categories">
+                        <PropertyRef Name="category_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_assignedTo">
+                <End Role="WorkItems" Type="AdminService.WorkItems" Multiplicity="*"/>
+                <End Role="Users" Type="AdminService.Users" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Users">
+                        <PropertyRef Name="userPrincipalName"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="assignedTo_userPrincipalName"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_parent">
+                <End Role="WorkItems" Type="AdminService.WorkItems" Multiplicity="*"/>
+                <End Role="Categories" Type="AdminService.Categories" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Categories">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="parent_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="WorkItems_hierarchy">
+                <End Role="WorkItems" Type="AdminService.WorkItems" Multiplicity="*"/>
+                <End Role="Hierarchies" Type="AdminService.Hierarchies" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Hierarchies">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="WorkItems">
+                        <PropertyRef Name="parent_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>displayName</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="User"/>
+                        <PropertyValue Property="TypeNamePlural" String="Users"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="userPrincipalName"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="displayName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="jobTitle"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="manager_userPrincipalName"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>displayName</PropertyPath>
+                        <PropertyPath>userPrincipalName</PropertyPath>
+                        <PropertyPath>manager_userPrincipalName</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Team"/>
+                            <PropertyValue Property="Target" AnnotationPath="teamMembers/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="userPrincipalName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="displayName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="jobTitle"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="manager_userPrincipalName"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.EntityContainer/Users">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Descending" Bool="true"/>
+                                    <PropertyValue Property="Property" PropertyPath="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>displayName</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/userPrincipalName">
+                <Annotation Term="Common.Label" String="Principal Name"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/displayName">
+                <Annotation Term="Common.Label" String="Name"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/givenName">
+                <Annotation Term="Common.Label" String="Given Name"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/jobTitle">
+                <Annotation Term="Common.Label" String="Job Title"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/mail">
+                <Annotation Term="Common.Label" String="Mail"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/mobilePhone">
+                <Annotation Term="Common.Label" String="Mobile Phone"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/officeLocation">
+                <Annotation Term="Common.Label" String="Office Location"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/preferredLanguage">
+                <Annotation Term="Common.Label" String="Preferred Language"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/surname">
+                <Annotation Term="Common.Label" String="Surname"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/manager">
+                <Annotation Term="Common.Label" String="Manager"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/manager_userPrincipalName">
+                <Annotation Term="Common.Text" Path="manager/displayName">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Common.Label" String="Manager"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Manager"/>
+                        <PropertyValue Property="CollectionPath" String="Users"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="manager_userPrincipalName"/>
+                                    <PropertyValue Property="ValueListProperty" String="userPrincipalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/teamMembers">
+                <Annotation Term="Common.Label" String="Team"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users/workItems">
+                <Annotation Term="Common.Label" String="Work Items"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Travels/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Travels/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Travels/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Travels/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Travels/user_userPrincipalName">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Users"/>
+                        <PropertyValue Property="CollectionPath" String="Users"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="user_userPrincipalName"/>
+                                    <PropertyValue Property="ValueListProperty" String="userPrincipalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Tags/workItem_ID">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="WorkItems"/>
+                        <PropertyValue Property="CollectionPath" String="WorkItems"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="workItem_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Tags2WorkItems/workItem_ID">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="WorkItems"/>
+                        <PropertyValue Property="CollectionPath" String="WorkItems"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="workItem_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Category"/>
+                        <PropertyValue Property="TypeNamePlural" String="Categories"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="reference"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="Hierarchy">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Label" String="Hierarchy"/>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="hierarchyLevel"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="parent_ID"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="drillDownState"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="Validity">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Label" String="Validity"/>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="validFrom"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="validTo"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reference"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Hierarchy"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Validity"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Descendants"/>
+                            <PropertyValue Property="Target" AnnotationPath="children/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>title</PropertyPath>
+                        <PropertyPath>hierarchyLevel</PropertyPath>
+                        <PropertyPath>validFrom</PropertyPath>
+                        <PropertyPath>validTo</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reference"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="validFrom"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="validTo"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.EntityContainer/Categories">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/invoiceRelevance">
+                <Annotation Term="Common.Label" String="Invoice Relevance"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/bonusRelevance">
+                <Annotation Term="Common.Label" String="Bonus Relevance"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/title">
+                <Annotation Term="Common.Label" String="Title"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/description">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/manager_userPrincipalName">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Users"/>
+                        <PropertyValue Property="CollectionPath" String="Users"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="manager_userPrincipalName"/>
+                                    <PropertyValue Property="ValueListProperty" String="userPrincipalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/parent">
+                <Annotation Term="Common.Label" String="Parent"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/parent_ID">
+                <Annotation Term="Common.Label" String="Parent"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Categories/children">
+                <Annotation Term="Common.Label" String="Descendants"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/user_userPrincipalName">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Users"/>
+                        <PropertyValue Property="CollectionPath" String="Users"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="user_userPrincipalName"/>
+                                    <PropertyValue Property="ValueListProperty" String="userPrincipalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Users2Categories/displayName">
+                <Annotation Term="Common.Label" String="Name"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="WorkItem"/>
+                        <PropertyValue Property="TypeNamePlural" String="WorkItems"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Label" String="Classification"/>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="title"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="invoiceRelevance"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="bonusRelevance"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>title</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="assignedTo_userPrincipalName"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Customer"/>
+                            <PropertyValue Property="Value" Path="hierarchy/level0"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Project"/>
+                            <PropertyValue Property="Value" Path="hierarchy/level1"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Subproject"/>
+                            <PropertyValue Property="Value" Path="hierarchy/level2"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Workpackage"/>
+                            <PropertyValue Property="Value" Path="hierarchy/level3"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.EntityContainer/WorkItems">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/invoiceRelevance">
+                <Annotation Term="Common.Label" String="Invoice Relevance"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/bonusRelevance">
+                <Annotation Term="Common.Label" String="Bonus Relevance"/>
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="1"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/ID">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+                <Annotation Term="Common.Label" String="ID"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/activatedDate">
+                <Annotation Term="Common.Label" String="Activated Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/activatedDateMonth">
+                <Annotation Term="Common.Label" String="Activated Date Month"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/activatedDateYear">
+                <Annotation Term="Common.Label" String="Activated Date Year"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/activatedDateDay">
+                <Annotation Term="Common.Label" String="Activated Date Day"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/completedDate">
+                <Annotation Term="Common.Label" String="Completed Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/completedDateMonth">
+                <Annotation Term="Common.Label" String="Completed Date Month"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/completedDateYear">
+                <Annotation Term="Common.Label" String="Completed Date Year"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/completedDateDay">
+                <Annotation Term="Common.Label" String="Completed Date Day"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/assignedTo">
+                <Annotation Term="Common.Label" String="Assigned To"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/assignedTo_userPrincipalName">
+                <Annotation Term="Common.Label" String="Assigned To"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Assigned To"/>
+                        <PropertyValue Property="CollectionPath" String="Users"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="assignedTo_userPrincipalName"/>
+                                    <PropertyValue Property="ValueListProperty" String="userPrincipalName"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="displayName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/changedDate">
+                <Annotation Term="Common.Label" String="Changed Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/assignedToName">
+                <Annotation Term="Common.Label" String="WorkItems.assignedToName"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/createdDate">
+                <Annotation Term="Common.Label" String="Created Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/reason">
+                <Annotation Term="Common.Label" String="Reason"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/state">
+                <Annotation Term="Common.Label" String="State"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/teamProject">
+                <Annotation Term="Common.Label" String="Team Project"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/title">
+                <Annotation Term="Common.Label" String="Title"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/workItemType">
+                <Annotation Term="Common.Label" String="Type"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/completedWork">
+                <Annotation Term="Common.Label" String="Completed Work"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/remainingWork">
+                <Annotation Term="Common.Label" String="Remaining Work"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/originalEstimate">
+                <Annotation Term="Common.Label" String="Original Estimate"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/resolvedDate">
+                <Annotation Term="Common.Label" String="Resolved Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/closedDate">
+                <Annotation Term="Common.Label" String="Closed Date"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/private">
+                <Annotation Term="Common.Label" String="Private"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/type">
+                <Annotation Term="Common.Label" String="Type"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/duration">
+                <Annotation Term="Common.Label" String="Duration"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/resetEntry">
+                <Annotation Term="Common.Label" String="Reset"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/deleted">
+                <Annotation Term="Common.Label" String="Deleted"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.WorkItems/confirmed">
+                <Annotation Term="Common.Label" String="Confirmed"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Category"/>
+                        <PropertyValue Property="TypeNamePlural" String="Categories"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="reference"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="Hierarchy">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Label" String="Hierarchy"/>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="hierarchyLevel"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="parent_ID"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="drillDownState"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="Validity">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Label" String="Validity"/>
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="validFrom"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="validTo"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reference"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.Identification"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Hierarchy"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Identification"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#Validity"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Descendants"/>
+                            <PropertyValue Property="Target" AnnotationPath="children/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>title</PropertyPath>
+                        <PropertyPath>hierarchyLevel</PropertyPath>
+                        <PropertyPath>validFrom</PropertyPath>
+                        <PropertyPath>validTo</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reference"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="validFrom"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="validTo"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.EntityContainer/Hierarchies">
+                <Annotation Term="UI.PresentationVariant">
+                    <Record Type="UI.PresentationVariantType">
+                        <PropertyValue Property="SortOrder">
+                            <Collection>
+                                <Record Type="Common.SortOrderType">
+                                    <PropertyValue Property="Property" PropertyPath="title"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Visualizations">
+                            <Collection>
+                                <AnnotationPath>@UI.LineItem</AnnotationPath>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="RequestAtLeast">
+                            <Collection>
+                                <PropertyPath>title</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level0">
+                <Annotation Term="Common.Text" Path="level0Title">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level1">
+                <Annotation Term="Common.Text" Path="level1Title">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level2">
+                <Annotation Term="Common.Text" Path="level2Title">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level3">
+                <Annotation Term="Common.Text" Path="level3Title">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level0Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level1Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level2Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level3Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level0MappingID">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level1MappingID">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level2MappingID">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="AdminService.Hierarchies/level3MappingID">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

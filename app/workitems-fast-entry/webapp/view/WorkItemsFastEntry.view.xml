@@ -1,85 +1,201 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m"
-	xmlns:f="sap.f" controllerName="iot.workitemsfastentry.controller.WorkItemsFastEntry">
+	xmlns:layout="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:f="sap.f"
+	xmlns:c="iot.workitemsfastentry.control" controllerName="iot.workitemsfastentry.controller.WorkItemsFastEntry">
 	<Shell id="shell" appWidthLimited="false">
-		<App>
+		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<customHeader>
 					<f:ShellBar title="{i18n>title}"/>
 				</customHeader>
 				<content>
-					<f:DynamicPage>
+					<f:DynamicPage showFooter="true">
 						<f:header>
-							<f:DynamicPageHeader pinnable="false">
-								<Input value="{/newWorkItemText}" placeholder="{i18n>inputPlaceholder}" change=".addWorkItem"/>
+							<f:DynamicPageHeader pinnable="true">
+								<form:Form id="formWorkItem" editable="true">
+									<form:layout>
+										<form:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="3" columnsM="2" singleContainerFullSize="false" />
+									</form:layout>
+									<form:formContainers>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>formTextAreaTitle}">
+													<TextArea id="textAreaTitle" value="{/newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
+												</form:FormElement>
+												<form:FormElement label="{i18n>formInputHierarchy}">
+													<form:fields>
+														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+													</form:fields>
+												</form:FormElement>
+												<form:FormElement>
+													<form:fields>
+														<ScrollContainer height="20vh" vertical="true">
+															<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+																<StandardTreeItem title="{title}"/>
+															</Tree>
+														</ScrollContainer>
+													</form:fields>
+												</form:FormElement>
+											</form:formElements>
+										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>formSelectActivity}">
+													<Select id="selectActivityForm" items="{/activities}">
+														<items>
+															<core:Item key="{title}" text="{title}"/>
+														</items>
+													</Select>
+												</form:FormElement>
+												<form:FormElement label="{i18n>formInputTags}">
+													<Input id="inputTags"/>
+												</form:FormElement>
+												<!-- <form:FormElement label="{i18n>formInputTags}">
+													<form:fields>
+														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
+															path: 'OData>/Tags',
+															templateShareable: false,
+															sorter: { path: 'title' }
+														}" showValueHelp="false" tokenUpdate="onUpdateTags">
+															<suggestionItems>
+																<core:Item key="{OData>title}" text="{OData>title}"/>
+															</suggestionItems>
+															<tokens>
+																<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
+															</tokens>
+														</MultiInput>
+													</form:fields>
+												</form:FormElement> -->
+											</form:formElements>
+										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>formDatePickerDate}">
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }" change=".onChangeDate"/>
+												</form:FormElement>
+												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
+													<TimePicker value="{ path: '/newWorkItem/activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+													<TimePicker value="{ path: '/newWorkItem/completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+												</form:FormElement>
+												<form:FormElement label="{i18n>formComboBoxLocation}">
+													<ComboBox id="selectLocationForm" items="{/locations}">
+														<items>
+															<core:Item key="{title}" text="{title}"/>
+														</items>
+													</ComboBox>
+												</form:FormElement>
+											</form:formElements>
+										</form:FormContainer>
+									</form:formContainers>
+								</form:Form>
+								<Button text="{i18n>formButtonSubmit}" press=".addWorkItem" type="Emphasized"/>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
-							<Table id="table" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" items="{
-								path: '/workItems',
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateFinished" items="{
+								path: '/MyWorkItems',
+								events: {
+            						updateFinished: '.setItemCountsFilters'
+								},
 								sorter: {
-									path: 'endDate',
-									descending: true
+									path: 'completedDate',
+									descending: false
 								}
 							}">
 								<headerToolbar>
 									<OverflowToolbar>
+										<SegmentedButton selectedKey="kids">
+											<items>
+												<SegmentedButtonItem text="Kids" key="kids" />
+												<SegmentedButtonItem text="Adults" />
+												<SegmentedButtonItem text="Seniors" />
+											</items>
+										</SegmentedButton>
+										<!-- <IconTabBar id="iconTabBar" select=".onFilterWorkItems">
+											<items>
+												<IconTabFilter key="all" showAll="true" count="{/countAll}" text="{i18n>tableFilterShowAll}"/>
+												<IconTabSeparator/>
+												<IconTabFilter key="completed" icon="sap-icon://message-success" iconColor="Positive" count="{/countCompleted}" text="{i18n>tableFilterCompleted}"/>
+												<IconTabFilter key="incompleted" icon="sap-icon://message-warning" iconColor="Critical" count="{/countIncompleted}" text="{i18n>tableFilterIncompleted}"/>
+											</items>
+										</IconTabBar> -->
 										<ToolbarSpacer/>
+										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
+										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
+										<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
 										<SearchField liveChange=".onSearch" width="20rem"/>
 									</OverflowToolbar>
 								</headerToolbar>
-
 								<columns>
+									<Column>
+										<Text text="{i18n>tableColumnTitle}"/>
+									</Column>
 									<Column>
 										<Text text="{i18n>tableColumnDate}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnStartDate}"/>
+										<Text text="{i18n>tableColumnActivatedDate}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnEndDate}"/>
+										<Text text="{i18n>tableColumnCompletedDate}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnCustomer}"/>
+										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnExtractedCustomer}"/>
+										<Text text="{i18n>tableColumnHierarchy}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnProject}"/>
+										<Text text="{i18n>tableColumnActivity}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnExtractedProject}"/>
+										<Text text="{i18n>tableColumnTags}"/>
 									</Column>
-									<Column>
-										<Text text="{i18n>tableColumnText}"/>
+									<Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Desktop">
+										<Text text="{i18n>tableColumnLocation}"/>
+									</Column>
+									<Column width="3vw">
+										<Text text="{i18n>tableColumnStatus}"/>
 									</Column>
 								</columns>
-
 								<items>
-									<ColumnListItem press=".onPress">
+									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
-											<TimePicker value="{ path: 'startDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<TimePicker value="{ path: 'endDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<ComboBox selectedKey="{customer_ID}" items="{path: '/customers', sorter: {path: 'name'}, templateShareable: false}" selectionChange="filterProjects">
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="6vw" change="updateWorkItem"/>
+											<DatePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<Text text="{path: 'duration', formatter: '.formatter.duration'}" wrapping="false"/>
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
+												<suggestionItems>
+													<core:Item key="{ID}" text="{path}"/>
+												</suggestionItems>
+											</Input>
+											<Select id="selectActivityTable" items="{/activities}">
 												<items>
-													<core:Item text="{name}" key="{ID}"/>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</Select>
+											<TextArea value="" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
+											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
 												</items>
 											</ComboBox>
-											<Input value="{extractedCustomer}"/>
-											<ComboBox selectedKey="{project_ID}" items="{path: 'filteredProjects', sorter: {path: 'friendlyID'}, templateShareable: false}" selectionChange="">
-												<items>
-													<core:Item text="{friendlyID}" key="{ID}"/>
-												</items>
-											</ComboBox>
-											<Input value="{extractedProject}"/>
-											<Input value="{text}"/>
+											<c:If condition="{= ${state} === 'completed'}">
+												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://sys-enter-2" state="Success"/>
+												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://alert" state="Warning"/>
+											</c:If>
 										</cells>
 									</ColumnListItem>
 								</items>
-
 							</Table>
 						</f:content>
 					</f:DynamicPage>

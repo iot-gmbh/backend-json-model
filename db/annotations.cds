@@ -9,8 +9,8 @@ annotate my.WorkItems with @(UI : {
     RequestAtLeast : [title]
   },
   HeaderInfo          : {
-    TypeName       : '{i18n>Customer}',
-    TypeNamePlural : '{i18n>Customers}',
+    TypeName       : '{i18n>WorkItem}',
+    TypeNamePlural : '{i18n>WorkItems}',
     Title          : {Value : title},
   },
   Identification      : [{Value : title}],
@@ -170,65 +170,87 @@ annotate my.Users with @(UI : {
 };
 
 annotate my.Categories with @(UI : {
-  PresentationVariant : {
+  PresentationVariant   : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{Property : title}],
     Visualizations : ['@UI.LineItem'],
     RequestAtLeast : [title]
   },
-  HeaderInfo          : {
+  HeaderInfo            : {
     TypeName       : '{i18n>Category}',
     TypeNamePlural : '{i18n>Categories}',
     Title          : {Value : title},
-    Description    : {Value : description},
+    Description    : {Value : absoluteReference},
   },
-  Facets              : [{
-    $Type  : 'UI.ReferenceFacet',
-    Label  : '{i18n>General}',
-    Target : '@UI.Identification'
-  }, ],
-  Identification      : [
+  FieldGroup #Hierarchy : {
+    $Type : 'UI.FieldGroupType',
+    Label : '{i18n>Hierarchy}',
+    Data  : [
+      {Value : hierarchyLevel},
+      {Value : parent_ID},
+      {Value : drillDownState},
+    ],
+  },
+  FieldGroup #Validity  : {
+    $Type : 'UI.FieldGroupType',
+    Label : '{i18n>Validity}',
+    Data  : [
+      {Value : validFrom},
+      {Value : validTo},
+    ],
+  },
+  Identification        : [
     {Value : title},
-    {Value : description},
-    {Value : parent_ID},
+    {Value : absoluteReference},
   ],
-  SelectionFields     : [
+  Facets                : [
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Identification}',
+      Target : '@UI.Identification'
+    },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Identification}',
+      Target : '@UI.FieldGroup#Hierarchy'
+    },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Identification}',
+      Target : '@UI.FieldGroup#Validity'
+    },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Categories.children}',
+      Target : 'children/@UI.LineItem'
+    }
+  ],
+  SelectionFields       : [
     title,
-    description,
+    hierarchyLevel,
+    validFrom,
+    validTo
   ],
-  LineItem            : [
+  LineItem              : [
     {
       $Type : 'UI.DataField',
       Value : title,
     },
+    // {
+    //   $Type : 'UI.DataField',
+    //   Value : parent_ID,
+    // },
     {
       $Type : 'UI.DataField',
-      Value : description,
+      Value : absoluteReference,
     },
     {
       $Type : 'UI.DataField',
-      Value : invoiceRelevance,
+      Value : validFrom,
     },
     {
       $Type : 'UI.DataField',
-      Value : bonusRelevance,
-    },
-  ]
-}) {
-  ID             @(
-    UI.Hidden,
-    sap.hierarchy.node.for : 'ID'
-  );
-  parent         @(
-    sap.hierarchy.parent.node.for : 'ID',
-    Common                        : {
-      Text         : {
-        $value                 : parent.title,
-        ![@UI.TextArrangement] : #TextOnly
-      },
-      FieldControl : #Mandatory,
+      Value : validTo,
     }
-  );
-  hierarchyLevel @sap.hierarchy.level.for       : 'ID';
-  drillDownState @sap.hierarchy.drill.state.for : 'ID';
-}
+  ]
+});

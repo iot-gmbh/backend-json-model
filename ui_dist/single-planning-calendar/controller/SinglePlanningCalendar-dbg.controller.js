@@ -328,10 +328,10 @@ sap.ui.define(
 
         async _submitEntry(appointment) {
           const model = this.getModel();
-          const { appointments, categoriesFlat } = model.getData();
+          const { appointments, MyCategories } = model.getData();
           const { hierarchy, ...data } = appointment;
 
-          const parent = categoriesFlat.find(
+          const parent = MyCategories.find(
             (cat) => cat.path === appointment.parentPath
           );
 
@@ -536,7 +536,7 @@ sap.ui.define(
           const categoriesNested = nest(categories);
 
           model.setProperty("/categoriesNested", categoriesNested);
-          model.setProperty("/categoriesFlat", categories);
+          model.setProperty("/MyCategories", categories);
           model.setProperty("/busy", false);
         },
 

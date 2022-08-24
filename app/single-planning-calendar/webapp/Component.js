@@ -1,10 +1,10 @@
 sap.ui.define(
   [
-    "sap/ui/core/UIComponent",
-    "sap/ui/Device",
+    "./CustomODataV2Model",
     "iot/singleplanningcalendar/model/models",
+    "sap/ui/core/UIComponent",
   ],
-  (UIComponent, Device, models) =>
+  (CustomODataV2Model, models, UIComponent) =>
     UIComponent.extend("iot.singleplanningcalendar.Component", {
       metadata: {
         manifest: "json",
@@ -15,9 +15,12 @@ sap.ui.define(
        * @public
        * @override
        */
-      init() {
+      init(...args) {
         // call the base component's init function
-        UIComponent.prototype.init.apply(this, arguments);
+        UIComponent.prototype.init.apply(this, ...args);
+
+        // call the base component's init function
+        this.setModel(new CustomODataV2Model("/v2/timetracking/"));
 
         // enable routing
         this.getRouter().initialize();
