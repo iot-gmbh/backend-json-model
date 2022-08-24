@@ -6,9 +6,90 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:fb="sap.ui.comp.filterbar"
     xmlns:semantic="sap.f.semantic">
 
-    <Page title="{i18n>worklistTitle}">
+    <Page showHeader="false">
+        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="onSearch" showRestoreButton="true" showClearButton="true">
+            <fb:filterGroupItems >
+                <fb:FilterGroupItem label="{i18n>search}" groupName="search" name="search" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <SearchField value="{worklistView>/filters/search}"/>
+                    </fb:control>
+                </fb:FilterGroupItem>
+                <fb:FilterGroupItem label="{i18n>scope}" groupName="scope" name="scope" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <Select selectedKey="{worklistView>/filters/scope}">
+                            <core:Item text="{i18n>scope.mine}" key="mine"/>
+                            <core:Item text="{i18n>scope.all}" key="all"/>
+                        </Select>
+                    </fb:control>
+                </fb:FilterGroupItem>
+                <fb:FilterGroupItem label="{i18n>validAt}" groupName="validity" name="validFrom" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <DatePicker value="{path: 'worklistView>/filters/validAt', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    </fb:control>
+                </fb:FilterGroupItem>
+            </fb:filterGroupItems>
+
+        </fb:FilterBar>
+        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
+        sorter: [{path: 'shallowReference'}], 
+        parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
+            <t:noData>
+                <Text text=""></Text>
+            </t:noData>
+            <t:rowActionTemplate>
+                <t:RowAction>
+                    <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
+                    <t:RowActionItem type="Custom" icon="sap-icon://edit" press="onPressUpdateCategory"/>
+                    <!-- <t:RowActionItem type="Custom" icon="sap-icon://delete" press="onPressDeleteCategory"/> -->
+                </t:RowAction>
+            </t:rowActionTemplate>
+            <t:extension>
+                <OverflowToolbar >
+                    <ToolbarSpacer/>
+                    <Button text="{i18n>delete}" press="onPressDeleteCategories"/>
+                </OverflowToolbar>
+            </t:extension>
+            <t:columns>
+                <t:Column label="{i18n>title}" width="30%">
+                    <t:template>
+                        <Text text="{title}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>childrenLength}" width="8%" hAlign="End">
+                    <t:template>
+                        <Text text="{= ${children}.length}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>members}" width="8%" hAlign="End">
+                    <t:template>
+                        <Text text="{= ${members}.length}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>shallowReference}" width="10%">
+                    <t:template>
+                        <Text text="{shallowReference}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>absoluteReference}" width="10%">
+                    <t:template>
+                        <Text text="{absoluteReference}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>validFrom}" width="10%">
+                    <t:template>
+                        <Text text="{path: 'validFrom', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}" />
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>validTo}" width="10%">
+                    <t:template>
+                        <Text text="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    </t:template>
+                </t:Column>
+            </t:columns>
+        </t:TreeTable>
         <dependents>
             <Dialog id="editCategoryDialog" initialFocus="titleInput">
                 <f:SimpleForm>
@@ -18,20 +99,11 @@
                     <Input id="shallowReferenceInput" value="{shallowReference}" />
                     <Label text="{i18n>absoluteReference}"/>
                     <Input id="referenceInput" value="{absoluteReference}" />
-
-                    <!-- <Label text="{i18n>tags}"/>
-                    <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-                                    path: 'OData>/Tags',
-                                    templateShareable: false,
-                                    sorter: { path: 'title' }
-                                }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
-                        <suggestionItems>
-                            <core:Item key="{OData>OData>title}" text="{OData>title}"/>
-                        </suggestionItems>
-                        <tokens>
-                            <Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-                        </tokens>
-                    </MultiInput> -->
+                    <Label text="{i18n>absoluteReference}"/>
+                    <Label text="{i18n>validFrom}"/>
+                    <DatePicker value="{path: 'validFrom', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    <Label text="{i18n>validTo}"/>
+                    <DatePicker value="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     <Label text="{i18n>members}"/>
                     <MultiInput tokens="{path: 'members'}" suggestionItems="{
                                     path: 'OData>/Users',
@@ -60,92 +132,6 @@
                 </endButton>
             </Dialog>
         </dependents>
-
-        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
-        sorter: [{path: 'shallowReference'}], 
-        parameters: {numberOfExpandedLevels: 0, expand : 'members,tags', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
-            <t:noData>
-                <Text text=""></Text>
-            </t:noData>
-            <t:rowActionTemplate>
-                <t:RowAction>
-                    <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
-                    <t:RowActionItem type="Custom" icon="sap-icon://edit" press="onPressUpdateCategory"/>
-                    <!-- <t:RowActionItem type="Custom" icon="sap-icon://delete" press="onPressDeleteCategory"/> -->
-                </t:RowAction>
-            </t:rowActionTemplate>
-            <t:extension>
-                <OverflowToolbar >
-                    <SearchField search="onSearch" width="100%" />
-                    <ToolbarSpacer/>
-                    <Button text="{i18n>/delete}" press="onPressDeleteCategory"/>
-                </OverflowToolbar>
-            </t:extension>
-            <t:columns>
-                <t:Column label="{i18n>title}" width="30%">
-                    <t:template>
-                        <Text text="{title}" />
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>childrenLength}" width="5%" hAlign="End">
-                    <t:template>
-                        <Text text="{= ${children}.length}" />
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>members}" width="5%" hAlign="End">
-                    <t:template>
-                        <Text text="{= ${members}.length}" />
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>shallowReference}" width="10%">
-                    <t:template>
-                        <Text text="{shallowReference}"/>
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>absoluteReference}" width="10%">
-                    <t:template>
-                        <Text text="{absoluteReference}" />
-                    </t:template>
-                </t:Column>
-                <!-- <t:Column label="{i18n>tags}" width="20%">
-                    <t:template>
-                        <MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-                                    path: 'OData>/Tags',
-                                    templateShareable: false,
-                                    sorter: { path: 'title' }
-                                }" showValueHelp="false" tokenUpdate="onUpdateTags" change="onCreateToken">
-                            <suggestionItems>
-                                <core:Item key="{OData>OData>title}" text="{OData>title}"/>
-                            </suggestionItems>
-                            <tokens>
-                                <Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-                            </tokens>
-                        </MultiInput>
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>members}" width="30%">
-                    <t:template>
-                        <MultiInput tokens="{path: 'members', templateShareable: false}" suggestionItems="{
-                                    path: 'OData>/Users',
-                                    templateShareable: false,
-                                    sorter: { path: 'displayName' }
-                                }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
-                            <suggestionItems>
-                                <core:Item key="{OData>userPrincipalName}" text="{OData>displayName}"/>
-                            </suggestionItems>
-                            <tokens >
-                                <Token key="{user_userPrincipalName}" text="{displayName}" delete="onDeleteToken"/>
-                            </tokens>
-                        </MultiInput>
-                    </t:template>
-                </t:Column> -->
-                <!-- <t:Column label="{i18n>totalDuration}" width="10%" hAlign="End">
-                    <t:template>
-                        <ObjectNumber number="{totalDuration}" textAlign="End"/>
-                    </t:template>
-                </t:Column> -->
-            </t:columns>
-        </t:TreeTable>
         <!-- <footer>
             <Bar>
                 <contentRight>

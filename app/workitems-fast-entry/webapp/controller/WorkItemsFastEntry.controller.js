@@ -10,13 +10,8 @@ sap.ui.define(
 		'sap/ui/model/FilterOperator',
 		'sap/m/MessageToast'
 	],
-	(BaseController, formatter, Filter, FilterOperator, MessageToast) => {
-		const nest = (items, ID = null, link = 'parent_ID') =>
-			items
-				.filter((item) => item[link] === ID)
-				.map((item) => ({ ...item, children: nest(items, item.ID) }));
-
-		return BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
+	(BaseController, formatter, Filter, FilterOperator, MessageToast) =>
+		BaseController.extend('iot.workitemsfastentry.controller.WorkItemsFastEntry', {
 			formatter,
 			async onInit() {
 				this._filterHierarchyByPath('hierarchyTreeForm', '');
@@ -57,7 +52,7 @@ sap.ui.define(
 					tableBusy: true,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
-					categoriesFlat: {},
+					MyCategories: {},
 					categoriesNested: {},
 					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					activities: [
@@ -85,8 +80,8 @@ sap.ui.define(
 					}
 				});
 
-				const [categories] = await Promise.all([
-					model.load('/MyCategories'),
+				await Promise.all([
+					model.load('/MyCategories', { nest: true }),
 					model.load('/MyWorkItems', {
 						filters: [
 							new Filter({
@@ -108,10 +103,7 @@ sap.ui.define(
 					})
 				]);
 
-				const categoriesNested = nest(categories);
-
 				model.setProperty('/tableBusy', false);
-				model.setProperty('/categories', categoriesNested);
 			},
 
 			calculateActivatedDate() {
@@ -245,24 +237,7 @@ sap.ui.define(
 				this.checkCompleteness();
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
 
-				model.setProperty('/busy', false);
-			},
-
-			// TODO: Erweitern um weitere Pruefungen
-			checkCompleteness() {
-				let isCompleted = true;
-				const model = this.getModel();
-				newWorkItem = model.getProperty('/newWorkItem');
-
-				Object.values(newWorkItem).forEach((val) => {
-					if (val.toString().trim() === '') {
-						isCompleted = false;
-					}
-				});
-
-				isCompleted
-					? model.setProperty('/newWorkItem/state', 'completed')
-					: model.setProperty('/newWorkItem/state', 'incompleted');
+				model.setProperty('/newWorkItem', {});
 			},
 
 			async updateWorkItem(event) {
@@ -304,6 +279,5 @@ sap.ui.define(
 
 				MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
 			}
-		});
-	}
+		})
 );

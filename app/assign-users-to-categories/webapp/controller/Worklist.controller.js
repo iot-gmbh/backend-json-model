@@ -20,13 +20,8 @@ sap.ui.define(
     FilterType,
     Sorter,
     Token
-  ) => {
-    const nest = (items, ID = null, link = "parent_ID") =>
-      items
-        .filter((item) => item[link] === ID)
-        .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
-    return BaseController.extend(
+  ) =>
+    BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
         // formatter,
@@ -43,6 +38,8 @@ sap.ui.define(
           // keeps the search state
           this._aTableSearchState = [];
 
+          const validAt = new Date();
+
           // Model used to manipulate control states
           const viewModel = new JSONModel({
             worklistTableTitle:
@@ -51,53 +48,60 @@ sap.ui.define(
               this.getResourceBundle().getText("tableNoDataText"),
             newCategory: {},
             busy: true,
+            filters: { validAt, search: "", scope: "mine" },
           });
 
           this.setModel(viewModel, "worklistView");
         },
 
-        async onBeforeRendering() {
-          const model = this.getModel();
+        async onSearch() {
+          await this._loadCategories();
+        },
 
-          this.getModel("worklistView").setProperty("/busy", true);
-          // const categories = await this.getModel().load("/Categories", {
-          //   sorters: [new Sorter("title")],
-          //   // filters: [new Filter("hierarchyLevel", "EQ", "0")],
-          // });
+        async onBeforeRendering() {
+          await this._loadCategories();
+        },
+
+        async _loadCategories() {
+          const model = this.getModel();
+          const viewModel = this.getModel("worklistView");
+          const { validAt, scope } = viewModel.getProperty("/filters");
+
+          viewModel.setProperty("/busy", true);
+
           const { results: categories } = await model.callFunction(
-            `/getCategoriesByID`,
+            scope === "mine" ? "/getMyCategoryTree" : "/getCategoryTree",
             {
               urlParameters: {
                 root: null,
-              },
-            }
-          );
-          const categoriesNested = nest(categories);
-
-          model.setProperty("/Categories", categoriesNested);
-
-          this.getModel("worklistView").setProperty("/busy", false);
-        },
-
-        async onToggleOpenState(event) {
-          const model = this.getModel();
-          const { rowContext, expanded } = event.getParameters();
-          if (!expanded) return;
-
-          const ID = rowContext.getProperty("ID");
-          const { results: categories } = await model.callFunction(
-            `/getCategoriesByID`,
-            {
-              urlParameters: {
-                root: ID,
+                validAt: validAt.toISOString(),
               },
             }
           );
 
-          const categoriesNested = nest(categories);
+          const categoriesNested = model.nest({ items: categories });
 
           model.setProperty("/Categories", categoriesNested);
+          viewModel.setProperty("/busy", false);
         },
+        // async onToggleOpenState(event) {
+        //   const model = this.getModel();
+        //   const { rowContext, expanded } = event.getParameters();
+        //   if (!expanded) return;
+
+        //   const ID = rowContext.getProperty("ID");
+        //   const { results: categories } = await model.callFunction(
+        //     `/getCategoryTree`,
+        //     {
+        //       urlParameters: {
+        //         root: ID,
+        //       },
+        //     }
+        //   );
+
+        //   const categoriesNested = model.nest({ items: categories });
+        //   model.setProperty("/Categories", categoriesNested);
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -206,7 +210,7 @@ sap.ui.define(
             await model.update(category);
           } else {
             // Create
-            await model.create("/Categories", category);
+            await model.create("/Categories", { ...category, children: [] });
           }
         },
 
@@ -220,10 +224,13 @@ sap.ui.define(
           dialog.close();
         },
 
-        onPressDeleteCategory(event) {
-          const obj = event.getSource().getBindingContext().getObject();
+        onPressDeleteCategories(event) {
+          const itemsToDelete = event
+            .getSource()
+            .getSelectedItems()
+            .map((item) => item.getBindingContext().getObject());
 
-          this.getModel().remove(obj);
+          itemsToDelete.forEach((item) => this.getModel().remove(item));
         },
 
         /**
@@ -292,21 +299,21 @@ sap.ui.define(
           }
         },
 
-        onSearch(event) {
-          const { query } = event.getParameters();
+        // onSearch(event) {
+        //   const { query } = event.getParameters();
 
-          const filters = [
-            new Filter({
-              path: "title",
-              operator: "Contains",
-              value1: query,
-            }),
-          ];
+        //   const filters = [
+        //     new Filter({
+        //       path: "title",
+        //       operator: "Contains",
+        //       value1: query,
+        //     }),
+        //   ];
 
-          this.byId("treeTable")
-            .getBinding("rows")
-            .filter(filters, FilterType.Application);
-        },
+        //   this.byId("treeTable")
+        //     .getBinding("rows")
+        //     .filter(filters, FilterType.Application);
+        // },
 
         onCreateToken(event) {
           const multiInput = event.getSource();
@@ -394,6 +401,5 @@ sap.ui.define(
           });
         },
       }
-    );
-  }
+    )
 );

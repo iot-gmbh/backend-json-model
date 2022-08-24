@@ -2,48 +2,74 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Categories, Tags, Tags2Categories } = db.entities("iot.planner");
+  const { Tags, Tags2Categories } = db.entities("iot.planner");
+
+  function transformCategories(rawCategories, sum = 1) {
+    return rawCategories.map(
+      ({
+        id,
+        tenant,
+        parent_id,
+        title,
+        path,
+        hierarchylevel,
+        description,
+        validfrom,
+        validto,
+        totalduration,
+        absolutereference,
+        shallowreference,
+        deepreference,
+        accumulatedduration,
+      }) => ({
+        ID: id,
+        tenant,
+        parent_ID: parent_id,
+        title,
+        path,
+        hierarchyLevel: hierarchylevel,
+        description,
+        validFrom: validfrom,
+        validTo: validto,
+        totalDuration: totalduration,
+        accumulatedDuration: accumulatedduration,
+        relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
+        relativeAccDuration: Math.round(
+          (accumulatedduration * 100) / sum
+        ).toFixed(0),
+        grandTotal: sum,
+        absoluteReference: absolutereference,
+        shallowReference: shallowreference,
+        deepReference: deepreference,
+      })
+    );
+  }
 
   this.before("CREATE", "*", async (req) => {
     const { tenant } = req.user;
     req.data.tenant = tenant;
   });
 
-  this.on("getCategoriesByID", async (req) => {
+  this.on("getMyCategoryTree", async (req) => {
+    const results = await db.run(
+      SELECT.from("iot_planner_my_categories")
+        .where`user_userPrincipalName = ${req.user.id} and tenant = ${req.user.tenant}`
+    );
+
+    return transformCategories(results);
+  });
+
+  this.on("getCategoryTree", async (req) => {
     const {
       data: { root, validAt },
       user,
     } = req;
 
     // TODO: implement filtering for user & tenant
-    const query = `SELECT * FROM get_categories($1, $2)`;
-    const results = await db.run(query, [user.tenant, root]);
+    const query = `SELECT * FROM get_categories($1, $2, $3)`;
+    const results = await db.run(query, [user.tenant, root, validAt]);
 
-    const categories = results.map(
-      ({
-        id,
-        tenant,
-        parent_id,
-        title,
-        description,
-        hierarchylevel,
-        absolutereference,
-        shallowreference,
-        deepreference,
-      }) => ({
-        ID: id,
-        tenant,
-        parent_ID: parent_id,
-        title,
-        description,
-        hierarchyLevel: hierarchylevel,
-        absoluteReference: absolutereference,
-        shallowReference: shallowreference,
-        deepReference: deepreference,
-      })
-    );
-
-    return categories;
+    return transformCategories(results);
   });
 
   this.on("getCumulativeCategoryDurations", async (req) => {
@@ -71,38 +97,7 @@ module.exports = cds.service.impl(async function () {
       [user.tenant, user.id, dateFrom, dateUntil]
     );
 
-    const categories = results.map(
-      ({
-        id,
-        tenant,
-        parent_id,
-        title,
-        hierarchylevel,
-        absolutereference,
-        shallowreference,
-        deepreference,
-        totalduration,
-        accumulatedduration,
-      }) => ({
-        ID: id,
-        tenant,
-        parent_ID: parent_id,
-        title,
-        hierarchyLevel: hierarchylevel,
-        totalDuration: totalduration,
-        accumulatedDuration: accumulatedduration,
-        relativeDuration: Math.round((totalduration * 100) / sum).toFixed(0),
-        relativeAccDuration: Math.round(
-          (accumulatedduration * 100) / sum
-        ).toFixed(0),
-        grandTotal: sum,
-        absoluteReference: absolutereference,
-        shallowReference: shallowreference,
-        deepReference: deepreference,
-      })
-    );
-
-    return categories;
+    return transformCategories(results, sum);
   });
 
   this.on("CREATE", "Tags", async (req) => {

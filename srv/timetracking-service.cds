@@ -15,20 +15,27 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                      as projection on my.WorkItems;
+  ])                      as projection on my.WorkItems excluding {
+    hierarchy
+  };
 
-  entity MSGraphWorkItems as projection on MSGraphService.Events {
-    key ID : String @odata.Type : 'Edm.String',
+  entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
+    key ID                       : String @odata.Type : 'Edm.String',
         title,
         activatedDate,
         completedDate,
         isPrivate,
-        categories as tags,
+        tags,
         isAllDay,
+        'MSGraphEvent' as source : String
   };
 
-  action removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
-  action resetToDraft(ID : String) returns MyWorkItems;
+  action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
+  action   resetToDraft(ID : String)                                         returns MyWorkItems;
+  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
+  function getWorkItemByID(ID : String)                                      returns MyWorkItems;
+  function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
+  function getMyCategoryTree()                                               returns array of MyCategories;
 
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;

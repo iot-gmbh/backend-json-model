@@ -170,6 +170,12 @@ entity WorkItems : managed, relevance, multitenant {
         Event;
         WorkItem
       };
+      source             : String enum {
+        Manual;
+        MSGraphEvent;
+        AzureDevopsWorkItem;
+      //...
+      };
       duration           : Decimal;
       resetEntry         : Boolean;
       deleted            : Boolean;
