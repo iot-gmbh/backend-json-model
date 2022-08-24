@@ -51,9 +51,6 @@ sap.ui.define(
 				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
 				// const newItemStartDate = this.calculateActivatedDate();
 				const newItemEndDate = addMinutes(new Date(), 15);
-				// // Code von Benedikt
-				// const newItemStartDate = new Date();
-				// const newItemEndDate = addMinutes(new Date(), 15);
 
 				model.setData({
 					busy: false,
