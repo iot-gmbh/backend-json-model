@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+
 sap.ui.define(
   [
     "./BaseController",
@@ -41,8 +42,25 @@ sap.ui.define(
               this.getResourceBundle().getText("worklistTableTitle"),
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
+            newCategory: {},
           });
+
           this.setModel(viewModel, "worklistView");
+        },
+
+        async onBeforeRendering() {
+          const model = this.getModel();
+          await this.getModel().load("/Categories", {
+            urlParameters: { $expand: "members,tags" },
+          });
+
+          const categories = model.getProperty("/Categories");
+
+          const categoriesLevel0 = categories.filter(
+            ({ parent_ID }) => !parent_ID
+          );
+
+          model.setProperty("/categoriesLevel0", categoriesLevel0);
         },
 
         /* =========================================================== */
@@ -77,6 +95,72 @@ sap.ui.define(
             "/worklistTableTitle",
             sTitle
           );
+        },
+
+        onPressAddCategory(event) {
+          const viewModel = this.getModel("worklistView");
+          const rowAction = event.getSource().getParent();
+          const parent_ID = rowAction.getBindingContext().getProperty("ID");
+          const popover = this.byId("editCategoryPopover");
+
+          this.getModel().setProperty("/newCategory", { parent_ID });
+          viewModel.setProperty(
+            "/popoverTitle",
+            this.getResourceBundle().getText("popoverTitle.createCategory")
+          );
+
+          popover.bindElement("/newCategory");
+          popover.openBy(rowAction);
+        },
+
+        onPressUpdateCategory(event) {
+          const rowAction = event.getSource().getParent();
+          const popover = this.byId("editCategoryPopover");
+
+          this.getModel("worklistView").setProperty(
+            "/popoverTitle",
+            this.getResourceBundle().getText("popoverTitle.editCategory")
+          );
+
+          popover.bindElement(rowAction.getBindingContext().getPath());
+          popover.openBy(rowAction);
+        },
+
+        async onChangeCategory(event) {
+          const category = event.getSource().getBindingContext().getObject();
+          await this.getModel().update(category);
+        },
+
+        async onPressSubmitCategory(event) {
+          const model = this.getModel();
+          const popover = event.getSource();
+          const category = popover.getBindingContext().getObject();
+
+          this._closePopover();
+
+          if (category.ID) {
+            // Update
+            await model.update(category);
+          } else {
+            // Create
+            await model.create("/Categories", category);
+          }
+        },
+
+        onPressClosePopover() {
+          this._closePopover();
+        },
+
+        _closePopover() {
+          const popover = this.byId("editCategoryPopover");
+          this.getModel().setProperty("/newCategory", {});
+          popover.close();
+        },
+
+        onPressDeleteCategory(event) {
+          const obj = event.getSource().getBindingContext().getObject();
+
+          this.getModel().remove(obj);
         },
 
         /**
@@ -184,17 +268,13 @@ sap.ui.define(
             // Suspicious: For added tokens, token.getBindingContext() gives the category - for removed tokens, it gives the token itself
             const category_ID = token.getBindingContext().getProperty("ID");
 
-            model.createEntry("/Tags", {
-              properties: {
-                title,
-              },
+            model.create("/Tags", {
+              title,
             });
 
-            model.createEntry("/Tags2Categories", {
-              properties: {
-                tag_title: title,
-                category_ID,
-              },
+            model.create("/Tags2Categories", {
+              tag_title: title,
+              category_ID,
             });
           });
 
@@ -203,8 +283,6 @@ sap.ui.define(
 
             model.remove(path);
           });
-
-          model.submitChanges();
         },
 
         _removeDuplicateTokens(multiInput) {
@@ -230,11 +308,9 @@ sap.ui.define(
             const user_userPrincipalName = token.getKey();
             const category_ID = token.getBindingContext().getProperty("ID");
 
-            model.createEntry("/Users2Categories", {
-              properties: {
-                category_ID,
-                user_userPrincipalName,
-              },
+            model.create("/Users2Categories", {
+              category_ID,
+              user_userPrincipalName,
             });
           });
 
@@ -243,8 +319,6 @@ sap.ui.define(
 
             model.remove(path);
           });
-
-          model.submitChanges();
         },
 
         onDeleteToken(event) {

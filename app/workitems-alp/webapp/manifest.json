@@ -21,7 +21,9 @@
         "uri": "/v2/analytics",
         "type": "OData",
         "settings": {
-          "annotations": ["annotation"],
+          "annotations": [
+            "annotation"
+          ],
           "localUri": "localService/metadata.xml",
           "odataVersion": "2.0"
         }
@@ -41,7 +43,7 @@
             "parameters": {},
             "additionalParameters": "allowed"
           },
-          "semanticObject": "WorkItems",
+          "semanticObject": "Categories",
           "action": "analyze",
           "title": "{{appTitle}}",
           "subTitle": "{{appSubtitle}}",
@@ -70,7 +72,10 @@
       "tablet": true,
       "phone": true
     },
-    "supportedThemes": ["sap_hcb", "sap_belize"]
+    "supportedThemes": [
+      "sap_hcb",
+      "sap_belize"
+    ]
   },
   "sap.ui5": {
     "resources": {
@@ -145,15 +150,15 @@
       "showDraftToggle": false
     },
     "pages": {
-      "AnalyticalListPage|WorkItems": {
-        "entitySet": "WorkItems",
+      "AnalyticalListPage|Categories": {
+        "entitySet": "Categories",
         "component": {
           "name": "sap.suite.ui.generic.template.AnalyticalListPage",
           "list": true,
           "settings": {
             "condensedTableLayout": true,
             "showGoButtonOnFilterBar": false,
-            "tableType": "AnalyticalTable",
+            "tableType": "TreeTable",
             "multiSelect": false,
             "qualifier": "",
             "autoHide": true,
@@ -163,8 +168,8 @@
           }
         },
         "pages": {
-          "ObjectPage|WorkItems": {
-            "entitySet": "WorkItems",
+          "ObjectPage|Categories": {
+            "entitySet": "Categories",
             "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
             "component": {
               "name": "sap.suite.ui.generic.template.ObjectPage"

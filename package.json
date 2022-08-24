@@ -13,8 +13,7 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-msal-auth",
-      "custom_packages/cds-pg-migra"
+      "custom_packages/cds-msal-auth"
     ]
   },
   "dependencies": {
@@ -26,20 +25,19 @@
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
-    "cds-pg": "^0.1.29",
-    "cds-pg-migra": "file:custom_packages/cds-pg-migra",
+    "cds-pg": "^0.1.30",
+    "didyoumean2": "^5.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "fs": "^0.0.1-security",
     "moment": "^2.29.4",
-    "path": "^0.12.7",
-    "string-similarity": "^4.0.4",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
     "@sap/ux-specification": "^1.102.1",
     "@ui5/cli": "^2.14.9",
+    "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -73,11 +71,26 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "env:dev": "bash ./set-env.sh dev",
     "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh prod"
+    "env:prod": "bash ./set-env.sh prod",
+    "watch-workitems-alp-v4": "cds watch --open workitems-alp-v4/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
     "db",
     "srv",
     "app"
-  ]
+  ],
+  "sapux": [
+    "app/workitems-alp-v4"
+  ],
+  "cds": {
+    "requires": {
+      "microsoft.graph": {
+        "kind": "odata",
+        "model": "srv\\external\\msgraph",
+        "credentials": {
+          "url": "https://graph.microsoft.com/v1.0/me"
+        }
+      }
+    }
+  }
 }

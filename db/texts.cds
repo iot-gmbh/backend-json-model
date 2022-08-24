@@ -18,10 +18,15 @@ annotate my.Users with {
 };
 
 annotate my.Categories {
-  title       @title : '{i18n>Categories.title}';
-  description @title : '{i18n>Categories.description}';
-  parent      @title : '{i18n>Categories.parent}';
-  children    @title : '{i18n>Categories.children}';
+  title             @title : '{i18n>Categories.title}';
+  description       @title : '{i18n>Categories.description}';
+  parent            @title : '{i18n>Categories.parent}';
+  children          @title : '{i18n>Categories.children}';
+  path              @title : '{i18n>Categories.path}';
+  validFrom         @title : '{i18n>Categories.validFrom}';
+  validTo           @title : '{i18n>Categories.validTo}';
+  absoluteReference @title : '{i18n>Categories.absoluteReference}';
+  deepReference     @title : '{i18n>Categories.deepReference}';
 }
 
 annotate my.WorkItems {

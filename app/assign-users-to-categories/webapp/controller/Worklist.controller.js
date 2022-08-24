@@ -4,25 +4,27 @@ sap.ui.define(
   [
     "./BaseController",
     "sap/ui/model/json/JSONModel",
-    "../model/formatter",
+    // "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/FilterType",
+    "sap/ui/model/Sorter",
     "sap/m/Token",
   ],
   (
     BaseController,
     JSONModel,
-    formatter,
+    // formatter,
     Filter,
     FilterOperator,
     FilterType,
+    Sorter,
     Token
   ) =>
     BaseController.extend(
       "iot.planner.assignuserstocategories.controller.Worklist",
       {
-        formatter,
+        // formatter,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -36,6 +38,8 @@ sap.ui.define(
           // keeps the search state
           this._aTableSearchState = [];
 
+          const validAt = new Date();
+
           // Model used to manipulate control states
           const viewModel = new JSONModel({
             worklistTableTitle:
@@ -43,25 +47,61 @@ sap.ui.define(
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
             newCategory: {},
+            busy: true,
+            filters: { validAt, search: "", scope: "mine" },
           });
 
           this.setModel(viewModel, "worklistView");
         },
 
+        async onSearch() {
+          await this._loadCategories();
+        },
+
         async onBeforeRendering() {
+          await this._loadCategories();
+        },
+
+        async _loadCategories() {
           const model = this.getModel();
-          await this.getModel().load("/Categories", {
-            urlParameters: { $expand: "members,tags" },
-          });
+          const viewModel = this.getModel("worklistView");
+          const { validAt, scope } = viewModel.getProperty("/filters");
 
-          const categories = model.getProperty("/Categories");
+          viewModel.setProperty("/busy", true);
 
-          const categoriesLevel0 = categories.filter(
-            ({ parent_ID }) => !parent_ID
+          const { results: categories } = await model.callFunction(
+            scope === "mine" ? "/getMyCategoryTree" : "/getCategoryTree",
+            {
+              urlParameters: {
+                root: null,
+                validAt: validAt.toISOString(),
+              },
+            }
           );
 
-          model.setProperty("/categoriesLevel0", categoriesLevel0);
+          const categoriesNested = model.nest({ items: categories });
+
+          model.setProperty("/Categories", categoriesNested);
+          viewModel.setProperty("/busy", false);
         },
+        // async onToggleOpenState(event) {
+        //   const model = this.getModel();
+        //   const { rowContext, expanded } = event.getParameters();
+        //   if (!expanded) return;
+
+        //   const ID = rowContext.getProperty("ID");
+        //   const { results: categories } = await model.callFunction(
+        //     `/getCategoryTree`,
+        //     {
+        //       urlParameters: {
+        //         root: ID,
+        //       },
+        //     }
+        //   );
+
+        //   const categoriesNested = model.nest({ items: categories });
+        //   model.setProperty("/Categories", categoriesNested);
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -99,37 +139,69 @@ sap.ui.define(
 
         onPressAddCategory(event) {
           const viewModel = this.getModel("worklistView");
-          const rowAction = event.getSource().getParent();
-          const parent_ID = rowAction.getBindingContext().getProperty("ID");
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
 
-          this.getModel().setProperty("/newCategory", { parent_ID });
+          const rowAction = event.getSource().getParent();
+          const {
+            ID: parent_ID,
+            hierarchyLevel,
+            children,
+          } = rowAction.getBindingContext().getObject();
+
+          const localPath = `${rowAction
+            .getBindingContext()
+            .getPath()}/children/${children.length}`;
+
+          this.getModel().setProperty("/newCategory", {
+            parent_ID,
+            hierarchyLevel: (parseInt(hierarchyLevel, 10) + 1).toString(),
+            localPath,
+            validFrom: new Date(),
+            validTo: new Date(2024, 10, 30),
+          });
+
           viewModel.setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.createCategory")
           );
 
-          popover.bindElement("/newCategory");
-          popover.openBy(rowAction);
+          dialog.bindElement("/newCategory");
+          dialog.open(rowAction);
         },
 
-        onPressUpdateCategory(event) {
+        async onPressUpdateCategory(event) {
+          const model = this.getModel();
           const rowAction = event.getSource().getParent();
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
+          const path = rowAction.getBindingContext().getPath();
+          const category = rowAction.getBindingContext().getObject();
+          const ODataPath = model.getODataPathFrom(category);
+
+          await model.load(`${ODataPath}/members`, {
+            into: `${path}/members`,
+            sorters: [new Sorter("user_userPrincipalName")],
+          });
 
           this.getModel("worklistView").setProperty(
             "/popoverTitle",
             this.getResourceBundle().getText("popoverTitle.editCategory")
           );
 
-          popover.bindElement(rowAction.getBindingContext().getPath());
-          popover.openBy(rowAction);
+          model.setProperty(`${path}/localPath`, path);
+
+          dialog.bindElement(path);
+          dialog.open(rowAction);
+        },
+
+        async onChangeCategory(event) {
+          const category = event.getSource().getBindingContext().getObject();
+          await this.getModel().update(category);
         },
 
         async onPressSubmitCategory(event) {
           const model = this.getModel();
-          const popover = event.getSource();
-          const category = popover.getBindingContext().getObject();
+          const dialog = event.getSource();
+          const category = dialog.getBindingContext().getObject();
 
           this._closePopover();
 
@@ -138,7 +210,7 @@ sap.ui.define(
             await model.update(category);
           } else {
             // Create
-            await model.create("/Categories", category);
+            await model.create("/Categories", { ...category, children: [] });
           }
         },
 
@@ -147,15 +219,18 @@ sap.ui.define(
         },
 
         _closePopover() {
-          const popover = this.byId("editCategoryPopover");
+          const dialog = this.byId("editCategoryDialog");
           this.getModel().setProperty("/newCategory", {});
-          popover.close();
+          dialog.close();
         },
 
-        onPressDeleteCategory(event) {
-          const obj = event.getSource().getBindingContext().getObject();
+        onPressDeleteCategories(event) {
+          const itemsToDelete = event
+            .getSource()
+            .getSelectedItems()
+            .map((item) => item.getBindingContext().getObject());
 
-          this.getModel().remove(obj);
+          itemsToDelete.forEach((item) => this.getModel().remove(item));
         },
 
         /**
@@ -224,21 +299,21 @@ sap.ui.define(
           }
         },
 
-        onSearch(event) {
-          const { query } = event.getParameters();
+        // onSearch(event) {
+        //   const { query } = event.getParameters();
 
-          const filters = [
-            new Filter({
-              path: "title",
-              operator: "Contains",
-              value1: query,
-            }),
-          ];
+        //   const filters = [
+        //     new Filter({
+        //       path: "title",
+        //       operator: "Contains",
+        //       value1: query,
+        //     }),
+        //   ];
 
-          this.byId("treeTable")
-            .getBinding("rows")
-            .filter(filters, FilterType.Application);
-        },
+        //   this.byId("treeTable")
+        //     .getBinding("rows")
+        //     .filter(filters, FilterType.Application);
+        // },
 
         onCreateToken(event) {
           const multiInput = event.getSource();
@@ -248,6 +323,52 @@ sap.ui.define(
           multiInput.addToken(newToken);
           multiInput.setValue();
           multiInput.fireTokenUpdate({ addedTokens: [newToken] });
+        },
+
+        onUpdateUsers2Categories(event) {
+          const model = this.getModel();
+          const { addedTokens = [], removedTokens = [] } =
+            event.getParameters();
+
+          this._removeDuplicateTokens(event.getSource());
+
+          addedTokens.forEach((token) => {
+            const user_userPrincipalName = token.getKey();
+            const category_ID = token.getBindingContext().getProperty("ID");
+            const localPath = `${token
+              .getBindingContext()
+              .getPath()}/members/X`;
+
+            model.create("/Users2Categories", {
+              category_ID,
+              user_userPrincipalName,
+              localPath,
+            });
+          });
+
+          removedTokens.forEach((token) => {
+            const obj = token.getBindingContext().getObject();
+
+            model.remove(obj);
+          });
+        },
+
+        _removeDuplicateTokens(multiInput) {
+          const tokens = multiInput.getTokens();
+          const tokensMap = {};
+
+          tokens.forEach((token) => {
+            const title = token.getText();
+            tokensMap[title] = token;
+          });
+
+          multiInput.setTokens(Object.values(tokensMap));
+        },
+
+        onDeleteToken(event) {
+          const obj = event.getSource().getBindingContext().getObject();
+
+          this.getModel().remove(obj);
         },
 
         onUpdateTags(event) {
@@ -274,52 +395,10 @@ sap.ui.define(
           });
 
           removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
+            const obj = token.getBindingContext().getPath();
 
-            model.remove(path);
+            model.remove(obj);
           });
-        },
-
-        _removeDuplicateTokens(multiInput) {
-          const tokens = multiInput.getTokens();
-          const tokensMap = {};
-
-          tokens.forEach((token) => {
-            const title = token.getText();
-            tokensMap[title] = token;
-          });
-
-          multiInput.setTokens(Object.values(tokensMap));
-        },
-
-        onUpdateUsers2Categories(event) {
-          const model = this.getModel();
-          const { addedTokens = [], removedTokens = [] } =
-            event.getParameters();
-
-          this._removeDuplicateTokens(event.getSource());
-
-          addedTokens.forEach((token) => {
-            const user_userPrincipalName = token.getKey();
-            const category_ID = token.getBindingContext().getProperty("ID");
-
-            model.create("/Users2Categories", {
-              category_ID,
-              user_userPrincipalName,
-            });
-          });
-
-          removedTokens.forEach((token) => {
-            const path = token.getBindingContext().getPath();
-
-            model.remove(path);
-          });
-        },
-
-        onDeleteToken(event) {
-          const path = event.getSource().getBindingContext().getPath();
-
-          this.getModel().remove(path);
         },
       }
     )

@@ -81,7 +81,7 @@
 					"bundleName": "iot.workitemsfastentry.i18n.i18n"
 				}
 			},
-			"OData": {
+			"--OData": {
 				"dataSource": "mainService",
 				"type": "sap.ui.model.odata.v2.ODataModel",
 				"settings": {
@@ -92,10 +92,6 @@
 					"defaultCountMode": "None"
 				}
 			}
-		},
-		"": {
-			"type": "sap.ui.model.json.JSONModel",
-			"uri": "model/todoitems.json"
 		},
 		"resources": {
 			"css": [
@@ -118,7 +114,9 @@
 				{
 					"name": "RouteWorkItemsFastEntry",
 					"pattern": "RouteWorkItemsFastEntry",
-					"target": ["TargetWorkItemsFastEntry"]
+					"target": [
+						"TargetWorkItemsFastEntry"
+					]
 				}
 			],
 			"targets": {

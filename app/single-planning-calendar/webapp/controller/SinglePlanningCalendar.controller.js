@@ -1,11 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
-const nest = (items, ID = null, link = "parent_ID") =>
-  items
-    .filter((item) => item[link] === ID)
-    .map((item) => ({ ...item, children: nest(items, item.ID) }));
-
 const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
@@ -15,7 +10,6 @@ sap.ui.define(
     "./ErrorParser",
     "sap/ui/model/Filter",
     "../model/formatter",
-    "sap/ui/model/json/JSONModel",
     "../model/legendItems",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -25,7 +19,6 @@ sap.ui.define(
     ErrorParser,
     Filter,
     formatter,
-    JSONModel,
     legendItems,
     MessageBox,
     MessageToast
@@ -53,37 +46,8 @@ sap.ui.define(
           const calendar = this.byId("SPCalendar");
           const workWeekView = calendar.getViews()[1];
 
-          const model = new JSONModel({
-            appointments: { NEW: {} },
-            busy: false,
-            categories: {},
-            hierarchySuggestion: "",
-            legendItems: Object.entries(legendItems.getItems()).map(
-              ([key, { type }]) => ({
-                text: bundle.getText(`legendItems.${key}`),
-                type,
-              })
-            ),
-          });
-
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
-
-          // Otherwise new entries won't be displayed in the calendar
-          model.setSizeLimit(300);
-
-          this.setModel(model);
-
-          // REVISIT: Inspired by suggestion-sample. Yet this function is not called
-          // Goal: Filter for substrings and not the entire query
-          // this.byId("hierarchySearch").setFilterFunction((query, item) => {
-          //   if (!query) return false;
-          //   const path = item.getBindingContext().getProperty("path");
-          //   const substrings = query.split(" ");
-          //   return substrings
-          //     .map((sub) => sub.toUpperCase())
-          //     .every((sub) => path.includes(sub));
-          // });
 
           await this.getModel("OData").metadataLoaded();
 
@@ -142,6 +106,27 @@ sap.ui.define(
           );
         },
 
+        onBeforeRendering() {
+          const bundle = this.getResourceBundle();
+          const model = this.getModel();
+
+          model.setData({
+            MyWorkItems: { NEW: {} },
+            busy: false,
+            categories: {},
+            hierarchySuggestion: "",
+            legendItems: Object.entries(legendItems.getItems()).map(
+              ([key, { type }]) => ({
+                text: bundle.getText(`legendItems.${key}`),
+                type,
+              })
+            ),
+          });
+
+          // Otherwise new entries won't be displayed in the calendar
+          model.setSizeLimit(300);
+        },
+
         onSelectHierarchy(event) {
           const { listItem } = event.getParameters();
           const hierarchyPath = listItem
@@ -166,7 +151,6 @@ sap.ui.define(
 
         async onEditAppointment(event) {
           const model = this.getModel();
-          const { categories } = model.getData();
           const { startDate, endDate, appointment, copy } =
             event.getParameters();
           const bindingContext = appointment.getBindingContext();
@@ -175,8 +159,8 @@ sap.ui.define(
           let path = bindingContext.getPath();
 
           if (copy) {
-            path = "/appointments/NEW";
-            model.setProperty("/appointments/NEW", appointment);
+            path = "/MyWorkItems/NEW";
+            model.setProperty("/MyWorkItems/NEW", appointment);
           }
 
           model.setProperty(`${path}/activatedDate`, startDate);
@@ -191,6 +175,7 @@ sap.ui.define(
             ...data,
             activatedDate: startDate,
             completedDate: endDate,
+            localPath: path,
           });
         },
 
@@ -202,17 +187,23 @@ sap.ui.define(
 
         async _deleteAppointment(appointment) {
           const model = this.getModel();
-          const { appointments } = model.getData();
+          const { MyWorkItems } = model.getData();
 
           model.setProperty("/dialogBusy", true);
 
           try {
-            await this.remove({
-              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
-              data: appointment,
-            });
+            await model.remove(appointment);
 
-            delete appointments[appointment.ID];
+            if (appointment.source !== "Manual") {
+              await model.callFunction("/removeDraft", {
+                method: "POST",
+                urlParameters: {
+                  ID: appointment.ID,
+                  activatedDate: appointment.activatedDate,
+                  completedDate: appointment.completedDate,
+                },
+              });
+            }
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -224,19 +215,21 @@ sap.ui.define(
 
         async onPressResetAppointment(event) {
           const model = this.getModel();
-          const { appointments } = model.getData();
-          const appointment = event.getSource().getBindingContext().getObject();
+          const bindingContext = event.getSource().getBindingContext();
+          const appointment = bindingContext.getObject();
+          const path = bindingContext.getPath();
 
           model.setProperty("/dialogBusy", true);
 
           try {
-            const appointmentSync = await this.reset({
-              path: `/MyWorkItems(ID='${encodeURIComponent(appointment.ID)}')`,
-              data: appointment,
+            const appointmentSync = await model.callFunction("/resetToDraft", {
+              method: "POST",
+              urlParameters: {
+                ID: appointment.ID,
+              },
             });
 
-            appointments[appointmentSync.ID] = appointmentSync;
-            await this._loadAppointments();
+            model.setProperty(path, appointmentSync);
 
             this._closeDialog("createItemDialog");
           } catch (error) {
@@ -248,7 +241,7 @@ sap.ui.define(
 
         onCreateAppointment(event) {
           this._createAppointment(event);
-          this._bindAndOpenDialog("/appointments/NEW");
+          this._bindAndOpenDialog("/MyWorkItems/NEW");
         },
 
         _createAppointment(event) {
@@ -257,9 +250,8 @@ sap.ui.define(
           const appointment = {
             activatedDate: startDate,
             completedDate: endDate,
-            hierarchy: {},
           };
-          model.setProperty("/appointments/NEW", appointment);
+          model.setProperty("/MyWorkItems/NEW", appointment);
         },
 
         _bindAndOpenDialog(path) {
@@ -289,14 +281,39 @@ sap.ui.define(
         _filterHierarchyByPath(query) {
           const filters = [
             new Filter({
-              path: "path",
-              test: (path) => {
-                if (!query) return false;
-                const substrings = query.split(" ");
-                return substrings
-                  .map((sub) => sub.toUpperCase())
-                  .every((sub) => path.includes(sub));
-              },
+              filters: [
+                new Filter({
+                  path: "path",
+                  test: (path) => {
+                    if (!query || !path) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => path.includes(sub));
+                  },
+                }),
+                new Filter({
+                  path: "path",
+                  test: (absoluteReference) => {
+                    if (!query || !absoluteReference) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => absoluteReference.includes(sub));
+                  },
+                }),
+                new Filter({
+                  path: "deepReference",
+                  test: (deepReference) => {
+                    if (!query || !deepReference) return false;
+                    const substrings = query.split(" ");
+                    return substrings
+                      .map((sub) => sub.toUpperCase())
+                      .every((sub) => deepReference.includes(sub));
+                  },
+                }),
+              ],
+              and: false,
             }),
           ];
 
@@ -309,6 +326,10 @@ sap.ui.define(
             .getBindingContext()
             .getObject();
 
+          const path = this.byId("createItemDialog")
+            .getBindingContext()
+            .getPath();
+
           if (appointment.isAllDay) {
             MessageToast.show(
               this.getResourceBundle().getText(
@@ -320,6 +341,8 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
+          appointment.localPath = path;
+
           await this._submitEntry(appointment);
 
           model.setProperty("/dialogBusy", false);
@@ -328,43 +351,24 @@ sap.ui.define(
 
         async _submitEntry(appointment) {
           const model = this.getModel();
-          const { appointments, categoriesFlat } = model.getData();
-          const { hierarchy, ...data } = appointment;
-
-          const parent = categoriesFlat.find(
+          const { MyCategories } = model.getData();
+          const parent = MyCategories.find(
             (cat) => cat.path === appointment.parentPath
           );
+          const data = appointment;
 
-          // Dummy-property; make meaningless to avoid ambiguity
-          data.parentPath = undefined;
+          data.parentPath = parent.path;
           data.parent_ID = parent.ID;
-
-          let appointmentSync;
 
           try {
             // Update
-            if (appointment.ID) {
-              const path = `/MyWorkItems(ID='${encodeURIComponent(
-                appointment.ID
-              )}')`;
-
-              appointmentSync = await this.update({
-                path,
-                data,
-              });
+            if (data.ID) {
+              await model.update(data);
             } else {
-              appointmentSync = await this.create({
-                path: "/MyWorkItems",
-                data,
-              });
+              await model.create("/MyWorkItems", data);
+
+              model.setProperty("/MyWorkItems/NEW", {});
             }
-
-            appointmentSync.parentPath = appointment.parentPath;
-            appointmentSync.tags = appointment.tags;
-            appointments[appointmentSync.ID] = appointmentSync;
-            appointments.NEW = {};
-
-            model.setProperty("/appointments", appointments);
           } catch (error) {
             MessageBox.error(ErrorParser.parse(error));
           }
@@ -379,7 +383,7 @@ sap.ui.define(
         },
 
         onAfterCloseDialog() {
-          this.getModel().setProperty("/appointments/NEW", {});
+          this.getModel().setProperty("/MyWorkItems/NEW", {});
         },
 
         onChangeView() {
@@ -465,60 +469,35 @@ sap.ui.define(
         async _loadAppointments() {
           const model = this.getModel();
           const calendar = this.byId("SPCalendar");
-          const appointmentsOld = model.getProperty("/appointments");
           const startDate = calendar.getStartDate();
           const endDate = this._getCalendarEndDate();
 
           model.setProperty("/busy", true);
 
-          const { results: appointments } = await this.read({
-            path: "/MyWorkItems",
-            urlParameters: { $top: 100, $expand: "tags" },
-            filters: [
-              new Filter({
-                filters: [
-                  new Filter({
-                    path: "completedDate",
-                    operator: "GT",
-                    value1: startDate,
-                  }),
-                  new Filter({
-                    path: "activatedDate",
-                    operator: "LE",
-                    value1: endDate,
-                  }),
-                ],
-                and: true,
-              }),
-            ],
-          });
+          const { results: workItems } = await model.callFunction(
+            "/getCalendarView",
+            {
+              urlParameters: {
+                startDateTime: startDate,
+                endDateTime: endDate,
+              },
+            }
+          );
 
-          const appointmentsMap = appointments.reduce((map, appointment) => {
-            const tags = appointment.tags.results;
-            // eslint-disable-next-line no-param-reassign
-            map[appointment.ID] = {
-              /* Trick, to get the dates right: Somehow all-day events start and end at 02:00 instead of 00:00.
-                This leads to problems with UI5, because the events are repeated each day which is ugly
-                TODO: Find a better solution. Maybe this thread can help: https://answers.sap.com/questions/13324088/why-cap-shows-datetime-field-different-in-fiori-db.html
-              */
-              completedDate: appointment.isAllDay
-                ? appointment.completedDate.setHours(0)
-                : appointment.completedDate,
-              activatedDate: appointment.isAllDay
-                ? appointment.activatedDate.setHours(0)
-                : appointment.activatedDate,
+          const appointments = workItems.map(
+            ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
               ...appointment,
-              tags,
-            };
+              tags: appointment.tags.results,
+              completedDate: isAllDay
+                ? completedDate.setHours(0)
+                : completedDate,
+              activatedDate: isAllDay
+                ? activatedDate.setHours(0)
+                : activatedDate,
+            })
+          );
 
-            return map;
-          }, {});
-
-          model.setProperty("/appointments", {
-            ...appointmentsOld,
-            ...appointmentsMap,
-          });
-
+          model.setProperty("/MyWorkItems", appointments);
           model.setProperty("/busy", false);
         },
 
@@ -527,16 +506,11 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const [{ results: categories }] = await Promise.all([
-            this.read({
-              path: "/MyCategories",
-            }),
-          ]);
+          const { results } = await model.callFunction("/getMyCategoryTree");
+          const categoriesNested = model.nest({ items: results });
 
-          const categoriesNested = nest(categories);
-
-          model.setProperty("/categoriesNested", categoriesNested);
-          model.setProperty("/categoriesFlat", categories);
+          model.setProperty("/MyCategories", results);
+          model.setProperty("/MyCategoriesNested", categoriesNested);
           model.setProperty("/busy", false);
         },
 
