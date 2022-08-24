@@ -162,14 +162,13 @@
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="6vw" change="updateWorkItem"/>
-											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+											<DatePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
 											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
 											<Text text="{path: 'duration', formatter: '.formatter.duration'}" wrapping="false"/>
-											<!-- <VBox alignItems="Center"> -->
 											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
 												<suggestionItems>
-													<core:Item text="{path}" key="{ID}"/>
+													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
 											</Input>
 											<Select id="selectActivityTable" items="{/activities}">
@@ -178,7 +177,7 @@
 												</items>
 											</Select>
 											<TextArea value="" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
-											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}">
+											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
 												</items>
