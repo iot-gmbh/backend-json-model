@@ -21,6 +21,23 @@ sap.ui.define(
 			async onInit() {
 				this._filterHierarchyByPath('hierarchyTreeForm', '');
 				this.searchFilters = [];
+				this._filters = {
+					all: new Filter({
+						path: 'state',
+						operator: 'NE',
+						value1: ''
+					}),
+					completed: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'completed'
+					}),
+					incompleted: new Filter({
+						path: 'state',
+						operator: 'EQ',
+						value1: 'incompleted'
+					})
+				};
 			},
 
 			async onBeforeRendering() {
@@ -28,29 +45,40 @@ sap.ui.define(
 				const loadFrom = new Date();
 				loadFrom.setHours(0, 0, 0, 0); // last midnight
 				const loadUntil = new Date();
-				loadUntil.setHours(24, 0, 0, 0); // last midnight
+				loadUntil.setHours(24, 0, 0, 0); // next midnight
+				// const newItemDate = new Date();
 				const newItemStartDate = new Date();
-				const newItemCompletedDate = addMinutes(new Date(), 15);
+				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
+				// const newItemStartDate = this.calculateActivatedDate();
+				const newItemEndDate = addMinutes(new Date(), 15);
 
 				model.setData({
-					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					busy: false,
 					tableBusy: true,
 					showHierarchyTreeForm: false,
 					showHierarchyTreeTable: false,
 					categoriesFlat: {},
 					categoriesNested: {},
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
+					activities: [
+						{ title: 'Durchführung' },
+						{ title: 'Reise-/Fahrzeit' },
+						{ title: 'Pendelfahrt Hotel/Einsatzort' }
+					],
+					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
-					// workItems: this._loadMockData(),
+					countAll: undefined,
+					countCompleted: undefined,
+					countIncompleted: undefined,
 					newWorkItem: {
 						title: '',
 						parentPath: '',
 						tags: [],
-						// TODO: description erst im DB-Schema und an weiteren Stellen hinzufügen
-						// description: '',
-						// date: new Date(),
+						// date: newItemDate,
 						activatedDate: newItemStartDate,
-						completedDate: newItemCompletedDate,
+						completedDate: newItemEndDate,
+						// TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
+						// activity: '',
 						// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
 						// location: '',
 						state: 'incompleted'
@@ -86,30 +114,56 @@ sap.ui.define(
 				model.setProperty('/categories', categoriesNested);
 			},
 
+			calculateActivatedDate() {
+				const model = this.getModel();
+				const workItems = model.getProperty('/MyWorkItems').map((workItem) => ({ ...workItem }));
+				const latestCompletedDate = workItems.reduce((completedDate, workItem) => {
+					if (completedDate === undefined) {
+						return workItem.completedDate;
+					}
+					return workItem.completedDate > completedDate ? workItem.completedDate : completedDate;
+				}, undefined);
+
+				let nextActivatedDate = latestCompletedDate;
+				let currentDate = new Date();
+				// toDateString() returns a string consisting of the year, month and day only
+				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
+					nextActivatedDate = currentDate;
+					nextActivatedDate.setHours(8, 30, 0);
+					if (currentDate.getTime() < nextActivatedDate.getTime()) {
+						nextActivatedDate = currentDate;
+					}
+				}
+
+				return nextActivatedDate;
+			},
+
+			async setItemCountsFilters(event) {
+				const model = this.getModel();
+
+				const countAll = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state !== '').length;
+
+				const countCompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'completed').length;
+
+				const countIncompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'incompleted').length;
+
+				model.setProperty('/countAll', countAll);
+				model.setProperty('/countCompleted', countCompleted);
+				model.setProperty('/countIncompleted', countIncompleted);
+			},
+
 			onChangeHierarchy(event) {
 				let associatedHierarchyTreeID;
 				if (event.getParameter('id').endsWith('Form')) {
 					this.getModel().setProperty('/showHierarchyTreeForm', true);
 					associatedHierarchyTreeID = 'hierarchyTreeForm';
-					// // Momentan nicht funktionsfaehig für 'hierarchyTreeTable'
-					// }
-					// else {
-					// 	this.getModel().setProperty('/showHierarchyTreeTable', true);
-					// 	associatedHierarchyTreeID = 'hierarchyTreeTable';
-					// }
 					const { newValue } = event.getParameters();
-
-					// // Laden eines Popover-Fragments für den HierarchyTree
-					// if (!this.popover) {
-					// 	this.popover = Fragment.load({
-					// 		id: this.getView().getId(),
-					// 		name: 'iot.workitemsfastentry.view.PopoverHierarchySelect',
-					// 		controller: this
-					// 	});
-					// }
-					// this.popover.then(function (popover) {
-					// 	popover.openBy(event.getSource());
-					// });
 
 					this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
 				}
@@ -144,6 +198,34 @@ sap.ui.define(
 				}
 			},
 
+			onChangeDate(event) {
+				const model = this.getModel();
+				const date = model.getProperty('/newWorkItem/date');
+				const activatedDate = model.getProperty('/newWorkItem/activatedDate');
+				const completedDate = model.getProperty('/newWorkItem/completedDate');
+
+				model.setProperty('/newWorkItem/activatedDate', this.updateDate(activatedDate, date));
+				model.setProperty('/newWorkItem/completedDate', this.updateDate(completedDate, date));
+			},
+
+			updateDate(oldDate, date) {
+				// Copy values instead of changing the state of /newWorkItem/date
+				const newDate = new Date(date.getTime());
+				const newDateHours = oldDate.getHours();
+				const newDateMinutes = oldDate.getMinutes();
+				const newDateSeconds = oldDate.getSeconds();
+
+				newDate.setHours(newDateHours, newDateMinutes, newDateSeconds);
+
+				return newDate;
+			},
+
+			onFilterWorkItems(event) {
+				const binding = this.byId('tableWorkItems').getBinding('items');
+				const key = event.getParameter('selectedKey');
+				binding.filter(this._filters[key]);
+			},
+
 			onSearch(event) {
 				this.searchFilters = [];
 				this.searchQuery = event.getSource().getValue();
@@ -158,7 +240,29 @@ sap.ui.define(
 			async addWorkItem() {
 				const model = this.getModel();
 				const newWorkItem = model.getProperty('/newWorkItem');
+				model.setProperty('/busy', true);
+
+				this.checkCompleteness();
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
+
+				model.setProperty('/busy', false);
+			},
+
+			// TODO: Erweitern um weitere Pruefungen
+			checkCompleteness() {
+				let isCompleted = true;
+				const model = this.getModel();
+				newWorkItem = model.getProperty('/newWorkItem');
+
+				Object.values(newWorkItem).forEach((val) => {
+					if (val.toString().trim() === '') {
+						isCompleted = false;
+					}
+				});
+
+				isCompleted
+					? model.setProperty('/newWorkItem/state', 'completed')
+					: model.setProperty('/newWorkItem/state', 'incompleted');
 			},
 
 			async updateWorkItem(event) {
@@ -199,27 +303,6 @@ sap.ui.define(
 				table.removeSelections();
 
 				MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
-			},
-
-			// TODO: Erweitern um weitere Pruefungen
-			checkCompleteness() {
-				let isCompleted = true;
-				const model = this.getModel();
-				newWorkItem = model.getProperty('/newWorkItem');
-
-				for (const [key, value] of Object.entries(newWorkItem)) {
-					console.log('key:', key, 'value:', value);
-				}
-
-				Object.values(newWorkItem).forEach((val) => {
-					if (val.toString().trim() === '') {
-						isCompleted = false;
-					}
-				});
-
-				isCompleted
-					? model.setProperty('/newWorkItem/state', 'completed')
-					: model.setProperty('/newWorkItem/state', 'incompleted');
 			}
 		});
 	}

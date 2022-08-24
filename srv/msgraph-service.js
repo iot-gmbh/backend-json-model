@@ -27,6 +27,8 @@ module.exports = async function (srv) {
       return cond;
     });
 
+    delete query.SELECT.where;
+    console.log(req.user.accessToken);
     const events = await msGraphSrv.send({
       query,
       headers: {
