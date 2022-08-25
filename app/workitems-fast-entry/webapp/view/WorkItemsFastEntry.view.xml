@@ -15,9 +15,9 @@
 					<f:DynamicPage showFooter="true">
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
-								<form:Form id="formWorkItem" editable="true">
+								<form:Form class="formNewWorkItem" id="formNewWorkItem" editable="true">
 									<form:layout>
-										<form:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="3" columnsM="2" singleContainerFullSize="false" />
+										<form:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
 									</form:layout>
 									<form:formContainers>
 										<form:FormContainer>
@@ -54,29 +54,6 @@
 														</items>
 													</Select>
 												</form:FormElement>
-												<form:FormElement label="{i18n>formInputTags}">
-													<Input id="inputTags"/>
-												</form:FormElement>
-												<!-- <form:FormElement label="{i18n>formInputTags}">
-													<form:fields>
-														<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-															path: 'OData>/Tags',
-															templateShareable: false,
-															sorter: { path: 'title' }
-														}" showValueHelp="false" tokenUpdate="onUpdateTags">
-															<suggestionItems>
-																<core:Item key="{OData>title}" text="{OData>title}"/>
-															</suggestionItems>
-															<tokens>
-																<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-															</tokens>
-														</MultiInput>
-													</form:fields>
-												</form:FormElement> -->
-											</form:formElements>
-										</form:FormContainer>
-										<form:FormContainer>
-											<form:formElements>
 												<form:FormElement label="{i18n>formDatePickerDate}">
 													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }" change=".onChangeDate"/>
 												</form:FormElement>
@@ -155,9 +132,6 @@
 									<Column>
 										<Text text="{i18n>tableColumnActivity}"/>
 									</Column>
-									<Column>
-										<Text text="{i18n>tableColumnTags}"/>
-									</Column>
 									<Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnLocation}"/>
 									</Column>
@@ -183,7 +157,6 @@
 													<core:Item key="{title}" text="{title}"/>
 												</items>
 											</Select>
-											<TextArea value="" rows="1" growing="true" growingMaxLines="6" width="6vw"/>
 											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}">
 												<items>
 													<core:Item key="{title}" text="{title}"/>

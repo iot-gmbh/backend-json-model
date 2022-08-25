@@ -1,7 +1,17 @@
-/* Strikes through the completed items */
-li[data-work-item-completed='true'] span {
-	text-decoration: line-through;
+/* Form */
+
+.formNewWorkItem {
+	padding: 0 20vw;
 }
+
+@media only screen and (max-width: 1700px) {
+	.formNewWorkItem {
+		padding: 0;
+	}
+}
+
+/* Table */
+
 .sapMListTblHighlightCell {
 	width: 10px;
 }
