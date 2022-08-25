@@ -100,7 +100,7 @@
       },
       "routes": [
         {
-          "pattern": "",
+          "pattern": ":basepath:",
           "name": "worklist",
           "target": [
             "worklist"

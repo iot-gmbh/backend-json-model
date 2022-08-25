@@ -1,0 +1,9 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
+    xmlns="sap.m" displayBlock="true">
+    <Page>
+        <content>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')"/>
+        </content>
+    </Page>
+</mvc:View>
+

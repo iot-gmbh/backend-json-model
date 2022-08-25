@@ -1,66 +1,16 @@
 {
   "_version": "1.40.0",
   "sap.app": {
-    "id": "iot.planner.assignuserstocategories",
-    "type": "application",
-    "i18n": "i18n/i18n.properties",
+    "id": "iot.planner",
     "applicationVersion": {
-      "version": "0.0.1"
-    },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
-    "resources": "resources.json",
-    "sourceTemplate": {
-      "id": "@sap-ux/fiori-freestyle-writer:worklist",
-      "version": "0.11.15",
-      "toolsId": "cc711169-d4ea-4bdb-927d-2108119f4733"
-    },
-    "dataSources": {
-      "--mainService": {
-        "uri": "/v2/categories/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "localUri": "localService/metadata.xml",
-          "odataVersion": "2.0"
-        }
-      }
-    }
-  },
-  "sap.ui": {
-    "technology": "UI5",
-    "icons": {
-      "icon": "",
-      "favIcon": "",
-      "phone": "",
-      "phone@2": "",
-      "tablet": "",
-      "tablet@2": ""
-    },
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
+      "version": "1.0.0"
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "dependencies": {
-      "minUI5Version": "1.102.1",
       "libs": {
-        "sap.m": {},
-        "sap.ui.core": {},
-        "sap.f": {},
-        "sap.suite.ui.generic.template": {},
-        "sap.ui.comp": {},
-        "sap.ui.generic.app": {},
-        "sap.ui.table": {},
-        "sap.ushell": {}
+        "sap.m": {}
       }
-    },
-    "contentDensities": {
-      "compact": true,
-      "cozy": true
     },
     "models": {
       "i18n": {
@@ -68,27 +18,27 @@
         "settings": {
           "bundleName": "iot.planner.assignuserstocategories.i18n.i18n"
         }
-      },
-      "OData": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultUpdateMethod": "MERGE",
-          "defaultOperationMode": "Server",
-          "defaultBindingMode": "TwoWay",
-          "refreshAfterChange": false,
-          "defaultCountMode": "Inline"
-        }
       }
     },
-    "resources": {
-      "css": []
+    "componentUsages": {
+      "manageCategoriesComp": {
+        "name": "iot.planner.assignuserstocategories",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      }
+    },
+    "rootView": {
+      "viewName": "iot.planner.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "iot.planner.assignuserstocategories.view",
+        "path": "iot.planner.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
@@ -100,61 +50,30 @@
       },
       "routes": [
         {
+          "name": "home",
           "pattern": "",
-          "name": "worklist",
-          "target": [
-            "worklist"
-          ]
+          "target": "home"
         },
         {
-          "pattern": "Categories/{objectId}",
-          "name": "object",
-          "target": [
-            "object"
-          ]
-        },
-        {
-          "pattern": "graph",
-          "name": "graph",
-          "target": [
-            "graph"
-          ]
+          "name": "manageCategories",
+          "pattern": "manageCategories",
+          "target": "manageCategories"
         }
       ],
       "targets": {
-        "worklist": {
-          "viewName": "Worklist",
-          "viewId": "worklist",
-          "viewLevel": 1,
-          "title": "{i18n>worklistViewTitle}"
+        "home": {
+          "type": "View",
+          "id": "home",
+          "name": "Home",
+          "title": "Home"
         },
-        "object": {
-          "viewName": "Object",
-          "viewId": "object",
-          "viewLevel": 2,
-          "title": "{i18n>objectViewTitle}"
-        },
-        "graph": {
-          "viewName": "Graph",
-          "viewId": "graph",
-          "viewLevel": 1,
-          "title": "{i18n>graph}"
-        },
-        "objectNotFound": {
-          "viewName": "ObjectNotFound",
-          "viewId": "objectNotFound"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewId": "notFound"
+        "manageCategories": {
+          "type": "Component",
+          "usage": "manageCategoriesComp",
+          "title": "Categories",
+          "id": "manageCategories"
         }
       }
-    },
-    "rootView": {
-      "viewName": "iot.planner.assignuserstocategories.view.App",
-      "type": "XML",
-      "async": true,
-      "id": "app"
     }
   }
 }
