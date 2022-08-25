@@ -25,7 +25,7 @@ sap.ui.define(
         this._oErrorHandler = new ErrorHandler(this);
 
         // call the base component's init function
-        this.setModel(new CustomODataV2Model("/v2/categories/"));
+        this.setModel(new CustomODataV2Model("/odata/v2/categories/"));
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");

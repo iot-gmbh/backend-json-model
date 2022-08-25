@@ -49,10 +49,13 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "npm-run-all": "^4.1.5",
     "prettier": "2.7.1",
-    "sqlite3": "^5.0.9"
+    "sqlite3": "^5.0.9",
+    "ui5-middleware-simpleproxy": "^0.9.1"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "run-p start:ui5 start:cds",
+    "start:ui5": "ui5 serve",
+    "start:cds": "cds run",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
@@ -81,6 +84,11 @@
   "sapux": [
     "app/workitems-alp-v4"
   ],
+  "ui5": {
+    "dependencies": [
+      "ui5-middleware-simpleproxy"
+    ]
+  },
   "cds": {
     "requires": {
       "microsoft.graph": {
