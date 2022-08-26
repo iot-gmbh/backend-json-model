@@ -3,7 +3,7 @@ sap.ui.define(
   (Opa5, Startup) => {
     Opa5.extendConfig({
       arrangements: new Startup(),
-      viewNamespace: "iot.singleplanningcalendar.view.",
+      viewNamespace: "iot.planner.components.singleplanningcalendar.view.",
       autoWait: true,
     });
   }

@@ -3,6 +3,7 @@
     <Page>
         <content>
             <GenericTile class="sapUiTinyMargin" header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')"/>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>calendar}" press=".navTo($event, 'calendar')"/>
         </content>
     </Page>
 </mvc:View>

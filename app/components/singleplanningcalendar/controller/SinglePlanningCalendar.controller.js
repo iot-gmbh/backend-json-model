@@ -37,7 +37,7 @@ sap.ui.define(
     }
 
     return BaseController.extend(
-      "iot.singleplanningcalendar.controller.SinglePlanningCalendar",
+      "iot.planner.components.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
         formatter,
 

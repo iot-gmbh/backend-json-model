@@ -20,14 +20,6 @@
         }
       }
     },
-    "componentUsages": {
-      "manageCategoriesComp": {
-        "name": "iot.planner.components.managecategories",
-        "settings": {},
-        "componentData": {},
-        "lazy": true
-      }
-    },
     "rootView": {
       "viewName": "iot.planner.view.App",
       "type": "XML",
@@ -58,6 +50,11 @@
           "name": "manageCategories",
           "pattern": "manageCategories",
           "target": "manageCategories"
+        },
+        {
+          "name": "calendar",
+          "pattern": "calendar",
+          "target": "calendar"
         }
       ],
       "targets": {
@@ -69,10 +66,30 @@
         },
         "manageCategories": {
           "type": "Component",
-          "usage": "manageCategoriesComp",
+          "usage": "manageCategoriesComponent",
           "title": "Categories",
           "id": "manageCategories"
+        },
+        "calendar": {
+          "type": "Component",
+          "usage": "calendarComponent",
+          "title": "Calendar",
+          "id": "calendar"
         }
+      }
+    },
+    "componentUsages": {
+      "manageCategoriesComponent": {
+        "name": "iot.planner.components.managecategories",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "calendarComponent": {
+        "name": "iot.planner.components.singleplanningcalendar",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
       }
     }
   }

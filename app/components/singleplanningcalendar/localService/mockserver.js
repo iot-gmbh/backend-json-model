@@ -7,7 +7,7 @@ sap.ui.define(
   ],
   (MockServer, JSONModel, UriParameters, Log) => {
     let oMockServer;
-    const _sAppPath = "iot.singleplanningcalendar/";
+    const _sAppPath = "iot.planner.components.singleplanningcalendar/";
     const _sJsonFilesPath = `${_sAppPath}localService/mockdata`;
 
     const oMockServerInterface = {

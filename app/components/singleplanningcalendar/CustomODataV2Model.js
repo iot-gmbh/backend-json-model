@@ -179,9 +179,8 @@ sap.ui.define(
       },
 
       getODataPathFrom(obj) {
-        const odataPath = `/${obj.__metadata.uri
-          .replace(location.origin, "")
-          .replace(this.serviceURL, "")}`;
+        const url = new URL(obj.__metadata.uri);
+        const odataPath = url.pathname.replace(this.serviceURL, "/");
         return odataPath;
       },
 

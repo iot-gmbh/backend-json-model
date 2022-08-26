@@ -1,4 +1,4 @@
-<mvc:View controllerName="iot.singleplanningcalendar.controller.SinglePlanningCalendar"
+<mvc:View controllerName="iot.planner.components.singleplanningcalendar.controller.SinglePlanningCalendar"
 	xmlns="sap.m"
 	xmlns:unified="sap.ui.unified"
 	xmlns:f="sap.ui.layout.form"

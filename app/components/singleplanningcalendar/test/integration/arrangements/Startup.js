@@ -1,6 +1,6 @@
 sap.ui.define(["sap/ui/test/Opa5"], (Opa5) =>
   Opa5.extend(
-    "iot.singleplanningcalendar.test.integration.arrangements.Startup",
+    "iot.planner.components.singleplanningcalendar.test.integration.arrangements.Startup",
     {
       iStartMyApp(oOptionsParameter) {
         const oOptions = oOptionsParameter || {};
@@ -11,7 +11,7 @@ sap.ui.define(["sap/ui/test/Opa5"], (Opa5) =>
         // start the app UI component
         this.iStartMyUIComponent({
           componentConfig: {
-            name: "iot.singleplanningcalendar",
+            name: "iot.planner.components.singleplanningcalendar",
             async: true,
           },
           hash: oOptions.hash,

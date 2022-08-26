@@ -17,7 +17,7 @@ sap.ui.define(["../model/legendItems"], (legendItems) => ({
     // return `./img/${customerID}.png`;
     // if (location.hostname.startsWith("localhost"))
     // else
-    //   return `iotprojectplanning.iot.singleplanningcalendar/img/${customerID}.png`;
+    //   return `iotprojectplanning.iot.planner.components.singleplanningcalendar/img/${customerID}.png`;
   },
 
   getReferenceAndText(absoluteReference, shallowReference, text) {
