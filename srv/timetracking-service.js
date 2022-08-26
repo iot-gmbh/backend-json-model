@@ -188,7 +188,12 @@ module.exports = cds.service.impl(async function () {
       SELECT.from("Categories").where({ ID: localWorkItem.parent_ID })
     );
 
-    const workItem = { ...MSGraphEvent, ...localWorkItem, parent };
+    const workItem = {
+      ...MSGraphEvent,
+      ...localWorkItem,
+      parent,
+      state: "incompleted",
+    };
 
     return workItem;
   });
@@ -211,7 +216,11 @@ module.exports = cds.service.impl(async function () {
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
     // TODO: Durch explizite Sortierung absichern.
     const combined = [
-      ...MSGraphEvents.map((itm) => ({ ...itm, confirmed: false })),
+      ...MSGraphEvents.map((itm) => ({
+        ...itm,
+        confirmed: false,
+        state: "incompleted",
+      })),
       ...localWorkItems.map((itm) => ({ ...itm, confirmed: true })),
     ]
       .filter((itm) => itm)
