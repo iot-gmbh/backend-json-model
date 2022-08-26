@@ -16,13 +16,13 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "iot.planner.assignuserstocategories.i18n.i18n"
+          "bundleName": "iot.planner.i18n.i18n"
         }
       }
     },
     "componentUsages": {
       "manageCategoriesComp": {
-        "name": "iot.planner.assignuserstocategories",
+        "name": "iot.planner.components.managecategories",
         "settings": {},
         "componentData": {},
         "lazy": true
