@@ -62,9 +62,9 @@ sap.ui.define(
 					],
 					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
-					countAll: undefined,
-					countCompleted: undefined,
-					countIncompleted: undefined,
+					countAll: 0,
+					countCompleted: 0,
+					countIncompleted: 0,
 					newWorkItem: {
 						title: '',
 						parentPath: '',
@@ -142,7 +142,7 @@ sap.ui.define(
 				return nextActivatedDate;
 			},
 
-			async setItemCountsFilters(event) {
+			async setItemCountsFilters() {
 				const model = this.getModel();
 
 				const countAll = model
@@ -226,7 +226,7 @@ sap.ui.define(
 
 			onFilterWorkItems(event) {
 				const binding = this.byId('tableWorkItems').getBinding('items');
-				const key = event.getParameter('selectedKey');
+				const key = event.getSource().getSelectedKey();
 				binding.filter(this._filters[key]);
 			},
 

@@ -72,15 +72,15 @@
 										</form:FormContainer>
 									</form:formContainers>
 								</form:Form>
-								<Button text="{i18n>formButtonSubmit}" press=".addWorkItem" type="Emphasized"/>
+								<FlexBox justifyContent="End">
+									<ToolbarSpacer/>
+									<Button text="{i18n>formButtonSubmit}" press=".addWorkItem" type="Emphasized"/>
+								</FlexBox>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
-							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateFinished" items="{
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".setItemCountsFilters" items="{
 								path: '/MyWorkItems',
-								events: {
-            						updateFinished: '.setItemCountsFilters'
-								},
 								sorter: {
 									path: 'completedDate',
 									descending: false
@@ -88,11 +88,11 @@
 							}">
 								<headerToolbar>
 									<OverflowToolbar>
-										<SegmentedButton selectedKey="kids">
+										<SegmentedButton selectedKey="all" selectionChange=".onFilterWorkItems">
 											<items>
-												<SegmentedButtonItem text="Kids" key="kids" />
-												<SegmentedButtonItem text="Adults" />
-												<SegmentedButtonItem text="Seniors" />
+												<SegmentedButtonItem key="all" text="{i18n>tableFilterShowAll} ({/countAll})"/>
+												<SegmentedButtonItem key="completed" text="{i18n>tableFilterCompleted} ({/countCompleted})"/>
+												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({/countIncompleted})"/>
 											</items>
 										</SegmentedButton>
 										<!-- <IconTabBar id="iconTabBar" select=".onFilterWorkItems">
