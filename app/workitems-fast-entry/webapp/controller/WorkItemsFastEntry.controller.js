@@ -42,10 +42,6 @@ sap.ui.define(
 				const loadUntil = new Date();
 				loadUntil.setHours(24, 0, 0, 0); // next midnight
 				// const newItemDate = new Date();
-				const newItemStartDate = new Date();
-				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
-				// const newItemStartDate = this.calculateActivatedDate();
-				const newItemEndDate = addMinutes(new Date(), 15);
 
 				model.setData({
 					busy: false,
@@ -64,21 +60,9 @@ sap.ui.define(
 					locations: [{ title: 'IOT' }, { title: 'Home-Office' }, { title: 'Rottendorf' }],
 					countAll: 0,
 					countCompleted: 0,
-					countIncompleted: 0,
-					newWorkItem: {
-						title: '',
-						parentPath: '',
-						tags: [],
-						// date: newItemDate,
-						activatedDate: newItemStartDate,
-						completedDate: newItemEndDate,
-						// TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
-						// activity: '',
-						// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
-						// location: '',
-						state: 'incompleted'
-					}
+					countIncompleted: 0
 				});
+				this.setNewWorkItemTemplate();
 
 				await Promise.all([
 					this._loadWorkItems({ startDateTime: loadFrom, endDateTime: loadUntil }),
@@ -86,6 +70,30 @@ sap.ui.define(
 				]);
 
 				model.setProperty('/tableBusy', false);
+			},
+
+			setNewWorkItemTemplate() {
+				const newItemStartDate = new Date();
+				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
+				// const newItemStartDate = this.calculateActivatedDate();
+				const newItemEndDate = addMinutes(new Date(), 15);
+
+				newWorkItemTemplate = {
+					title: '',
+					parentPath: '',
+					tags: [],
+					// date: newItemDate,
+					activatedDate: newItemStartDate,
+					completedDate: newItemEndDate,
+					// TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
+					// activity: '',
+					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
+					// location: '',
+					type: 'Manual',
+					state: 'incompleted'
+				};
+
+				this.getModel().setProperty('/newWorkItem', newWorkItemTemplate);
 			},
 
 			async _loadWorkItems({ startDateTime, endDateTime }) {
@@ -249,7 +257,7 @@ sap.ui.define(
 				// this.checkCompleteness();
 				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
 
-				model.setProperty('/newWorkItem', {});
+				this.setNewWorkItemTemplate();
 				model.setProperty('/busy', false);
 			},
 
