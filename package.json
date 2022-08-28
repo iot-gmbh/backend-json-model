@@ -82,9 +82,6 @@
     "srv",
     "app"
   ],
-  "sapux": [
-    "app/workitems-alp-v4"
-  ],
   "ui5": {
     "dependencies": [
       "ui5-middleware-simpleproxy"
