@@ -1,10 +1,10 @@
 sap.ui.define(
   [
     "sap/ui/core/UIComponent",
-    "./CustomODataV2Model",
+    "iot/CustomODataV2Model",
     "sap/ui/Device",
     "./model/models",
-    "./controller/ErrorHandler",
+    "errorhandler/ErrorHandler",
   ],
   (UIComponent, CustomODataV2Model, Device, models, ErrorHandler) =>
     UIComponent.extend("iot.planner.components.managecategories.Component", {
@@ -22,16 +22,28 @@ sap.ui.define(
         UIComponent.prototype.init.apply(this, ...args);
 
         // initialize the error handler with the component
-        this._oErrorHandler = new ErrorHandler(this);
+        // this._oErrorHandler = new ErrorHandler(this);
+
+        const customODataV2Model = new CustomODataV2Model("/v2/categories/");
 
         // call the base component's init function
-        this.setModel(new CustomODataV2Model("/v2/categories/"));
+        this.setModel(customODataV2Model);
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
 
         // create the views based on the url/hash
         this.getRouter().initialize();
+
+        ErrorHandler.cover([customODataV2Model.ODataModel]);
+        // .catch((error) => {
+        //   appVM.setProperty("/errorOnStartupText", error.message);
+        //   router.getTargets().display("errorOnStartup");
+        // })
+        // .finally(() => {
+        //   appVM.setProperty("/busy", false);
+        //   appVM.setProperty("/busyIndicatorDelay", 1000);
+        // });
       },
 
       /**
