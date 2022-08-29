@@ -2,11 +2,12 @@ const uuid = require("uuid");
 const cds = require("@sap/cds");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
-function calcDurationInH({ start, end }) {
+function calcDurationInHM({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
-  const durationInH = durationInMS / 1000 / 60 / 60;
-  const durationInHRounded = durationInH.toFixed(2);
-  return durationInHRounded;
+  const hours = durationInMS / 1000 / 60 / 60;
+  const hoursFloored = Math.floor(durationInMS / 1000 / 60 / 60);
+  const minutesFloored = Math.floor((hours - hoursFloored) * 60);
+  return `${hoursFloored}:${minutesFloored}`;
 }
 
 function calcDates({ activatedDate, completedDate }) {
@@ -134,7 +135,7 @@ module.exports = cds.service.impl(async function () {
     item.confirmed = true;
     item.tenant = req.user.tenant;
     item.assignedTo_userPrincipalName = req.user.id;
-    item.duration = calcDurationInH({
+    item.duration = calcDurationInHM({
       start: item.activatedDate,
       end: item.completedDate,
     });
@@ -160,7 +161,7 @@ module.exports = cds.service.impl(async function () {
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
-    req.data.duration = calcDurationInH({
+    req.data.duration = calcDurationInHM({
       start: req.data.activatedDate,
       end: req.data.completedDate,
     });
@@ -192,6 +193,10 @@ module.exports = cds.service.impl(async function () {
       ...MSGraphEvent,
       ...localWorkItem,
       parent,
+      duration: calcDurationInHM({
+        start: MSGraphEvent.activatedDate,
+        end: MSGraphEvent.completedDate,
+      }),
       state: "incompleted",
     };
 
@@ -218,6 +223,10 @@ module.exports = cds.service.impl(async function () {
     const combined = [
       ...MSGraphEvents.map((itm) => ({
         ...itm,
+        duration: calcDurationInHM({
+          start: itm.activatedDate,
+          end: itm.completedDate,
+        }),
         confirmed: false,
         state: "incompleted",
       })),

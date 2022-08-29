@@ -176,7 +176,7 @@ entity WorkItems : managed, relevance, multitenant {
         AzureDevopsWorkItem;
       //...
       };
-      duration           : Decimal;
+      duration           : String;
       resetEntry         : Boolean;
       deleted            : Boolean;
       confirmed          : Boolean;
