@@ -14,7 +14,7 @@ server:
       configuration:
         excludePatterns:
           - "/resources/**"
-          - "/launchpad.html"
+          # - "/launchpad.html"
         baseUri: http://localhost:4004
 framework:
   name: SAPUI5

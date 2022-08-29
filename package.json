@@ -54,10 +54,10 @@
     "ui5-middleware-simpleproxy": "^0.9.1"
   },
   "scripts": {
-    "start": "run-p start:ui5 start:cds",
+    "start": "run-p start:cds start:ui5",
     "start:ui5": "ui5 serve",
     "start:cds": "cds run",
-    "start:qas": "run-s profile:test start:cds",
+    "start:qas": "npm run profile:test && cds run --port 8080",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
@@ -68,8 +68,7 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "profile:dev": "bash ./set-env.sh development",
     "profile:test": "bash ./set-env.sh test",
-    "profile:prod": "bash ./set-env.sh production",
-    "watch-workitems-alp-v4": "cds watch --open workitems-alp-v4/webapp/index.html?sap-ui-xx-viewCache=false"
+    "profile:prod": "bash ./set-env.sh production"
   },
   "files": [
     "db",
