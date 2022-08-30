@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["./CustomODataV2Model", "./model/models", "sap/ui/core/UIComponent"],
+  ["iot/CustomODataV2Model", "./model/models", "sap/ui/core/UIComponent"],
   (CustomODataV2Model, models, UIComponent) =>
     UIComponent.extend(
       "iot.planner.components.singleplanningcalendar.Component",
