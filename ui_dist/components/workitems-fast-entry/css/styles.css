@@ -1,0 +1,13 @@
+/* Strikes through the completed items */
+li[data-work-item-completed='true'] span {
+	text-decoration: line-through;
+}
+.sapMListTblHighlightCell {
+	width: 10px;
+}
+.sapMLIBHighlightSuccess {
+	width: 10px;
+}
+.sapMLIBHighlightWarning {
+	width: 10px;
+}
