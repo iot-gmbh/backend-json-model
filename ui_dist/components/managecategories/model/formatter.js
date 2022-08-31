@@ -1,0 +1,1 @@
+sap.ui.define([],()=>({toFixed2(e){if(!e){return""}return parseFloat(e).toFixed(2)},getRelativeDuration(e,r,t,i){if(t==i){return r}return e}}));

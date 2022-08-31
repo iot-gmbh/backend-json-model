@@ -1,4 +1,14 @@
 {
+  "[development]": {
+    "folders": {
+      "app": "app"
+    }
+  },
+  "[test]": {
+    "folders": {
+      "app": "dist"
+    }
+  },
   "[production]": {
     "folders": {
       "app": "ui_dist"
@@ -19,25 +29,21 @@
       }
     },
     "db": {
-      "[development]": {
-        "kind": "postgres"
-      },
-      "[sqlite]": {
-        "kind": "sqlite"
-      },
-      "[test]": {
-        "kind": "postgres"
-      },
-      "[production]": {
-        "kind": "postgres"
-      }
+      "kind": "postgres"
     },
     "postgres": {
       "dialect": "plain",
       "impl": "cds-pg",
       "model": [
         "srv"
-      ]
+      ],
+      "credentials": {
+        "[production]": {
+          "ssl": {
+            "rejectUnauthorized": false
+          }
+        }
+      }
     },
     "uaa": {
       "kind": "xsuaa"

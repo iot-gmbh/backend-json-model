@@ -1,1 +1,0 @@
-sap.ui.define([],()=>({numberUnit(e){if(!e){return""}return parseFloat(e).toFixed(2)}}));

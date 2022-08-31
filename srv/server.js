@@ -7,6 +7,14 @@ require("dotenv").config();
 cds.on("bootstrap", (app) => {
   msalAuth(app);
   app.use(proxy());
+
+  app.use((req, _, next) => {
+    if (req.method === "POST" && req.data) {
+      const tenant = req.session.account.tenantId;
+      req.data.tenant = tenant;
+    }
+    next();
+  });
 });
 
 module.exports = cds.server;

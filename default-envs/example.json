@@ -20,6 +20,9 @@
           "password": "example"
         },
         "target": {
+          "ssl": {
+            "rejectUnauthorized": false
+          },
           "url": "postgresql://user:password@localhost:5432/original"
         },
         "reference": {

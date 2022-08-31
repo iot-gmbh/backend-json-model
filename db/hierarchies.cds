@@ -3,117 +3,155 @@ using {iot.planner as my} from './schema';
 namespace iot.planner.hierarchies;
 
 view Hierarchies as
-  select from my.Categories as parent
-  left outer join my.Categories as grandParent
-    on parent.parent.ID = grandParent.ID
-  left outer join my.Categories as greatGrandParent
-    on grandParent.parent.ID = greatGrandParent.ID
-  left outer join my.Categories as greatGreatGrandParent
-    on greatGrandParent.parent.ID = greatGreatGrandParent.ID
-  {
-    key parent.ID as parent,
+  select from my.Categories {
+    key ID,
+
         case parent.hierarchyLevel
           when
-            0
+            '0'
           then
             parent.ID
           when
-            1
+            '1'
           then
-            grandParent.ID
+            parent.parent.ID
           when
-            2
+            '2'
           then
-            greatGrandParent.ID
-          else
-            greatGreatGrandParent.ID
-        end       as level0          : String,
+            parent.parent.parent.ID
+          when
+            '3'
+          then
+            parent.parent.parent.parent.ID
+        end as level0          : String,
         case parent.hierarchyLevel
           when
-            0
-          then
-            parent.mappingID
-          when
-            1
-          then
-            grandParent.mappingID
-          when
-            2
-          then
-            greatGrandParent.mappingID
-          else
-            greatGreatGrandParent.mappingID
-        end       as level0MappingID : String,
-        case parent.hierarchyLevel
-          when
-            1
+            '1'
           then
             parent.ID
           when
-            2
+            '2'
           then
-            grandParent.ID
+            parent.parent.ID
           when
-            3
+            '3'
           then
-            greatGrandParent.ID
-          else
-            greatGreatGrandParent.ID
-        end       as level1          : String,
+            parent.parent.parent.ID
+        end as level1          : String,
         case parent.hierarchyLevel
           when
-            1
-          then
-            parent.mappingID
-          when
-            2
-          then
-            grandParent.mappingID
-          when
-            3
-          then
-            greatGrandParent.mappingID
-          else
-            greatGreatGrandParent.mappingID
-        end       as level1MappingID : String,
-        case parent.hierarchyLevel
-          when
-            2
+            '2'
           then
             parent.ID
           when
-            3
+            '3'
           then
-            grandParent.ID
-          else
-            greatGrandParent.ID
-        end       as level2          : String,
+            parent.parent.ID
+        end as level2          : String,
         case parent.hierarchyLevel
           when
-            2
-          then
-            parent.mappingID
-          when
-            3
-          then
-            grandParent.mappingID
-          else
-            greatGrandParent.mappingID
-        end       as level2MappingID : String,
-        case parent.hierarchyLevel
-          when
-            3
+            '3'
           then
             parent.ID
-          else
-            grandParent.ID
-        end       as level3          : String,
+        end as level3          : String,
+
+        // texts
         case parent.hierarchyLevel
           when
-            3
+            '0'
+          then
+            parent.title
+          when
+            '1'
+          then
+            parent.parent.title
+          when
+            '2'
+          then
+            parent.parent.parent.title
+          when
+            '3'
+          then
+            parent.parent.parent.parent.title
+        end as level0Title     : String,
+        case parent.hierarchyLevel
+          when
+            '1'
+          then
+            parent.title
+          when
+            '2'
+          then
+            parent.parent.title
+          when
+            '3'
+          then
+            parent.parent.parent.title
+        end as level1Title     : String,
+        case parent.hierarchyLevel
+          when
+            '2'
+          then
+            parent.title
+          when
+            '3'
+          then
+            parent.parent.title
+        end as level2Title     : String,
+        case parent.hierarchyLevel
+          when
+            '3'
+          then
+            parent.title
+        end as level3Title     : String,
+
+        // mapping-ID's
+        case parent.hierarchyLevel
+          when
+            '0'
           then
             parent.mappingID
-          else
-            grandParent.mappingID
-        end       as level3MappingID : String,
+          when
+            '1'
+          then
+            parent.parent.mappingID
+          when
+            '2'
+          then
+            parent.parent.parent.mappingID
+          when
+            '3'
+          then
+            parent.parent.parent.parent.mappingID
+        end as level0MappingID : String,
+        case parent.hierarchyLevel
+          when
+            '1'
+          then
+            parent.mappingID
+          when
+            '2'
+          then
+            parent.parent.mappingID
+          when
+            '3'
+          then
+            parent.parent.parent.mappingID
+        end as level1MappingID : String,
+        case parent.hierarchyLevel
+          when
+            '2'
+          then
+            parent.mappingID
+          when
+            '3'
+          then
+            parent.parent.mappingID
+        end as level2MappingID : String,
+        case parent.hierarchyLevel
+          when
+            '3'
+          then
+            parent.mappingID
+        end as level3MappingID : String,
   };

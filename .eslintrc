@@ -24,8 +24,9 @@
     "document": true
   },
   "rules": {
-    "no-underscore-dangle": 0,
-    "max-len": 0,
+    "no-underscore-dangle": "off",
+    "max-len": "off",
+    "func-names": "off",
     "no-console": "off",
     "require-atomic-updates": "off",
     "camelcase": "off",

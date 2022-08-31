@@ -2,7 +2,7 @@ using {
   Currency,
   cuid,
   managed,
-  sap
+  sap,
 } from '@sap/cds/common';
 
 namespace iot.planner;
@@ -57,26 +57,52 @@ entity Users2Categories : cuid, managed, multitenant {
   category : Association to Categories;
 }
 
+@assert.unique : {ID : [ID]} // set explicit unique-constraint on ID. If we don't do this, Postgres will throw an error when upserting data ("es gibt keinen Unique-Constraint oder Exclusion-Constraint, der auf die ON-CONFLICT-Angabe passt"). See: https://stackoverflow.com/questions/42022362/no-unique-or-exclusion-constraint-matching-the-on-conflict
 entity Categories : cuid, managed, relevance, multitenant {
-  title          : String;
-  description    : String;
-  hierarchyLevel : Integer;
-  friendlyID     : String;
-  mappingID      : String;
-  drillDownState : String default 'expanded';
-  path           : String;
-  tags           : Association to many Tags2Categories
-                     on tags.category = $self;
-  levelName      : Association to CategoryLevels
-                     on hierarchyLevel = levelName.hierarchyLevel;
+  title               : String;
+  description         : String;
+  absoluteReference   : String;
+  mappingID           : String;
+  drillDownState      : String default 'expanded';
+  path                : String;
+  hierarchyLevel      : String;
+  shallowReference    : String;
+  deepReference       : String;
+  totalDuration       : Decimal;
+  accumulatedDuration : Decimal;
+  relativeDuration    : Decimal;
+  relativeAccDuration : Decimal;
+  grandTotal          : Decimal;
+  validFrom           : DateTime;
+  validTo             : DateTime;
+  level               : Association to CategoryLevels
+                          on hierarchyLevel = level.hierarchyLevel;
+  tags                : Association to many Tags2Categories
+                          on tags.category = $self;
   @assert.notNull : false
-  manager        : Association to Users;
-  members        : Association to many Users2Categories
-                     on members.category = $self;
+  manager             : Association to Users;
+  members             : Association to many Users2Categories
+                          on members.category = $self;
   @assert.notNull : false
-  parent         : Association to Categories;
-  children       : Association to many Categories
-                     on children.parent = $self;
+  parent              : Association to Categories;
+  children            : Composition of many Categories
+                          on children.parent = $self;
+}
+
+entity CategoriesCumulativeDurations as projection on Categories {
+  key ID,
+      tenant,
+      parent,
+      title,
+      cast('2021-05-02 14:55:08.091' as DateTime) as activatedDate                : DateTime,
+      cast('2021-05-02 14:55:08.091' as DateTime) as completedDate                : DateTime,
+      cast('' as                        String)   as assignedTo_userPrincipalName : String,
+      // members,
+      // tags,
+      children,
+      // shallowReference as deepReference,
+      // title           as path,
+      totalDuration
 }
 
 entity Tags : multitenant {
@@ -108,59 +134,61 @@ view CategoryTags as
       tenant;
 
 entity WorkItems : managed, relevance, multitenant {
-  key ID                  : String @odata.Type : 'Edm.String';
-      tags                : Composition of many Tags2WorkItems
-                              on tags.workItem = $self;
-      activatedDate       : DateTime;
-      activatedDateMonth  : Integer;
-      activatedDateYear   : Integer;
-      activatedDateDay    : Integer;
-      completedDate       : DateTime;
-      completedDateMonth  : Integer;
-      completedDateYear   : Integer;
-      completedDateDay    : Integer;
-      assignedTo          : Association to Users;
-      changedDate         : DateTime;
-      assignedToName      : String;
-      createdDate         : DateTime;
-      reason              : String;
-      state               : String;
-      teamProject         : String;
-      title               : String;
-      workItemType        : String;
+  key ID                 : String @odata.Type : 'Edm.String';
+      tags               : Composition of many Tags2WorkItems
+                             on tags.workItem = $self;
+      activatedDate      : DateTime;
+      activatedDateMonth : Integer;
+      activatedDateYear  : Integer;
+      activatedDateDay   : Integer;
+      completedDate      : DateTime;
+      completedDateMonth : Integer;
+      completedDateYear  : Integer;
+      completedDateDay   : Integer;
+      assignedTo         : Association to Users;
+      changedDate        : DateTime;
+      assignedToName     : String;
+      createdDate        : DateTime;
+      reason             : String;
+      state              : String;
+      teamProject        : String;
+      title              : String;
+      workItemType       : String;
       // Scheduling
-      completedWork       : Decimal(2);
-      remainingWork       : Decimal(2);
-      originalEstimate    : Decimal(2);
+      completedWork      : Decimal;
+      remainingWork      : Decimal;
+      originalEstimate   : Decimal;
       // Documentation
-      resolvedDate        : DateTime;
-      closedDate          : DateTime;
-      customer_friendlyID : String;
-      customerName        : String;
-      private             : Boolean;
-      isAllDay            : Boolean;
+      resolvedDate       : DateTime;
+      closedDate         : DateTime;
+      private            : Boolean;
+      isPrivate          : Boolean;
+      isAllDay           : Boolean;
       // Custom
-      project_friendlyID  : String;
-      projectTitle        : String;
-      ticket              : String;
-      type                : String enum {
+      type               : String enum {
         Manual;
         Event;
         WorkItem
       };
-      duration            : Decimal(2);
-      resetEntry          : Boolean;
-      deleted             : Boolean;
-      confirmed           : Boolean;
-      parent              : Association to Categories;
-      hierarchy           : Association to Hierarchies
-                              on parent.ID = hierarchy.parent;
+      source             : String enum {
+        Manual;
+        MSGraphEvent;
+        AzureDevopsWorkItem;
+      //...
+      };
+      duration           : Decimal;
+      resetEntry         : Boolean;
+      deleted            : Boolean;
+      confirmed          : Boolean;
+      parent             : Association to Categories;
+      hierarchy          : Association to Hierarchies
+                             on parent.ID = hierarchy.ID;
       // Used by the Frontend's hierarchy input-filter
-      parentPath          : String;
+      parentPath         : String;
 };
 
 entity CategoryLevels : multitenant {
-  key hierarchyLevel : Integer;
+  key hierarchyLevel : String;
       title          : String;
 }
 

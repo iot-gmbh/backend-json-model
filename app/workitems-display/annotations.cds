@@ -1,1 +1,0 @@
-using WorkItemsService as service from '../../srv/work-items-service';
