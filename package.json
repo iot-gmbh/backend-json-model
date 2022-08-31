@@ -65,7 +65,7 @@
     "lint:fix:srv": "eslint srv --fix",
     "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production",
-    "build:ui": "ui5 build --all --dest ui_dist",
+    "build:ui": "ui5 build self-contained --clean-dest --all",
     "deploy": "cds-pg-migra",
     "release": "npm run build:ui && npm run build",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",

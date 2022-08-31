@@ -1,1 +1,0 @@
-sap.ui.define(["require"],e=>({resolvePath(r){return e.toUrl("../")+r}}));

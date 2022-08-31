@@ -1,1 +1,0 @@
-sap.ui.define(["sap/ui/core/mvc/Controller"],e=>e.extend("iot.planner.Home",{navTo(e,n){this.getOwnerComponent().getRouter().navTo(n)},navToAnalytics(){this.getOwnerComponent().getRouter().navTo("manageCategories",{},{manageCategories:{route:"graph"}})}}));

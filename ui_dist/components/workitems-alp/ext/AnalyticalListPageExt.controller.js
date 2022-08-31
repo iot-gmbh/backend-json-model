@@ -1,1 +1,0 @@
-sap.ui.define([],()=>sap.ui.controller("iot.planner.workitemsalp.ext.AnalyticalListPageExt",{async onBeforeRendering(){}}));

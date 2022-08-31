@@ -1,1 +1,0 @@
-sap.ui.define([],()=>({duration(r){if(!r){return""}return`${r} h`}}));
