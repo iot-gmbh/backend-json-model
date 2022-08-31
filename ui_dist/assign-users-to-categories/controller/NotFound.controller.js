@@ -1,1 +1,0 @@
-sap.ui.define(["./BaseController"],e=>e.extend("iot.planner.assignuserstocategories.controller.NotFound",{onLinkPressed(){this.getRouter().navTo("worklist")}}));

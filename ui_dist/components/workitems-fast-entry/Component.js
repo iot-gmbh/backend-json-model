@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ui/core/UIComponent","./CustomODataV2Model","./model/models"],(e,t,i)=>e.extend("iot.workitemsfastentry.Component",{metadata:{manifest:"json"},init(...o){e.prototype.init.apply(this,...o);this.setModel(new t("/v2/timetracking/"));this.setModel(i.createDeviceModel(),"device");this.getRouter().initialize()}}));

@@ -1,0 +1,3 @@
+GET https://graph.microsoft.com/v1.0/me/calendarview?startdatetime=Benedikt.Hoelker@iot-online.de&enddatetime=2022-08-10T08:50:39.645Z&$top=1000&$select=id,subject,start,end,categories,sensitivity,isAllDay
+
+GET https://graph.microsoft.com/v1.0/me/calendarview?startdatetime=2022-08-14T22:00:00Z&enddatetime=2022-08-19T22:00:00Z&$top=1000&$select=id,subject,start,end,categories,sensitivity,isAllDay

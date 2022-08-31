@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
+    "@iot/ui5-errorhandler": "file:custom_packages/errorhandler",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
@@ -26,12 +27,14 @@
     "azure-devops-node-api": "^11.2.0",
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.30",
+    "cors": "^2.8.5",
     "didyoumean2": "^5.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "moment": "^2.29.4",
     "uuid": "^8.3.2",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "custom-odata-v2-model": "file:custom_packages/custom-odata-v2-model"
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
@@ -49,38 +52,39 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "npm-run-all": "^4.1.5",
     "prettier": "2.7.1",
-    "sqlite3": "^5.0.9"
+    "sqlite3": "^5.0.9",
+    "ui5-middleware-simpleproxy": "^0.9.1"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "run-p start:cds start:ui5",
+    "start:ui5": "ui5 serve",
+    "start:cds": "cds run",
+    "start:qas": "npm run profile:test && cds run --port 8080",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
     "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production",
-    "build:ui": "rimraf ui_dist && npm-run-all build:ui:*",
-    "build:ui:azdev-workitems": "rimraf dist/azdev-workitems && mkdirp -p ui_dist/azdev-workitems && npm run build --prefix app/azdev-workitems && cp -r app/azdev-workitems/dist/* ui_dist/azdev-workitems",
-    "build:ui:single-planning-calendar": "rimraf dist/single-planning-calendar && mkdirp -p ui_dist/single-planning-calendar && npm run build --prefix app/single-planning-calendar && cp -r app/single-planning-calendar/dist/* ui_dist/single-planning-calendar",
-    "build:ui:users": "rimraf dist/users && mkdirp -p ui_dist/users && npm run build --prefix app/users && cp -r app/users/dist/* ui_dist/users",
-    "build:ui:workitems-iot": "rimraf dist/workitems-iot && mkdirp -p ui_dist/workitems-iot && npm run build --prefix app/workitems-iot && cp -r app/workitems-iot/dist/* ui_dist/workitems-iot",
-    "build:ui:workitems-alp": "rimraf dist/workitems-alp && mkdirp -p ui_dist/workitems-alp && npm run build --prefix app/workitems-alp && cp -r app/workitems-alp/dist/* ui_dist/workitems-alp",
-    "build:ui:workitems-display": "rimraf dist/workitems-display && mkdirp -p ui_dist/workitems-display && npm run build --prefix app/workitems-display && cp -r app/workitems-display/dist/* ui_dist/workitems-display",
-    "build:ui:assign-users-to-categories": "rimraf dist/assign-users-to-categories && mkdirp -p ui_dist/assign-users-to-categories && npm run build --prefix app/assign-users-to-categories && cp -r app/assign-users-to-categories/dist/* ui_dist/assign-users-to-categories",
+    "build:ui": "ui5 build --all --dest ui_dist",
     "deploy": "cds-pg-migra",
+    "release": "npm run build:ui && npm run build",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
-    "env:dev": "bash ./set-env.sh dev",
-    "env:test": "bash ./set-env.sh test",
-    "env:prod": "bash ./set-env.sh prod",
-    "watch-workitems-alp-v4": "cds watch --open workitems-alp-v4/webapp/index.html?sap-ui-xx-viewCache=false"
+    "profile:dev": "bash ./set-env.sh development",
+    "profile:test": "bash ./set-env.sh test",
+    "profile:prod": "bash ./set-env.sh production"
   },
   "files": [
     "db",
     "srv",
     "app"
   ],
-  "sapux": [
-    "app/workitems-alp-v4"
-  ],
+  "ui5": {
+    "dependencies": [
+      "ui5-middleware-simpleproxy",
+      "@iot/ui5-errorhandler",
+      "custom-odata-v2-model"
+    ]
+  },
   "cds": {
     "requires": {
       "microsoft.graph": {
