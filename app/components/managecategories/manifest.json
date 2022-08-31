@@ -96,25 +96,19 @@
       },
       "routes": [
         {
-          "pattern": ":basepath:",
+          "pattern": "",
           "name": "worklist",
-          "target": [
-            "worklist"
-          ]
+          "target": "worklist"
         },
         {
           "pattern": "Categories/{objectId}",
           "name": "object",
-          "target": [
-            "object"
-          ]
+          "target": "object"
         },
         {
           "pattern": "graph",
           "name": "graph",
-          "target": [
-            "graph"
-          ]
+          "target": "graph"
         }
       ],
       "targets": {

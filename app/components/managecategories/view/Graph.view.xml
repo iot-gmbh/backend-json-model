@@ -1,5 +1,4 @@
 <mvc:View xmlns:layout="sap.suite.ui.commons.networkgraph.layout" controllerName="iot.planner.components.managecategories.controller.Graph" displayBlock="true"
-    xmlns="sap.suite.ui.commons.networkgraph"
     xmlns:m="sap.m"
     xmlns:t="sap.ui.table"
     xmlns:mvc="sap.ui.core.mvc">

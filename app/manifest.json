@@ -19,6 +19,10 @@
         "sap.suite.ui.generic.template": {}
       }
     },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
@@ -63,12 +67,16 @@
         {
           "name": "manageCategories",
           "pattern": "manageCategories",
-          "target": "manageCategories"
+          "target": {
+            "name": "manageCategories",
+            "prefix": "m"
+          }
         },
         {
           "name": "calendar",
           "pattern": "calendar",
-          "target": "calendar"
+          "target": "calendar",
+          "prefix": "calendar"
         }
       ],
       "targets": {
