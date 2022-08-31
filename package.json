@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "file:custom_packages/errorhandler",
+    "@iot/ui5-errorhandler": "^2.2.19",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
@@ -28,13 +28,13 @@
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.30",
     "cors": "^2.8.5",
+    "custom-odata-v2-model": "file:custom_packages/custom-odata-v2-model",
     "didyoumean2": "^5.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "moment": "^2.29.4",
     "uuid": "^8.3.2",
-    "validator": "^13.7.0",
-    "custom-odata-v2-model": "file:custom_packages/custom-odata-v2-model"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
