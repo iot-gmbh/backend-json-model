@@ -4,8 +4,6 @@
     xmlns:core="sap.ui.core"
     xmlns:t="sap.ui.table"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:semantic="sap.f.semantic">
 
