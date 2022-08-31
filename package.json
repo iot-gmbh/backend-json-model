@@ -58,7 +58,7 @@
   "scripts": {
     "start": "run-p start:cds start:ui5",
     "start:ui5": "ui5 serve",
-    "start:cds": "cds run",
+    "start:cds": "cds run --port 8080",
     "start:qas": "npm run profile:test && cds run --port 8080",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
