@@ -46,9 +46,9 @@ module.exports = cds.service.impl(async function () {
   }
 
   this.before("CREATE", "*", async (req) => {
-    req.reject("Oh no!");
-    // const { tenant } = req.user;
-    // req.data.tenant = tenant;
+    // req.reject("Oh no!");
+    const { tenant } = req.user;
+    req.data.tenant = tenant;
   });
 
   this.on("getMyCategoryTree", async (req) => {
