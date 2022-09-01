@@ -58,8 +58,8 @@
   "scripts": {
     "start": "run-p start:cds start:ui5",
     "start:ui5": "ui5 serve",
-    "start:cds": "cds run --port 8080",
-    "start:qas": "npm run profile:test && cross-env PORT=8080 cds run --port 8080 --profile test",
+    "start:cds": "cds run",
+    "start:qas": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
@@ -70,9 +70,9 @@
     "deploy": "cds-pg-migra",
     "release": "npm run build:ui && npm run build",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
-    "profile:dev": "bash ./set-env.sh development",
-    "profile:test": "bash ./set-env.sh test",
-    "profile:prod": "bash ./set-env.sh production"
+    "set-default-env:dev": "bash ./set-env.sh development",
+    "set-default-env:test": "bash ./set-env.sh test",
+    "set-default-env:prod": "bash ./set-env.sh production"
   },
   "files": [
     "db",
