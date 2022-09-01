@@ -98,35 +98,6 @@
           "uri": "css/style.css"
         }
       ]
-    },
-    "routing": {
-      "config": {
-        "routerClass": "sap.m.routing.Router",
-        "viewType": "XML",
-        "async": true,
-        "viewPath": "iot.planner.components.singleplanningcalendar.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
-      },
-      "routes": [
-        {
-          "name": "RouteSinglePlanningCalendar",
-          "pattern": "RouteSinglePlanningCalendar",
-          "target": [
-            "TargetSinglePlanningCalendar"
-          ]
-        }
-      ],
-      "targets": {
-        "TargetSinglePlanningCalendar": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "SinglePlanningCalendar",
-          "viewName": "SinglePlanningCalendar"
-        }
-      }
     }
   }
 }

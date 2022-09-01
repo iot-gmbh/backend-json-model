@@ -20,8 +20,8 @@ sap.ui.define(
           // call the base component's init function
           this.setModel(new CustomODataV2Model("/v2/timetracking/"));
 
-          // enable routing
-          this.getRouter().initialize();
+          // // enable routing
+          // this.getRouter().initialize();
 
           // set the device model
           this.setModel(models.createDeviceModel(), "device");
