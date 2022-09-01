@@ -19,7 +19,7 @@
 						<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 					</appointments>
 					<dependents>
-						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="50vh" contentWidth="40vw">
+						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="80vh" contentWidth="40vw">
 							<customHeader>
 								<Bar>
 									<contentLeft>
