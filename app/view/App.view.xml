@@ -6,5 +6,5 @@
             <m:Avatar initials="UI"/>
         </profile> -->
     </f:ShellBar>
-    <App id="app" class="sapUiSizeCozy"/>
+    <App id="app"/>
 </mvc:View>
