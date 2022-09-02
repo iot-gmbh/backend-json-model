@@ -317,7 +317,7 @@ sap.ui.define(
             }),
           ];
 
-          this.byId("hierarchyTree").getBinding("items").filter(filters);
+          this.byId("hierarchyTree").getBinding("rows").filter(filters);
         },
 
         async onSubmitEntry() {

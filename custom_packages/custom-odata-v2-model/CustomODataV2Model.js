@@ -162,8 +162,9 @@ sap.ui.define(
         const odataPath = this.getODataPathFrom(obj);
         const data = this.removeNavPropsFrom(obj);
         const result = await this.odata.update(odataPath, data);
+        const cleanResult = this.sliceDeferredProperties(result);
 
-        const merge = { ...result, ...obj };
+        const merge = { ...obj, ...cleanResult };
 
         this.setProperty(localPath, merge);
       },
@@ -181,6 +182,18 @@ sap.ui.define(
         );
 
         this.setProperty(entityName, data);
+      },
+
+      sliceDeferredProperties(obj) {
+        const sliced = Object.entries(obj)
+          .filter(([, value]) => !value.__deferred)
+          .reduce((map, [key, value]) => {
+            // eslint-disable-next-line no-param-reassign
+            map[key] = value;
+            return map;
+          }, {});
+
+        return sliced;
       },
 
       getODataPathFrom(obj) {

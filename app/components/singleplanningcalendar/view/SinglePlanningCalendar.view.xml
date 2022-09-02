@@ -4,7 +4,7 @@
 	xmlns:f="sap.ui.layout.form"
 	xmlns:l="sap.ui.layout"
 	xmlns:core="sap.ui.core"
-	xmlns:table="sap.ui.table"
+	xmlns:t="sap.ui.table"
 	xmlns:mvc="sap.ui.core.mvc">
 	<App busy="{/busy}" busyIndicatorDelay="0" id="app">
 		<pages>
@@ -19,7 +19,7 @@
 						<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 					</appointments>
 					<dependents>
-						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="80vh" contentWidth="40vw">
+						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="680px" contentWidth="480px">
 							<customHeader>
 								<Bar>
 									<contentLeft>
@@ -55,16 +55,23 @@
 											</f:FormElement>
 											<f:FormElement>
 												<f:fields>
-													<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTree" items="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-														<StandardTreeItem title="{parts: ['absoluteReference', 'shallowReference', 'title'], formatter: '.formatter.getReferenceAndText'}" />
-													</Tree>
+													<t:TreeTable selectionMode="Single" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], 
+													parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="5" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+														<t:columns>
+															<t:Column label="{i18n>title}">
+																<t:template>
+																	<Text text="{title}" />
+																</t:template>
+															</t:Column>
+														</t:columns>
+													</t:TreeTable>
 												</f:fields>
 											</f:FormElement>
 										</f:formElements>
 									</f:FormContainer>
 									<f:FormContainer>
 										<f:formElements>
-											<f:FormElement label="{i18n>WorkItems.tags}">
+											<!-- <f:FormElement label="{i18n>WorkItems.tags}">
 												<f:fields>
 													<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
 															path: 'OData>/Tags',
@@ -80,7 +87,7 @@
 													</MultiInput>
 													<Text text="{/hierarchySuggestion}"/>
 												</f:fields>
-											</f:FormElement>
+											</f:FormElement> -->
 											<f:FormElement label="{i18n>WorkItems.activatedDate}">
 												<f:fields>
 													<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
