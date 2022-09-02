@@ -1,8 +1,8 @@
 {
   "configurations": [
     {
-      "command": "cds run",
-      "name": "cds run",
+      "command": "npm start",
+      "name": "npm start",
       "request": "launch",
       "type": "node-terminal",
       "skipFiles": ["<node_internals>/**"]
