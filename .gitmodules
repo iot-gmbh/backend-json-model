@@ -4,3 +4,6 @@
 [submodule "custom_packages/cds-pg-migra"]
 	path = custom_packages/cds-pg-migra
 	url = https://github.com/BenediktHoelker/cds-pg-migra.git
+[submodule "custom_packages/errorhandler"]
+	path = custom_packages/errorhandler
+	url = https://iot-gmbh.visualstudio.com/IOT%20Artifacts/_git/errorhandler

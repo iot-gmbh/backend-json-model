@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
-const capitalizeFirstLetter = (string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
-
 sap.ui.define(
   [
     "./BaseController",
-    "./ErrorParser",
     "sap/ui/model/Filter",
     "../model/formatter",
     "../model/legendItems",
@@ -16,7 +12,6 @@ sap.ui.define(
   ],
   (
     BaseController,
-    ErrorParser,
     Filter,
     formatter,
     legendItems,
@@ -51,14 +46,7 @@ sap.ui.define(
 
           await this.getModel("OData").metadataLoaded();
 
-          try {
-            await Promise.all([
-              this._loadAppointments(),
-              this._loadHierarchy(),
-            ]);
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
-          }
+          await Promise.all([this._loadAppointments(), this._loadHierarchy()]);
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -191,24 +179,20 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
-          try {
-            await model.remove(appointment);
+          await model.remove(appointment);
 
-            if (appointment.source !== "Manual") {
-              await model.callFunction("/removeDraft", {
-                method: "POST",
-                urlParameters: {
-                  ID: appointment.ID,
-                  activatedDate: appointment.activatedDate,
-                  completedDate: appointment.completedDate,
-                },
-              });
-            }
-
-            this._closeDialog("createItemDialog");
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
+          if (appointment.source !== "Manual") {
+            await model.callFunction("/removeDraft", {
+              method: "POST",
+              urlParameters: {
+                ID: appointment.ID,
+                activatedDate: appointment.activatedDate,
+                completedDate: appointment.completedDate,
+              },
+            });
           }
+
+          this._closeDialog("createItemDialog");
 
           model.setProperty("/dialogBusy", false);
         },
@@ -221,20 +205,16 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
-          try {
-            const appointmentSync = await model.callFunction("/resetToDraft", {
-              method: "POST",
-              urlParameters: {
-                ID: appointment.ID,
-              },
-            });
+          const appointmentSync = await model.callFunction("/resetToDraft", {
+            method: "POST",
+            urlParameters: {
+              ID: appointment.ID,
+            },
+          });
 
-            model.setProperty(path, appointmentSync);
+          model.setProperty(path, appointmentSync);
 
-            this._closeDialog("createItemDialog");
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
-          }
+          this._closeDialog("createItemDialog");
 
           model.setProperty("/dialogBusy", false);
         },
@@ -360,17 +340,13 @@ sap.ui.define(
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
 
-          try {
-            // Update
-            if (data.ID) {
-              await model.update(data);
-            } else {
-              await model.create("/MyWorkItems", data);
+          // Update
+          if (data.ID) {
+            await model.update(data);
+          } else {
+            await model.create("/MyWorkItems", data);
 
-              model.setProperty("/MyWorkItems/NEW", {});
-            }
-          } catch (error) {
-            MessageBox.error(ErrorParser.parse(error));
+            model.setProperty("/MyWorkItems/NEW", {});
           }
         },
 

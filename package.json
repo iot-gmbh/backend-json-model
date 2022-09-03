@@ -13,12 +13,13 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-msal-auth"
+      "custom_packages/cds-msal-auth",
+      "custom_packages/errorhandler"
     ]
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "^2.2.19",
+    "@iot/ui5-errorhandler": "file:custom_packages/errorhandler",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
@@ -56,10 +57,10 @@
     "ui5-middleware-simpleproxy": "^0.9.1"
   },
   "scripts": {
-    "start": "run-p start:cds start:ui5",
+    "start": "npm run set-default-env:dev && run-p start:cds start:ui5",
     "start:ui5": "ui5 serve",
     "start:cds": "cds run",
-    "start:qas": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
+    "start:test": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
