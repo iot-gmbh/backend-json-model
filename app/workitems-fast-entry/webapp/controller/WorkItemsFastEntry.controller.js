@@ -2,6 +2,17 @@ function addMinutes(date, minutes) {
 	return new Date(date.getTime() + minutes * 60000);
 }
 
+function getQuarterHourRoundedTime(date) {
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+	const roundedHours = minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
+	const roundedMinutes = (Math.round(minutes / 15) * 15) % 60;
+	const roundedHoursString = roundedHours < 10 ? `0${roundedHours}` : roundedHours;
+	const roundedMinutesString = roundedMinutes === 0 ? '00' : roundedMinutes;
+
+	return `${roundedHoursString}:${roundedMinutesString}`;
+}
+
 sap.ui.define(
 	[
 		'./BaseController',
@@ -41,13 +52,10 @@ sap.ui.define(
 				loadFrom.setHours(0, 0, 0, 0); // last midnight
 				const loadUntil = new Date();
 				loadUntil.setHours(24, 0, 0, 0); // next midnight
-				// const newItemDate = new Date();
 
 				model.setData({
 					busy: false,
 					tableBusy: true,
-					showHierarchyTreeForm: false,
-					showHierarchyTreeTable: false,
 					MyCategories: {},
 					categoriesNested: {},
 					// TODO: Entität im Schema erstellen und aus ODataModel beziehen
@@ -73,18 +81,13 @@ sap.ui.define(
 			},
 
 			setNewWorkItemTemplate() {
-				const newItemStartDate = new Date();
-				// // Problem: this.calculateActivatedDate benötigt geladene MyWorkItems
-				// const newItemStartDate = this.calculateActivatedDate();
-				const newItemEndDate = addMinutes(new Date(), 15);
-
 				newWorkItemTemplate = {
 					title: '',
-					parentPath: '',
 					tags: [],
-					// date: newItemDate,
-					activatedDate: newItemStartDate,
-					completedDate: newItemEndDate,
+					date: new Date().toISOString().substring(0, 10),
+					activatedDateTime: getQuarterHourRoundedTime(new Date()),
+					completedDateTime: getQuarterHourRoundedTime(addMinutes(new Date(), 15)),
+					parentPath: '',
 					// TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
 					// activity: '',
 					// TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
@@ -109,8 +112,8 @@ sap.ui.define(
 					({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
 						...appointment,
 						tags: appointment.tags.results,
-						completedDate: isAllDay ? completedDate.setHours(0) : completedDate,
-						activatedDate: isAllDay ? activatedDate.setHours(0) : activatedDate
+						activatedDate: isAllDay ? activatedDate.setHours(0) : activatedDate,
+						completedDate: isAllDay ? completedDate.setHours(0) : completedDate
 					})
 				);
 
@@ -124,50 +127,6 @@ sap.ui.define(
 
 				model.setProperty('/MyCategories', results);
 				model.setProperty('/MyCategoriesNested', categoriesNested);
-			},
-
-			calculateActivatedDate() {
-				const model = this.getModel();
-				const workItems = model.getProperty('/MyWorkItems').map((workItem) => ({ ...workItem }));
-				const latestCompletedDate = workItems.reduce((completedDate, workItem) => {
-					if (completedDate === undefined) {
-						return workItem.completedDate;
-					}
-					return workItem.completedDate > completedDate ? workItem.completedDate : completedDate;
-				}, undefined);
-
-				let nextActivatedDate = latestCompletedDate;
-				const currentDate = new Date();
-				// toDateString() returns a string consisting of the year, month and day only
-				if (nextActivatedDate.toDateString() !== currentDate.toDateString()) {
-					nextActivatedDate = currentDate;
-					nextActivatedDate.setHours(8, 30, 0);
-					if (currentDate.getTime() < nextActivatedDate.getTime()) {
-						nextActivatedDate = currentDate;
-					}
-				}
-
-				return nextActivatedDate;
-			},
-
-			async setItemCountsFilters() {
-				const model = this.getModel();
-
-				const countAll = model
-					.getProperty('/MyWorkItems')
-					.filter((workItem) => workItem.state !== '').length;
-
-				const countCompleted = model
-					.getProperty('/MyWorkItems')
-					.filter((workItem) => workItem.state === 'completed').length;
-
-				const countIncompleted = model
-					.getProperty('/MyWorkItems')
-					.filter((workItem) => workItem.state === 'incompleted').length;
-
-				model.setProperty('/countAll', countAll);
-				model.setProperty('/countCompleted', countCompleted);
-				model.setProperty('/countIncompleted', countIncompleted);
 			},
 
 			onChangeHierarchy(event) {
@@ -210,32 +169,30 @@ sap.ui.define(
 				}
 			},
 
-			onChangeDate(event) {
-				const model = this.getModel();
-				const date = model.getProperty('/newWorkItem/date');
-				const activatedDate = model.getProperty('/newWorkItem/activatedDate');
-				const completedDate = model.getProperty('/newWorkItem/completedDate');
-
-				model.setProperty('/newWorkItem/activatedDate', this.updateDate(activatedDate, date));
-				model.setProperty('/newWorkItem/completedDate', this.updateDate(completedDate, date));
-			},
-
-			updateDate(oldDate, date) {
-				// Copy values instead of changing the state of /newWorkItem/date
-				const newDate = new Date(date.getTime());
-				const newDateHours = oldDate.getHours();
-				const newDateMinutes = oldDate.getMinutes();
-				const newDateSeconds = oldDate.getSeconds();
-
-				newDate.setHours(newDateHours, newDateMinutes, newDateSeconds);
-
-				return newDate;
-			},
-
 			onFilterWorkItems(event) {
 				const binding = this.byId('tableWorkItems').getBinding('items');
 				const key = event.getSource().getSelectedKey();
 				binding.filter(this._filters[key]);
+			},
+
+			setItemCountsFilters() {
+				const model = this.getModel();
+
+				const countAll = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state !== '').length;
+
+				const countCompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'completed').length;
+
+				const countIncompleted = model
+					.getProperty('/MyWorkItems')
+					.filter((workItem) => workItem.state === 'incompleted').length;
+
+				model.setProperty('/countAll', countAll);
+				model.setProperty('/countCompleted', countCompleted);
+				model.setProperty('/countIncompleted', countIncompleted);
 			},
 
 			onSearch(event) {
@@ -249,23 +206,21 @@ sap.ui.define(
 				this.byId('table').getBinding('items').filter(this.searchFilters);
 			},
 
-			async addWorkItem() {
+			async onPressAddWorkItem() {
 				const model = this.getModel();
 				const newWorkItem = model.getProperty('/newWorkItem');
+				console.log(newWorkItem);
+
 				model.setProperty('/busy', true);
 
 				// this.checkCompleteness();
-				await model.create('/MyWorkItems', { localPath: '/MyWorkItems/X', ...newWorkItem });
+				await model.create('/MyWorkItems', {
+					localPath: '/MyWorkItems/X',
+					...newWorkItem
+				});
 
 				this.setNewWorkItemTemplate();
 				model.setProperty('/busy', false);
-			},
-
-			async updateWorkItem(event) {
-				const bindingContext = event.getSource().getBindingContext();
-				const localPath = bindingContext.getPath();
-				const workItem = bindingContext.getObject();
-				await this.getModel().update({ ...workItem, localPath });
 			},
 
 			async onPressDeleteWorkItems() {
@@ -299,6 +254,13 @@ sap.ui.define(
 				table.removeSelections();
 
 				MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
+			},
+
+			async updateWorkItem(event) {
+				const bindingContext = event.getSource().getBindingContext();
+				const localPath = bindingContext.getPath();
+				const workItem = bindingContext.getObject();
+				await this.getModel().update({ ...workItem, localPath });
 			}
 		})
 );

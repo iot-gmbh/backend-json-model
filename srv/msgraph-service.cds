@@ -24,8 +24,11 @@ service MSGraphService @(requires : 'authenticated-user') {
         @odata.Type : 'Edm.String'
     key id             as ID,
         subject        as title,
+        // cast(start as Date) as date,
         start          as activatedDate,
+        // cast(start as Time) as activatedDateTime,
         end            as completedDate,
+        // cast(end as   Time) as completedDateTime,
         sensitivity,
         case
           when

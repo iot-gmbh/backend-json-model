@@ -55,14 +55,14 @@
 													</Select>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }" change=".onChangeDate"/>
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy', source: { pattern: 'yyyy-MM-dd' }}}"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
-													<TimePicker value="{ path: '/newWorkItem/activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-													<TimePicker value="{ path: '/newWorkItem/completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+													<TimePicker value="{/newWorkItem/activatedDateTime}" displayFormat="HH:mm" minutesStep="15"/>
+													<TimePicker value="{/newWorkItem/completedDateTime}" displayFormat="HH:mm" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
-													<ComboBox id="selectLocationForm" items="{/locations}">
+													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="IOT">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
@@ -74,7 +74,7 @@
 								</form:Form>
 								<FlexBox justifyContent="End">
 									<ToolbarSpacer/>
-									<Button text="{i18n>formButtonSubmit}" press=".addWorkItem" type="Emphasized"/>
+									<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
 								</FlexBox>
 							</f:DynamicPageHeader>
 						</f:header>
@@ -95,14 +95,6 @@
 												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({/countIncompleted})"/>
 											</items>
 										</SegmentedButton>
-										<!-- <IconTabBar id="iconTabBar" select=".onFilterWorkItems">
-											<items>
-												<IconTabFilter key="all" showAll="true" count="{/countAll}" text="{i18n>tableFilterShowAll}"/>
-												<IconTabSeparator/>
-												<IconTabFilter key="completed" icon="sap-icon://message-success" iconColor="Positive" count="{/countCompleted}" text="{i18n>tableFilterCompleted}"/>
-												<IconTabFilter key="incompleted" icon="sap-icon://message-warning" iconColor="Critical" count="{/countIncompleted}" text="{i18n>tableFilterIncompleted}"/>
-											</items>
-										</IconTabBar> -->
 										<ToolbarSpacer/>
 										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
 										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
@@ -143,9 +135,9 @@
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" width="6vw" change="updateWorkItem"/>
-											<DatePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
-											<TimePicker value="{ path: 'activatedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
-											<TimePicker value="{ path: 'completedDate' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'HH:mm'} }"/>
+											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
+											<TimePicker value="{ path: 'activatedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern : 'HH:mm'}}" minutesStep="15"/>
+											<TimePicker value="{ path: 'completedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern : 'HH:mm'}}" minutesStep="15"/>
 											<Text text="{path: 'duration', formatter: '.formatter.duration'}" wrapping="false"/>
 											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
 												<suggestionItems>
@@ -157,7 +149,7 @@
 													<core:Item key="{title}" text="{title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}">
+											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="IOT">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
 												</items>

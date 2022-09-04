@@ -2,12 +2,22 @@ const uuid = require("uuid");
 const cds = require("@sap/cds");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
-function calcDurationInHM({ start, end }) {
+function joinDateAndTime(date, time) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const timeSplitted = time.split(":");
+  const hours = timeSplitted[0];
+  const minutes = timeSplitted[1];
+  const dateTime = new Date(year, month, day, hours, minutes);
+  return dateTime;
+}
+
+function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
-  const hours = durationInMS / 1000 / 60 / 60;
-  const hoursFloored = Math.floor(durationInMS / 1000 / 60 / 60);
-  const minutesFloored = Math.floor((hours - hoursFloored) * 60);
-  return `${hoursFloored}:${minutesFloored}`;
+  const durationInH = durationInMS / 1000 / 60 / 60;
+  const durationInHRounded = durationInH.toFixed(2);
+  return durationInHRounded;
 }
 
 function calcDates({ activatedDate, completedDate }) {
@@ -135,7 +145,15 @@ module.exports = cds.service.impl(async function () {
     item.confirmed = true;
     item.tenant = req.user.tenant;
     item.assignedTo_userPrincipalName = req.user.id;
-    item.duration = calcDurationInHM({
+    item.activatedDate = joinDateAndTime(
+      req.data.date,
+      req.data.activatedDateTime
+    );
+    item.completedDate = joinDateAndTime(
+      req.data.date,
+      req.data.completedDateTime
+    );
+    item.duration = calcDurationInH({
       start: item.activatedDate,
       end: item.completedDate,
     });
@@ -158,10 +176,19 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", "MyWorkItems", async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
+    console.log("req.data: ", req.data);
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
-    req.data.duration = calcDurationInHM({
+    req.data.activatedDate = joinDateAndTime(
+      req.data.date,
+      req.data.activatedDateTime
+    );
+    req.data.completedDate = joinDateAndTime(
+      req.data.date,
+      req.data.completedDateTime
+    );
+    req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
       end: req.data.completedDate,
     });
@@ -193,7 +220,7 @@ module.exports = cds.service.impl(async function () {
       ...MSGraphEvent,
       ...localWorkItem,
       parent,
-      duration: calcDurationInHM({
+      duration: calcDurationInH({
         start: MSGraphEvent.activatedDate,
         end: MSGraphEvent.completedDate,
       }),
@@ -223,7 +250,7 @@ module.exports = cds.service.impl(async function () {
     const combined = [
       ...MSGraphEvents.map((itm) => ({
         ...itm,
-        duration: calcDurationInHM({
+        duration: calcDurationInH({
           start: itm.activatedDate,
           end: itm.completedDate,
         }),
@@ -251,10 +278,13 @@ module.exports = cds.service.impl(async function () {
     const results = Object.values(map)
       .filter(({ deleted }) => !deleted)
       .map((workItem) => {
-        // Der Parent-Path kann nicht per join oder Assoziation ermittelt werden, da es sich bei der Selektion der Kategorien und der entsprechenden Pfade um eine custom-implementation handelt. Lösung: Alle myCategories laden und manuell zuordnen
         const parent = categorizeWorkItem(workItem, myCategories);
 
-        return { ...workItem, parentPath: parent?.path, parent };
+        return {
+          ...workItem,
+          parentPath: parent?.path,
+          parent,
+        };
       });
 
     results.$count = results.length;

@@ -22,10 +22,12 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
         title,
+        // cast(activatedDate as Date) as date,
         activatedDate,
+        // cast(activatedDate as Time) as activatedDateTime,
         completedDate,
+        // cast(completedDate as Time) as completedDateTime,
         isPrivate,
-        tags,
         isAllDay,
         'MSGraphEvent' as source : String
   };
