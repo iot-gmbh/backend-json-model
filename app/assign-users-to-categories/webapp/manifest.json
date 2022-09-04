@@ -16,7 +16,7 @@
       "toolsId": "cc711169-d4ea-4bdb-927d-2108119f4733"
     },
     "dataSources": {
-      "--mainService": {
+      "mainService": {
         "uri": "/v2/categories/",
         "type": "OData",
         "settings": {
