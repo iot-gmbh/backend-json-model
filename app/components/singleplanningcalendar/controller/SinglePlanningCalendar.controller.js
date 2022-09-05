@@ -117,6 +117,9 @@ sap.ui.define(
 
         onSelectHierarchy(event) {
           const { rowContext } = event.getParameters();
+
+          if (!rowContext) return;
+
           const hierarchyPath = rowContext.getProperty("path");
           const path = event.getSource().getBindingContext().getPath();
 
