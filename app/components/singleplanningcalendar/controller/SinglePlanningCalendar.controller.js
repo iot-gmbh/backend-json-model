@@ -116,10 +116,8 @@ sap.ui.define(
         },
 
         onSelectHierarchy(event) {
-          const { listItem } = event.getParameters();
-          const hierarchyPath = listItem
-            .getBindingContext()
-            .getProperty("path");
+          const { rowContext } = event.getParameters();
+          const hierarchyPath = rowContext.getProperty("path");
           const path = event.getSource().getBindingContext().getPath();
 
           this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);

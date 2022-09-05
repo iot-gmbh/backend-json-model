@@ -186,7 +186,7 @@ sap.ui.define(
 
       sliceDeferredProperties(obj) {
         const sliced = Object.entries(obj)
-          .filter(([, value]) => !value.__deferred)
+          .filter(([, value]) => !!value && !value.__deferred)
           .reduce((map, [key, value]) => {
             // eslint-disable-next-line no-param-reassign
             map[key] = value;

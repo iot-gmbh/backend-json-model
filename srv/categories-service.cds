@@ -2,7 +2,15 @@ using {iot.planner as my} from '../db/schema';
 
 
 service CategoriesService @(requires : 'authenticated-user') {
-  entity Categories       as projection on my.Categories;
+  entity Categories       as projection on my.Categories excluding {
+    manager,
+    // members,
+    tags,
+    // parent,
+    // children,
+    level,
+  };
+
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
 
   @(restrict : [{to : 'admin'}])
