@@ -44,12 +44,15 @@ module.exports = async function (srv) {
       This leads to UI5 showing repeating them each single day instead of showing all-day events.
       Thus we replace the time for all-day events
       */
+      date: `${start.dateTime.substring(0, 10)}`,
       activatedDate: isAllDay
         ? `${start.dateTime.substring(0, 11)}00:00:00Z`
         : `${start.dateTime.substring(0, 19)}Z`,
+      activatedDateTime: `${start.dateTime.substring(11, 16)}`,
       completedDate: isAllDay
         ? `${end.dateTime.substring(0, 11)}00:00:00Z`
         : `${end.dateTime.substring(0, 19)}Z`,
+      completedDateTime: `${end.dateTime.substring(11, 16)}`,
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,
