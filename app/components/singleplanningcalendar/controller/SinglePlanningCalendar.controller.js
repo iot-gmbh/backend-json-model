@@ -265,46 +265,97 @@ sap.ui.define(
           this._filterHierarchyByPath(newValue);
         },
 
-        _filterHierarchyByPath(query) {
-          const filters = [
-            new Filter({
-              filters: [
-                new Filter({
-                  path: "path",
-                  test: (path) => {
-                    if (!query || !path) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => path.includes(sub));
-                  },
-                }),
-                new Filter({
-                  path: "absoluteReference",
-                  test: (absoluteReference) => {
-                    if (!query || !absoluteReference) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => absoluteReference.includes(sub));
-                  },
-                }),
-                new Filter({
-                  path: "deepReference",
-                  test: (deepReference) => {
-                    if (!query || !deepReference) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => deepReference.includes(sub));
-                  },
-                }),
-              ],
-              and: false,
-            }),
-          ];
+        _filterHierarchyByPath(querySubstring) {
+          let filters = [];
 
-          this.byId("hierarchyTree").getBinding("rows").filter(filters);
+          if (!querySubstring) {
+            filters = [];
+          } else if (querySubstring.includes(">")) {
+            filters = [
+              new Filter({
+                path: "path",
+                test: (path) => {
+                  if (!querySubstring || !path) return false;
+                  const pathSubstrings = path.replaceAll(" ", "").split(">");
+                  const querySubstrings = querySubstring
+                    .toUpperCase()
+                    .replaceAll(" ", "")
+                    .split(">");
+
+                  return querySubstrings.every(
+                    (querySubstring, index) =>
+                      pathSubstrings[index] &&
+                      pathSubstrings[index].includes(querySubstring)
+                  );
+                },
+              }),
+            ];
+          } else {
+            filters = [
+              new Filter({
+                filters: [
+                  new Filter({
+                    path: "path",
+                    test: (path) => {
+                      if (!querySubstring || !path) return false;
+                      const substrings = querySubstring.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => path.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "absoluteReference",
+                    test: (absoluteReference) => {
+                      if (!querySubstring || !absoluteReference) return false;
+                      const substrings = querySubstring.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => absoluteReference.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "deepReference",
+                    test: (deepReference) => {
+                      if (!querySubstring || !deepReference) return false;
+                      const substrings = querySubstring.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => deepReference.includes(sub));
+                    },
+                  }),
+                ],
+                and: false,
+              }),
+            ];
+          }
+
+          const tree = this.byId("hierarchyTree");
+          tree.getBinding("rows").filter(filters);
+
+          tree.getRows().forEach((row) => {
+            const titleCell = row.getCells()[0];
+
+            if (!titleCell) return;
+
+            const htmlText = titleCell
+              .getHtmlText()
+              .replaceAll("<strong>", "")
+              .replaceAll("</strong>", "");
+
+            titleCell.setHtmlText(htmlText);
+
+            if (!querySubstring) return;
+
+            const querySubstrings = querySubstring.split(/>| /);
+
+            const newText = querySubstrings.reduce(
+              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+              htmlText
+            );
+
+            titleCell.setHtmlText(newText);
+          });
         },
 
         async onSubmitEntry() {
