@@ -6,4 +6,4 @@
 	url = https://github.com/BenediktHoelker/cds-pg-migra.git
 [submodule "custom_packages/errorhandler"]
 	path = custom_packages/errorhandler
-	url = https://iot-gmbh.visualstudio.com/IOT%20Artifacts/_git/errorhandler
+	url = https://github.com/BenediktHoelker/ui5-errorhandler.git

@@ -69,6 +69,7 @@
     "build:ui": "ui5 build self-contained --clean-dest --all",
     "build:ui:dev": "ui5 build dev --clean-dest --all",
     "deploy": "cds-pg-migra",
+    "deploy:prod": "npm run set-default-env:prod && cds-pg-migra",
     "release": "npm run build:ui && npm run build",
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "set-default-env:dev": "bash ./set-env.sh development",
