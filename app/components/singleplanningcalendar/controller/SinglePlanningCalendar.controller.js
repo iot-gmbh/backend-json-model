@@ -265,19 +265,19 @@ sap.ui.define(
           this._filterHierarchyByPath(newValue);
         },
 
-        _filterHierarchyByPath(querySubstring) {
+        _filterHierarchyByPath(query) {
           let filters = [];
 
-          if (!querySubstring) {
+          if (!query) {
             filters = [];
-          } else if (querySubstring.includes(">")) {
+          } else if (query.includes(">")) {
             filters = [
               new Filter({
                 path: "path",
                 test: (path) => {
-                  if (!querySubstring || !path) return false;
+                  if (!query || !path) return false;
                   const pathSubstrings = path.replaceAll(" ", "").split(">");
-                  const querySubstrings = querySubstring
+                  const querySubstrings = query
                     .toUpperCase()
                     .replaceAll(" ", "")
                     .split(">");
@@ -297,8 +297,8 @@ sap.ui.define(
                   new Filter({
                     path: "path",
                     test: (path) => {
-                      if (!querySubstring || !path) return false;
-                      const substrings = querySubstring.split(" ");
+                      if (!query || !path) return false;
+                      const substrings = query.split(" ");
                       return substrings
                         .map((sub) => sub.toUpperCase())
                         .every((sub) => path.includes(sub));
@@ -307,8 +307,8 @@ sap.ui.define(
                   new Filter({
                     path: "absoluteReference",
                     test: (absoluteReference) => {
-                      if (!querySubstring || !absoluteReference) return false;
-                      const substrings = querySubstring.split(" ");
+                      if (!query || !absoluteReference) return false;
+                      const substrings = query.split(" ");
                       return substrings
                         .map((sub) => sub.toUpperCase())
                         .every((sub) => absoluteReference.includes(sub));
@@ -317,8 +317,8 @@ sap.ui.define(
                   new Filter({
                     path: "deepReference",
                     test: (deepReference) => {
-                      if (!querySubstring || !deepReference) return false;
-                      const substrings = querySubstring.split(" ");
+                      if (!query || !deepReference) return false;
+                      const substrings = query.split(" ");
                       return substrings
                         .map((sub) => sub.toUpperCase())
                         .every((sub) => deepReference.includes(sub));
@@ -345,9 +345,9 @@ sap.ui.define(
 
             titleCell.setHtmlText(htmlText);
 
-            if (!querySubstring) return;
+            if (!query) return;
 
-            const querySubstrings = querySubstring.split(/>| /);
+            const querySubstrings = query.split(/>| /);
 
             const newText = querySubstrings.reduce(
               (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
