@@ -4,7 +4,7 @@
 	xmlns:layout="sap.ui.layout"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:f="sap.f"
-	xmlns:c="iot.workitemsfastentry.control" controllerName="iot.workitemsfastentry.controller.WorkItemsFastEntry">
+	xmlns:c="iot.planner.components.workitemsfastentry.control" controllerName="iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry">
 	<Shell id="shell" appWidthLimited="false">
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
