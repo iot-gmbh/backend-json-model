@@ -138,7 +138,7 @@ module.exports = cds.service.impl(async function () {
     return details;
   });
 
-  this.on("UPDATE", "MyWorkItems", async (req) => {
+  this.on("UPDATE", MyWorkItems, async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
 
@@ -174,7 +174,7 @@ module.exports = cds.service.impl(async function () {
     return item;
   });
 
-  this.on("CREATE", "MyWorkItems", async (req, next) => {
+  this.on("CREATE", MyWorkItems, async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     console.log("req.data: ", req.data);
     req.data.ID = uuid.v4();
