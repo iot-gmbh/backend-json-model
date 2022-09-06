@@ -137,11 +137,14 @@ entity WorkItems : managed, relevance, multitenant {
   key ID                 : String @odata.Type : 'Edm.String';
       tags               : Composition of many Tags2WorkItems
                              on tags.workItem = $self;
+      date               : Date;
       activatedDate      : DateTime;
+      activatedDateTime  : Time;
       activatedDateMonth : Integer;
       activatedDateYear  : Integer;
       activatedDateDay   : Integer;
       completedDate      : DateTime;
+      completedDateTime  : Time;
       completedDateMonth : Integer;
       completedDateYear  : Integer;
       completedDateDay   : Integer;

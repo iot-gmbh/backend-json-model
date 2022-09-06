@@ -17,11 +17,12 @@ service TimetrackingService @(requires : 'authenticated-user') {
     }
   ])                      as projection on my.WorkItems {
     *,
-    cast(activatedDate as Date) as date,
-    activatedDate,
-    cast(activatedDate as Time) as activatedDateTime,
-    completedDate,
-    cast(completedDate as Time) as completedDateTime,
+    title as test,
+  // activatedDate,
+  // completedDate,
+  // cast(activatedDate as Date) as date,
+  // cast(activatedDate as Time) as activatedDateTime,
+  // cast(completedDate as Time) as completedDateTime,
   } excluding {
     hierarchy
   };

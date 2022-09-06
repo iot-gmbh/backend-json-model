@@ -170,9 +170,7 @@ sap.ui.define(
       },
 
       async remove(obj) {
-        const path = `/${obj.__metadata.uri
-          .replace(location.origin, "")
-          .replace(this.serviceURL, "")}`;
+        const path = this.getODataPathFrom(obj);
         const entityName = path.split("(")[0];
 
         await this.odata.remove(path);

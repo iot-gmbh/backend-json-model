@@ -1,20 +1,3 @@
-function addMinutes(date, minutes) {
-  return new Date(date.getTime() + minutes * 60000);
-}
-
-function getQuarterHourRoundedTime(date) {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  // eslint-disable-next-line no-nested-ternary
-  const roundedHours = minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
-  const roundedMinutes = (Math.round(minutes / 15) * 15) % 60;
-  const roundedHoursString =
-    roundedHours < 10 ? `0${roundedHours}` : roundedHours;
-  const roundedMinutesString = roundedMinutes === 0 ? "00" : roundedMinutes;
-
-  return `${roundedHoursString}:${roundedMinutesString}`;
-}
-
 sap.ui.define(
   [
     "./BaseController",
@@ -23,7 +6,36 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
   ],
-  (BaseController, formatter, Filter, FilterOperator, MessageToast) =>
+  (BaseController, formatter, Filter, FilterOperator, MessageToast) => {
+    function addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes * 60000);
+    }
+
+    function joinDateAndTime(date, time) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const timeSplitted = time.split(":");
+      const hours = timeSplitted[0];
+      const minutes = timeSplitted[1];
+      const dateTime = new Date(year, month, day, hours, minutes);
+      return dateTime;
+    }
+
+    function getQuarterHourRoundedTime(date) {
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const roundedHours =
+        // eslint-disable-next-line no-nested-ternary
+        minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
+      const roundedMinutes = (Math.round(minutes / 15) * 15) % 60;
+      const roundedHoursString =
+        roundedHours < 10 ? `0${roundedHours}` : roundedHours;
+      const roundedMinutesString = roundedMinutes === 0 ? "00" : roundedMinutes;
+
+      return `${roundedHoursString}:${roundedMinutesString}`;
+    }
+
     BaseController.extend(
       "iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry",
       {
@@ -96,10 +108,8 @@ sap.ui.define(
             title: "",
             tags: [],
             date: new Date().toISOString().substring(0, 10),
-            activatedDateTime: getQuarterHourRoundedTime(new Date()),
-            completedDateTime: getQuarterHourRoundedTime(
-              addMinutes(new Date(), 15)
-            ),
+            activatedDateTime: new Date(),
+            completedDateTime: addMinutes(new Date(), 15),
             parentPath: "",
             // TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
             // activity: '',
@@ -249,7 +259,15 @@ sap.ui.define(
         async onPressAddWorkItem() {
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
-          console.log(newWorkItem);
+
+          newWorkItem.activatedDate = joinDateAndTime(
+            new Date(),
+            newWorkItem.activatedDateTime
+          );
+          newWorkItem.completedDate = joinDateAndTime(
+            new Date(),
+            newWorkItem.completedDateTime
+          );
 
           model.setProperty("/busy", true);
 
@@ -305,5 +323,6 @@ sap.ui.define(
           await this.getModel().update({ ...workItem, localPath });
         },
       }
-    )
+    );
+  }
 );

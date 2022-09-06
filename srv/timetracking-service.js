@@ -2,17 +2,6 @@ const uuid = require("uuid");
 const cds = require("@sap/cds");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
-function joinDateAndTime(date, time) {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  const timeSplitted = time.split(":");
-  const hours = timeSplitted[0];
-  const minutes = timeSplitted[1];
-  const dateTime = new Date(year, month, day, hours, minutes);
-  return dateTime;
-}
-
 function calcDurationInH({ start, end }) {
   const durationInMS = new Date(end) - new Date(start);
   const durationInH = durationInMS / 1000 / 60 / 60;
@@ -145,14 +134,6 @@ module.exports = cds.service.impl(async function () {
     item.confirmed = true;
     item.tenant = req.user.tenant;
     item.assignedTo_userPrincipalName = req.user.id;
-    item.activatedDate = joinDateAndTime(
-      req.data.date,
-      req.data.activatedDateTime
-    );
-    item.completedDate = joinDateAndTime(
-      req.data.date,
-      req.data.completedDateTime
-    );
     item.duration = calcDurationInH({
       start: item.activatedDate,
       end: item.completedDate,
@@ -180,14 +161,14 @@ module.exports = cds.service.impl(async function () {
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
-    req.data.activatedDate = joinDateAndTime(
-      req.data.date,
-      req.data.activatedDateTime
-    );
-    req.data.completedDate = joinDateAndTime(
-      req.data.date,
-      req.data.completedDateTime
-    );
+    // req.data.activatedDate = joinDateAndTime(
+    //   req.data.date,
+    //   req.data.activatedDateTime
+    // );
+    // req.data.completedDate = joinDateAndTime(
+    //   req.data.date,
+    //   req.data.completedDateTime
+    // );
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
       end: req.data.completedDate,

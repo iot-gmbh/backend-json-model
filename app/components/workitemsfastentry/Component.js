@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["sap/ui/core/UIComponent", "./CustomODataV2Model", "./model/models"],
+  ["sap/ui/core/UIComponent", "iot/CustomODataV2Model", "./model/models"],
   (UIComponent, CustomODataV2Model, models) =>
     UIComponent.extend("iot.planner.components.workitemsfastentry.Component", {
       metadata: {
