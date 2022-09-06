@@ -58,8 +58,8 @@
 													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy', source: { pattern: 'yyyy-MM-dd' }}}"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
-													<TimePicker value="{/newWorkItem/activatedDateTime}" displayFormat="HH:mm" valueFormat="hh:mm:ss" minutesStep="15"/>
-													<TimePicker value="{/newWorkItem/completedDateTime}" displayFormat="HH:mm" valueFormat="hh:mm:ss" minutesStep="15"/>
+													<TimePicker value="{/newWorkItem/activatedDateTime}" displayFormat="HH:mm" valueFormat="HH:mm:ss" minutesStep="15"/>
+													<TimePicker value="{/newWorkItem/completedDateTime}" displayFormat="HH:mm" valueFormat="HH:mm:ss" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
 													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="IOT">
@@ -107,24 +107,24 @@
 										<Text text="{i18n>tableColumnTitle}"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnDate}"/>
+										<Text text="{i18n>tableColumnDate}" wrapping="false"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnActivatedDate}"/>
+										<Text text="{i18n>tableColumnActivatedDate}" wrapping="false"/>
 									</Column>
 									<Column>
-										<Text text="{i18n>tableColumnCompletedDate}"/>
+										<Text text="{i18n>tableColumnCompletedDate}" wrapping="false"/>
 									</Column>
-									<Column>
+									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 									</Column>
-									<Column>
+									<Column minScreenWidth="Tablet">
 										<Text text="{i18n>tableColumnHierarchy}"/>
 									</Column>
-									<Column>
+									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>
 									</Column>
-									<Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Desktop">
+									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnLocation}"/>
 									</Column>
 									<Column width="3vw">
@@ -135,10 +135,10 @@
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-											<DatePicker value="{ path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'} }"/>
-											<TimePicker value="{ path: 'activatedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern : 'HH:mm'}}" minutesStep="15"/>
-											<TimePicker value="{ path: 'completedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern : 'HH:mm'}}" minutesStep="15"/>
-											<Text text="{path: 'duration', formatter: '.formatter.duration'}" wrapping="false"/>
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em"/>
+											<TimePicker value="{path: 'activatedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em"/>
+											<TimePicker value="{path: 'completedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em"/>
+											<ObjectNumber number="{duration}" unit="h"/>
 											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>

@@ -22,18 +22,15 @@ sap.ui.define(
       return dateTime;
     }
 
-    function getQuarterHourRoundedTime(date) {
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const roundedHours =
-        // eslint-disable-next-line no-nested-ternary
-        minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
-      const roundedMinutes = (Math.round(minutes / 15) * 15) % 60;
-      const roundedHoursString =
-        roundedHours < 10 ? `0${roundedHours}` : roundedHours;
-      const roundedMinutesString = roundedMinutes === 0 ? "00" : roundedMinutes;
+    function roundTimeQuarterHour(time) {
+      const timeToReturn = new Date(time);
 
-      return `${roundedHoursString}:${roundedMinutesString}`;
+      timeToReturn.setMilliseconds(
+        Math.round(timeToReturn.getMilliseconds() / 1000) * 1000
+      );
+      timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
+      timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
+      return timeToReturn;
     }
 
     BaseController.extend(
@@ -90,6 +87,7 @@ sap.ui.define(
             countCompleted: 0,
             countIncompleted: 0,
           });
+
           this.setNewWorkItemTemplate();
 
           await Promise.all([
@@ -103,13 +101,18 @@ sap.ui.define(
           model.setProperty("/tableBusy", false);
         },
 
-        setNewWorkItemTemplate() {
+        setNewWorkItemTemplate(overwrite) {
           const newWorkItemTemplate = {
             title: "",
             tags: [],
             date: new Date().toISOString().substring(0, 10),
-            activatedDateTime: new Date(),
-            completedDateTime: addMinutes(new Date(), 15),
+            activatedDateTime: roundTimeQuarterHour(
+              new Date()
+              // Use en-US locale in order to get 'hh:mm:ss' and not 'hh:mm:ss PM'
+            ).toLocaleTimeString("en-US", { hour12: false }),
+            completedDateTime: roundTimeQuarterHour(
+              addMinutes(new Date(), 15)
+            ).toLocaleTimeString("en-US", { hour12: false }),
             parentPath: "",
             // TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
             // activity: '',
@@ -117,6 +120,7 @@ sap.ui.define(
             // location: '',
             type: "Manual",
             state: "incompleted",
+            ...overwrite,
           };
 
           this.getModel().setProperty("/newWorkItem", newWorkItemTemplate);
@@ -277,7 +281,13 @@ sap.ui.define(
             ...newWorkItem,
           });
 
-          this.setNewWorkItemTemplate();
+          this.setNewWorkItemTemplate({
+            activatedDateTime: newWorkItem.completedDateTime,
+            completedDateTime: roundTimeQuarterHour(
+              addMinutes(newWorkItem.completedDate, 15)
+            ).toLocaleTimeString("en-US", { hour12: false }),
+          });
+
           model.setProperty("/busy", false);
         },
 
