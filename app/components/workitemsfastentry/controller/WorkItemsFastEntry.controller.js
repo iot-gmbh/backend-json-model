@@ -204,24 +204,31 @@ sap.ui.define(
           binding.filter(this._filters[key]);
         },
 
-        setItemCountsFilters() {
-          const model = this.getModel();
+        setItemCountsFilters(event) {
+          const totalItems = event.getParameter("total");
 
-          const countAll = model
-            .getProperty("/MyWorkItems")
-            .filter((workItem) => workItem.state !== "").length;
+          if (
+            totalItems &&
+            event.getSource().getBinding("items").isLengthFinal()
+          ) {
+            const model = this.getModel();
 
-          const countCompleted = model
-            .getProperty("/MyWorkItems")
-            .filter((workItem) => workItem.state === "completed").length;
+            const countAll = model
+              .getProperty("/MyWorkItems")
+              .filter((workItem) => workItem.state !== "").length;
 
-          const countIncompleted = model
-            .getProperty("/MyWorkItems")
-            .filter((workItem) => workItem.state === "incompleted").length;
+            const countCompleted = model
+              .getProperty("/MyWorkItems")
+              .filter((workItem) => workItem.state === "completed").length;
 
-          model.setProperty("/countAll", countAll);
-          model.setProperty("/countCompleted", countCompleted);
-          model.setProperty("/countIncompleted", countIncompleted);
+            const countIncompleted = model
+              .getProperty("/MyWorkItems")
+              .filter((workItem) => workItem.state === "incompleted").length;
+
+            model.setProperty("/countAll", countAll);
+            model.setProperty("/countCompleted", countCompleted);
+            model.setProperty("/countIncompleted", countIncompleted);
+          }
         },
 
         onSearch(event) {
