@@ -1,6 +1,11 @@
 sap.ui.define(
-  ["iot/CustomODataV2Model", "./model/models", "sap/ui/core/UIComponent"],
-  (CustomODataV2Model, models, UIComponent) =>
+  [
+    "iot/CustomODataV2Model",
+    "errorhandler/ErrorHandler",
+    "./model/models",
+    "sap/ui/core/UIComponent",
+  ],
+  (CustomODataV2Model, ErrorHandler, models, UIComponent) =>
     UIComponent.extend(
       "iot.planner.components.singleplanningcalendar.Component",
       {
@@ -17,8 +22,14 @@ sap.ui.define(
           // call the base component's init function
           UIComponent.prototype.init.apply(this, ...args);
 
+          const customODataV2Model = new CustomODataV2Model(
+            "/v2/timetracking/"
+          );
+
           // call the base component's init function
-          this.setModel(new CustomODataV2Model("/v2/timetracking/"));
+          this.setModel(customODataV2Model);
+
+          ErrorHandler.cover([customODataV2Model.ODataModel]);
 
           // // enable routing
           // this.getRouter().initialize();

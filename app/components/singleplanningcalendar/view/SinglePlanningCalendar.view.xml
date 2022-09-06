@@ -60,7 +60,7 @@
 														<t:columns>
 															<t:Column label="{i18n>title}">
 																<t:template>
-																	<Text text="{title}" />
+																	<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
 																</t:template>
 															</t:Column>
 														</t:columns>

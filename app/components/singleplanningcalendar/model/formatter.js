@@ -25,4 +25,9 @@ sap.ui.define(["../model/legendItems"], (legendItems) => ({
     if (shallowReference) return `${shallowReference}: ${text}`;
     return text;
   },
+
+  highlightFilter(text, query) {
+    if (!(text && query)) return text;
+    return text.replace(query, `<strong>${query}</strong>`);
+  },
 }));

@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-
 sap.ui.define(
   [
     "./BaseController",
     "sap/ui/model/Filter",
     "../model/formatter",
     "../model/legendItems",
+    "sap/base/Log",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
   ],
@@ -15,6 +15,7 @@ sap.ui.define(
     Filter,
     formatter,
     legendItems,
+    Log,
     MessageBox,
     MessageToast
   ) => {
@@ -100,7 +101,7 @@ sap.ui.define(
 
           model.setData({
             MyWorkItems: { NEW: {} },
-            busy: false,
+            busy: true,
             categories: {},
             hierarchySuggestion: "",
             legendItems: Object.entries(legendItems.getItems()).map(
@@ -176,25 +177,27 @@ sap.ui.define(
 
         async _deleteAppointment(appointment) {
           const model = this.getModel();
-          const { MyWorkItems } = model.getData();
 
           model.setProperty("/dialogBusy", true);
 
-          await model.remove(appointment);
+          try {
+            await model.remove(appointment);
 
-          if (appointment.source !== "Manual") {
-            await model.callFunction("/removeDraft", {
-              method: "POST",
-              urlParameters: {
-                ID: appointment.ID,
-                activatedDate: appointment.activatedDate,
-                completedDate: appointment.completedDate,
-              },
-            });
+            if (appointment.source !== "Manual") {
+              await model.callFunction("/removeDraft", {
+                method: "POST",
+                urlParameters: {
+                  ID: appointment.ID,
+                  activatedDate: appointment.activatedDate,
+                  completedDate: appointment.completedDate,
+                },
+              });
+            }
+          } catch (error) {
+            Log.error(error);
           }
 
           this._closeDialog("createItemDialog");
-
           model.setProperty("/dialogBusy", false);
         },
 
@@ -206,16 +209,19 @@ sap.ui.define(
 
           model.setProperty("/dialogBusy", true);
 
-          const appointmentSync = await model.callFunction("/resetToDraft", {
-            method: "POST",
-            urlParameters: {
-              ID: appointment.ID,
-            },
-          });
+          try {
+            const appointmentSync = await model.callFunction("/resetToDraft", {
+              method: "POST",
+              urlParameters: {
+                ID: appointment.ID,
+              },
+            });
 
-          model.setProperty(path, appointmentSync);
-
-          this._closeDialog("createItemDialog");
+            model.setProperty(path, appointmentSync);
+            this._closeDialog("createItemDialog");
+          } catch (error) {
+            Log.error(error);
+          }
 
           model.setProperty("/dialogBusy", false);
         },
@@ -260,45 +266,96 @@ sap.ui.define(
         },
 
         _filterHierarchyByPath(query) {
-          const filters = [
-            new Filter({
-              filters: [
-                new Filter({
-                  path: "path",
-                  test: (path) => {
-                    if (!query || !path) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => path.includes(sub));
-                  },
-                }),
-                new Filter({
-                  path: "path",
-                  test: (absoluteReference) => {
-                    if (!query || !absoluteReference) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => absoluteReference.includes(sub));
-                  },
-                }),
-                new Filter({
-                  path: "deepReference",
-                  test: (deepReference) => {
-                    if (!query || !deepReference) return false;
-                    const substrings = query.split(" ");
-                    return substrings
-                      .map((sub) => sub.toUpperCase())
-                      .every((sub) => deepReference.includes(sub));
-                  },
-                }),
-              ],
-              and: false,
-            }),
-          ];
+          let filters = [];
 
-          this.byId("hierarchyTree").getBinding("rows").filter(filters);
+          if (!query) {
+            filters = [];
+          } else if (query.includes(">")) {
+            filters = [
+              new Filter({
+                path: "path",
+                test: (path) => {
+                  if (!query || !path) return false;
+                  const pathSubstrings = path.replaceAll(" ", "").split(">");
+                  const querySubstrings = query
+                    .toUpperCase()
+                    .replaceAll(" ", "")
+                    .split(">");
+
+                  return querySubstrings.every(
+                    (querySubstring, index) =>
+                      pathSubstrings[index] &&
+                      pathSubstrings[index].includes(querySubstring)
+                  );
+                },
+              }),
+            ];
+          } else {
+            filters = [
+              new Filter({
+                filters: [
+                  new Filter({
+                    path: "path",
+                    test: (path) => {
+                      if (!query || !path) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => path.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "absoluteReference",
+                    test: (absoluteReference) => {
+                      if (!query || !absoluteReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => absoluteReference.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "deepReference",
+                    test: (deepReference) => {
+                      if (!query || !deepReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => deepReference.includes(sub));
+                    },
+                  }),
+                ],
+                and: false,
+              }),
+            ];
+          }
+
+          const tree = this.byId("hierarchyTree");
+          tree.getBinding("rows").filter(filters);
+
+          tree.getRows().forEach((row) => {
+            const titleCell = row.getCells()[0];
+
+            if (!titleCell) return;
+
+            const htmlText = titleCell
+              .getHtmlText()
+              .replaceAll("<strong>", "")
+              .replaceAll("</strong>", "");
+
+            titleCell.setHtmlText(htmlText);
+
+            if (!query) return;
+
+            const querySubstrings = query.split(/>| /);
+
+            const newText = querySubstrings.reduce(
+              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+              htmlText
+            );
+
+            titleCell.setHtmlText(newText);
+          });
         },
 
         async onSubmitEntry() {
@@ -324,7 +381,11 @@ sap.ui.define(
 
           appointment.localPath = path;
 
-          await this._submitEntry(appointment);
+          try {
+            await this._submitEntry(appointment);
+          } catch (error) {
+            Log.error(error);
+          }
 
           model.setProperty("/dialogBusy", false);
           this._closeDialog("createItemDialog");
@@ -483,11 +544,16 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          const { results } = await model.callFunction("/getMyCategoryTree");
-          const categoriesNested = model.nest({ items: results });
+          try {
+            const { results } = await model.callFunction("/getMyCategoryTree");
+            const categoriesNested = model.nest({ items: results });
 
-          model.setProperty("/MyCategories", results);
-          model.setProperty("/MyCategoriesNested", categoriesNested);
+            model.setProperty("/MyCategories", results);
+            model.setProperty("/MyCategoriesNested", categoriesNested);
+          } catch (error) {
+            Log.error(error);
+          }
+
           model.setProperty("/busy", false);
         },
 
