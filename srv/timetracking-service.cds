@@ -15,18 +15,22 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                      as projection on my.WorkItems excluding {
+  ])                      as projection on my.WorkItems {
+    *,
+    cast(activatedDate as Date) as date,
+    activatedDate,
+    cast(activatedDate as Time) as activatedDateTime,
+    completedDate,
+    cast(completedDate as Time) as completedDateTime,
+  } excluding {
     hierarchy
   };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
         title,
-        // cast(activatedDate as Date) as date,
         activatedDate,
-        // cast(activatedDate as Time) as activatedDateTime,
         completedDate,
-        // cast(completedDate as Time) as completedDateTime,
         isPrivate,
         isAllDay,
         'MSGraphEvent' as source : String
