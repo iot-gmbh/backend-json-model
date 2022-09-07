@@ -96,6 +96,12 @@ sap.ui.define(
         this.metadataLoaded = (e) => this.ODataModel.metadataLoaded(e);
       },
 
+      destroy(...args) {
+        this.ODataModel.destroy();
+        // call the base component's destroy function
+        JSONModel.prototype.destroy.apply(this, ...args);
+      },
+
       async callFunction(...args) {
         const result = await this.odata.callFunction(...args);
         return result;
