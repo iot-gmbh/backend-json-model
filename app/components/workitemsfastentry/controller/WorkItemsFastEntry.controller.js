@@ -278,11 +278,11 @@ sap.ui.define(
           const newWorkItem = model.getProperty("/newWorkItem");
 
           newWorkItem.activatedDate = joinDateAndTime(
-            new Date(),
+            newWorkItem.date,
             newWorkItem.activatedDateTime
           );
           newWorkItem.completedDate = joinDateAndTime(
-            new Date(),
+            newWorkItem.date,
             newWorkItem.completedDateTime
           );
 
