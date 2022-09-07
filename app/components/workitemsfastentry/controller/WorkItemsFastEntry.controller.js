@@ -143,24 +143,24 @@ sap.ui.define(
                 },
               }
             );
+
+            const appointments = workItems.map(
+              ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
+                ...appointment,
+                tags: appointment.tags.results,
+                activatedDate: isAllDay
+                  ? activatedDate.setHours(0)
+                  : activatedDate,
+                completedDate: isAllDay
+                  ? completedDate.setHours(0)
+                  : completedDate,
+              })
+            );
+
+            model.setProperty("/MyWorkItems", appointments);
           } catch (error) {
             Log.error(error);
           }
-
-          const appointments = workItems.map(
-            ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
-              ...appointment,
-              tags: appointment.tags.results,
-              activatedDate: isAllDay
-                ? activatedDate.setHours(0)
-                : activatedDate,
-              completedDate: isAllDay
-                ? completedDate.setHours(0)
-                : completedDate,
-            })
-          );
-
-          model.setProperty("/MyWorkItems", appointments);
         },
 
         async _loadHierarchy() {
