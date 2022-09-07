@@ -13,6 +13,14 @@ module.exports = async function (srv) {
   ];
   const select = selectFields.join(",");
 
+  function convertDateTimeToLocalISOString(dateTimeUTC) {
+    const dateUTC = new Date(dateTimeUTC);
+    const dateUTCHours = dateUTC.getHours();
+    const dateLocal = dateUTC.setHours(dateUTCHours + 4);
+
+    return new Date(dateLocal).toISOString();
+  }
+
   function transformEventToWorkItem({
     id,
     subject,
@@ -48,11 +56,15 @@ module.exports = async function (srv) {
       activatedDate: isAllDay
         ? `${start.dateTime.substring(0, 11)}00:00:00Z`
         : `${start.dateTime.substring(0, 19)}Z`,
-      activatedDateTime: `${start.dateTime.substring(11, 16)}`,
+      activatedDateTime: `${convertDateTimeToLocalISOString(
+        start.dateTime
+      ).substring(11, 16)}`,
       completedDate: isAllDay
         ? `${end.dateTime.substring(0, 11)}00:00:00Z`
         : `${end.dateTime.substring(0, 19)}Z`,
-      completedDateTime: `${end.dateTime.substring(11, 16)}`,
+      completedDateTime: `${convertDateTimeToLocalISOString(
+        end.dateTime
+      ).substring(11, 16)}`,
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,
