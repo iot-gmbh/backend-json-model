@@ -6,6 +6,7 @@
             <GenericTile class="sapUiTinyMargin" header="{i18n>calendar}" press=".navTo($event, 'calendar')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>fastEntry}" press=".navTo($event, 'fastEntry')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>graph}" press="navToAnalytics"/>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems}" press=".navTo($event, 'IOTWorkItems1')"/>
         </content>
     </Page>
 </mvc:View>

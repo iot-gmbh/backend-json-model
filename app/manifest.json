@@ -73,14 +73,17 @@
         {
           "name": "calendar",
           "pattern": "calendar",
-          "target": "calendar",
-          "prefix": "calendar"
+          "target": "calendar"
         },
         {
           "name": "fastEntry",
           "pattern": "fastEntry",
-          "target": "fastEntry",
-          "prefix": "fastEntry"
+          "target": "fastEntry"
+        },
+        {
+          "name": "IOTWorkItems",
+          "pattern": "IOTWorkItems",
+          "target": "IOTWorkItems"
         }
       ],
       "targets": {
@@ -107,6 +110,12 @@
           "usage": "fastEntryComponent",
           "title": "FastEntry",
           "id": "fastEntry"
+        },
+        "IOTWorkItems": {
+          "type": "Component",
+          "usage": "IOTWorkItemsComponent",
+          "title": "IOTWorkItems",
+          "id": "IOTWorkItems"
         }
       }
     },
@@ -125,6 +134,12 @@
       },
       "fastEntryComponent": {
         "name": "iot.planner.components.workitemsfastentry",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "IOTWorkItemsComponent": {
+        "name": "iot.planner.components.workitemsiot",
         "settings": {},
         "componentData": {},
         "lazy": true

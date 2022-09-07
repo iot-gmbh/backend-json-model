@@ -32,17 +32,6 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
-    function extractTimeFrom(date) {
-      const time = date.getTime();
-      const startOfDay = date.setHours(0, 0, 0, 0);
-      const ms = time - startOfDay;
-
-      return {
-        ms,
-        __edmType: "Edm.Time",
-      };
-    }
-
     return BaseController.extend(
       "iot.planner.components.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
@@ -165,18 +154,6 @@ sap.ui.define(
             model.setProperty("/MyWorkItems/NEW", appointment);
           }
 
-          model.setProperty(`${path}/date`, startDate);
-          model.setProperty(`${path}/activatedDate`, startDate);
-          model.setProperty(
-            `${path}/activatedDateTime`,
-            extractTimeFrom(startDate)
-          );
-          model.setProperty(`${path}/completedDate`, endDate);
-          model.setProperty(
-            `${path}/completedDateTime`,
-            extractTimeFrom(endDate)
-          );
-
           if (!data.parentPath) {
             this._bindAndOpenDialog(path);
             return;
@@ -184,6 +161,7 @@ sap.ui.define(
 
           this._submitEntry({
             ...data,
+            date: startDate,
             activatedDate: startDate,
             completedDate: endDate,
             localPath: path,
@@ -258,9 +236,7 @@ sap.ui.define(
           const appointment = {
             date: startDate,
             activatedDate: startDate,
-            activatedDateTime: extractTimeFrom(startDate),
             completedDate: endDate,
-            completedDateTime: extractTimeFrom(endDate),
           };
 
           model.setProperty("/MyWorkItems/NEW", appointment);
@@ -427,12 +403,12 @@ sap.ui.define(
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
 
-          data.activatedDate = new Date(
-            appointment.date.getTime() + appointment.activatedDateTime.ms
-          );
-          data.completedDate = new Date(
-            appointment.date.getTime() + appointment.completedDateTime.ms
-          );
+          const month = appointment.date.getUTCMonth();
+          const day = appointment.date.getUTCDate();
+          const year = appointment.date.getUTCFullYear();
+
+          data.activatedDate.setFullYear(year, month, day);
+          data.completedDate.setFullYear(year, month, day);
 
           // Update
           if (data.ID) {

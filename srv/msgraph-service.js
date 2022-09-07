@@ -13,6 +13,15 @@ module.exports = async function (srv) {
   ];
   const select = selectFields.join(",");
 
+  const addHoursToTimeString = (timeString, hours) => {
+    const [h, m] = timeString.split(":");
+    const date = new Date();
+    date.setHours(h, m, 0);
+    date.toString();
+    const res = `${date.getHours() + hours}:${date.getMinutes()}`;
+    return res;
+  };
+
   function transformEventToWorkItem({
     id,
     subject,
@@ -44,15 +53,13 @@ module.exports = async function (srv) {
       This leads to UI5 showing repeating them each single day instead of showing all-day events.
       Thus we replace the time for all-day events
       */
-      date: `${start.dateTime.substring(0, 10)}`,
+      date: start.dateTime,
       activatedDate: isAllDay
         ? `${start.dateTime.substring(0, 11)}00:00:00Z`
         : `${start.dateTime.substring(0, 19)}Z`,
-      activatedDateTime: `${start.dateTime.substring(11, 16)}`,
       completedDate: isAllDay
         ? `${end.dateTime.substring(0, 11)}00:00:00Z`
         : `${end.dateTime.substring(0, 19)}Z`,
-      completedDateTime: `${end.dateTime.substring(11, 16)}`,
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,

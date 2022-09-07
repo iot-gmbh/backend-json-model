@@ -28,6 +28,7 @@ framework:
     - name: sap.m
     - name: sap.f
     - name: sap.fe.templates
+    - name: sap.fe.core
     - name: sap.ui.comp
     - name: sap.ui.core
     - name: sap.ui.unified
