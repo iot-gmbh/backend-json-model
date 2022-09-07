@@ -19,7 +19,7 @@
 						<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 					</appointments>
 					<dependents>
-						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="680px" contentWidth="480px">
+						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="1024px">
 							<customHeader>
 								<Bar>
 									<contentLeft>
@@ -44,50 +44,6 @@
 													<Input value="{title}"/>
 												</f:fields>
 											</f:FormElement>
-											<f:FormElement label="{i18n>WorkItems.hierarchy}">
-												<f:fields>
-													<Input id="hierarchySearch" value="{parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
-														<suggestionItems>
-															<core:Item text="{path}" key="{ID}"/>
-														</suggestionItems>
-													</Input>
-												</f:fields>
-											</f:FormElement>
-											<f:FormElement>
-												<f:fields>
-													<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], 
-													parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="5" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
-														<t:columns>
-															<t:Column label="{i18n>title}">
-																<t:template>
-																	<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
-																</t:template>
-															</t:Column>
-														</t:columns>
-													</t:TreeTable>
-												</f:fields>
-											</f:FormElement>
-										</f:formElements>
-									</f:FormContainer>
-									<f:FormContainer>
-										<f:formElements>
-											<!-- <f:FormElement label="{i18n>WorkItems.tags}">
-												<f:fields>
-													<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-															path: '/Tags',
-															templateShareable: false,
-															sorter: { path: 'title' }
-														}" showValueHelp="false" tokenUpdate="onUpdateTags">
-														<suggestionItems>
-															<core:Item key="{OData>title}" text="{OData>title}"/>
-														</suggestionItems>
-														<tokens>
-															<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-														</tokens>
-													</MultiInput>
-													<Text text="{/hierarchySuggestion}"/>
-												</f:fields>
-											</f:FormElement> -->
 											<f:FormElement label="{i18n>WorkItems.activatedDate}">
 												<f:fields>
 													<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
@@ -99,6 +55,30 @@
 												</f:fields>
 											</f:FormElement>
 										</f:formElements>
+									</f:FormContainer>
+									<f:FormContainer >
+										<f:FormElement label="{i18n>WorkItems.hierarchy}">
+											<f:fields>
+												<Input id="hierarchySearch" value="{parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+													<suggestionItems>
+														<core:Item text="{path}" key="{ID}"/>
+													</suggestionItems>
+												</Input>
+											</f:fields>
+										</f:FormElement>
+										<f:FormElement>
+											<f:fields>
+												<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="18" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+													<t:columns>
+														<t:Column label="{i18n>title}">
+															<t:template>
+																<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+															</t:template>
+														</t:Column>
+													</t:columns>
+												</t:TreeTable>
+											</f:fields>
+										</f:FormElement>
 									</f:FormContainer>
 								</f:formContainers>
 							</f:Form>
