@@ -45,7 +45,7 @@ sap.ui.define(
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
 
-          await this.getModel("OData").metadataLoaded();
+          await this.getModel().metadataLoaded();
 
           await Promise.all([this._loadAppointments(), this._loadHierarchy()]);
 
@@ -559,7 +559,7 @@ sap.ui.define(
 
         _getUser() {
           return new Promise((resolve, reject) => {
-            this.getModel("OData").read("/MyUser", {
+            this.getModel().read("/MyUser", {
               success: (response) => {
                 const myUser = response.results[0];
                 if (!myUser)

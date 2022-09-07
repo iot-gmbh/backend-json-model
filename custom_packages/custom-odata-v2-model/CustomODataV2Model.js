@@ -27,6 +27,7 @@ sap.ui.define(
         JSONModel.apply(this, ...args);
 
         const odataModel = new ODataModel(serviceURL);
+        this._jsonModelBindList = JSONModel.prototype.bindList;
 
         odataModel.metadataLoaded().then(() => {
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
@@ -126,6 +127,14 @@ sap.ui.define(
         this.setProperty(into, results);
 
         return results;
+      },
+
+      bindList(path, ...args) {
+        if (this.getProperty(path)) {
+          return this._jsonModelBindList(path, ...args);
+        }
+
+        return this.ODataModel.bindList(path, ...args);
       },
 
       nest({
