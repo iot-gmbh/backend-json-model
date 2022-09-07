@@ -5,8 +5,9 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
+    "sap/base/Log",
   ],
-  (BaseController, formatter, Filter, FilterOperator, MessageToast) => {
+  (BaseController, formatter, Filter, FilterOperator, MessageToast, Log) => {
     function addMinutes(date, minutes) {
       return new Date(date.getTime() + minutes * 60000);
     }
@@ -90,13 +91,17 @@ sap.ui.define(
 
           this.setNewWorkItemTemplate();
 
-          await Promise.all([
-            this._loadWorkItems({
-              startDateTime: loadFrom,
-              endDateTime: loadUntil,
-            }),
-            this._loadHierarchy(),
-          ]);
+          try {
+            await Promise.all([
+              this._loadWorkItems({
+                startDateTime: loadFrom,
+                endDateTime: loadUntil,
+              }),
+              this._loadHierarchy(),
+            ]);
+          } catch (error) {
+            Log.error(error);
+          }
 
           model.setProperty("/tableBusy", false);
         },
@@ -128,15 +133,19 @@ sap.ui.define(
 
         async _loadWorkItems({ startDateTime, endDateTime }) {
           const model = this.getModel();
-          const { results: workItems } = await model.callFunction(
-            "/getCalendarView",
-            {
-              urlParameters: {
-                startDateTime,
-                endDateTime,
-              },
-            }
-          );
+          try {
+            const { results: workItems } = await model.callFunction(
+              "/getCalendarView",
+              {
+                urlParameters: {
+                  startDateTime,
+                  endDateTime,
+                },
+              }
+            );
+          } catch (error) {
+            Log.error(error);
+          }
 
           const appointments = workItems.map(
             ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
@@ -156,11 +165,15 @@ sap.ui.define(
 
         async _loadHierarchy() {
           const model = this.getModel();
-          const { results } = await model.callFunction("/getMyCategoryTree");
-          const categoriesNested = model.nest({ items: results });
+          try {
+            const { results } = await model.callFunction("/getMyCategoryTree");
+            const categoriesNested = model.nest({ items: results });
 
-          model.setProperty("/MyCategories", results);
-          model.setProperty("/MyCategoriesNested", categoriesNested);
+            model.setProperty("/MyCategories", results);
+            model.setProperty("/MyCategoriesNested", categoriesNested);
+          } catch (error) {
+            Log.error(error);
+          }
         },
 
         onChangeHierarchy(event) {
@@ -276,10 +289,14 @@ sap.ui.define(
           model.setProperty("/busy", true);
 
           // this.checkCompleteness();
-          await model.create("/MyWorkItems", {
-            localPath: "/MyWorkItems/X",
-            ...newWorkItem,
-          });
+          try {
+            await model.create("/MyWorkItems", {
+              localPath: "/MyWorkItems/X",
+              ...newWorkItem,
+            });
+          } catch (error) {
+            Log.error(error);
+          }
 
           this.setNewWorkItemTemplate({
             activatedDateTime: newWorkItem.completedDateTime,
@@ -298,19 +315,23 @@ sap.ui.define(
             .getSelectedContexts()
             .map((context) => context.getObject());
 
-          await Promise.all(
-            workItemsToDelete.map((workItem) => {
-              if (workItem.type === "Manual") return model.remove(workItem);
-              return model.callFunction("/removeDraft", {
-                method: "POST",
-                urlParameters: {
-                  ID: workItem.ID,
-                  activatedDate: workItem.activatedDate,
-                  completedDate: workItem.completedDate,
-                },
-              });
-            })
-          );
+          try {
+            await Promise.all(
+              workItemsToDelete.map((workItem) => {
+                if (workItem.type === "Manual") return model.remove(workItem);
+                return model.callFunction("/removeDraft", {
+                  method: "POST",
+                  urlParameters: {
+                    ID: workItem.ID,
+                    activatedDate: workItem.activatedDate,
+                    completedDate: workItem.completedDate,
+                  },
+                });
+              })
+            );
+          } catch (error) {
+            Log.error(error);
+          }
 
           const data = model.getProperty("/MyWorkItems").filter((entity) => {
             const keepItem = !workItemsToDelete
@@ -330,7 +351,12 @@ sap.ui.define(
           const bindingContext = event.getSource().getBindingContext();
           const localPath = bindingContext.getPath();
           const workItem = bindingContext.getObject();
-          await this.getModel().update({ ...workItem, localPath });
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
         },
       }
     );
