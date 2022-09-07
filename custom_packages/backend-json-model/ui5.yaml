@@ -1,7 +1,7 @@
 specVersion: "2.6"
 type: module
 metadata:
-  name: custom-odata-v2-model
+  name: backend-json-model
 resources:
   configuration:
     paths:

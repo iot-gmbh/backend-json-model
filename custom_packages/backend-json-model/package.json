@@ -1,5 +1,5 @@
 {
-  "name": "custom-odata-v2-model",
+  "name": "backend-json-model",
   "version": "1.0.0",
   "description": "Merge JSON-model and ODataV2-model",
   "main": "index.js",

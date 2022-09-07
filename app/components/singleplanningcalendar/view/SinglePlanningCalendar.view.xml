@@ -71,7 +71,7 @@
 									</f:FormContainer>
 									<f:FormContainer>
 										<f:formElements>
-											<f:FormElement label="{i18n>WorkItems.tags}">
+											<!-- <f:FormElement label="{i18n>WorkItems.tags}">
 												<f:fields>
 													<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
 															path: '/Tags',
@@ -87,7 +87,7 @@
 													</MultiInput>
 													<Text text="{/hierarchySuggestion}"/>
 												</f:fields>
-											</f:FormElement>
+											</f:FormElement> -->
 											<f:FormElement label="{i18n>WorkItems.activatedDate}">
 												<f:fields>
 													<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>

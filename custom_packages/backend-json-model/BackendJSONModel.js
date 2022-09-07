@@ -27,7 +27,6 @@ sap.ui.define(
         JSONModel.apply(this, ...args);
 
         const odataModel = new ODataModel(serviceURL);
-        this._jsonModelBindList = JSONModel.prototype.bindList;
 
         odataModel.metadataLoaded().then(() => {
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;
@@ -79,10 +78,10 @@ sap.ui.define(
           );
         });
 
-        this.serviceURL = serviceURL;
-        this.ODataModel = odataModel;
+        this._serviceURL = serviceURL;
+        this._ODataModel = odataModel;
 
-        this.odata = {
+        this._promises = {
           create: _promisify(odataModel, "create", 2),
           read: _promisify(odataModel, "read", 1),
           query: _promisify(odataModel, "read", 1),
@@ -94,29 +93,40 @@ sap.ui.define(
         this.isMetadataLoadingFailed = (e) =>
           odataModel.isMetadataLoadingFailed(e);
         this.attachMetadataFailed = (e) => odataModel.attachMetadataFailed(e);
-        this.metadataLoaded = (e) => this.ODataModel.metadataLoaded(e);
+        this.metadataLoaded = (e) => this._ODataModel.metadataLoaded(e);
       },
 
       destroy(...args) {
-        this.ODataModel.destroy();
+        this._ODataModel.destroy();
+        this._serviceURL = undefined;
+        this._promises = undefined;
+
+        this.isMetadataLoadingFailed = undefined;
+        this.attachMetadataFailed = undefined;
+        this.metadataLoaded = undefined;
+
         // call the base component's destroy function
         JSONModel.prototype.destroy.apply(this, ...args);
       },
 
+      getODataModel() {
+        return this._ODataModel;
+      },
+
       async callFunction(...args) {
-        const result = await this.odata.callFunction(...args);
+        const result = await this._promises.callFunction(...args);
         return result;
       },
 
       async read(...args) {
-        const { results } = await this.odata.read(...args);
+        const { results } = await this._promises.read(...args);
 
         return results;
       },
 
       // = read + store
       async load(...args) {
-        const { results } = await this.odata.read(...args);
+        const { results } = await this._promises.read(...args);
         const [path, { into = path, nest } = {}] = args;
 
         if (nest) {
@@ -127,14 +137,6 @@ sap.ui.define(
         this.setProperty(into, results);
 
         return results;
-      },
-
-      bindList(path, ...args) {
-        if (this.getProperty(path)) {
-          return this._jsonModelBindList(path, ...args);
-        }
-
-        return this.ODataModel.bindList(path, ...args);
       },
 
       nest({
@@ -160,7 +162,7 @@ sap.ui.define(
 
       async create(...args) {
         const [path, { localPath = `${path}/X`, ...object } = {}] = args;
-        const result = await this.odata.create(path, object);
+        const result = await this._promises.create(path, object);
         const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
 
         const resultWithoutNavProps = this.removeNavPropsFrom(result);
@@ -176,7 +178,7 @@ sap.ui.define(
       async update({ localPath, ...obj }) {
         const odataPath = this.getODataPathFrom(obj);
         const data = this.removeNavPropsFrom(obj);
-        const result = await this.odata.update(odataPath, data);
+        const result = await this._promises.update(odataPath, data);
         const cleanResult = this.sliceDeferredProperties(result);
 
         const merge = { ...obj, ...cleanResult };
@@ -188,7 +190,7 @@ sap.ui.define(
         const path = this.getODataPathFrom(obj);
         const entityName = path.split("(")[0];
 
-        await this.odata.remove(path);
+        await this._promises.remove(path);
 
         const data = this.getProperty(entityName).filter(
           (entity) => !entity.__metadata.uri.includes(path)
@@ -211,7 +213,7 @@ sap.ui.define(
 
       getODataPathFrom(obj) {
         const url = new URL(obj.__metadata.uri);
-        const odataPath = url.pathname.replace(this.serviceURL, "/");
+        const odataPath = url.pathname.replace(this._serviceURL, "/");
         return odataPath;
       },
 
