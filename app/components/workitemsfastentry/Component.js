@@ -1,6 +1,6 @@
 sap.ui.define(
-  ["sap/ui/core/UIComponent", "iot/CustomODataV2Model", "./model/models"],
-  (UIComponent, CustomODataV2Model, models) =>
+  ["sap/ui/core/UIComponent", "iot/backendJSONModel", "./model/models"],
+  (UIComponent, BackendJSONModel, models) =>
     UIComponent.extend("iot.planner.components.workitemsfastentry.Component", {
       metadata: {
         manifest: "json",
@@ -15,8 +15,12 @@ sap.ui.define(
       init(...args) {
         UIComponent.prototype.init.apply(this, ...args);
 
+        const backendJSONModel = new BackendJSONModel("/v2/timetracking/");
+        const ODataModel = backendJSONModel.getODataModel();
+
         // call the base component's init function
-        this.setModel(new CustomODataV2Model("/v2/timetracking/"));
+        this.setModel(backendJSONModel);
+        this.setModel(ODataModel, "OData");
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");

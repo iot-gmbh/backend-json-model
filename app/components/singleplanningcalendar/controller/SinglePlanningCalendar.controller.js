@@ -32,6 +32,39 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
+    function joinDateAndTime(date, time) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const timeSplitted = time.split(":");
+      const hours = timeSplitted[0];
+      const minutes = timeSplitted[1];
+      const dateTime = new Date(year, month, day, hours, minutes);
+      return dateTime;
+    }
+
+    function extractTimeFrom(date) {
+      const time = date.getTime();
+      const startOfDay = date.setHours(0, 0, 0, 0);
+      const ms = time - startOfDay;
+
+      return {
+        ms,
+        __edmType: "Edm.Time",
+      };
+    }
+
+    function roundTimeQuarterHour(time) {
+      const timeToReturn = new Date(time);
+
+      timeToReturn.setMilliseconds(
+        Math.round(timeToReturn.getMilliseconds() / 1000) * 1000
+      );
+      timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
+      timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
+      return timeToReturn;
+    }
+
     return BaseController.extend(
       "iot.planner.components.singleplanningcalendar.controller.SinglePlanningCalendar",
       {
@@ -235,9 +268,13 @@ sap.ui.define(
           const model = this.getModel();
           const { startDate, endDate } = event.getParameters();
           const appointment = {
+            date: startDate,
             activatedDate: startDate,
+            activatedDateTime: extractTimeFrom(startDate),
             completedDate: endDate,
+            completedDateTime: extractTimeFrom(endDate),
           };
+
           model.setProperty("/MyWorkItems/NEW", appointment);
         },
 
@@ -401,6 +438,13 @@ sap.ui.define(
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
+
+          data.activatedDate = new Date(
+            appointment.date.getTime() + appointment.activatedDateTime.ms
+          );
+          data.completedDate = new Date(
+            appointment.date.getTime() + appointment.completedDateTime.ms
+          );
 
           // Update
           if (data.ID) {
