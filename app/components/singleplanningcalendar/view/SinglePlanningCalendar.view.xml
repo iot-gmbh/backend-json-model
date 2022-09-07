@@ -19,7 +19,7 @@
 						<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 					</appointments>
 					<dependents>
-						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="1024px">
+						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" class="sapUiSizeCompact" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="1280px">
 							<customHeader>
 								<Bar>
 									<contentLeft>
@@ -34,7 +34,7 @@
 							<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}" class="sapUiTinyMargin"/>
 							<f:Form id="appointmentForm" editable="true">
 								<f:layout>
-									<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
+									<f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
 								</f:layout>
 								<f:formContainers>
 									<f:FormContainer>
@@ -51,16 +51,6 @@
 												<TimePicker value="{path: 'activatedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												<TimePicker value="{path: 'completedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 											</f:FormElement>
-											<!-- <f:FormElement label="{i18n>WorkItems.activatedDate}">
-												<f:fields>
-													<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-												</f:fields>
-											</f:FormElement>
-											<f:FormElement label="{i18n>WorkItems.completedDate}">
-												<f:fields>
-													<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-												</f:fields>
-											</f:FormElement> -->
 										</f:formElements>
 									</f:FormContainer>
 									<f:FormContainer >
@@ -80,6 +70,11 @@
 														<t:Column label="{i18n>title}">
 															<t:template>
 																<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+															</t:template>
+														</t:Column>
+														<t:Column label="{i18n>WorkItems.reference}" width="30%">
+															<t:template>
+																<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
 															</t:template>
 														</t:Column>
 													</t:columns>

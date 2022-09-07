@@ -61,17 +61,6 @@
         "settings": {
           "bundleName": "iot.planner.components.managecategories.i18n.i18n"
         }
-      },
-      "OData": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultUpdateMethod": "MERGE",
-          "defaultOperationMode": "Server",
-          "defaultBindingMode": "TwoWay",
-          "refreshAfterChange": false,
-          "defaultCountMode": "Inline"
-        }
       }
     },
     "resources": {

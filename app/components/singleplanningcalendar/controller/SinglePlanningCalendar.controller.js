@@ -32,17 +32,6 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
-    function joinDateAndTime(date, time) {
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
-      const timeSplitted = time.split(":");
-      const hours = timeSplitted[0];
-      const minutes = timeSplitted[1];
-      const dateTime = new Date(year, month, day, hours, minutes);
-      return dateTime;
-    }
-
     function extractTimeFrom(date) {
       const time = date.getTime();
       const startOfDay = date.setHours(0, 0, 0, 0);
@@ -52,17 +41,6 @@ sap.ui.define(
         ms,
         __edmType: "Edm.Time",
       };
-    }
-
-    function roundTimeQuarterHour(time) {
-      const timeToReturn = new Date(time);
-
-      timeToReturn.setMilliseconds(
-        Math.round(timeToReturn.getMilliseconds() / 1000) * 1000
-      );
-      timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
-      timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
-      return timeToReturn;
     }
 
     return BaseController.extend(
@@ -176,6 +154,7 @@ sap.ui.define(
           const model = this.getModel();
           const { startDate, endDate, appointment, copy } =
             event.getParameters();
+
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
 
@@ -186,8 +165,17 @@ sap.ui.define(
             model.setProperty("/MyWorkItems/NEW", appointment);
           }
 
+          model.setProperty(`${path}/date`, startDate);
           model.setProperty(`${path}/activatedDate`, startDate);
+          model.setProperty(
+            `${path}/activatedDateTime`,
+            extractTimeFrom(startDate)
+          );
           model.setProperty(`${path}/completedDate`, endDate);
+          model.setProperty(
+            `${path}/completedDateTime`,
+            extractTimeFrom(endDate)
+          );
 
           if (!data.parentPath) {
             this._bindAndOpenDialog(path);

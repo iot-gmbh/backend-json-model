@@ -1,12 +1,12 @@
 sap.ui.define(
   [
     "sap/ui/core/UIComponent",
-    "iot/CustomODataV2Model",
+    "iot/BackendJSONModel",
     "sap/ui/Device",
     "./model/models",
     "errorhandler/ErrorHandler",
   ],
-  (UIComponent, CustomODataV2Model, Device, models, ErrorHandler) =>
+  (UIComponent, BackendJSONModel, Device, models, ErrorHandler) =>
     UIComponent.extend("iot.planner.components.managecategories.Component", {
       metadata: {
         manifest: "json",
@@ -21,13 +21,14 @@ sap.ui.define(
       init(...args) {
         UIComponent.prototype.init.apply(this, ...args);
 
-        // initialize the error handler with the component
-        // this._oErrorHandler = new ErrorHandler(this);
-
-        const customODataV2Model = new CustomODataV2Model("/v2/categories/");
+        const backendJSONModel = new BackendJSONModel("/v2/categories/");
+        const ODataModel = backendJSONModel.getODataModel();
 
         // call the base component's init function
-        this.setModel(customODataV2Model);
+        this.setModel(backendJSONModel);
+        this.setModel(ODataModel, "OData");
+
+        ErrorHandler.cover([ODataModel]);
 
         // set the device model
         this.setModel(models.createDeviceModel(), "device");
@@ -35,7 +36,6 @@ sap.ui.define(
         // create the views based on the url/hash
         this.getRouter().initialize();
 
-        ErrorHandler.cover([customODataV2Model.ODataModel]);
         // .catch((error) => {
         //   appVM.setProperty("/errorOnStartupText", error.message);
         //   router.getTargets().display("errorOnStartup");

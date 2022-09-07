@@ -15,15 +15,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  ])                      as projection on my.WorkItems {
-    *,
-    title as test,
-  // activatedDate,
-  // completedDate,
-  // cast(activatedDate as Date) as date,
-  // cast(activatedDate as Time) as activatedDateTime,
-  // cast(completedDate as Time) as completedDateTime,
-  } excluding {
+  ])                      as projection on my.WorkItems excluding {
     hierarchy
   };
 
