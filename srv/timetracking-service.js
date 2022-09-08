@@ -161,14 +161,6 @@ module.exports = cds.service.impl(async function () {
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
-    // req.data.activatedDate = joinDateAndTime(
-    //   req.data.date,
-    //   req.data.activatedDateTime
-    // );
-    // req.data.completedDate = joinDateAndTime(
-    //   req.data.date,
-    //   req.data.completedDateTime
-    // );
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
       end: req.data.completedDate,

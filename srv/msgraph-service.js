@@ -14,14 +14,6 @@ module.exports = async function (srv) {
   ];
   const select = selectFields.join(",");
 
-  function convertDateTimeToLocalISOString(dateTimeUTC) {
-    const dateUTC = new Date(dateTimeUTC);
-    const dateUTCHours = dateUTC.getHours();
-    const dateLocal = dateUTC.setHours(dateUTCHours + 4);
-
-    return new Date(dateLocal).toISOString();
-  }
-
   function transformEventToWorkItem({
     id,
     subject,
