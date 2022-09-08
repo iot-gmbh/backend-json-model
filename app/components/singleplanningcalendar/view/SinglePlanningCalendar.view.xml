@@ -6,7 +6,7 @@
 	xmlns:core="sap.ui.core"
 	xmlns:t="sap.ui.table"
 	xmlns:mvc="sap.ui.core.mvc">
-	<App busy="{/busy}" busyIndicatorDelay="0" id="app">
+	<App busy="{/busy}" busyIndicatorDelay="0" id="app" class="sapUiSizeCozy">
 		<pages>
 			<Page showHeader="false">
 				<SinglePlanningCalendar id="SPCalendar" appointments="{/MyWorkItems}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
