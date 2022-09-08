@@ -393,12 +393,12 @@ sap.ui.define(
         },
 
         async _submitEntry(appointment) {
+          const data = appointment;
           const model = this.getModel();
           const { MyCategories } = model.getData();
           const parent = MyCategories.find(
             (cat) => cat.path === appointment.parentPath
           );
-          const data = appointment;
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
