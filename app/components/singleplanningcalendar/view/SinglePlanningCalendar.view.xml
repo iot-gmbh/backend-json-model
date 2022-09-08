@@ -65,7 +65,7 @@
 										</f:FormElement>
 										<f:FormElement>
 											<f:fields>
-												<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="18" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+												<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
 													<t:columns>
 														<t:Column label="{i18n>title}">
 															<t:template>
