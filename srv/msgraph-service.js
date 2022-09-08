@@ -10,17 +10,9 @@ module.exports = async function (srv) {
     "end",
     "categories",
     "sensitivity",
+    "isAllDay",
   ];
   const select = selectFields.join(",");
-
-  const addHoursToTimeString = (timeString, hours) => {
-    const [h, m] = timeString.split(":");
-    const date = new Date();
-    date.setHours(h, m, 0);
-    date.toString();
-    const res = `${date.getHours() + hours}:${date.getMinutes()}`;
-    return res;
-  };
 
   function transformEventToWorkItem({
     id,
@@ -54,12 +46,8 @@ module.exports = async function (srv) {
       Thus we replace the time for all-day events
       */
       date: start.dateTime,
-      activatedDate: isAllDay
-        ? `${start.dateTime.substring(0, 11)}00:00:00Z`
-        : `${start.dateTime.substring(0, 19)}Z`,
-      completedDate: isAllDay
-        ? `${end.dateTime.substring(0, 11)}00:00:00Z`
-        : `${end.dateTime.substring(0, 19)}Z`,
+      activatedDate: `${start.dateTime.substring(0, 19)}Z`,
+      completedDate: `${end.dateTime.substring(0, 19)}Z`,
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,

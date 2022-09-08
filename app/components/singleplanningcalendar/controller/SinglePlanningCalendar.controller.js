@@ -534,12 +534,14 @@ sap.ui.define(
             ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
               ...appointment,
               tags: appointment.tags.results,
-              completedDate: isAllDay
-                ? completedDate.setHours(0)
-                : completedDate,
+              // completedDate,
+              // activatedDate,
               activatedDate: isAllDay
-                ? activatedDate.setHours(0)
+                ? new Date(activatedDate.setHours(0))
                 : activatedDate,
+              completedDate: isAllDay
+                ? addDays(completedDate.setHours(0), -1)
+                : completedDate,
             })
           );
 

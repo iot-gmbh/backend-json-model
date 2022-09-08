@@ -14,6 +14,17 @@ sap.ui.define(
       },
 
       /**
+       * The component is destroyed by UI5 automatically.
+       * In this method, the ErrorHandler is destroyed.
+       * @public
+       * @override
+       */
+      destroy(...args) {
+        // call the base component's destroy function
+        UIComponent.prototype.destroy.apply(this, args);
+      },
+
+      /**
        * This method can be called to determine whether the sapUiSizeCompact or sapUiSizeCozy
        * design mode class should be set, which influences the size appearance of some controls.
        * @public
