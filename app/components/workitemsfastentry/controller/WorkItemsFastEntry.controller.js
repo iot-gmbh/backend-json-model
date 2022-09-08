@@ -12,17 +12,6 @@ sap.ui.define(
       return new Date(date.getTime() + minutes * 60000);
     }
 
-    function joinDateAndTime(date, time) {
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
-      const timeSplitted = time.split(":");
-      const hours = timeSplitted[0];
-      const minutes = timeSplitted[1];
-      const dateTime = new Date(year, month, day, hours, minutes);
-      return dateTime;
-    }
-
     function roundTimeQuarterHour(time) {
       const timeToReturn = new Date(time);
 
@@ -32,6 +21,12 @@ sap.ui.define(
       timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
       timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
       return timeToReturn;
+    }
+
+    function addDays(date, days) {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
     }
 
     BaseController.extend(
@@ -68,6 +63,7 @@ sap.ui.define(
           loadUntil.setHours(24, 0, 0, 0); // next midnight
 
           model.setData({
+            newWorkItem: {},
             busy: false,
             tableBusy: true,
             MyCategories: {},
@@ -110,14 +106,9 @@ sap.ui.define(
           const newWorkItemTemplate = {
             title: "",
             tags: [],
-            date: new Date().toISOString().substring(0, 10),
-            activatedDateTime: roundTimeQuarterHour(
-              new Date()
-              // Use en-US locale in order to get 'hh:mm:ss' and not 'hh:mm:ss PM'
-            ).toLocaleTimeString("en-US", { hour12: false }),
-            completedDateTime: roundTimeQuarterHour(
-              addMinutes(new Date(), 15)
-            ).toLocaleTimeString("en-US", { hour12: false }),
+            date: new Date(),
+            activatedDate: roundTimeQuarterHour(new Date()),
+            completedDate: roundTimeQuarterHour(addMinutes(new Date(), 15)),
             parentPath: "",
             // TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
             // activity: '',
@@ -133,6 +124,9 @@ sap.ui.define(
 
         async _loadWorkItems({ startDateTime, endDateTime }) {
           const model = this.getModel();
+
+          model.setProperty("/busy", true);
+
           try {
             const { results: workItems } = await model.callFunction(
               "/getCalendarView",
@@ -149,15 +143,16 @@ sap.ui.define(
                 ...appointment,
                 tags: appointment.tags.results,
                 activatedDate: isAllDay
-                  ? activatedDate.setHours(0)
+                  ? new Date(activatedDate.setHours(0))
                   : activatedDate,
                 completedDate: isAllDay
-                  ? completedDate.setHours(0)
+                  ? addDays(completedDate.setHours(0), -1)
                   : completedDate,
               })
             );
 
             model.setProperty("/MyWorkItems", appointments);
+            model.setProperty("/busy", false);
           } catch (error) {
             Log.error(error);
           }
@@ -277,18 +272,17 @@ sap.ui.define(
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
 
-          newWorkItem.activatedDate = joinDateAndTime(
-            newWorkItem.date,
-            newWorkItem.activatedDateTime
-          );
-          newWorkItem.completedDate = joinDateAndTime(
-            newWorkItem.date,
-            newWorkItem.completedDateTime
-          );
+          const month = newWorkItem.date.getUTCMonth();
+          const day = newWorkItem.date.getUTCDate();
+          const year = newWorkItem.date.getUTCFullYear();
+
+          newWorkItem.activatedDate.setFullYear(year, month, day);
+          newWorkItem.completedDate.setFullYear(year, month, day);
+
+          // this.checkCompleteness();
 
           model.setProperty("/busy", true);
 
-          // this.checkCompleteness();
           try {
             await model.create("/MyWorkItems", {
               localPath: "/MyWorkItems/X",
@@ -299,10 +293,10 @@ sap.ui.define(
           }
 
           this.setNewWorkItemTemplate({
-            activatedDateTime: newWorkItem.completedDateTime,
-            completedDateTime: roundTimeQuarterHour(
+            activatedDate: newWorkItem.completedDate,
+            completedDate: roundTimeQuarterHour(
               addMinutes(newWorkItem.completedDate, 15)
-            ).toLocaleTimeString("en-US", { hour12: false }),
+            ),
           });
 
           model.setProperty("/busy", false);
