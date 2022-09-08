@@ -66,9 +66,7 @@ annotate my.WorkItems with @(UI : {
       Target : '@UI.FieldGroup'
     }
   ]
-}) {
-  ID @UI.Hidden;
-}
+});
 
 annotate my.hierarchies.Hierarchies with {
   level0 @(Common : {

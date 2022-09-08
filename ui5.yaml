@@ -27,7 +27,10 @@ framework:
   libraries:
     - name: sap.m
     - name: sap.f
+    - name: sap.ushell
+    - name: sap.suite.ui.generic.template
     - name: sap.fe.templates
+    - name: sap.fe.core
     - name: sap.ui.comp
     - name: sap.ui.core
     - name: sap.ui.unified

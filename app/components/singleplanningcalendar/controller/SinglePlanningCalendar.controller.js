@@ -45,7 +45,7 @@ sap.ui.define(
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
 
-          await this.getModel("OData").metadataLoaded();
+          await this.getModel().metadataLoaded();
 
           await Promise.all([this._loadAppointments(), this._loadHierarchy()]);
 
@@ -143,6 +143,7 @@ sap.ui.define(
           const model = this.getModel();
           const { startDate, endDate, appointment, copy } =
             event.getParameters();
+
           const bindingContext = appointment.getBindingContext();
           const data = bindingContext.getObject();
 
@@ -153,9 +154,6 @@ sap.ui.define(
             model.setProperty("/MyWorkItems/NEW", appointment);
           }
 
-          model.setProperty(`${path}/activatedDate`, startDate);
-          model.setProperty(`${path}/completedDate`, endDate);
-
           if (!data.parentPath) {
             this._bindAndOpenDialog(path);
             return;
@@ -163,6 +161,7 @@ sap.ui.define(
 
           this._submitEntry({
             ...data,
+            date: startDate,
             activatedDate: startDate,
             completedDate: endDate,
             localPath: path,
@@ -235,9 +234,11 @@ sap.ui.define(
           const model = this.getModel();
           const { startDate, endDate } = event.getParameters();
           const appointment = {
+            date: startDate,
             activatedDate: startDate,
             completedDate: endDate,
           };
+
           model.setProperty("/MyWorkItems/NEW", appointment);
         },
 
@@ -392,15 +393,22 @@ sap.ui.define(
         },
 
         async _submitEntry(appointment) {
+          const data = appointment;
           const model = this.getModel();
           const { MyCategories } = model.getData();
           const parent = MyCategories.find(
             (cat) => cat.path === appointment.parentPath
           );
-          const data = appointment;
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
+
+          const month = appointment.date.getUTCMonth();
+          const day = appointment.date.getUTCDate();
+          const year = appointment.date.getUTCFullYear();
+
+          data.activatedDate.setFullYear(year, month, day);
+          data.completedDate.setFullYear(year, month, day);
 
           // Update
           if (data.ID) {
@@ -526,12 +534,14 @@ sap.ui.define(
             ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
               ...appointment,
               tags: appointment.tags.results,
-              completedDate: isAllDay
-                ? completedDate.setHours(0)
-                : completedDate,
+              // completedDate,
+              // activatedDate,
               activatedDate: isAllDay
-                ? activatedDate.setHours(0)
+                ? new Date(activatedDate.setHours(0))
                 : activatedDate,
+              completedDate: isAllDay
+                ? addDays(completedDate.setHours(0), -1)
+                : completedDate,
             })
           );
 
@@ -559,7 +569,7 @@ sap.ui.define(
 
         _getUser() {
           return new Promise((resolve, reject) => {
-            this.getModel("OData").read("/MyUser", {
+            this.getModel().read("/MyUser", {
               success: (response) => {
                 const myUser = response.results[0];
                 if (!myUser)

@@ -1,4 +1,5 @@
-<mvc:View xmlns:f="sap.f"
+<mvc:View controllerName="iot.planner.controller.App"
+    xmlns:f="sap.f"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <!-- <f:ShellBar id="sapFShellBarSample" title="{i18n>appTitle}" secondTitle="{i18n>appDescription}" homeIcon="./iot_logo.png"/> -->

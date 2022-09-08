@@ -139,12 +139,10 @@ entity WorkItems : managed, relevance, multitenant {
                              on tags.workItem = $self;
       date               : Date;
       activatedDate      : DateTime;
-      activatedDateTime  : Time;
       activatedDateMonth : Integer;
       activatedDateYear  : Integer;
       activatedDateDay   : Integer;
       completedDate      : DateTime;
-      completedDateTime  : Time;
       completedDateMonth : Integer;
       completedDateYear  : Integer;
       completedDateDay   : Integer;

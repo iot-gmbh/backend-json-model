@@ -6,10 +6,10 @@
 	xmlns:core="sap.ui.core"
 	xmlns:t="sap.ui.table"
 	xmlns:mvc="sap.ui.core.mvc">
-	<App busy="{/busy}" busyIndicatorDelay="0" id="app">
+	<App busy="{/busy}" busyIndicatorDelay="0" id="app" class="sapUiSizeCozy">
 		<pages>
 			<Page showHeader="false">
-				<SinglePlanningCalendar id="SPCalendar" appointments="{/MyWorkItems}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true">
+				<SinglePlanningCalendar id="SPCalendar" appointments="{/MyWorkItems}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="7" endHour="20" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true" scaleFactor="2">
 					<actions>
 						<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 						<Button id="displayLegend" text="{i18n>displayLegend.button.text}" press="onDisplayLegend" tooltip="{i18n>displayLegend.button.tooltip}" />
@@ -19,7 +19,7 @@
 						<!-- icon="{path: 'customer_friendlyID', formatter: '.formatter.getIconURL'}" -->
 					</appointments>
 					<dependents>
-						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" afterOpen="onAfterOpenDialog" contentHeight="680px" contentWidth="480px">
+						<Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" class="sapUiSizeCompact" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="1280px">
 							<customHeader>
 								<Bar>
 									<contentLeft>
@@ -34,7 +34,7 @@
 							<MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}" class="sapUiTinyMargin"/>
 							<f:Form id="appointmentForm" editable="true">
 								<f:layout>
-									<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
+									<f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
 								</f:layout>
 								<f:formContainers>
 									<f:FormContainer>
@@ -44,61 +44,43 @@
 													<Input value="{title}"/>
 												</f:fields>
 											</f:FormElement>
-											<f:FormElement label="{i18n>WorkItems.hierarchy}">
-												<f:fields>
-													<Input id="hierarchySearch" value="{parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
-														<suggestionItems>
-															<core:Item text="{path}" key="{ID}"/>
-														</suggestionItems>
-													</Input>
-												</f:fields>
+											<f:FormElement label="{i18n>WorkItems.date}">
+												<DatePicker id="date" value="{ path: 'date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
 											</f:FormElement>
-											<f:FormElement>
-												<f:fields>
-													<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], 
-													parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="5" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
-														<t:columns>
-															<t:Column label="{i18n>title}">
-																<t:template>
-																	<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
-																</t:template>
-															</t:Column>
-														</t:columns>
-													</t:TreeTable>
-												</f:fields>
+											<f:FormElement label="{i18n>WorkItems.activatedAndCompletedDate}">
+												<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+												<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 											</f:FormElement>
 										</f:formElements>
 									</f:FormContainer>
-									<f:FormContainer>
-										<f:formElements>
-											<!-- <f:FormElement label="{i18n>WorkItems.tags}">
-												<f:fields>
-													<MultiInput tokens="{path: 'tags', templateShareable: false}" suggestionItems="{
-															path: 'OData>/Tags',
-															templateShareable: false,
-															sorter: { path: 'title' }
-														}" showValueHelp="false" tokenUpdate="onUpdateTags">
-														<suggestionItems>
-															<core:Item key="{OData>title}" text="{OData>title}"/>
-														</suggestionItems>
-														<tokens>
-															<Token key="{tag_title}" text="{tag_title}" delete="onDeleteToken"/>
-														</tokens>
-													</MultiInput>
-													<Text text="{/hierarchySuggestion}"/>
-												</f:fields>
-											</f:FormElement> -->
-											<f:FormElement label="{i18n>WorkItems.activatedDate}">
-												<f:fields>
-													<DateTimePicker value="{path:'activatedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-												</f:fields>
-											</f:FormElement>
-											<f:FormElement label="{i18n>WorkItems.completedDate}">
-												<f:fields>
-													<DateTimePicker value="{path: 'completedDate', type:'sap.ui.model.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
-												</f:fields>
-											</f:FormElement>
-										</f:formElements>
+									<f:FormContainer >
+										<f:FormElement label="{i18n>WorkItems.hierarchy}">
+											<f:fields>
+												<Input id="hierarchySearch" value="{parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+													<suggestionItems>
+														<core:Item text="{path}" key="{ID}"/>
+													</suggestionItems>
+												</Input>
+											</f:fields>
+										</f:FormElement>
+										<f:FormElement>
+											<f:fields>
+												<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+													<t:columns>
+														<t:Column label="{i18n>title}">
+															<t:template>
+																<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+															</t:template>
+														</t:Column>
+														<t:Column label="{i18n>WorkItems.reference}" width="30%">
+															<t:template>
+																<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+															</t:template>
+														</t:Column>
+													</t:columns>
+												</t:TreeTable>
+											</f:fields>
+										</f:FormElement>
 									</f:FormContainer>
 								</f:formContainers>
 							</f:Form>

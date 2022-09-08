@@ -29,7 +29,7 @@
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.30",
     "cors": "^2.8.5",
-    "custom-odata-v2-model": "file:custom_packages/custom-odata-v2-model",
+    "backend-json-model": "file:custom_packages/backend-json-model",
     "didyoumean2": "^5.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
@@ -85,7 +85,7 @@
     "dependencies": [
       "ui5-middleware-simpleproxy",
       "@iot/ui5-errorhandler",
-      "custom-odata-v2-model"
+      "backend-json-model"
     ]
   },
   "cds": {
