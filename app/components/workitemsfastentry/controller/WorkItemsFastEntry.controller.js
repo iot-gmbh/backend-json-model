@@ -273,7 +273,7 @@ sap.ui.define(
           const newWorkItem = model.getProperty("/newWorkItem");
 
           const month = newWorkItem.date.getUTCMonth();
-          const day = newWorkItem.date.getUTCDate();
+          const day = newWorkItem.date.getDate();
           const year = newWorkItem.date.getUTCFullYear();
 
           newWorkItem.activatedDate.setFullYear(year, month, day);
