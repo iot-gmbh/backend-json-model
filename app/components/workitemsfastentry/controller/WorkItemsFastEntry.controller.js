@@ -352,6 +352,25 @@ sap.ui.define(
             Log.error(error);
           }
         },
+
+        async updateWorkItemDates(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
+
+          const month = workItem.date.getUTCMonth();
+          const day = workItem.date.getDate();
+          const year = workItem.date.getUTCFullYear();
+
+          workItem.activatedDate.setFullYear(year, month, day);
+          workItem.completedDate.setFullYear(year, month, day);
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
+        },
       }
     );
   }
