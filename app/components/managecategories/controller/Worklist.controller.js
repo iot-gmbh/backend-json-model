@@ -203,6 +203,10 @@ sap.ui.define(
           const dialog = event.getSource();
           const category = dialog.getBindingContext().getObject();
 
+          if (!category.parent_ID) {
+            delete category.parent_ID;
+          }
+
           this._closePopover();
 
           if (category.ID) {
