@@ -161,7 +161,6 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", MyWorkItems, async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-    console.log("req.data: ", req.data);
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
