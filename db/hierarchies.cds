@@ -6,129 +6,129 @@ view Hierarchies as
   select from my.Categories {
     key ID,
 
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '0'
           then
-            parent.ID
+            ID
           when
             '1'
           then
-            parent.parent.ID
+            parent.ID
           when
             '2'
           then
-            parent.parent.parent.ID
+            parent.parent.ID
           when
             '3'
           then
-            parent.parent.parent.parent.ID
+            parent.parent.parent.ID
         end as level0          : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '1'
           then
-            parent.ID
+            ID
           when
             '2'
           then
-            parent.parent.ID
+            parent.ID
           when
             '3'
           then
-            parent.parent.parent.ID
+            parent.parent.ID
         end as level1          : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '2'
           then
-            parent.ID
+            ID
           when
             '3'
           then
-            parent.parent.ID
+            parent.ID
         end as level2          : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '3'
           then
-            parent.ID
+            ID
         end as level3          : String,
 
         // texts
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '0'
           then
-            parent.title
+            title
           when
             '1'
           then
-            parent.parent.title
+            parent.title
           when
             '2'
           then
-            parent.parent.parent.title
+            parent.parent.title
           when
             '3'
           then
-            parent.parent.parent.parent.title
+            parent.parent.parent.title
         end as level0Title     : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '1'
           then
-            parent.title
+            title
           when
             '2'
           then
-            parent.parent.title
+            parent.title
           when
             '3'
           then
-            parent.parent.parent.title
+            parent.parent.title
         end as level1Title     : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '2'
           then
-            parent.title
+            title
           when
             '3'
           then
-            parent.parent.title
+            parent.title
         end as level2Title     : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '3'
           then
-            parent.title
+            title
         end as level3Title     : String,
 
         // mapping-ID's
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '0'
           then
-            parent.mappingID
+            mappingID
           when
             '1'
           then
-            parent.parent.mappingID
+            parent.mappingID
           when
             '2'
           then
-            parent.parent.parent.mappingID
+            parent.parent.mappingID
           when
             '3'
           then
-            parent.parent.parent.parent.mappingID
+            parent.parent.parent.mappingID
         end as level0MappingID : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '1'
           then
-            parent.mappingID
+            mappingID
           when
             '2'
           then
@@ -136,22 +136,22 @@ view Hierarchies as
           when
             '3'
           then
-            parent.parent.parent.mappingID
+            parent.parent.mappingID
         end as level1MappingID : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '2'
           then
-            parent.mappingID
+            mappingID
           when
             '3'
           then
-            parent.parent.mappingID
+            parent.mappingID
         end as level2MappingID : String,
-        case parent.hierarchyLevel
+        case hierarchyLevel
           when
             '3'
           then
-            parent.mappingID
+            mappingID
         end as level3MappingID : String,
   };
