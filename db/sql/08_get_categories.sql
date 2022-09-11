@@ -34,13 +34,13 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
     FROM
         iot_planner_Categories
     WHERE
-        -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "parent_ID IS NULL"
+        -- if p_root is null (=> in case you want to get all elements of level 0), then parent_ID = null will return no results => in this case check for "hierarchyLevel = -1"
         tenant = p_tenant
         and validFrom <= p_valid_at
         and validTo > p_valid_at
         and (
             p_root is null
-            and parent_ID is null
+            and hierarchyLevel = '-1'
             or ID = p_root
         )
     UNION

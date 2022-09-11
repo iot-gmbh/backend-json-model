@@ -24,7 +24,13 @@ module.exports = cds.service.impl(async function () {
       }) => ({
         ID: id,
         tenant,
-        parent_ID: parent_id,
+        parent_ID:
+          // remove dummy-category appearance in frontend (otherwise there will be problems when nesting the categories)
+          // hopefully the dummy-category won't be necessary when we upgrad to cds > 6 and @assert.notNull can be used
+          // in cds < 6 @assert.notNull has no effect
+          parent_id === "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb"
+            ? null
+            : parent_id,
         title,
         path,
         hierarchyLevel: hierarchylevel,

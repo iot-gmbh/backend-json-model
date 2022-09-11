@@ -71,9 +71,12 @@
           }
         },
         {
-          "name": "calendar",
-          "pattern": "calendar",
-          "target": "calendar"
+          "name": "trackViaCalendar",
+          "pattern": "trackViaCalendar",
+          "target": {
+            "name": "calendar",
+            "prefix": "spc"
+          }
         },
         {
           "name": "fastEntry",

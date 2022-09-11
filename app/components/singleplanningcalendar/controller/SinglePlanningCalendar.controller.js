@@ -45,9 +45,13 @@ sap.ui.define(
           calendar.setSelectedView(workWeekView);
           calendar.setStartDate(getMondayMorning());
 
-          await this.getModel().metadataLoaded();
-
-          await Promise.all([this._loadAppointments(), this._loadHierarchy()]);
+          this.getRouter()
+            .getRoute("calendar")
+            .attachPatternMatched(
+              () =>
+                Promise.all([this._loadAppointments(), this._loadHierarchy()]),
+              this
+            );
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -270,7 +274,7 @@ sap.ui.define(
           let filters = [];
 
           if (!query) {
-            filters = [];
+            filters = new Filter("title", "EQ", null);
           } else if (query.includes(">")) {
             filters = [
               new Filter({

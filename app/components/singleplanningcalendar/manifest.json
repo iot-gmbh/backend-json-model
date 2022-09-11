@@ -55,12 +55,6 @@
   },
   "sap.ui5": {
     "flexEnabled": false,
-    "rootView": {
-      "viewName": "iot.planner.components.singleplanningcalendar.view.SinglePlanningCalendar",
-      "type": "XML",
-      "async": true,
-      "id": "SinglePlanningCalendar"
-    },
     "dependencies": {
       "minUI5Version": "1.66.0",
       "libs": {
@@ -87,6 +81,42 @@
           "uri": "css/style.css"
         }
       ]
+    },
+    "rootView": {
+      "viewName": "iot.planner.components.singleplanningcalendar.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "iot.planner.components.singleplanningcalendar.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "calendar",
+          "target": "calendar"
+        }
+      ],
+      "targets": {
+        "calendar": {
+          "viewName": "SinglePlanningCalendar",
+          "viewId": "spc",
+          "viewLevel": 0,
+          "title": "SinglePlanningCalendar"
+        }
+      }
     }
   }
 }

@@ -8,11 +8,11 @@
     xmlns:semantic="sap.f.semantic">
 
     <Page showHeader="false">
-        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="onSearch" showRestoreButton="true" showClearButton="true">
+        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="loadData" showRestoreButton="true" showClearButton="true">
             <fb:filterGroupItems >
                 <fb:FilterGroupItem label="{i18n>search}" groupName="search" name="search" partOfCurrentVariant="true" visibleInFilterBar="true">
                     <fb:control>
-                        <SearchField value="{worklistView>/filters/search}"/>
+                        <SearchField value="{worklistView>/filters/search}" search="onSearch" />
                     </fb:control>
                 </fb:FilterGroupItem>
                 <fb:FilterGroupItem label="{i18n>scope}" groupName="scope" name="scope" partOfCurrentVariant="true" visibleInFilterBar="true">

@@ -52,14 +52,10 @@ sap.ui.define(
           });
 
           this.setModel(viewModel, "worklistView");
-        },
 
-        async onSearch() {
-          await this._loadCategories();
-        },
-
-        async onBeforeRendering() {
-          await this._loadCategories();
+          this.getRouter()
+            .getRoute("worklist")
+            .attachPatternMatched(this._loadCategories, this);
         },
 
         async _loadCategories() {
@@ -158,6 +154,7 @@ sap.ui.define(
           this._createCategory({
             localPath: "/Categories/X",
             hierarchyLevel: "-2",
+            parent_ID: "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb", // Dummy
           });
         },
 
@@ -241,11 +238,13 @@ sap.ui.define(
           dialog.close();
         },
 
-        onPressDeleteCategories(event) {
-          const itemsToDelete = event
-            .getSource()
-            .getSelectedItems()
-            .map((item) => item.getBindingContext().getObject());
+        onPressDeleteCategories() {
+          const treeTable = this.byId("treeTable");
+          const itemsToDelete = treeTable
+            .getSelectedIndices()
+            .map((index) =>
+              treeTable.getRows()[index].getBindingContext().getObject()
+            );
 
           itemsToDelete.forEach((item) => this.getModel().remove(item));
         },
@@ -316,21 +315,25 @@ sap.ui.define(
           }
         },
 
-        // onSearch(event) {
-        //   const { query } = event.getParameters();
+        loadData() {
+          this._loadCategories();
+        },
 
-        //   const filters = [
-        //     new Filter({
-        //       path: "title",
-        //       operator: "Contains",
-        //       value1: query,
-        //     }),
-        //   ];
+        onSearch(event) {
+          const { query } = event.getParameters();
 
-        //   this.byId("treeTable")
-        //     .getBinding("rows")
-        //     .filter(filters, FilterType.Application);
-        // },
+          const filters = [
+            new Filter({
+              path: "title",
+              operator: "Contains",
+              value1: query,
+            }),
+          ];
+
+          this.byId("treeTable")
+            .getBinding("rows")
+            .filter(filters, FilterType.Application);
+        },
 
         onCreateToken(event) {
           const multiInput = event.getSource();

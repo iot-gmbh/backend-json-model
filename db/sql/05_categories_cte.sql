@@ -25,7 +25,7 @@ AS WITH RECURSIVE cte AS (
     FROM
         iot_planner_Categories
     WHERE
-        parent_ID IS NULL
+        hierarchyLevel = '-1'
     UNION
     SELECT
         this.ID,
