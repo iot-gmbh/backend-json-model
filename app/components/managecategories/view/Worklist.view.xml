@@ -47,6 +47,7 @@
             <t:extension>
                 <OverflowToolbar >
                     <ToolbarSpacer/>
+                    <Button text="{i18n>create}" press="onPressCreateCategory"/>
                     <Button text="{i18n>delete}" press="onPressDeleteCategories"/>
                 </OverflowToolbar>
             </t:extension>
@@ -89,7 +90,7 @@
             </t:columns>
         </t:TreeTable>
         <dependents>
-            <Dialog id="editCategoryDialog" initialFocus="titleInput">
+            <Dialog id="editCategoryDialog" initialFocus="titleInput" contentWidth="420px" contentHeight="560px">
                 <f:SimpleForm>
                     <Label text="{i18n>title}"/>
                     <TextArea id="titleInput" value="{title}"/>

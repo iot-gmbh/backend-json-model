@@ -138,9 +138,6 @@ sap.ui.define(
         },
 
         onPressAddCategory(event) {
-          const viewModel = this.getModel("worklistView");
-          const dialog = this.byId("editCategoryDialog");
-
           const rowAction = event.getSource().getParent();
           const {
             ID: parent_ID,
@@ -148,9 +145,25 @@ sap.ui.define(
             children,
           } = rowAction.getBindingContext().getObject();
 
-          const localPath = `${rowAction
-            .getBindingContext()
-            .getPath()}/children/${children.length}`;
+          this._createCategory({
+            parent_ID,
+            hierarchyLevel,
+            localPath: `${rowAction.getBindingContext().getPath()}/children/${
+              children.length
+            }`,
+          });
+        },
+
+        onPressCreateCategory() {
+          this._createCategory({
+            localPath: "/Categories/X",
+            hierarchyLevel: "-2",
+          });
+        },
+
+        _createCategory({ parent_ID, localPath, hierarchyLevel }) {
+          const viewModel = this.getModel("worklistView");
+          const dialog = this.byId("editCategoryDialog");
 
           this.getModel().setProperty("/newCategory", {
             parent_ID,
@@ -166,7 +179,7 @@ sap.ui.define(
           );
 
           dialog.bindElement("/newCategory");
-          dialog.open(rowAction);
+          dialog.open();
         },
 
         async onPressUpdateCategory(event) {
