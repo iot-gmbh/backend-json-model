@@ -68,13 +68,11 @@ sap.ui.define(
             tableBusy: true,
             MyCategories: {},
             categoriesNested: {},
-            // TODO: Entität im Schema erstellen und aus ODataModel beziehen
             activities: [
               { title: "Durchführung" },
               { title: "Reise-/Fahrzeit" },
               { title: "Pendelfahrt Hotel/Einsatzort" },
             ],
-            // TODO: Entität im Schema erstellen und aus ODataModel beziehen
             locations: [
               { title: "IOT" },
               { title: "Home-Office" },
@@ -106,14 +104,12 @@ sap.ui.define(
           const newWorkItemTemplate = {
             title: "",
             tags: [],
+            activity: this.getModel().getProperty("/activities")[0].title,
             date: new Date(),
             activatedDate: roundTimeQuarterHour(new Date()),
             completedDate: roundTimeQuarterHour(addMinutes(new Date(), 15)),
             parentPath: "",
-            // TODO: activity erst im DB-Schema und an weiteren Stellen hinzufügen
-            // activity: '',
-            // TODO: location erst im DB-Schema und an weiteren Stellen hinzufügen
-            // location: '',
+            location: "",
             type: "Manual",
             state: "incompleted",
             ...overwrite,
@@ -142,6 +138,10 @@ sap.ui.define(
               ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
                 ...appointment,
                 tags: appointment.tags.results,
+                activity:
+                  appointment.activity === null || undefined
+                    ? model.getProperty("/activities")[0].title
+                    : appointment.activity,
                 activatedDate: isAllDay
                   ? new Date(activatedDate.setHours(0))
                   : activatedDate,
@@ -150,6 +150,7 @@ sap.ui.define(
                   : completedDate,
               })
             );
+            console.log(appointments);
 
             model.setProperty("/MyWorkItems", appointments);
             model.setProperty("/busy", false);
@@ -199,25 +200,12 @@ sap.ui.define(
         },
 
         onSelectHierarchy(event) {
-          if (event.getParameter("id").endsWith("Form")) {
-            const { listItem } = event.getParameters();
-            const hierarchyPath = listItem
-              .getBindingContext()
-              .getProperty("path");
+          const { listItem } = event.getParameters();
+          const hierarchyPath = listItem
+            .getBindingContext()
+            .getProperty("path");
 
-            this.getModel().setProperty(
-              "/newWorkItem/parentPath",
-              hierarchyPath
-            );
-          } else {
-            const { listItem } = event.getParameters();
-            const hierarchyPath = listItem
-              .getBindingContext()
-              .getProperty("path");
-            const path = event.getSource().getBindingContext().getPath();
-
-            this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
-          }
+          this.getModel().setProperty("/newWorkItem/parentPath", hierarchyPath);
         },
 
         onFilterWorkItems(event) {
@@ -272,9 +260,9 @@ sap.ui.define(
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
 
-          const month = newWorkItem.date.getUTCMonth();
+          const year = newWorkItem.date.getFullYear();
+          const month = newWorkItem.date.getMonth();
           const day = newWorkItem.date.getDate();
-          const year = newWorkItem.date.getUTCFullYear();
 
           newWorkItem.activatedDate.setFullYear(year, month, day);
           newWorkItem.completedDate.setFullYear(year, month, day);
@@ -297,6 +285,7 @@ sap.ui.define(
             completedDate: roundTimeQuarterHour(
               addMinutes(newWorkItem.completedDate, 15)
             ),
+            location: newWorkItem.location,
           });
 
           model.setProperty("/busy", false);
@@ -353,6 +342,21 @@ sap.ui.define(
           }
         },
 
+        async updateWorkItemActivity(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
+          const selectedKey = event.getSource().getSelectedKey();
+
+          workItem.activity = selectedKey;
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
+        },
+
         async updateWorkItemDates(event) {
           const bindingContext = event.getSource().getBindingContext();
           const localPath = bindingContext.getPath();
@@ -364,6 +368,21 @@ sap.ui.define(
 
           workItem.activatedDate.setFullYear(year, month, day);
           workItem.completedDate.setFullYear(year, month, day);
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
+        },
+
+        async updateWorkItemLocation(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
+          const value = event.getParameters().newValue;
+
+          workItem.location = value;
 
           try {
             await this.getModel().update({ ...workItem, localPath });
