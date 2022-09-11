@@ -1,4 +1,4 @@
-﻿ID;parent_ID;title;shallowReference;absoluteReference;validFrom;validTo;hierarchyLevel;tenant;alias
+﻿ID;parent_ID;title;shallowReference;absoluteReference;validFrom;validTo;hierarchyLevel;tenant;mappingID
 6e4213d8-47b0-4707-92e4-69fbf2bb3d40;;Covivio;;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z;-1;d439e362-ecdf-4d78-8fed-86c7c639b131;
 90a902c5-c971-4181-9757-a6ea85e10621;;DMK;;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z;-1;d439e362-ecdf-4d78-8fed-86c7c639b131;
 44d95650-2ff9-428b-9710-99e56c945541;;ALDI;;;2010-01-01T00:00:00.000Z;9999-01-01T00:00:00.000Z;-1;d439e362-ecdf-4d78-8fed-86c7c639b131;
