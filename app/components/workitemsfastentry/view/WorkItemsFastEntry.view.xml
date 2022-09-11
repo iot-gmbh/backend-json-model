@@ -15,9 +15,9 @@
 					<f:DynamicPage showFooter="true">
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
-								<form:Form class="formNewWorkItem" id="formNewWorkItem" editable="true">
+								<form:Form id="formNewWorkItem" editable="true">
 									<form:layout>
-										<form:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false" />
+										<form:ResponsiveGridLayout emptySpanXL="2" labelSpanXL="4" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="2" columnsM="1" singleContainerFullSize="false" />
 									</form:layout>
 									<form:formContainers>
 										<form:FormContainer>
@@ -48,21 +48,21 @@
 										<form:FormContainer>
 											<form:formElements>
 												<form:FormElement label="{i18n>formSelectActivity}">
-													<Select id="selectActivityForm" items="{/activities}">
+													<Select id="selectActivityForm" items="{/activities}" selectedKey="{/newWorkItem/activity}">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
 													</Select>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy', source: { pattern: 'yyyy-MM-dd' }}}"/>
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
-													<TimePicker value="{/newWorkItem/activatedDateTime}" displayFormat="HH:mm" valueFormat="HH:mm:ss" minutesStep="15"/>
-													<TimePicker value="{/newWorkItem/completedDateTime}" displayFormat="HH:mm" valueFormat="HH:mm:ss" minutesStep="15"/>
+													<TimePicker value="{path: '/newWorkItem/activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
-													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="IOT">
+													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="{/newWorkItem/location}">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
@@ -135,21 +135,21 @@
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em"/>
-											<TimePicker value="{path: 'activatedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em"/>
-											<TimePicker value="{path: 'completedDateTime', type: 'sap.ui.model.odata.type.Time', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em"/>
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="updateWorkItem">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
 											</Input>
-											<Select id="selectActivityTable" items="{/activities}">
+											<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="IOT">
+											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
 												</items>

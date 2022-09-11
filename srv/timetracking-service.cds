@@ -26,6 +26,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
         completedDate,
         isPrivate,
         isAllDay,
+        location,
         'MSGraphEvent' as source : String
   };
 

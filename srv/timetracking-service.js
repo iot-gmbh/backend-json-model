@@ -143,6 +143,10 @@ module.exports = cds.service.impl(async function () {
     Object.assign(item, dates);
 
     delete item.tags;
+    // Seltsames Verhalten beim Mergen der date-properties: Aus 'date: Sat Sep 10 2022 00:00:00 GMT+0200' (neues date)
+    // wird beim mergen in der update-Methode vom backendJSONModel 'date: Fri Sep 09 2022 02:00:00 GMT+0200'
+    // => daher Entfernen des dates hier
+    delete item.date;
 
     const [entry] = await db.read(WorkItems).where({ ID: item.ID });
 
@@ -157,18 +161,9 @@ module.exports = cds.service.impl(async function () {
 
   this.on("CREATE", MyWorkItems, async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
-    console.log("req.data: ", req.data);
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
     req.data.confirmed = true;
-    // req.data.activatedDate = joinDateAndTime(
-    //   req.data.date,
-    //   req.data.activatedDateTime
-    // );
-    // req.data.completedDate = joinDateAndTime(
-    //   req.data.date,
-    //   req.data.completedDateTime
-    // );
     req.data.duration = calcDurationInH({
       start: req.data.activatedDate,
       end: req.data.completedDate,

@@ -137,7 +137,7 @@ entity WorkItems : managed, relevance, multitenant {
   key ID                 : String @odata.Type : 'Edm.String';
       tags               : Composition of many Tags2WorkItems
                              on tags.workItem = $self;
-      date               : Date;
+      date               : DateTime;
       activatedDate      : DateTime;
       activatedDateMonth : Integer;
       activatedDateYear  : Integer;
@@ -166,6 +166,8 @@ entity WorkItems : managed, relevance, multitenant {
       isPrivate          : Boolean;
       isAllDay           : Boolean;
       // Custom
+      activity           : String;
+      location           : String;
       type               : String enum {
         Manual;
         Event;
