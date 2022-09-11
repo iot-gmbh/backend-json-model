@@ -251,4 +251,21 @@ annotate my.Categories with @(UI : {
       Value : validTo,
     }
   ]
-});
+}) {
+  ID             @(
+    UI.Hidden,
+    sap.hierarchy.node.for : 'ID'
+  );
+  parent         @(
+    sap.hierarchy.parent.node.for : 'ID',
+    Common                        : {
+      Text         : {
+        $value                 : parent.title,
+        ![@UI.TextArrangement] : #TextOnly
+      },
+      FieldControl : #Mandatory,
+    }
+  );
+  hierarchyLevel @sap.hierarchy.level.for       : 'ID';
+  drillDownState @sap.hierarchy.drill.state.for : 'ID';
+}

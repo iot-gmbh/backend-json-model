@@ -2,7 +2,7 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Tags, Tags2Categories } = db.entities("iot.planner");
+  const { Tags, Tags2Categories, Categories } = db.entities("iot.planner");
 
   function transformCategories(rawCategories, sum = 1) {
     return rawCategories.map(
