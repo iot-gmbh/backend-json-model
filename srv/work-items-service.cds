@@ -43,7 +43,7 @@ service WorkItemsService @(requires : 'authenticated-user') {
   } where deleted is null
 
   @cds.redirection.target : true
-  entity IOTWorkItems                                                      @(restrict : [
+  entity IOTWorkItems                                                           @(restrict : [
     {
       grant : 'READ',
       to    : 'team-lead',
@@ -61,24 +61,24 @@ service WorkItemsService @(requires : 'authenticated-user') {
       to    : 'admin',
     },
   ])                 as projection on my.WorkItems {
-    key ID                                                                 @UI.Hidden,
-        activatedDate                        as Datum             : String @(title : '{i18n>IOTWorkItems.Datum}'),
-        completedDate                        as DatumBis          : String @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
+    key ID                                                                      @UI.Hidden,
+        activatedDate                        as Datum             : String(10)  @(title : '{i18n>IOTWorkItems.Datum}'),
+        completedDate                        as DatumBis          : String(10)  @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
         // Casting findet in work-items-service.js statt (mittels moment.js)
-        ''                                   as Beginn            : String @(title : '{i18n>IOTWorkItems.Beginn}'),
-        ''                                   as Ende              : String @(title : '{i18n>IOTWorkItems.Ende}'),
-        ''                                   as P1                : String @(title : '{i18n>IOTWorkItems.P1}'),
-        hierarchy.level0Title                as Kunde             : String @(title : '{i18n>IOTWorkItems.Kunde}'),
-        hierarchy.level1Title                as Projekt           : String @(title : '{i18n>IOTWorkItems.Projekt}'),
-        hierarchy.level1MappingID            as ProjektAlias      : String @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
-        hierarchy.level2Title                as Teilprojekt       : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
-        hierarchy.level2MappingID            as TeilprojektAlias  : String @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
-        hierarchy.level3Title                as Arbeitspaket      : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
-        hierarchy.level3MappingID            as ArbeitspaketAlias : String @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
-        'Durchführung'                       as Taetigkeit        : String @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
-        assignedTo.userPrincipalName         as Nutzer            : String @(title : '{i18n>IOTWorkItems.Nutzer}'),
-        'GE'                                 as Einsatzort        : String @(title : '{i18n>IOTWorkItems.Einsatzort}'),
-        title                                as Bemerkung         : String @(title : '{i18n>IOTWorkItems.Bemerkung}'),
+        ''                                   as Beginn            : String(5)   @(title : '{i18n>IOTWorkItems.Beginn}'),
+        ''                                   as Ende              : String(5)   @(title : '{i18n>IOTWorkItems.Ende}'),
+        ''                                   as P1                : String      @(title : '{i18n>IOTWorkItems.P1}'),
+        // hierarchy.level0Title                as Kunde             : String @(title : '{i18n>IOTWorkItems.Kunde}'),
+        // hierarchy.level0Title                as Projekt           : String @(title : '{i18n>IOTWorkItems.Projekt}'),
+        hierarchy.level0Alias                as ProjektAlias      : String(150) @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
+        // hierarchy.level1Title                as Teilprojekt       : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
+        hierarchy.level1Alias                as TeilprojektAlias  : String(150) @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
+        // hierarchy.level2Title                as Arbeitspaket      : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
+        hierarchy.level2Alias                as ArbeitspaketAlias : String(150) @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
+        'Durchführung'                       as Taetigkeit        : String(30)  @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
+        assignedTo.userPrincipalName         as Nutzer            : String      @(title : '{i18n>IOTWorkItems.Nutzer}'),
+        'GE'                                 as Einsatzort        : String      @(title : '{i18n>IOTWorkItems.Einsatzort}'),
+        title                                as Bemerkung         : String      @(title : '{i18n>IOTWorkItems.Bemerkung}'),
         @UI.Hidden
         tenant,
         @UI.Hidden

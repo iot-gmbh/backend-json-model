@@ -19,9 +19,6 @@ annotate my.IOTWorkItems with @(UI : {
     Datum,
     Beginn,
     Ende,
-    Projekt,
-    Teilprojekt,
-    Arbeitspaket,
     Taetigkeit,
     Nutzer,
     Bemerkung
@@ -41,15 +38,19 @@ annotate my.IOTWorkItems with @(UI : {
     },
     {
       $Type : 'UI.DataField',
-      Value : Projekt,
+      Value : Bemerkung,
     },
     {
       $Type : 'UI.DataField',
-      Value : Teilprojekt,
+      Value : ProjektAlias,
     },
     {
       $Type : 'UI.DataField',
-      Value : Arbeitspaket,
+      Value : TeilprojektAlias,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : ArbeitspaketAlias,
     },
     {
       $Type : 'UI.DataField',
@@ -63,9 +64,5 @@ annotate my.IOTWorkItems with @(UI : {
       $Type : 'UI.DataField',
       Value : Einsatzort,
     },
-    {
-      $Type : 'UI.DataField',
-      Value : Bemerkung,
-    }
   ]
 });
