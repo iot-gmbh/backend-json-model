@@ -81,6 +81,15 @@ sap.ui.define(
             countAll: 0,
             countCompleted: 0,
             countIncompleted: 0,
+            checkedProperties: [
+              "title",
+              "date",
+              "activatedDate",
+              "completedDate",
+              "parentPath",
+              "activity",
+              "location",
+            ],
           });
 
           this.setNewWorkItemTemplate();
@@ -109,7 +118,7 @@ sap.ui.define(
             activatedDate: roundTimeQuarterHour(new Date()),
             completedDate: roundTimeQuarterHour(addMinutes(new Date(), 15)),
             parentPath: "",
-            location: "",
+            location: this.getModel().getProperty("/locations")[0].title,
             type: "Manual",
             state: "incompleted",
             ...overwrite,
@@ -267,7 +276,7 @@ sap.ui.define(
           newWorkItem.activatedDate.setFullYear(year, month, day);
           newWorkItem.completedDate.setFullYear(year, month, day);
 
-          // this.checkCompleteness();
+          this.checkCompleteness();
 
           model.setProperty("/busy", true);
 
@@ -289,6 +298,27 @@ sap.ui.define(
           });
 
           model.setProperty("/busy", false);
+        },
+
+        checkCompleteness() {
+          const model = this.getModel();
+          const newWorkItem = model.getProperty("/newWorkItem");
+          const checkedProperties =
+            this.getModel().getProperty("/checkedProperties");
+
+          // eslint-disable-next-line no-restricted-syntax
+          for (const property of checkedProperties) {
+            if (
+              newWorkItem[property].toString().trim() === "" ||
+              newWorkItem[property] === null ||
+              newWorkItem[property] === undefined
+            ) {
+              model.setProperty("/newWorkItem/state", "incompleted");
+              return;
+            }
+          }
+
+          model.setProperty("/newWorkItem/state", "completed");
         },
 
         async onPressDeleteWorkItems() {
@@ -340,6 +370,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemActivity(event) {
@@ -355,6 +387,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemDates(event) {
@@ -374,6 +408,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemLocation(event) {
@@ -383,6 +419,39 @@ sap.ui.define(
           const value = event.getParameters().newValue;
 
           workItem.location = value;
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
+
+          this.updateWorkItemState(workItem, localPath);
+        },
+
+        async updateWorkItemState(workItem, localPath) {
+          const checkedProperties =
+            this.getModel().getProperty("/checkedProperties");
+          let isCompleted = true;
+
+          // eslint-disable-next-line no-restricted-syntax
+          for (const property of checkedProperties) {
+            if (
+              workItem[property].toString().trim() === "" ||
+              workItem[property] === null ||
+              workItem[property] === undefined
+            ) {
+              isCompleted = false;
+              break;
+            }
+          }
+
+          // eslint-disable-next-line no-unused-expressions
+          isCompleted
+            ? // eslint-disable-next-line no-param-reassign
+              (workItem.state = "completed")
+            : // eslint-disable-next-line no-param-reassign
+              (workItem.state = "incompleted");
 
           try {
             await this.getModel().update({ ...workItem, localPath });
