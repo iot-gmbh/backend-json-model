@@ -17,7 +17,7 @@
 							<f:DynamicPageHeader pinnable="true">
 								<form:Form id="formNewWorkItem" editable="true">
 									<form:layout>
-										<form:ResponsiveGridLayout emptySpanXL="2" labelSpanXL="4" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="2" columnsM="1" singleContainerFullSize="false" />
+										<form:ResponsiveGridLayout emptySpanXL="0" labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="2" columnsM="1" singleContainerFullSize="false" />
 									</form:layout>
 									<form:formContainers>
 										<form:FormContainer>
@@ -25,28 +25,6 @@
 												<form:FormElement label="{i18n>formTextAreaTitle}">
 													<TextArea id="textAreaTitle" value="{/newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
-												<form:FormElement label="{i18n>formInputHierarchy}">
-													<form:fields>
-														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
-															<suggestionItems>
-																<core:Item text="{path}" key="{ID}"/>
-															</suggestionItems>
-														</Input>
-													</form:fields>
-												</form:FormElement>
-												<form:FormElement>
-													<form:fields>
-														<ScrollContainer height="20vh" vertical="true">
-															<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-																<StandardTreeItem title="{title}"/>
-															</Tree>
-														</ScrollContainer>
-													</form:fields>
-												</form:FormElement>
-											</form:formElements>
-										</form:FormContainer>
-										<form:FormContainer>
-											<form:formElements>
 												<form:FormElement label="{i18n>formSelectActivity}">
 													<Select id="selectActivityForm" items="{/activities}" selectedKey="{/newWorkItem/activity}">
 														<items>
@@ -70,12 +48,35 @@
 												</form:FormElement>
 											</form:formElements>
 										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>formInputHierarchy}">
+													<form:fields>
+														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+													</form:fields>
+												</form:FormElement>
+												<form:FormElement>
+													<form:fields>
+														<ScrollContainer height="28vh" vertical="true">
+															<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+																<StandardTreeItem title="{title}"/>
+															</Tree>
+														</ScrollContainer>
+													</form:fields>
+												</form:FormElement>
+												<form:FormElement>
+													<FlexBox justifyContent="End">
+														<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
+													</FlexBox>
+												</form:FormElement>
+											</form:formElements>
+										</form:FormContainer>
 									</form:formContainers>
 								</form:Form>
-								<FlexBox justifyContent="End">
-									<ToolbarSpacer/>
-									<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
-								</FlexBox>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
