@@ -25,25 +25,6 @@ view Hierarchies as
             parent.parent.parent.ID
         end as level0          : String,
 
-        // case hierarchyLevel
-        //   when
-        //     '1'
-        //   then
-        //     parent.ID
-        //   when
-        //     '2'
-        //   then
-        //     parent.parent.ID
-        //   when
-        //     '2'
-        //   then
-        //     parent.parent.parent.ID
-        //   when
-        //     '3'
-        //   then
-        //     parent.parent.parent.parent.ID
-        // end as level1          : String,
-
         case hierarchyLevel
           when
             '1'
@@ -58,6 +39,7 @@ view Hierarchies as
           then
             parent.parent.ID
         end as level1          : String,
+
         case hierarchyLevel
           when
             '2'
@@ -68,6 +50,7 @@ view Hierarchies as
           then
             parent.ID
         end as level2          : String,
+
         case hierarchyLevel
           when
             '3'
