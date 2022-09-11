@@ -90,14 +90,6 @@
             "name": "IOTWorkItems",
             "prefix": "wiv4"
           }
-        },
-        {
-          "name": "IOTWorkItemsV2",
-          "pattern": "IOTWorkItemsV2",
-          "target": {
-            "name": "IOTWorkItemsV2",
-            "prefix": "wiv2"
-          }
         }
       ],
       "targets": {
@@ -130,12 +122,6 @@
           "usage": "IOTWorkItemsComponent",
           "title": "IOTWorkItems",
           "id": "IOTWorkItems"
-        },
-        "IOTWorkItemsV2": {
-          "type": "Component",
-          "usage": "IOTWorkItemsV2Component",
-          "title": "IOTWorkItemsV2",
-          "id": "IOTWorkItemsV2"
         }
       }
     },
@@ -160,12 +146,6 @@
       },
       "IOTWorkItemsComponent": {
         "name": "iot.planner.components.workitemsiot",
-        "settings": {},
-        "componentData": {},
-        "lazy": true
-      },
-      "IOTWorkItemsV2Component": {
-        "name": "iot.planner.components.workitemsiotv2",
         "settings": {},
         "componentData": {},
         "lazy": true
