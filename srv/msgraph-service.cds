@@ -26,6 +26,7 @@ service MSGraphService @(requires : 'authenticated-user') {
         subject        as title,
         start          as activatedDate,
         end            as completedDate,
+        location,
         sensitivity,
         case
           when

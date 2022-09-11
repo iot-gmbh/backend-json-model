@@ -22,6 +22,7 @@ module.exports = async function (srv) {
     categories,
     sensitivity,
     isAllDay,
+    location,
     user,
   }) {
     return {
@@ -51,6 +52,8 @@ module.exports = async function (srv) {
       assignedTo_userPrincipalName: user,
       private: sensitivity === "private",
       isAllDay,
+      activity: undefined,
+      location,
       source: "MSGraphEvent",
     };
   }
