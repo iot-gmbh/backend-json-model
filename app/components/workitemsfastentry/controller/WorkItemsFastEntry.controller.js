@@ -172,6 +172,20 @@ sap.ui.define(
           }
         },
 
+        onChangeHierarchyInTable(event) {
+          const popover = this.byId("hierarchyPopover");
+          const input = event.getSource();
+          popover.openBy(input);
+          setTimeout(() => input.focus());
+
+          let associatedHierarchyTreeID;
+          this.getModel().setProperty("/showHierarchyTreeForm", true);
+          associatedHierarchyTreeID = "popoverHierarchyTree";
+          const { newValue } = event.getParameters();
+
+          this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
+        },
+
         onChangeHierarchy(event) {
           let associatedHierarchyTreeID;
           if (event.getParameter("id").endsWith("Form")) {

@@ -8,6 +8,13 @@
 	<Shell id="shell" appWidthLimited="false">
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
+				<dependents>
+					<Popover id="hierarchyPopover" contentWidth="320px" contentHeight="480px">
+						<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="popoverHierarchyTree" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
+							<StandardTreeItem title="{title}"/>
+						</Tree>
+					</Popover>
+				</dependents>
 				<customHeader>
 					<f:ShellBar title="{i18n>title}"/>
 				</customHeader>
@@ -139,7 +146,7 @@
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="updateWorkItem">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchyInTable" width="24vw" change="updateWorkItem">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
