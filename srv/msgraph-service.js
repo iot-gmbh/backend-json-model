@@ -16,7 +16,7 @@ module.exports = async function (srv) {
 
   function transformEventToWorkItem({
     id,
-    subject,
+    subject = "",
     start,
     end,
     categories,
@@ -60,7 +60,9 @@ module.exports = async function (srv) {
 
   const transformEventsToWorkItems = (events) => {
     if (Array.isArray(events)) {
-      return events.map((event) => transformEventToWorkItem(event));
+      return events
+        .filter(({ subject }) => !!subject)
+        .map((event) => transformEventToWorkItem(event));
     }
 
     return transformEventToWorkItem(events);
