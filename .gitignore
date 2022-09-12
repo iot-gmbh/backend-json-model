@@ -55,3 +55,6 @@ tmp
 
 # Postgres
 .azure-postgres-connection.json
+
+# DB
+db_changelogs
