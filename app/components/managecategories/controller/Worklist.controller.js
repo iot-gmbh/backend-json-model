@@ -52,14 +52,10 @@ sap.ui.define(
           });
 
           this.setModel(viewModel, "worklistView");
-        },
 
-        async onSearch() {
-          await this._loadCategories();
-        },
-
-        async onBeforeRendering() {
-          await this._loadCategories();
+          this.getRouter()
+            .getRoute("worklist")
+            .attachPatternMatched(this._loadCategories, this);
         },
 
         async _loadCategories() {
@@ -138,9 +134,6 @@ sap.ui.define(
         },
 
         onPressAddCategory(event) {
-          const viewModel = this.getModel("worklistView");
-          const dialog = this.byId("editCategoryDialog");
-
           const rowAction = event.getSource().getParent();
           const {
             ID: parent_ID,
@@ -148,9 +141,26 @@ sap.ui.define(
             children,
           } = rowAction.getBindingContext().getObject();
 
-          const localPath = `${rowAction
-            .getBindingContext()
-            .getPath()}/children/${children.length}`;
+          this._createCategory({
+            parent_ID,
+            hierarchyLevel,
+            localPath: `${rowAction.getBindingContext().getPath()}/children/${
+              children.length
+            }`,
+          });
+        },
+
+        onPressCreateCategory() {
+          this._createCategory({
+            localPath: "/Categories/X",
+            hierarchyLevel: "-2",
+            parent_ID: "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb", // Dummy
+          });
+        },
+
+        _createCategory({ parent_ID, localPath, hierarchyLevel }) {
+          const viewModel = this.getModel("worklistView");
+          const dialog = this.byId("editCategoryDialog");
 
           this.getModel().setProperty("/newCategory", {
             parent_ID,
@@ -166,7 +176,7 @@ sap.ui.define(
           );
 
           dialog.bindElement("/newCategory");
-          dialog.open(rowAction);
+          dialog.open();
         },
 
         async onPressUpdateCategory(event) {
@@ -228,11 +238,13 @@ sap.ui.define(
           dialog.close();
         },
 
-        onPressDeleteCategories(event) {
-          const itemsToDelete = event
-            .getSource()
-            .getSelectedItems()
-            .map((item) => item.getBindingContext().getObject());
+        onPressDeleteCategories() {
+          const treeTable = this.byId("treeTable");
+          const itemsToDelete = treeTable
+            .getSelectedIndices()
+            .map((index) =>
+              treeTable.getRows()[index].getBindingContext().getObject()
+            );
 
           itemsToDelete.forEach((item) => this.getModel().remove(item));
         },
@@ -303,21 +315,25 @@ sap.ui.define(
           }
         },
 
-        // onSearch(event) {
-        //   const { query } = event.getParameters();
+        loadData() {
+          this._loadCategories();
+        },
 
-        //   const filters = [
-        //     new Filter({
-        //       path: "title",
-        //       operator: "Contains",
-        //       value1: query,
-        //     }),
-        //   ];
+        onSearch(event) {
+          const { query } = event.getParameters();
 
-        //   this.byId("treeTable")
-        //     .getBinding("rows")
-        //     .filter(filters, FilterType.Application);
-        // },
+          const filters = [
+            new Filter({
+              path: "title",
+              operator: "Contains",
+              value1: query,
+            }),
+          ];
+
+          this.byId("treeTable")
+            .getBinding("rows")
+            .filter(filters, FilterType.Application);
+        },
 
         onCreateToken(event) {
           const multiInput = event.getSource();
