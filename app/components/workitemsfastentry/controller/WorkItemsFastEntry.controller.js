@@ -114,7 +114,7 @@ sap.ui.define(
             title: "",
             tags: [],
             activity: this.getModel().getProperty("/activities")[0].title,
-            date: new Date(),
+            date: new Date(new Date().setHours(0, 0, 0)),
             activatedDate: roundTimeQuarterHour(new Date()),
             completedDate: roundTimeQuarterHour(addMinutes(new Date(), 15)),
             parentPath: "",
@@ -159,7 +159,6 @@ sap.ui.define(
                   : completedDate,
               })
             );
-            console.log(appointments);
 
             model.setProperty("/MyWorkItems", appointments);
             model.setProperty("/busy", false);
