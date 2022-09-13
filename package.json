@@ -66,7 +66,7 @@
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",
     "format": "prettier --write --plugin-search-dir=. .",
-    "build": "cds build --production && npm run build:ui",
+    "build": "cds build --production",
     "build:ui": "ui5 build self-contained --clean-dest --all",
     "build:ui:dev": "ui5 build dev --clean-dest --all",
     "deploy": "npm run set-default-env:dev && cds-pg-migra",
