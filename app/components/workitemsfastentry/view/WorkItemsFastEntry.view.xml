@@ -47,19 +47,19 @@
 												<form:FormElement label="{i18n>formTextAreaTitle}">
 													<TextArea id="textAreaTitle" value="{/newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
+												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
+													<TimePicker value="{path: '/newWorkItem/activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+												</form:FormElement>
+												<form:FormElement label="{i18n>formDatePickerDate}">
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
+												</form:FormElement>
 												<form:FormElement label="{i18n>formSelectActivity}">
 													<Select id="selectActivityForm" items="{/activities}" selectedKey="{/newWorkItem/activity}">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
 													</Select>
-												</form:FormElement>
-												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
-												</form:FormElement>
-												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
-													<TimePicker value="{path: '/newWorkItem/activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
-													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
 													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="{/newWorkItem/location}">
@@ -138,6 +138,9 @@
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
+									<Column minScreenWidth="Tablet">
+										<Text text="{i18n>tableColumnHierarchy}"/>
+									</Column>
 									<Column>
 										<Text text="{i18n>tableColumnTitle}"/>
 									</Column>
@@ -153,9 +156,6 @@
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 									</Column>
-									<Column minScreenWidth="Tablet">
-										<Text text="{i18n>tableColumnHierarchy}"/>
-									</Column>
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>
 									</Column>
@@ -169,16 +169,16 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
-											<ObjectNumber number="{duration}" unit="h"/>
 											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy($event, 'hierarchyTreeTable')" width="24vw" change="updateWorkItem">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
 											</Input>
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<ObjectNumber number="{duration}" unit="h"/>
 											<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
 												<items>
 													<core:Item key="{title}" text="{title}"/>
