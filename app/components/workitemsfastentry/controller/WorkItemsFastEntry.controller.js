@@ -181,54 +181,121 @@ sap.ui.define(
           }
         },
 
-        onChangeHierarchyInTable(event) {
-          const popover = this.byId("hierarchyPopover");
-          const input = event.getSource();
-          popover.openBy(input);
-          setTimeout(() => input.focus());
+        onChangeHierarchy(event, elementID) {
+          if (elementID === "hierarchyTreeTable") {
+            const popover = this.byId("hierarchyPopover");
+            const input = event.getSource();
 
-          let associatedHierarchyTreeID;
-          this.getModel().setProperty("/showHierarchyTreeForm", true);
-          associatedHierarchyTreeID = "popoverHierarchyTree";
+            popover.openBy(input);
+            setTimeout(() => input.focus());
+          }
           const { newValue } = event.getParameters();
 
-          this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
-        },
-
-        onChangeHierarchy(event) {
-          let associatedHierarchyTreeID;
-          if (event.getParameter("id").endsWith("Form")) {
-            this.getModel().setProperty("/showHierarchyTreeForm", true);
-            associatedHierarchyTreeID = "hierarchyTreeForm";
-            const { newValue } = event.getParameters();
-
-            this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
-          }
+          this._filterHierarchyByPath(elementID, newValue);
         },
 
         _filterHierarchyByPath(elementID, query) {
-          const filters = [
-            new Filter({
-              path: "path",
-              test: (path) => {
-                if (!query) return false;
-                const substrings = query.split(" ");
-                return substrings
-                  .map((sub) => sub.toUpperCase())
-                  .every((sub) => path.includes(sub));
-              },
-            }),
-          ];
-          this.byId(elementID).getBinding("items").filter(filters);
+          let filters = [];
+
+          if (!query) {
+            filters = new Filter("title", "EQ", null);
+          } else if (query.includes(">")) {
+            filters = [
+              new Filter({
+                path: "path",
+                test: (path) => {
+                  if (!query || !path) return false;
+                  const pathSubstrings = path.replaceAll(" ", "").split(">");
+                  const querySubstrings = query
+                    .toUpperCase()
+                    .replaceAll(" ", "")
+                    .split(">");
+
+                  return querySubstrings.every(
+                    (querySubstring, index) =>
+                      pathSubstrings[index] &&
+                      pathSubstrings[index].includes(querySubstring)
+                  );
+                },
+              }),
+            ];
+          } else {
+            filters = [
+              new Filter({
+                filters: [
+                  new Filter({
+                    path: "path",
+                    test: (path) => {
+                      if (!query || !path) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => path.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "absoluteReference",
+                    test: (absoluteReference) => {
+                      if (!query || !absoluteReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => absoluteReference.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "deepReference",
+                    test: (deepReference) => {
+                      if (!query || !deepReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => deepReference.includes(sub));
+                    },
+                  }),
+                ],
+                and: false,
+              }),
+            ];
+          }
+
+          const tree = this.byId(elementID);
+          tree.getBinding("rows").filter(filters);
+
+          tree.getRows().forEach((row) => {
+            const titleCell = row.getCells()[0];
+
+            if (!titleCell) return;
+
+            const htmlText = titleCell
+              .getHtmlText()
+              .replaceAll("<strong>", "")
+              .replaceAll("</strong>", "");
+
+            titleCell.setHtmlText(htmlText);
+
+            if (!query) return;
+
+            const querySubstrings = query.split(/>| /);
+
+            const newText = querySubstrings.reduce(
+              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+              htmlText
+            );
+
+            titleCell.setHtmlText(newText);
+          });
         },
 
         onSelectHierarchy(event) {
-          const { listItem } = event.getParameters();
-          const hierarchyPath = listItem
-            .getBindingContext()
-            .getProperty("path");
+          const { rowContext } = event.getParameters();
 
-          this.getModel().setProperty("/newWorkItem/parentPath", hierarchyPath);
+          if (!rowContext) return;
+
+          const hierarchyPath = rowContext.getProperty("path");
+          const path = event.getSource().getBindingContext().getPath();
+
+          this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
         },
 
         onFilterWorkItems(event) {

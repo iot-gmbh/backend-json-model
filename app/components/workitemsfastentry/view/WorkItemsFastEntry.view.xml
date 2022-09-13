@@ -4,15 +4,30 @@
 	xmlns:layout="sap.ui.layout"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:f="sap.f"
-	xmlns:c="iot.planner.components.workitemsfastentry.control" controllerName="iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry">
+	xmlns:c="iot.planner.components.workitemsfastentry.control"
+	xmlns:t="sap.ui.table" controllerName="iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry">
 	<Shell id="shell" appWidthLimited="false">
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<dependents>
-					<Popover id="hierarchyPopover" contentWidth="320px" contentHeight="480px">
-						<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="popoverHierarchyTree" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-							<StandardTreeItem title="{title}"/>
-						</Tree>
+					<Popover id="hierarchyPopover" contentWidth="24vw" contentHeight="30vw" placement="Bottom">
+						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+							<t:noData>
+								<Text text=""/>
+							</t:noData>
+							<t:columns>
+								<t:Column label="{i18n>title}">
+									<t:template>
+										<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+									</t:template>
+								</t:Column>
+								<t:Column label="{i18n>WorkItems.reference}" width="30%">
+									<t:template>
+										<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+									</t:template>
+								</t:Column>
+							</t:columns>
+						</t:TreeTable>
 					</Popover>
 				</dependents>
 				<customHeader>
@@ -59,7 +74,7 @@
 											<form:formElements>
 												<form:FormElement label="{i18n>formInputHierarchy}">
 													<form:fields>
-														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy($event, 'hierarchyTreeForm')">
 															<suggestionItems>
 																<core:Item text="{path}" key="{ID}"/>
 															</suggestionItems>
@@ -68,11 +83,23 @@
 												</form:FormElement>
 												<form:FormElement>
 													<form:fields>
-														<ScrollContainer height="28vh" vertical="true">
-															<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-																<StandardTreeItem title="{title}"/>
-															</Tree>
-														</ScrollContainer>
+														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeForm" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+															<t:noData>
+																<Text text=""/>
+															</t:noData>
+															<t:columns>
+																<t:Column label="{i18n>title}">
+																	<t:template>
+																		<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+																	</t:template>
+																</t:Column>
+																<t:Column label="{i18n>WorkItems.reference}" width="30%">
+																	<t:template>
+																		<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+																	</t:template>
+																</t:Column>
+															</t:columns>
+														</t:TreeTable>
 													</form:fields>
 												</form:FormElement>
 												<form:FormElement>
@@ -147,7 +174,7 @@
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchyInTable" width="24vw" change="updateWorkItem">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy($event, 'hierarchyTreeTable')" width="24vw" change="updateWorkItem">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
