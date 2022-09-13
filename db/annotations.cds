@@ -117,6 +117,7 @@ annotate my.Users with @(UI : {
     Title          : {Value : userPrincipalName},
   },
   Identification      : [
+    {Value : userPrincipalName},
     {Value : displayName},
     {Value : jobTitle},
     {Value : manager_userPrincipalName},

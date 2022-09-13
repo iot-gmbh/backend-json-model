@@ -90,6 +90,14 @@
             "name": "IOTWorkItems",
             "prefix": "wiv4"
           }
+        },
+        {
+          "name": "Users",
+          "pattern": "Users",
+          "target": {
+            "name": "Users",
+            "prefix": "u"
+          }
         }
       ],
       "targets": {
@@ -122,6 +130,12 @@
           "usage": "IOTWorkItemsComponent",
           "title": "IOTWorkItems",
           "id": "IOTWorkItems"
+        },
+        "Users": {
+          "type": "Component",
+          "usage": "UsersComponent",
+          "title": "Users",
+          "id": "users"
         }
       }
     },
@@ -146,6 +160,12 @@
       },
       "IOTWorkItemsComponent": {
         "name": "iot.planner.components.workitemsiot",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "UsersComponent": {
+        "name": "iot.planner.components.usersv2",
         "settings": {},
         "componentData": {},
         "lazy": true

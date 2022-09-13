@@ -18,6 +18,9 @@ service CategoriesService @(requires : 'authenticated-user') {
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;
 
+  // @odata.draft.enabled : true
+  @odata.create.enabled
+  @odata.update.enabled
   entity Users @(restrict : [
     // {
     //   grant : 'READ',
