@@ -29,6 +29,7 @@
     "backend-json-model": "file:custom_packages/backend-json-model",
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.30",
+    "cds-swagger-ui-express": "^0.5.0",
     "cors": "^2.8.5",
     "didyoumean2": "^5.0.0",
     "dotenv": "^16.0.1",

@@ -4,15 +4,30 @@
 	xmlns:layout="sap.ui.layout"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:f="sap.f"
-	xmlns:c="iot.planner.components.workitemsfastentry.control" controllerName="iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry">
+	xmlns:c="iot.planner.components.workitemsfastentry.control"
+	xmlns:t="sap.ui.table" controllerName="iot.planner.components.workitemsfastentry.controller.WorkItemsFastEntry">
 	<Shell id="shell" appWidthLimited="false">
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<dependents>
-					<Popover id="hierarchyPopover" contentWidth="320px" contentHeight="480px">
-						<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="popoverHierarchyTree" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-							<StandardTreeItem title="{title}"/>
-						</Tree>
+					<Popover id="hierarchyPopover" contentWidth="24vw" contentHeight="30vw" placement="Bottom">
+						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+							<t:noData>
+								<Text text=""/>
+							</t:noData>
+							<t:columns>
+								<t:Column label="{i18n>title}">
+									<t:template>
+										<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+									</t:template>
+								</t:Column>
+								<t:Column label="{i18n>WorkItems.reference}" width="30%">
+									<t:template>
+										<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+									</t:template>
+								</t:Column>
+							</t:columns>
+						</t:TreeTable>
 					</Popover>
 				</dependents>
 				<customHeader>
@@ -24,7 +39,7 @@
 							<f:DynamicPageHeader pinnable="true">
 								<form:Form id="formNewWorkItem" editable="true">
 									<form:layout>
-										<form:ResponsiveGridLayout emptySpanXL="2" labelSpanXL="4" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="2" columnsM="1" singleContainerFullSize="false" />
+										<form:ResponsiveGridLayout emptySpanXL="0" labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="3" columnsL="2" columnsM="1" singleContainerFullSize="false" />
 									</form:layout>
 									<form:formContainers>
 										<form:FormContainer>
@@ -32,41 +47,19 @@
 												<form:FormElement label="{i18n>formTextAreaTitle}">
 													<TextArea id="textAreaTitle" value="{/newWorkItem/title}" rows="1" growing="true" growingMaxLines="6" width="100%"/>
 												</form:FormElement>
-												<form:FormElement label="{i18n>formInputHierarchy}">
-													<form:fields>
-														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
-															<suggestionItems>
-																<core:Item text="{path}" key="{ID}"/>
-															</suggestionItems>
-														</Input>
-													</form:fields>
+												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
+													<TimePicker value="{path: '/newWorkItem/activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												</form:FormElement>
-												<form:FormElement>
-													<form:fields>
-														<ScrollContainer height="20vh" vertical="true">
-															<Tree mode="SingleSelectMaster" selectionChange="onSelectHierarchy" id="hierarchyTreeForm" items="{path: '/MyCategoriesNested', parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}">
-																<StandardTreeItem title="{title}"/>
-															</Tree>
-														</ScrollContainer>
-													</form:fields>
+												<form:FormElement label="{i18n>formDatePickerDate}">
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
 												</form:FormElement>
-											</form:formElements>
-										</form:FormContainer>
-										<form:FormContainer>
-											<form:formElements>
 												<form:FormElement label="{i18n>formSelectActivity}">
 													<Select id="selectActivityForm" items="{/activities}" selectedKey="{/newWorkItem/activity}">
 														<items>
 															<core:Item key="{title}" text="{title}"/>
 														</items>
 													</Select>
-												</form:FormElement>
-												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
-												</form:FormElement>
-												<form:FormElement label="{i18n>formTimePickerActivatedAndCompletedDate}">
-													<TimePicker value="{path: '/newWorkItem/activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
-													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formComboBoxLocation}">
 													<ComboBox id="selectLocationForm" items="{/locations}" selectedKey="{/newWorkItem/location}">
@@ -77,12 +70,47 @@
 												</form:FormElement>
 											</form:formElements>
 										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>formInputHierarchy}">
+													<form:fields>
+														<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy($event, 'hierarchyTreeForm')">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+													</form:fields>
+												</form:FormElement>
+												<form:FormElement>
+													<form:fields>
+														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeForm" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+															<t:noData>
+																<Text text=""/>
+															</t:noData>
+															<t:columns>
+																<t:Column label="{i18n>title}">
+																	<t:template>
+																		<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+																	</t:template>
+																</t:Column>
+																<t:Column label="{i18n>WorkItems.reference}" width="30%">
+																	<t:template>
+																		<Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+																	</t:template>
+																</t:Column>
+															</t:columns>
+														</t:TreeTable>
+													</form:fields>
+												</form:FormElement>
+												<form:FormElement>
+													<FlexBox justifyContent="End">
+														<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
+													</FlexBox>
+												</form:FormElement>
+											</form:formElements>
+										</form:FormContainer>
 									</form:formContainers>
 								</form:Form>
-								<FlexBox justifyContent="End">
-									<ToolbarSpacer/>
-									<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
-								</FlexBox>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
@@ -110,6 +138,9 @@
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
+									<Column minScreenWidth="Tablet">
+										<Text text="{i18n>tableColumnHierarchy}"/>
+									</Column>
 									<Column>
 										<Text text="{i18n>tableColumnTitle}"/>
 									</Column>
@@ -125,9 +156,6 @@
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 									</Column>
-									<Column minScreenWidth="Tablet">
-										<Text text="{i18n>tableColumnHierarchy}"/>
-									</Column>
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>
 									</Column>
@@ -141,16 +169,16 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy($event, 'hierarchyTreeTable')" width="24vw" change="updateWorkItem">
+												<suggestionItems>
+													<core:Item key="{ID}" text="{path}"/>
+												</suggestionItems>
+											</Input>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
 											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchyInTable" width="24vw" change="updateWorkItem">
-												<suggestionItems>
-													<core:Item key="{ID}" text="{path}"/>
-												</suggestionItems>
-											</Input>
 											<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
 												<items>
 													<core:Item key="{title}" text="{title}"/>

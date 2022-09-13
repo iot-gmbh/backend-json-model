@@ -81,6 +81,15 @@ sap.ui.define(
             countAll: 0,
             countCompleted: 0,
             countIncompleted: 0,
+            checkedProperties: [
+              "title",
+              "date",
+              "activatedDate",
+              "completedDate",
+              "parentPath",
+              "activity",
+              "location",
+            ],
           });
 
           this.setNewWorkItemTemplate();
@@ -105,11 +114,11 @@ sap.ui.define(
             title: "",
             tags: [],
             activity: this.getModel().getProperty("/activities")[0].title,
-            date: new Date(),
+            date: new Date(new Date().setHours(0, 0, 0)),
             activatedDate: roundTimeQuarterHour(new Date()),
             completedDate: roundTimeQuarterHour(addMinutes(new Date(), 15)),
             parentPath: "",
-            location: "",
+            location: this.getModel().getProperty("/locations")[0].title,
             type: "Manual",
             state: "incompleted",
             ...overwrite,
@@ -150,7 +159,6 @@ sap.ui.define(
                   : completedDate,
               })
             );
-            console.log(appointments);
 
             model.setProperty("/MyWorkItems", appointments);
             model.setProperty("/busy", false);
@@ -172,54 +180,121 @@ sap.ui.define(
           }
         },
 
-        onChangeHierarchyInTable(event) {
-          const popover = this.byId("hierarchyPopover");
-          const input = event.getSource();
-          popover.openBy(input);
-          setTimeout(() => input.focus());
+        onChangeHierarchy(event, elementID) {
+          if (elementID === "hierarchyTreeTable") {
+            const popover = this.byId("hierarchyPopover");
+            const input = event.getSource();
 
-          let associatedHierarchyTreeID;
-          this.getModel().setProperty("/showHierarchyTreeForm", true);
-          associatedHierarchyTreeID = "popoverHierarchyTree";
+            popover.openBy(input);
+            setTimeout(() => input.focus());
+          }
           const { newValue } = event.getParameters();
 
-          this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
-        },
-
-        onChangeHierarchy(event) {
-          let associatedHierarchyTreeID;
-          if (event.getParameter("id").endsWith("Form")) {
-            this.getModel().setProperty("/showHierarchyTreeForm", true);
-            associatedHierarchyTreeID = "hierarchyTreeForm";
-            const { newValue } = event.getParameters();
-
-            this._filterHierarchyByPath(associatedHierarchyTreeID, newValue);
-          }
+          this._filterHierarchyByPath(elementID, newValue);
         },
 
         _filterHierarchyByPath(elementID, query) {
-          const filters = [
-            new Filter({
-              path: "path",
-              test: (path) => {
-                if (!query) return false;
-                const substrings = query.split(" ");
-                return substrings
-                  .map((sub) => sub.toUpperCase())
-                  .every((sub) => path.includes(sub));
-              },
-            }),
-          ];
-          this.byId(elementID).getBinding("items").filter(filters);
+          let filters = [];
+
+          if (!query) {
+            filters = new Filter("title", "EQ", null);
+          } else if (query.includes(">")) {
+            filters = [
+              new Filter({
+                path: "path",
+                test: (path) => {
+                  if (!query || !path) return false;
+                  const pathSubstrings = path.replaceAll(" ", "").split(">");
+                  const querySubstrings = query
+                    .toUpperCase()
+                    .replaceAll(" ", "")
+                    .split(">");
+
+                  return querySubstrings.every(
+                    (querySubstring, index) =>
+                      pathSubstrings[index] &&
+                      pathSubstrings[index].includes(querySubstring)
+                  );
+                },
+              }),
+            ];
+          } else {
+            filters = [
+              new Filter({
+                filters: [
+                  new Filter({
+                    path: "path",
+                    test: (path) => {
+                      if (!query || !path) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => path.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "absoluteReference",
+                    test: (absoluteReference) => {
+                      if (!query || !absoluteReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => absoluteReference.includes(sub));
+                    },
+                  }),
+                  new Filter({
+                    path: "deepReference",
+                    test: (deepReference) => {
+                      if (!query || !deepReference) return false;
+                      const substrings = query.split(" ");
+                      return substrings
+                        .map((sub) => sub.toUpperCase())
+                        .every((sub) => deepReference.includes(sub));
+                    },
+                  }),
+                ],
+                and: false,
+              }),
+            ];
+          }
+
+          const tree = this.byId(elementID);
+          tree.getBinding("rows").filter(filters);
+
+          tree.getRows().forEach((row) => {
+            const titleCell = row.getCells()[0];
+
+            if (!titleCell) return;
+
+            const htmlText = titleCell
+              .getHtmlText()
+              .replaceAll("<strong>", "")
+              .replaceAll("</strong>", "");
+
+            titleCell.setHtmlText(htmlText);
+
+            if (!query) return;
+
+            const querySubstrings = query.split(/>| /);
+
+            const newText = querySubstrings.reduce(
+              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+              htmlText
+            );
+
+            titleCell.setHtmlText(newText);
+          });
         },
 
         onSelectHierarchy(event) {
-          const { listItem } = event.getParameters();
-          const hierarchyPath = listItem
-            .getBindingContext()
-            .getProperty("path");
+          const { rowContext } = event.getParameters();
 
-          this.getModel().setProperty("/newWorkItem/parentPath", hierarchyPath);
+          if (!rowContext) return;
+
+          const hierarchyPath = rowContext.getProperty("path");
+          const path = event.getSource().getBindingContext().getPath();
+
+          this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
         },
 
         onFilterWorkItems(event) {
@@ -281,7 +356,7 @@ sap.ui.define(
           newWorkItem.activatedDate.setFullYear(year, month, day);
           newWorkItem.completedDate.setFullYear(year, month, day);
 
-          // this.checkCompleteness();
+          this.checkCompleteness();
 
           model.setProperty("/busy", true);
 
@@ -303,6 +378,27 @@ sap.ui.define(
           });
 
           model.setProperty("/busy", false);
+        },
+
+        checkCompleteness() {
+          const model = this.getModel();
+          const newWorkItem = model.getProperty("/newWorkItem");
+          const checkedProperties =
+            this.getModel().getProperty("/checkedProperties");
+
+          // eslint-disable-next-line no-restricted-syntax
+          for (const property of checkedProperties) {
+            if (
+              newWorkItem[property].toString().trim() === "" ||
+              newWorkItem[property] === null ||
+              newWorkItem[property] === undefined
+            ) {
+              model.setProperty("/newWorkItem/state", "incompleted");
+              return;
+            }
+          }
+
+          model.setProperty("/newWorkItem/state", "completed");
         },
 
         async onPressDeleteWorkItems() {
@@ -354,6 +450,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemActivity(event) {
@@ -369,6 +467,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemDates(event) {
@@ -388,6 +488,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          this.updateWorkItemState(workItem, localPath);
         },
 
         async updateWorkItemLocation(event) {
@@ -397,6 +499,39 @@ sap.ui.define(
           const value = event.getParameters().newValue;
 
           workItem.location = value;
+
+          try {
+            await this.getModel().update({ ...workItem, localPath });
+          } catch (error) {
+            Log.error(error);
+          }
+
+          this.updateWorkItemState(workItem, localPath);
+        },
+
+        async updateWorkItemState(workItem, localPath) {
+          const checkedProperties =
+            this.getModel().getProperty("/checkedProperties");
+          let isCompleted = true;
+
+          // eslint-disable-next-line no-restricted-syntax
+          for (const property of checkedProperties) {
+            if (
+              workItem[property].toString().trim() === "" ||
+              workItem[property] === null ||
+              workItem[property] === undefined
+            ) {
+              isCompleted = false;
+              break;
+            }
+          }
+
+          // eslint-disable-next-line no-unused-expressions
+          isCompleted
+            ? // eslint-disable-next-line no-param-reassign
+              (workItem.state = "completed")
+            : // eslint-disable-next-line no-param-reassign
+              (workItem.state = "incompleted");
 
           try {
             await this.getModel().update({ ...workItem, localPath });
