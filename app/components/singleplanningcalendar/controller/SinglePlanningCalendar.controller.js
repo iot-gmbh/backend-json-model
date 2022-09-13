@@ -271,72 +271,43 @@ sap.ui.define(
         },
 
         _filterHierarchyByPath(query) {
-          let filters = [];
+          const filters = [];
+          const model = this.getModel();
+          const { MyCategories } = model.getData();
 
-          if (!query) {
-            filters = new Filter("title", "EQ", null);
-          } else if (query.includes(">")) {
-            filters = [
-              new Filter({
-                path: "path",
-                test: (path) => {
-                  if (!query || !path) return false;
-                  const pathSubstrings = path.replaceAll(" ", "").split(">");
-                  const querySubstrings = query
-                    .toUpperCase()
-                    .replaceAll(" ", "")
-                    .split(">");
+          if (!query) return;
+          const categoriesFiltered = MyCategories.filter(
+            ({ path = "", absoluteReference = "", deepReference = "" }) => {
+              const pathSubstrings = path.replaceAll(" ", "").split(">");
 
-                  return querySubstrings.every(
-                    (querySubstring, index) =>
-                      pathSubstrings[index] &&
-                      pathSubstrings[index].includes(querySubstring)
-                  );
-                },
-              }),
-            ];
-          } else {
-            filters = [
-              new Filter({
-                filters: [
-                  new Filter({
-                    path: "path",
-                    test: (path) => {
-                      if (!query || !path) return false;
-                      const substrings = query.split(" ");
-                      return substrings
-                        .map((sub) => sub.toUpperCase())
-                        .every((sub) => path.includes(sub));
-                    },
-                  }),
-                  new Filter({
-                    path: "absoluteReference",
-                    test: (absoluteReference) => {
-                      if (!query || !absoluteReference) return false;
-                      const substrings = query.split(" ");
-                      return substrings
-                        .map((sub) => sub.toUpperCase())
-                        .every((sub) => absoluteReference.includes(sub));
-                    },
-                  }),
-                  new Filter({
-                    path: "deepReference",
-                    test: (deepReference) => {
-                      if (!query || !deepReference) return false;
-                      const substrings = query.split(" ");
-                      return substrings
-                        .map((sub) => sub.toUpperCase())
-                        .every((sub) => deepReference.includes(sub));
-                    },
-                  }),
-                ],
-                and: false,
-              }),
-            ];
-          }
+              if (query.includes(">")) {
+                const querySubstrings = query
+                  .toUpperCase()
+                  .replaceAll(" ", "")
+                  .split(">");
+                return querySubstrings.every(
+                  (querySubstring, index) =>
+                    pathSubstrings[index] &&
+                    pathSubstrings[index].includes(querySubstring)
+                );
+              }
+
+              const substrings = query.split(" ");
+              return substrings
+                .map((sub) => sub.toUpperCase())
+                .every(
+                  (sub) =>
+                    (path && path.includes(sub)) ||
+                    (absoluteReference && absoluteReference.includes(sub)) ||
+                    (deepReference && deepReference.includes(sub))
+                );
+            }
+          );
+
+          const categoriesNested = model.nest({ items: categoriesFiltered });
+          model.setProperty("/MyCategoriesNested", categoriesNested);
 
           const tree = this.byId("hierarchyTree");
-          tree.getBinding("rows").filter(filters);
 
           tree.getRows().forEach((row) => {
             const titleCell = row.getCells()[0];
