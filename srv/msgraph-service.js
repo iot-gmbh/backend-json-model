@@ -41,14 +41,8 @@ module.exports = async function (srv) {
       /*
       The original format is: '2022-06-23T14:30:00.0000000'
       OData needs a format like this: '2022-06-23T00:00:00Z'
-
-      All-Day events show the wrong times and are a couple of hours off (02:00 instead of 00:00).
-      This leads to UI5 showing repeating them each single day instead of showing all-day events.
-      Thus we replace the time for all-day events
       */
-      date: new Date(
-        `${start.dateTime.substring(0, 11)}00:00:00Z`
-      ).toISOString(),
+      date: new Date(new Date(start.dateTime).setHours(0, 0, 0)).toISOString(),
       activatedDate: `${start.dateTime.substring(0, 19)}Z`,
       completedDate: `${end.dateTime.substring(0, 19)}Z`,
       assignedTo_userPrincipalName: user,
