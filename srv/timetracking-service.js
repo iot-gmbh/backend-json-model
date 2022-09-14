@@ -143,10 +143,6 @@ module.exports = cds.service.impl(async function () {
     Object.assign(item, dates);
 
     delete item.tags;
-    // Seltsames Verhalten beim Mergen der date-properties: Aus 'date: Sat Sep 10 2022 00:00:00 GMT+0200' (neues date)
-    // wird beim mergen in der update-Methode vom backendJSONModel 'date: Fri Sep 09 2022 02:00:00 GMT+0200'
-    // => daher Entfernen des dates hier
-    delete item.date;
 
     const [entry] = await db.read(WorkItems).where({ ID: item.ID });
 
