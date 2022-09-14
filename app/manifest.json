@@ -81,7 +81,10 @@
         {
           "name": "fastEntry",
           "pattern": "fastEntry",
-          "target": "fastEntry"
+          "target": {
+            "name": "fastEntry",
+            "prefix": "fe"
+          }
         },
         {
           "name": "IOTWorkItems",

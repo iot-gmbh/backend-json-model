@@ -56,12 +56,6 @@
 	},
 	"sap.ui5": {
 		"flexEnabled": false,
-		"rootView": {
-			"viewName": "iot.planner.components.workitemsfastentry.view.WorkItemsFastEntry",
-			"type": "XML",
-			"async": true,
-			"id": "WorkItemsFastEntry"
-		},
 		"dependencies": {
 			"minUI5Version": "1.75.0",
 			"libs": {
@@ -89,32 +83,37 @@
 				}
 			]
 		},
+		"rootView": {
+			"viewName": "iot.planner.components.workitemsfastentry.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "app"
+		},
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"async": true,
 				"viewPath": "iot.planner.components.workitemsfastentry.view",
-				"controlAggregation": "pages",
 				"controlId": "app",
+				"controlAggregation": "pages",
+				"async": true,
 				"clearControlAggregation": false
 			},
 			"routes": [
 				{
-					"name": "RouteWorkItemsFastEntry",
-					"pattern": "RouteWorkItemsFastEntry",
-					"target": [
-						"TargetWorkItemsFastEntry"
-					]
+					"pattern": "",
+					"name": "fastentry",
+					"target": "fastentry"
 				}
 			],
 			"targets": {
-				"TargetWorkItemsFastEntry": {
+				"fastentry": {
+					"viewName": "WorkItemsFastEntry",
+					"viewId": "fe",
+					"viewLevel": 0,
 					"viewType": "XML",
 					"transition": "slide",
-					"clearControlAggregation": false,
-					"viewId": "WorkItemsFastEntry",
-					"viewName": "WorkItemsFastEntry"
+					"clearControlAggregation": false
 				}
 			}
 		}
