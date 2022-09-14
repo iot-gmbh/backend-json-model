@@ -10,7 +10,7 @@
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<dependents>
-					<Popover id="hierarchyPopover" contentWidth="24vw" contentHeight="30vw" placement="Bottom">
+					<Popover id="hierarchyPopover" contentWidth="24vw" contentHeight="30vw" placement="VerticalPreferredBottom">
 						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
 							<t:noData>
 								<Text text=""/>
