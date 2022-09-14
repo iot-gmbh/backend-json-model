@@ -34,7 +34,6 @@ sap.ui.define(
       {
         formatter,
         async onInit() {
-          this._filterHierarchyByPath("hierarchyTreeForm", "");
           const loadFrom = new Date();
           loadFrom.setUTCHours(0, 0, 0, 0); // last midnight
           const loadUntil = new Date();
@@ -114,6 +113,7 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+          this._filterHierarchyByPath("hierarchyTreeForm", "");
 
           model.setProperty("/tableBusy", false);
         },
