@@ -35,6 +35,11 @@ sap.ui.define(
         formatter,
         async onInit() {
           this._filterHierarchyByPath("hierarchyTreeForm", "");
+          const loadFrom = new Date();
+          loadFrom.setUTCHours(0, 0, 0, 0); // last midnight
+          const loadUntil = new Date();
+          loadUntil.setUTCHours(24, 0, 0, 0); // next midnight
+
           this.searchFilters = [];
           this._filters = {
             all: new Filter({
@@ -53,6 +58,10 @@ sap.ui.define(
               value1: "incompleted",
             }),
           };
+
+          this.getRouter()
+            .getRoute("fastentry")
+            .attachPatternMatched(() => this.onBeforeRendering());
         },
 
         async onBeforeRendering() {
