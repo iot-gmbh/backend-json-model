@@ -66,9 +66,9 @@ sap.ui.define(
         async onBeforeRendering() {
           const model = this.getModel();
           const loadFrom = new Date();
-          loadFrom.setUTCHours(0, 0, 0, 0); // last midnight
+          loadFrom.setHours(0, 0, 0, 0); // last midnight
           const loadUntil = new Date();
-          loadUntil.setUTCHours(24, 0, 0, 0); // next midnight
+          loadUntil.setHours(24, 0, 0, 0); // next midnight
 
           model.setData({
             newWorkItem: {},
