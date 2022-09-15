@@ -92,11 +92,6 @@ sap.ui.define(
               }
             }
           });
-
-          this.byId("hierarchySearch").setFilterFunction((term, item) =>
-            // A case-insensitive "string contains" style filter
-            item.getText().match(new RegExp(term, "i"))
-          );
         },
 
         onBeforeRendering() {
@@ -270,42 +265,60 @@ sap.ui.define(
           this._filterHierarchyByPath(newValue);
         },
 
+        filterTree(array, texts) {
+          // See: https://stackoverflow.com/questions/45289854/how-to-effectively-filter-tree-view-retaining-its-existing-structure
+          const getChildren = (result, object) => {
+            if (
+              (object.path &&
+                texts.every((text) =>
+                  object.path.toUpperCase().includes(text)
+                )) ||
+              (object.absoluteReference &&
+                texts.every((text) =>
+                  object.absoluteReference.toUpperCase().includes(text)
+                )) ||
+              (object.deepReference &&
+                texts.every((text) =>
+                  object.deepReference.toUpperCase().includes(text)
+                ))
+            ) {
+              result.push(object);
+              return result;
+            }
+
+            if (Array.isArray(object.children)) {
+              const children = object.children.reduce(getChildren, []);
+              if (children.length) result.push({ ...object, children });
+            }
+            return result;
+          };
+
+          return array.reduce(getChildren, []);
+        },
+
         _filterHierarchyByPath(query) {
           const filters = [];
           const model = this.getModel();
-          const { MyCategories } = model.getData();
+          const { MyCategoriesNested } = model.getData();
 
-          if (!query) return;
-          const categoriesFiltered = MyCategories.filter(
-            ({ path = "", absoluteReference = "", deepReference = "" }) => {
-              const pathSubstrings = path.replaceAll(" ", "").split(">");
+          if (!query) {
+            model.setProperty("/MyCategoriesNestedAndFiltered", []);
+            return;
+          }
 
-              if (query.includes(">")) {
-                const querySubstrings = query
-                  .toUpperCase()
-                  .replaceAll(" ", "")
-                  .split(">");
-                return querySubstrings.every(
-                  (querySubstring, index) =>
-                    pathSubstrings[index] &&
-                    pathSubstrings[index].includes(querySubstring)
-                );
-              }
-
-              const substrings = query.split(" ");
-              return substrings
-                .map((sub) => sub.toUpperCase())
-                .every(
-                  (sub) =>
-                    (path && path.includes(sub)) ||
-                    (absoluteReference && absoluteReference.includes(sub)) ||
-                    (deepReference && deepReference.includes(sub))
-                );
-            }
+          const categoriesFiltered = this.filterTree(
+            MyCategoriesNested,
+            query
+              .split(" ")
+              .filter(Boolean)
+              .map((text) => text.toUpperCase())
           );
 
-          const categoriesNested = model.nest({ items: categoriesFiltered });
-          model.setProperty("/MyCategoriesNested", categoriesNested);
+          // const categoriesNested = model.nest({ items: categoriesFiltered });
+          model.setProperty(
+            "/MyCategoriesNestedAndFiltered",
+            categoriesFiltered
+          );
 
           const tree = this.byId("hierarchyTree");
 
@@ -535,6 +548,10 @@ sap.ui.define(
 
             model.setProperty("/MyCategories", results);
             model.setProperty("/MyCategoriesNested", categoriesNested);
+            model.setProperty(
+              "/MyCategoriesNestedAndFiltered",
+              categoriesNested
+            );
           } catch (error) {
             Log.error(error);
           }

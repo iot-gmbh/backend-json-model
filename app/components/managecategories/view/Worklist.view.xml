@@ -8,7 +8,7 @@
     xmlns:semantic="sap.f.semantic">
 
     <Page showHeader="false">
-        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="loadData" showRestoreButton="true" showClearButton="true">
+        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="loadData" showRestoreButton="true" showClearButton="true" useToolbar="false" showGoOnFB="false">
             <fb:filterGroupItems >
                 <fb:FilterGroupItem label="{i18n>search}" groupName="search" name="search" partOfCurrentVariant="true" visibleInFilterBar="true">
                     <fb:control>
