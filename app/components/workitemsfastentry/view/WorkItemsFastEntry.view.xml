@@ -52,7 +52,7 @@
 													<TimePicker value="{path: '/newWorkItem/completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formDatePickerDate}">
-													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
+													<DatePicker id="date" value="{ path: '/newWorkItem/date', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
 												</form:FormElement>
 												<form:FormElement label="{i18n>formSelectActivity}">
 													<Select id="selectActivityForm" items="{/activities}" selectedKey="{/newWorkItem/activity}">
@@ -175,7 +175,7 @@
 												</suggestionItems>
 											</Input>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
