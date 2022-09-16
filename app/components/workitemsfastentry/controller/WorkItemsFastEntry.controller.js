@@ -295,13 +295,17 @@ sap.ui.define(
           });
         },
 
-        onSelectHierarchy(event) {
+        onSelectHierarchy(event, elementID) {
           const { rowContext } = event.getParameters();
 
           if (!rowContext) return;
 
           const hierarchyPath = rowContext.getProperty("path");
-          const path = event.getSource().getBindingContext().getPath();
+          let path = "/newWorkItem";
+
+          if (elementID === "hierarchyTreeTable") {
+            path = event.getSource().getBindingContext().getPath();
+          }
 
           this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
         },

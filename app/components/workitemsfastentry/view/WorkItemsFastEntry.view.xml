@@ -11,7 +11,7 @@
 			<Page>
 				<dependents>
 					<Popover id="hierarchyPopover" contentWidth="24vw" contentHeight="30vw" placement="VerticalPreferredBottom">
-						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeTable')" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
 							<t:noData>
 								<Text text=""/>
 							</t:noData>
@@ -83,7 +83,7 @@
 												</form:FormElement>
 												<form:FormElement>
 													<form:fields>
-														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeForm" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeForm')" id="hierarchyTreeForm" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="17" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
 															<t:noData>
 																<Text text=""/>
 															</t:noData>
