@@ -320,31 +320,31 @@ sap.ui.define(
             categoriesFiltered
           );
 
-          const tree = this.byId("hierarchyTree");
+          // const tree = this.byId("hierarchyTree");
 
-          tree.getRows().forEach((row) => {
-            const titleCell = row.getCells()[0];
+          // tree.getRows().forEach((row) => {
+          //   const titleCell = row.getCells()[0];
 
-            if (!titleCell) return;
+          //   if (!titleCell) return;
 
-            const htmlText = titleCell
-              .getHtmlText()
-              .replaceAll("<strong>", "")
-              .replaceAll("</strong>", "");
+          //   const htmlText = titleCell
+          //     .getHtmlText()
+          //     .replaceAll("<strong>", "")
+          //     .replaceAll("</strong>", "");
 
-            titleCell.setHtmlText(htmlText);
+          //   titleCell.setHtmlText(htmlText);
 
-            if (!query) return;
+          //   if (!query) return;
 
-            const querySubstrings = query.split(/>| /);
+          //   const querySubstrings = query.split(/>| /);
 
-            const newText = querySubstrings.reduce(
-              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
-              htmlText
-            );
+          //   const newText = querySubstrings.reduce(
+          //     (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+          //     htmlText
+          //   );
 
-            titleCell.setHtmlText(newText);
-          });
+          //   titleCell.setHtmlText(newText);
+          // });
         },
 
         async onSubmitEntry() {
