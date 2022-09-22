@@ -93,6 +93,7 @@ sap.ui.define(
               "activity",
               "location",
             ],
+            selectedItemPath: {},
           });
 
           this.setNewWorkItemTemplate();
@@ -186,6 +187,11 @@ sap.ui.define(
 
         onChangeHierarchy(event, elementID) {
           if (elementID === "hierarchyTreeTable") {
+            const selectedItemPath = event
+              .getSource()
+              .getBindingContext()
+              .getPath();
+            this.getModel().setProperty("/selectedItemPath", selectedItemPath);
             const popover = this.byId("hierarchyPopover");
             const input = event.getSource();
 
@@ -296,13 +302,16 @@ sap.ui.define(
           if (!rowContext) return;
 
           const hierarchyPath = rowContext.getProperty("path");
-          let path = "/newWorkItem";
+          let workItemPath = "/newWorkItem";
 
           if (elementID === "hierarchyTreeTable") {
-            path = event.getSource().getBindingContext().getPath();
+            workItemPath = this.getModel().getProperty("/selectedItemPath");
           }
 
-          this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
+          this.getModel().setProperty(
+            `${workItemPath}/parentPath`,
+            hierarchyPath
+          );
         },
 
         onFilterWorkItems(event) {

@@ -254,7 +254,6 @@ module.exports = cds.service.impl(async function () {
 
         return {
           ...workItem,
-          parentPath: parent?.path,
           parent,
         };
       });
