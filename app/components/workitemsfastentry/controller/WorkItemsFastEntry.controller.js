@@ -34,11 +34,6 @@ sap.ui.define(
       {
         formatter,
         async onInit() {
-          const loadFrom = new Date();
-          loadFrom.setUTCHours(0, 0, 0, 0); // last midnight
-          const loadUntil = new Date();
-          loadUntil.setUTCHours(24, 0, 0, 0); // next midnight
-
           this.searchFilters = [];
           this._filters = {
             all: new Filter({
