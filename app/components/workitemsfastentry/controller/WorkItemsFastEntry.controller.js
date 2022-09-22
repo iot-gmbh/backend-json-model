@@ -525,9 +525,9 @@ sap.ui.define(
           // eslint-disable-next-line no-restricted-syntax
           for (const property of checkedProperties) {
             if (
-              workItem[property].toString().trim() === "" ||
+              workItem[property] === undefined ||
               workItem[property] === null ||
-              workItem[property] === undefined
+              workItem[property].toString().trim() === ""
             ) {
               isCompleted = false;
               break;
