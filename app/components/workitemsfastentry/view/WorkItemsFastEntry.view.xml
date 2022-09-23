@@ -166,7 +166,7 @@
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 										<footer>
-											<ObjectNumber number="{/summedDuration}" unit="h"/>
+											<ObjectNumber number="{/totalDuration}" unit="h"/>
 										</footer>
 									</Column>
 									<Column minScreenWidth="Desktop">
