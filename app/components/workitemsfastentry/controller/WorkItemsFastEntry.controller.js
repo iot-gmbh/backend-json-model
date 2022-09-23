@@ -55,10 +55,10 @@ sap.ui.define(
 
           this.getRouter()
             .getRoute("fastentry")
-            .attachPatternMatched(() => this.onBeforeRendering(), this);
+            .attachPatternMatched(() => this.onRouteMatched(), this);
         },
 
-        async onBeforeRendering() {
+        async onRouteMatched() {
           const model = this.getModel();
           const loadFrom = new Date();
           loadFrom.setHours(0, 0, 0, 0); // last midnight

@@ -101,8 +101,7 @@
 						"notFound"
 					]
 				},
-				"async": true,
-				"clearControlAggregation": false
+				"async": true
 			},
 			"routes": [
 				{
@@ -118,8 +117,6 @@
 					"viewLevel": 0,
 					"title": "WorkItemsFastEntry",
 					"viewType": "XML",
-					"transition": "slide",
-					"clearControlAggregation": false
 				}
 			}
 		}
