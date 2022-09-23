@@ -124,7 +124,7 @@
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
-							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".setItemCountsFilters" items="{
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{
 								path: '/MyWorkItems',
 								sorter: {
 									path: 'completedDate',
@@ -165,6 +165,9 @@
 									</Column>
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
+										<footer>
+											<ObjectNumber number="{/summedDuration}" unit="h"/>
+										</footer>
 									</Column>
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>

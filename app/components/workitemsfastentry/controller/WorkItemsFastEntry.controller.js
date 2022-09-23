@@ -94,6 +94,7 @@ sap.ui.define(
               "location",
             ],
             selectedItemPath: {},
+            totalDuration: 0,
           });
 
           this.setNewWorkItemTemplate();
@@ -170,6 +171,24 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+        },
+
+        calcTotalDuration() {
+          const model = this.getModel();
+          const filteredItemsIndices =
+            this.byId("tableWorkItems").getBindingInfo("items").binding
+              .aIndices;
+          const myWorkItems = model.getProperty("/MyWorkItems");
+          let totalDuration = 0;
+
+          totalDuration = filteredItemsIndices.reduce((sum, index) => {
+            if (myWorkItems[index].duration !== "24") {
+              return sum + parseFloat(myWorkItems[index].duration);
+            }
+            return sum;
+          }, 0);
+
+          model.setProperty("/totalDuration", totalDuration);
         },
 
         async _loadHierarchy() {
@@ -318,6 +337,11 @@ sap.ui.define(
           const binding = this.byId("tableWorkItems").getBinding("items");
           const key = event.getSource().getSelectedKey();
           binding.filter(this._filters[key]);
+        },
+
+        onUpdateTableFinished(event) {
+          this.setItemCountsFilters(event);
+          this.calcTotalDuration();
         },
 
         setItemCountsFilters(event) {
