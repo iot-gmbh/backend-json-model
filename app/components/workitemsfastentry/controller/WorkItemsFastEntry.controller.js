@@ -55,7 +55,7 @@ sap.ui.define(
 
           this.getRouter()
             .getRoute("fastentry")
-            .attachPatternMatched(() => this.onBeforeRendering());
+            .attachPatternMatched(() => this.onBeforeRendering(), this);
         },
 
         async onBeforeRendering() {
