@@ -96,6 +96,11 @@
 				"viewPath": "iot.planner.components.workitemsfastentry.view",
 				"controlId": "app",
 				"controlAggregation": "pages",
+				"bypassed": {
+					"target": [
+						"notFound"
+					]
+				},
 				"async": true,
 				"clearControlAggregation": false
 			},
@@ -111,6 +116,7 @@
 					"viewName": "WorkItemsFastEntry",
 					"viewId": "fe",
 					"viewLevel": 0,
+					"title": "WorkItemsFastEntry",
 					"viewType": "XML",
 					"transition": "slide",
 					"clearControlAggregation": false
