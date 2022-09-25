@@ -1,0 +1,140 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:layout="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:f="sap.f"
+	xmlns:c="iot.planner.components.workitems.control"
+	xmlns:t="sap.ui.table" controllerName="iot.planner.components.workitems.controller.WorkItems">
+	<Shell id="shell" appWidthLimited="false">
+		<App busy="{/busy}" busyIndicatorDelay="0">
+			<Page>
+				<dependents>
+					<Popover id="hierarchyPopover" contentWidth="24vw" placement="VerticalPreferredBottom">
+						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+							<t:noData>
+								<Text text=""/>
+							</t:noData>
+							<t:columns>
+								<t:Column label="{i18n>title}">
+									<t:template>
+										<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+									</t:template>
+								</t:Column>
+								<t:Column label="{i18n>WorkItems.reference}" width="20%">
+									<t:template>
+										<Text text="{deepReference}"/>
+									</t:template>
+								</t:Column>
+								<t:Column label="{i18n>WorkItems.reference}" width="15%">
+									<t:template>
+										<Text text="{absoluteReference}"/>
+									</t:template>
+								</t:Column>
+							</t:columns>
+						</t:TreeTable>
+					</Popover>
+				</dependents>
+				<customHeader>
+					<f:ShellBar title="{i18n>title}"/>
+				</customHeader>
+				<content>
+					<f:DynamicPage showFooter="true">
+						<f:header>
+							<f:DynamicPageHeader pinnable="true">
+							</f:DynamicPageHeader>
+						</f:header>
+						<f:content>
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{
+								path: '/MyWorkItems',
+								sorter: {
+									path: 'completedDate',
+									descending: false
+								}
+							}">
+								<headerToolbar>
+									<OverflowToolbar>
+										<SegmentedButton selectedKey="all" selectionChange=".onFilterWorkItems">
+											<items>
+												<SegmentedButtonItem key="all" text="{i18n>tableFilterShowAll} ({/countAll})"/>
+												<SegmentedButtonItem key="completed" text="{i18n>tableFilterCompleted} ({/countCompleted})"/>
+												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({/countIncompleted})"/>
+											</items>
+										</SegmentedButton>
+										<ToolbarSpacer/>
+										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
+										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
+										<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
+										<SearchField liveChange=".onSearch" width="20rem"/>
+									</OverflowToolbar>
+								</headerToolbar>
+								<columns>
+									<Column minScreenWidth="Tablet">
+										<Text text="{i18n>tableColumnHierarchy}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnTitle}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnDate}" wrapping="false"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnActivatedDate}" wrapping="false"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnCompletedDate}" wrapping="false"/>
+									</Column>
+									<Column hAlign="End">
+										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
+										<footer>
+											<ObjectNumber number="{/totalDuration}" unit="h"/>
+										</footer>
+									</Column>
+									<Column minScreenWidth="Desktop">
+										<Text text="{i18n>tableColumnActivity}"/>
+									</Column>
+									<Column minScreenWidth="Desktop">
+										<Text text="{i18n>tableColumnLocation}"/>
+									</Column>
+									<Column width="3vw">
+										<Text text="{i18n>tableColumnStatus}" wrapping="false"/>
+									</Column>
+								</columns>
+								<items>
+									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
+										<cells>
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="updateWorkItem">
+												<suggestionItems>
+													<core:Item key="{ID}" text="{path}"/>
+												</suggestionItems>
+											</Input>
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<ObjectNumber number="{duration}" unit="h"/>
+											<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</Select>
+											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</ComboBox>
+											<c:If condition="{= ${state} === 'completed'}">
+												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://sys-enter-2" state="Success"/>
+												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://alert" state="Warning"/>
+											</c:If>
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+						</f:content>
+					</f:DynamicPage>
+				</content>
+			</Page>
+		</App>
+	</Shell>
+</mvc:View>

@@ -87,6 +87,14 @@
           }
         },
         {
+          "name": "workItems",
+          "pattern": "workItems",
+          "target": {
+            "name": "workItems",
+            "prefix": "wi"
+          }
+        },
+        {
           "name": "IOTWorkItems",
           "pattern": "IOTWorkItems",
           "target": {
@@ -128,6 +136,12 @@
           "title": "FastEntry",
           "id": "fastEntry"
         },
+        "workItems": {
+          "type": "Component",
+          "usage": "workItemsComponent",
+          "title": "WorkItems",
+          "id": "workItems"
+        },
         "IOTWorkItems": {
           "type": "Component",
           "usage": "IOTWorkItemsComponent",
@@ -157,6 +171,12 @@
       },
       "fastEntryComponent": {
         "name": "iot.planner.components.workitemsfastentry",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "workItemsComponent": {
+        "name": "iot.planner.components.workitems",
         "settings": {},
         "componentData": {},
         "lazy": true

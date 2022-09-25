@@ -1,0 +1,7 @@
+<mvc:View displayBlock="true"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+
+    <App busy="{/busy}" busyIndicatorDelay="0" id="app" class="sapUiSizeCozy"/>
+
+</mvc:View>
