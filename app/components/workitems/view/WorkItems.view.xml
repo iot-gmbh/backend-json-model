@@ -11,24 +11,24 @@
 			<Page>
 				<dependents>
 					<Popover id="hierarchyPopover" contentWidth="24vw" placement="VerticalPreferredBottom">
-						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
+						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTreeTable" rows="{path: 'viewModel>/MyCategoriesNested', sorter: [{path: 'viewModel>shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="Row" sort="onSort" columnHeaderVisible="false">
 							<t:noData>
 								<Text text=""/>
 							</t:noData>
 							<t:columns>
 								<t:Column label="{i18n>title}">
 									<t:template>
-										<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+										<FormattedText htmlText="{parts: ['viewModel>title', 'viewModel>parentPath'], formatter: '.formatter.highlightFilter'}" />
 									</t:template>
 								</t:Column>
 								<t:Column label="{i18n>WorkItems.reference}" width="20%">
 									<t:template>
-										<Text text="{deepReference}"/>
+										<Text text="{viewModel>deepReference}"/>
 									</t:template>
 								</t:Column>
 								<t:Column label="{i18n>WorkItems.reference}" width="15%">
 									<t:template>
-										<Text text="{absoluteReference}"/>
+										<Text text="{viewModel>absoluteReference}"/>
 									</t:template>
 								</t:Column>
 							</t:columns>
@@ -103,22 +103,22 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="updateWorkItem">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="submitChanges">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
 											</Input>
-											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="submitChanges" />
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="submitChanges"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="submitChanges"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="submitChanges"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
+											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="submitChanges">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
+											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="submitChanges">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>

@@ -8,11 +8,11 @@ sap.ui.define(
     "sap/base/Log",
   ],
   (BaseController, formatter, Filter, JSONModel, MessageToast, Log) => {
-    function addDays(date, days) {
-      const result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result;
-    }
+    // function addDays(date, days) {
+    //   const result = new Date(date);
+    //   result.setDate(result.getDate() + days);
+    //   return result;
+    // }
 
     BaseController.extend(
       "iot.planner.components.workitems.controller.WorkItems",
@@ -22,6 +22,7 @@ sap.ui.define(
           const viewModel = new JSONModel({
             busy: false,
             tableBusy: true,
+            MyCategories: {},
             categoriesNested: {},
             activities: [
               { title: "Durchführung" },
@@ -46,7 +47,7 @@ sap.ui.define(
               "activity",
               "location",
             ],
-            selectedItemPath: {},
+            // selectedItemPath: {},
             totalDuration: 0,
           });
           this.setModel(viewModel, "viewModel");
@@ -75,49 +76,23 @@ sap.ui.define(
         },
 
         async onRouteMatched() {
-          // try {
-          //   await Promise.all([
-          //     this._loadWorkItems(),
-          //     this._loadHierarchy(),
-          //   ]);
-          // } catch (error) {
-          //   Log.error(error);
-          // }
+          try {
+            await Promise.all([
+              // this._loadWorkItems(),
+              this._loadHierarchy(),
+            ]);
+          } catch (error) {
+            Log.error(error);
+          }
 
           this._filterHierarchyByPath("hierarchyTreeForm", "");
         },
 
-        // _loadWorkItems() {
-        //   const model = this.getModel();
-        //   const viewModel = this.getModel("viewModel");
-        //   const workItemsRaw = oDataModel.getProperty("/MyWorkItems");
-
-        //   const workItems = workItemsRaw.map(
-        //     ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
-        //       ...appointment,
-        //       tags: appointment.tags.results,
-        //       activity:
-        //         appointment.activity === null || undefined
-        //           ? model.getProperty("/activities")[0].title
-        //           : appointment.activity,
-        //       activatedDate: isAllDay
-        //         ? new Date(activatedDate.setHours(0))
-        //         : activatedDate,
-        //       completedDate: isAllDay
-        //         ? addDays(completedDate.setHours(0), -1)
-        //         : completedDate,
-        //     })
-        //   );
-
-        //   oDataModel.setProperty("/MyWorkItems", workItems);
-        // },
-
         // calcTotalDuration() {
-        //   const model = this.getModel();
         //   const filteredItemsIndices =
         //     this.byId("tableWorkItems").getBindingInfo("items").binding
         //       .aIndices;
-        //   const myWorkItems = model.getProperty("/MyWorkItems");
+        //   const myWorkItems = this.getModel().getProperty("/MyWorkItems");
         //   let totalDuration = 0;
 
         //   totalDuration = filteredItemsIndices.reduce((sum, index) => {
@@ -127,21 +102,24 @@ sap.ui.define(
         //     return sum;
         //   }, 0);
 
-        //   model.setProperty("/totalDuration", totalDuration);
+        //   this.getModel("viewModel").setProperty("/totalDuration", totalDuration);
         // },
 
-        // async _loadHierarchy() {
-        //   const model = this.getModel();
-        //   try {
-        //     const { results } = await model.callFunction("/getMyCategoryTree");
-        //     const categoriesNested = model.nest({ items: results });
+        async _loadHierarchy() {
+          const backendJSONModel = this.getModel("backendJSONModel");
+          const viewModel = this.getModel("viewModel");
+          try {
+            const { results } = await backendJSONModel.callFunction(
+              "/getMyCategoryTree"
+            );
+            const categoriesNested = backendJSONModel.nest({ items: results });
 
-        //     model.setProperty("/MyCategories", results);
-        //     model.setProperty("/MyCategoriesNested", categoriesNested);
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
-        // },
+            viewModel.setProperty("/MyCategories", results);
+            viewModel.setProperty("/MyCategoriesNested", categoriesNested);
+          } catch (error) {
+            Log.error(error);
+          }
+        },
 
         onChangeHierarchy(event) {
           const selectedItemPath = event
@@ -289,6 +267,7 @@ sap.ui.define(
         //     event.getSource().getBinding("items").isLengthFinal()
         //   ) {
         //     const model = this.getModel();
+        //     const viewModel = this.getModel("viewModel");
 
         //     const countAll = model
         //       .getProperty("/MyWorkItems")
@@ -302,14 +281,14 @@ sap.ui.define(
         //       .getProperty("/MyWorkItems")
         //       .filter((workItem) => workItem.state === "incompleted").length;
 
-        //     model.setProperty("/countAll", countAll);
-        //     model.setProperty("/countCompleted", countCompleted);
-        //     model.setProperty("/countIncompleted", countIncompleted);
+        //     viewModel.setProperty("/countAll", countAll);
+        //     viewModel.setProperty("/countCompleted", countCompleted);
+        //     viewModel.setProperty("/countIncompleted", countIncompleted);
         //   }
         // },
 
         async onPressDeleteWorkItems() {
-          const model = this.getModel();
+          const backendJSONModel = this.getModel("backendJSONModel");
           const table = this.byId("tableWorkItems");
           const workItemsToDelete = table
             .getSelectedContexts()
@@ -318,8 +297,9 @@ sap.ui.define(
           try {
             await Promise.all(
               workItemsToDelete.map((workItem) => {
-                if (workItem.type === "Manual") return model.remove(workItem);
-                return model.callFunction("/removeDraft", {
+                if (workItem.type === "Manual")
+                  return backendJSONModel.remove(workItem);
+                return backendJSONModel.callFunction("/removeDraft", {
                   method: "POST",
                   urlParameters: {
                     ID: workItem.ID,
@@ -333,17 +313,7 @@ sap.ui.define(
             Log.error(error);
           }
 
-          const data = model.getProperty("/MyWorkItems").filter((entity) => {
-            const keepItem = !workItemsToDelete
-              .map((wi) => wi.__metadata.uri)
-              .includes(entity.__metadata.uri);
-            return keepItem;
-          });
-
-          model.setProperty("/MyWorkItems", data);
-
-          table.removeSelections();
-
+          table.getBinding("items").refresh();
           MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
         },
 
@@ -351,6 +321,7 @@ sap.ui.define(
           const paths = ["parentPath", "title", "activity", "location"];
           const operator = "Contains";
           const query = event.getSource().getValue();
+          // const caseSensitive = false;
           const filters = [
             new Filter({
               filters: paths.map((path) => new Filter(path, operator, query)),
@@ -359,105 +330,130 @@ sap.ui.define(
           this.byId("tableWorkItems").getBinding("items").filter(filters);
         },
 
-        async updateWorkItem(event) {
-          const bindingContext = event.getSource().getBindingContext();
-          const localPath = bindingContext.getPath();
-          const workItem = bindingContext.getObject();
+        submitChanges() {
+          const model = this.getModel();
+          const viewModel = this.getModel("viewModel");
 
-          try {
-            await this.getModel().update({ ...workItem, localPath });
-          } catch (error) {
-            Log.error(error);
+          if (!model.hasPendingChanges()) {
+            return Promise.resolve();
           }
 
-          this.updateWorkItemState(workItem, localPath);
+          viewModel.setProperty("/busy", true);
+
+          return new Promise((resolve, reject) => {
+            model.submitChanges({
+              // groupId: "changes",
+
+              success: () => {
+                if (model.hasPendingChanges()) return reject();
+
+                return resolve();
+              },
+
+              error: reject,
+            });
+          }).finally(() => {
+            viewModel.setProperty("/busy", false);
+          });
         },
 
-        async updateWorkItemActivity(event) {
-          const bindingContext = event.getSource().getBindingContext();
-          const localPath = bindingContext.getPath();
-          const workItem = bindingContext.getObject();
-          const selectedKey = event.getSource().getSelectedKey();
+        // async updateWorkItem(event) {
+        //   const bindingContext = event.getSource().getBindingContext();
+        //   const localPath = bindingContext.getPath();
+        //   const workItem = bindingContext.getObject();
+        //   try {
+        //     await this.getModel().update({ ...workItem, localPath });
+        //   } catch (error) {
+        //     Log.error(error);
+        //   }
+        //   this.updateWorkItemState(workItem, localPath);
+        // },
 
-          workItem.activity = selectedKey;
+        // async updateWorkItemActivity(event) {
+        //   const bindingContext = event.getSource().getBindingContext();
+        //   const localPath = bindingContext.getPath();
+        //   const workItem = bindingContext.getObject();
+        //   const selectedKey = event.getSource().getSelectedKey();
 
-          try {
-            await this.getModel().update({ ...workItem, localPath });
-          } catch (error) {
-            Log.error(error);
-          }
+        //   workItem.activity = selectedKey;
 
-          this.updateWorkItemState(workItem, localPath);
-        },
+        //   try {
+        //     await this.getModel("viewModel").update({ ...workItem, localPath });
+        //   } catch (error) {
+        //     Log.error(error);
+        //   }
 
-        async updateWorkItemDates(event) {
-          const bindingContext = event.getSource().getBindingContext();
-          const localPath = bindingContext.getPath();
-          const workItem = bindingContext.getObject();
+        //   this.updateWorkItemState(workItem, localPath);
+        // },
 
-          const month = workItem.date.getUTCMonth();
-          const day = workItem.date.getDate();
-          const year = workItem.date.getUTCFullYear();
+        // async updateWorkItemDates(event) {
+        //   const bindingContext = event.getSource().getBindingContext();
+        //   const localPath = bindingContext.getPath();
+        //   const workItem = bindingContext.getObject();
 
-          workItem.activatedDate.setFullYear(year, month, day);
-          workItem.completedDate.setFullYear(year, month, day);
+        //   const month = workItem.date.getUTCMonth();
+        //   const day = workItem.date.getDate();
+        //   const year = workItem.date.getUTCFullYear();
 
-          try {
-            await this.getModel().update({ ...workItem, localPath });
-          } catch (error) {
-            Log.error(error);
-          }
+        //   workItem.activatedDate.setFullYear(year, month, day);
+        //   workItem.completedDate.setFullYear(year, month, day);
 
-          this.updateWorkItemState(workItem, localPath);
-        },
+        //   try {
+        //     await this.getModel("viewModel").update({ ...workItem, localPath });
+        //   } catch (error) {
+        //     Log.error(error);
+        //   }
 
-        async updateWorkItemLocation(event) {
-          const bindingContext = event.getSource().getBindingContext();
-          const localPath = bindingContext.getPath();
-          const workItem = bindingContext.getObject();
-          const value = event.getParameters().newValue;
+        //   this.updateWorkItemState(workItem, localPath);
+        // },
 
-          workItem.location = value;
+        // async updateWorkItemLocation(event) {
+        //   const bindingContext = event.getSource().getBindingContext();
+        //   const localPath = bindingContext.getPath();
+        //   const workItem = bindingContext.getObject();
+        //   const value = event.getParameters().newValue;
 
-          try {
-            await this.getModel().update({ ...workItem, localPath });
-          } catch (error) {
-            Log.error(error);
-          }
+        //   workItem.location = value;
 
-          this.updateWorkItemState(workItem, localPath);
-        },
+        //   try {
+        //     await this.getModel("viewModel").update({ ...workItem, localPath });
+        //   } catch (error) {
+        //     Log.error(error);
+        //   }
 
-        async updateWorkItemState(workItem, localPath) {
-          const checkedProperties =
-            this.getModel("viewModel").getProperty("/checkedProperties");
-          let isCompleted = true;
+        //   this.updateWorkItemState(workItem, localPath);
+        // },
 
-          // eslint-disable-next-line no-restricted-syntax
-          for (const property of checkedProperties) {
-            if (
-              workItem[property] === undefined ||
-              workItem[property] === null ||
-              workItem[property].toString().trim() === ""
-            ) {
-              isCompleted = false;
-              break;
-            }
-          }
+        // async updateWorkItemState(workItem, localPath) {
+        //   const checkedProperties =
+        //     this.getModel("viewModel").getProperty("/checkedProperties");
+        //   let isCompleted = true;
 
-          // eslint-disable-next-line no-unused-expressions
-          isCompleted
-            ? // eslint-disable-next-line no-param-reassign
-              (workItem.state = "completed")
-            : // eslint-disable-next-line no-param-reassign
-              (workItem.state = "incompleted");
+        //   // eslint-disable-next-line no-restricted-syntax
+        //   for (const property of checkedProperties) {
+        //     if (
+        //       workItem[property] === undefined ||
+        //       workItem[property] === null ||
+        //       workItem[property].toString().trim() === ""
+        //     ) {
+        //       isCompleted = false;
+        //       break;
+        //     }
+        //   }
 
-          try {
-            await this.getModel().update({ ...workItem, localPath });
-          } catch (error) {
-            Log.error(error);
-          }
-        },
+        //   // eslint-disable-next-line no-unused-expressions
+        //   isCompleted
+        //     ? // eslint-disable-next-line no-param-reassign
+        //       (workItem.state = "completed")
+        //     : // eslint-disable-next-line no-param-reassign
+        //       (workItem.state = "incompleted");
+
+        //   try {
+        //     await this.getModel().update({ ...workItem, localPath });
+        //   } catch (error) {
+        //     Log.error(error);
+        //   }
+        // },
       }
     );
   }

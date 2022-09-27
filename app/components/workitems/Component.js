@@ -1,11 +1,6 @@
 sap.ui.define(
-  [
-    "sap/ui/core/UIComponent",
-    "iot/BackendJSONModel",
-    "./model/models",
-    "errorhandler/ErrorHandler",
-  ],
-  (UIComponent, BackendJSONModel, models, ErrorHandler) =>
+  ["sap/ui/core/UIComponent", "iot/BackendJSONModel", "./model/models"],
+  (UIComponent, BackendJSONModel, models) =>
     UIComponent.extend("iot.planner.components.workitems.Component", {
       metadata: {
         manifest: "json",
@@ -21,6 +16,10 @@ sap.ui.define(
         // call the base component's init function
         UIComponent.prototype.init.apply(this, ...args);
 
+        const backendJSONModel = new BackendJSONModel("/v2/timetracking/");
+
+        this.setModel(backendJSONModel, "backendJSONModel");
+
         // enable routing
         this.getRouter().initialize();
 
@@ -29,8 +28,7 @@ sap.ui.define(
       },
 
       exit() {
-        this.getModel().destroy();
-        this.getModel("OData").destroy();
+        this.getModel("backendJSONModel").destroy();
       },
     })
 );
