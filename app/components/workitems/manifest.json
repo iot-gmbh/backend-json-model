@@ -74,6 +74,15 @@
 				"settings": {
 					"bundleName": "iot.planner.components.workitems.i18n.i18n"
 				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"preload": true,
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"refreshAfterChange": false
+				}
 			}
 		},
 		"resources": {

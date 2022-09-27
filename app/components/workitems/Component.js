@@ -21,14 +21,6 @@ sap.ui.define(
         // call the base component's init function
         UIComponent.prototype.init.apply(this, ...args);
 
-        const backendJSONModel = new BackendJSONModel("/v2/timetracking/");
-        const ODataModel = backendJSONModel.getODataModel();
-
-        this.setModel(backendJSONModel);
-        this.setModel(ODataModel, "OData");
-
-        ErrorHandler.cover([ODataModel]);
-
         // enable routing
         this.getRouter().initialize();
 

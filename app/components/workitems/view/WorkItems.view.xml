@@ -54,13 +54,13 @@
 							}">
 								<headerToolbar>
 									<OverflowToolbar>
-										<SegmentedButton selectedKey="all" selectionChange=".onFilterWorkItems">
+										<!-- <SegmentedButton selectedKey="all" selectionChange=".onFilterWorkItems">
 											<items>
 												<SegmentedButtonItem key="all" text="{i18n>tableFilterShowAll} ({/countAll})"/>
 												<SegmentedButtonItem key="completed" text="{i18n>tableFilterCompleted} ({/countCompleted})"/>
 												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({/countIncompleted})"/>
 											</items>
-										</SegmentedButton>
+										</SegmentedButton> -->
 										<ToolbarSpacer/>
 										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
 										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
@@ -86,9 +86,9 @@
 									</Column>
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
-										<footer>
+										<!-- <footer>
 											<ObjectNumber number="{/totalDuration}" unit="h"/>
-										</footer>
+										</footer> -->
 									</Column>
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>
@@ -113,14 +113,14 @@
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
+											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
 												<items>
-													<core:Item key="{title}" text="{title}"/>
+													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
+											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
 												<items>
-													<core:Item key="{title}" text="{title}"/>
+													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</ComboBox>
 											<c:If condition="{= ${state} === 'completed'}">
