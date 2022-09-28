@@ -361,26 +361,33 @@ sap.ui.define(
           });
         },
 
-        // async updateWorkItemDates(event) {
-        //   const bindingContext = event.getSource().getBindingContext();
-        //   const localPath = bindingContext.getPath();
-        //   const workItem = bindingContext.getObject();
+        async updateWorkItemDates(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
 
-        //   const month = workItem.date.getUTCMonth();
-        //   const day = workItem.date.getDate();
-        //   const year = workItem.date.getUTCFullYear();
+          const month = workItem.date.getUTCMonth();
+          const day = workItem.date.getDate();
+          const year = workItem.date.getUTCFullYear();
 
-        //   workItem.activatedDate.setFullYear(year, month, day);
-        //   workItem.completedDate.setFullYear(year, month, day);
+          const activatedDate = new Date(
+            workItem.activatedDate.setFullYear(year, month, day)
+          );
+          const completedDate = new Date(
+            workItem.completedDate.setFullYear(year, month, day)
+          );
 
-        //   try {
-        //     await this.getModel("viewModel").update({ ...workItem, localPath });
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
+          this.getModel().setProperty(
+            `${localPath}/activatedDate`,
+            activatedDate
+          );
+          this.getModel().setProperty(
+            `${localPath}/completedDate`,
+            completedDate
+          );
 
-        //   this.updateWorkItemState(workItem, localPath);
-        // },
+          this.onChangeWorkItemValue(event);
+        },
 
         async updateWorkItemState(event) {
           const bindingContext = event.getSource().getBindingContext();
