@@ -8,12 +8,6 @@ sap.ui.define(
     "sap/base/Log",
   ],
   (BaseController, formatter, Filter, JSONModel, MessageToast, Log) => {
-    // function addDays(date, days) {
-    //   const result = new Date(date);
-    //   result.setDate(result.getDate() + days);
-    //   return result;
-    // }
-
     BaseController.extend(
       "iot.planner.components.workitems.controller.WorkItems",
       {
@@ -47,7 +41,7 @@ sap.ui.define(
               "activity",
               "location",
             ],
-            // selectedItemPath: {},
+            selectedItemPath: "",
             totalDuration: 0,
           });
           this.setModel(viewModel, "viewModel");
@@ -77,10 +71,7 @@ sap.ui.define(
 
         async onRouteMatched() {
           try {
-            await Promise.all([
-              // this._loadWorkItems(),
-              this._loadHierarchy(),
-            ]);
+            await Promise.all([this._loadHierarchy()]);
           } catch (error) {
             Log.error(error);
           }
@@ -119,6 +110,131 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+        },
+
+        onFilterWorkItems(event) {
+          const binding = this.byId("tableWorkItems").getBinding("items");
+          const key = event.getSource().getSelectedKey();
+          binding.filter(this._filters[key]);
+        },
+
+        onUpdateTableFinished(event) {
+          this.setItemCountsFilters(event);
+          // this.calcTotalDuration();
+        },
+
+        async setItemCountsFilters(event) {
+          const totalItems = event.getParameter("total");
+
+          if (
+            totalItems &&
+            event.getSource().getBinding("items").isLengthFinal()
+          ) {
+            const model = this.getModel();
+            const viewModel = this.getModel("viewModel");
+
+            let workItems;
+
+            viewModel.setProperty("/busy", true);
+
+            try {
+              workItems = await new Promise((resolve, reject) => {
+                model.read("/MyWorkItems", {
+                  success: resolve,
+                  error: reject,
+                });
+              });
+            } finally {
+              viewModel.setProperty("/busy", false);
+            }
+
+            const countAll = workItems.results.filter(
+              (workItem) => workItem.state !== ""
+            ).length;
+
+            const countCompleted = workItems.results.filter(
+              (workItem) => workItem.state === "completed"
+            ).length;
+
+            const countIncompleted = workItems.results.filter(
+              (workItem) => workItem.state === "incompleted"
+            ).length;
+
+            viewModel.setProperty("/countAll", countAll);
+            viewModel.setProperty("/countCompleted", countCompleted);
+            viewModel.setProperty("/countIncompleted", countIncompleted);
+          }
+        },
+
+        async onPressDeleteWorkItems() {
+          const backendJSONModel = this.getModel("backendJSONModel");
+          const table = this.byId("tableWorkItems");
+          const workItemsToDelete = table
+            .getSelectedContexts()
+            .map((context) => context.getObject());
+
+          try {
+            await Promise.all(
+              workItemsToDelete.map((workItem) => {
+                if (workItem.type === "Manual")
+                  return backendJSONModel.remove(workItem);
+                return backendJSONModel.callFunction("/removeDraft", {
+                  method: "POST",
+                  urlParameters: {
+                    ID: workItem.ID,
+                    activatedDate: workItem.activatedDate,
+                    completedDate: workItem.completedDate,
+                  },
+                });
+              })
+            );
+          } catch (error) {
+            Log.error(error);
+          }
+
+          table.getBinding("items").refresh();
+          MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
+        },
+
+        onSearch(event) {
+          const paths = ["parentPath", "title", "activity", "location"];
+          const operator = "Contains";
+          const query = event.getSource().getValue();
+          // const caseSensitive = false;
+          const filters = [
+            new Filter({
+              filters: paths.map((path) => new Filter(path, operator, query)),
+            }),
+          ];
+          this.byId("tableWorkItems").getBinding("items").filter(filters);
+        },
+
+        async updateWorkItemDates(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
+
+          const month = workItem.date.getUTCMonth();
+          const day = workItem.date.getDate();
+          const year = workItem.date.getUTCFullYear();
+
+          const activatedDate = new Date(
+            workItem.activatedDate.setFullYear(year, month, day)
+          );
+          const completedDate = new Date(
+            workItem.completedDate.setFullYear(year, month, day)
+          );
+
+          this.getModel().setProperty(
+            `${localPath}/activatedDate`,
+            activatedDate
+          );
+          this.getModel().setProperty(
+            `${localPath}/completedDate`,
+            completedDate
+          );
+
+          this.onChangeWorkItemValue(event);
         },
 
         onChangeHierarchy(event) {
@@ -248,145 +364,9 @@ sap.ui.define(
           );
         },
 
-        // onFilterWorkItems(event) {
-        //   const binding = this.byId("tableWorkItems").getBinding("items");
-        //   const key = event.getSource().getSelectedKey();
-        //   binding.filter(this._filters[key]);
-        // },
-
-        // onUpdateTableFinished(event) {
-        // this.setItemCountsFilters(event);
-        // this.calcTotalDuration();
-        // },
-
-        // setItemCountsFilters(event) {
-        //   const totalItems = event.getParameter("total");
-
-        //   if (
-        //     totalItems &&
-        //     event.getSource().getBinding("items").isLengthFinal()
-        //   ) {
-        //     const model = this.getModel();
-        //     const viewModel = this.getModel("viewModel");
-
-        //     const countAll = model
-        //       .getProperty("/MyWorkItems")
-        //       .filter((workItem) => workItem.state !== "").length;
-
-        //     const countCompleted = model
-        //       .getProperty("/MyWorkItems")
-        //       .filter((workItem) => workItem.state === "completed").length;
-
-        //     const countIncompleted = model
-        //       .getProperty("/MyWorkItems")
-        //       .filter((workItem) => workItem.state === "incompleted").length;
-
-        //     viewModel.setProperty("/countAll", countAll);
-        //     viewModel.setProperty("/countCompleted", countCompleted);
-        //     viewModel.setProperty("/countIncompleted", countIncompleted);
-        //   }
-        // },
-
-        async onPressDeleteWorkItems() {
-          const backendJSONModel = this.getModel("backendJSONModel");
-          const table = this.byId("tableWorkItems");
-          const workItemsToDelete = table
-            .getSelectedContexts()
-            .map((context) => context.getObject());
-
-          try {
-            await Promise.all(
-              workItemsToDelete.map((workItem) => {
-                if (workItem.type === "Manual")
-                  return backendJSONModel.remove(workItem);
-                return backendJSONModel.callFunction("/removeDraft", {
-                  method: "POST",
-                  urlParameters: {
-                    ID: workItem.ID,
-                    activatedDate: workItem.activatedDate,
-                    completedDate: workItem.completedDate,
-                  },
-                });
-              })
-            );
-          } catch (error) {
-            Log.error(error);
-          }
-
-          table.getBinding("items").refresh();
-          MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
-        },
-
-        onSearch(event) {
-          const paths = ["parentPath", "title", "activity", "location"];
-          const operator = "Contains";
-          const query = event.getSource().getValue();
-          // const caseSensitive = false;
-          const filters = [
-            new Filter({
-              filters: paths.map((path) => new Filter(path, operator, query)),
-            }),
-          ];
-          this.byId("tableWorkItems").getBinding("items").filter(filters);
-        },
-
         onChangeWorkItemValue(event) {
           this.updateWorkItemState(event);
           this.submitChanges();
-        },
-
-        submitChanges() {
-          const model = this.getModel();
-          const viewModel = this.getModel("viewModel");
-
-          if (!model.hasPendingChanges()) {
-            return Promise.resolve();
-          }
-
-          viewModel.setProperty("/busy", true);
-
-          return new Promise((resolve, reject) => {
-            model.submitChanges({
-              // groupId: "changes",
-
-              success: () => {
-                if (model.hasPendingChanges()) return reject();
-                return resolve();
-              },
-
-              error: reject,
-            });
-          }).finally(() => {
-            viewModel.setProperty("/busy", false);
-          });
-        },
-
-        async updateWorkItemDates(event) {
-          const bindingContext = event.getSource().getBindingContext();
-          const localPath = bindingContext.getPath();
-          const workItem = bindingContext.getObject();
-
-          const month = workItem.date.getUTCMonth();
-          const day = workItem.date.getDate();
-          const year = workItem.date.getUTCFullYear();
-
-          const activatedDate = new Date(
-            workItem.activatedDate.setFullYear(year, month, day)
-          );
-          const completedDate = new Date(
-            workItem.completedDate.setFullYear(year, month, day)
-          );
-
-          this.getModel().setProperty(
-            `${localPath}/activatedDate`,
-            activatedDate
-          );
-          this.getModel().setProperty(
-            `${localPath}/completedDate`,
-            completedDate
-          );
-
-          this.onChangeWorkItemValue(event);
         },
 
         async updateWorkItemState(event) {
@@ -416,6 +396,32 @@ sap.ui.define(
               this.getModel().setProperty(`${localPath}/state`, "completed")
             : // eslint-disable-next-line no-param-reassign
               this.getModel().setProperty(`${localPath}/state`, "incompleted");
+        },
+
+        async submitChanges() {
+          const model = this.getModel();
+          const viewModel = this.getModel("viewModel");
+
+          if (!model.hasPendingChanges()) {
+            return Promise.resolve();
+          }
+
+          viewModel.setProperty("/busy", true);
+
+          return new Promise((resolve, reject) => {
+            model.submitChanges({
+              // groupId: "changes",
+
+              success: () => {
+                if (model.hasPendingChanges()) return reject();
+                return resolve();
+              },
+
+              error: reject,
+            });
+          }).finally(() => {
+            viewModel.setProperty("/busy", false);
+          });
         },
       }
     );
