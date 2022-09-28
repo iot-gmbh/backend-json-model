@@ -103,22 +103,22 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="submitChanges">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy" width="24vw" change="onChangeWorkItemValue">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
 											</Input>
-											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="submitChanges" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="submitChanges"/>
-											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="submitChanges"/>
-											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="submitChanges"/>
+											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="onChangeWorkItemValue" />
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="onChangeWorkItemValue"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="onChangeWorkItemValue"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="onChangeWorkItemValue"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="submitChanges">
+											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="onChangeWorkItemValue">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="submitChanges">
+											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="onChangeWorkItemValue">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>

@@ -330,6 +330,11 @@ sap.ui.define(
           this.byId("tableWorkItems").getBinding("items").filter(filters);
         },
 
+        onChangeWorkItemValue(event) {
+          this.updateWorkItemState(event);
+          this.submitChanges();
+        },
+
         submitChanges() {
           const model = this.getModel();
           const viewModel = this.getModel("viewModel");
@@ -346,7 +351,6 @@ sap.ui.define(
 
               success: () => {
                 if (model.hasPendingChanges()) return reject();
-
                 return resolve();
               },
 
@@ -356,35 +360,6 @@ sap.ui.define(
             viewModel.setProperty("/busy", false);
           });
         },
-
-        // async updateWorkItem(event) {
-        //   const bindingContext = event.getSource().getBindingContext();
-        //   const localPath = bindingContext.getPath();
-        //   const workItem = bindingContext.getObject();
-        //   try {
-        //     await this.getModel().update({ ...workItem, localPath });
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
-        //   this.updateWorkItemState(workItem, localPath);
-        // },
-
-        // async updateWorkItemActivity(event) {
-        //   const bindingContext = event.getSource().getBindingContext();
-        //   const localPath = bindingContext.getPath();
-        //   const workItem = bindingContext.getObject();
-        //   const selectedKey = event.getSource().getSelectedKey();
-
-        //   workItem.activity = selectedKey;
-
-        //   try {
-        //     await this.getModel("viewModel").update({ ...workItem, localPath });
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
-
-        //   this.updateWorkItemState(workItem, localPath);
-        // },
 
         // async updateWorkItemDates(event) {
         //   const bindingContext = event.getSource().getBindingContext();
@@ -407,53 +382,34 @@ sap.ui.define(
         //   this.updateWorkItemState(workItem, localPath);
         // },
 
-        // async updateWorkItemLocation(event) {
-        //   const bindingContext = event.getSource().getBindingContext();
-        //   const localPath = bindingContext.getPath();
-        //   const workItem = bindingContext.getObject();
-        //   const value = event.getParameters().newValue;
+        async updateWorkItemState(event) {
+          const bindingContext = event.getSource().getBindingContext();
+          const localPath = bindingContext.getPath();
+          const workItem = bindingContext.getObject();
 
-        //   workItem.location = value;
+          const checkedProperties =
+            this.getModel("viewModel").getProperty("/checkedProperties");
+          let isCompleted = true;
 
-        //   try {
-        //     await this.getModel("viewModel").update({ ...workItem, localPath });
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
+          // eslint-disable-next-line no-restricted-syntax
+          for (const property of checkedProperties) {
+            if (
+              workItem[property] === undefined ||
+              workItem[property] === null ||
+              workItem[property].toString().trim() === ""
+            ) {
+              isCompleted = false;
+              break;
+            }
+          }
 
-        //   this.updateWorkItemState(workItem, localPath);
-        // },
-
-        // async updateWorkItemState(workItem, localPath) {
-        //   const checkedProperties =
-        //     this.getModel("viewModel").getProperty("/checkedProperties");
-        //   let isCompleted = true;
-
-        //   // eslint-disable-next-line no-restricted-syntax
-        //   for (const property of checkedProperties) {
-        //     if (
-        //       workItem[property] === undefined ||
-        //       workItem[property] === null ||
-        //       workItem[property].toString().trim() === ""
-        //     ) {
-        //       isCompleted = false;
-        //       break;
-        //     }
-        //   }
-
-        //   // eslint-disable-next-line no-unused-expressions
-        //   isCompleted
-        //     ? // eslint-disable-next-line no-param-reassign
-        //       (workItem.state = "completed")
-        //     : // eslint-disable-next-line no-param-reassign
-        //       (workItem.state = "incompleted");
-
-        //   try {
-        //     await this.getModel().update({ ...workItem, localPath });
-        //   } catch (error) {
-        //     Log.error(error);
-        //   }
-        // },
+          // eslint-disable-next-line no-unused-expressions
+          isCompleted
+            ? // eslint-disable-next-line no-param-reassign
+              this.getModel().setProperty(`${localPath}/state`, "completed")
+            : // eslint-disable-next-line no-param-reassign
+              this.getModel().setProperty(`${localPath}/state`, "incompleted");
+        },
       }
     );
   }
