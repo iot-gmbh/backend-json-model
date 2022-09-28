@@ -85,11 +85,11 @@ sap.ui.define(
             countCompleted: 0,
             countIncompleted: 0,
             checkedProperties: [
+              "parentPath",
               "title",
               "date",
               "activatedDate",
               "completedDate",
-              "parentPath",
               "activity",
               "location",
             ],
@@ -371,21 +371,6 @@ sap.ui.define(
           }
         },
 
-        onSearch(event) {
-          this.searchFilters = [];
-          this.searchQuery = event.getSource().getValue();
-
-          if (this.searchQuery && this.searchQuery.length > 0) {
-            this.searchFilters = new Filter(
-              "text",
-              FilterOperator.Contains,
-              this.searchQuery
-            );
-          }
-
-          this.byId("table").getBinding("items").filter(this.searchFilters);
-        },
-
         async onPressAddWorkItem() {
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
@@ -479,6 +464,20 @@ sap.ui.define(
           table.removeSelections();
 
           MessageToast.show(`Deleted ${workItemsToDelete.length} work items.`);
+        },
+
+        onSearch(event) {
+          const paths = ["parentPath", "title", "activity", "location"];
+          const operator = "Contains";
+          const query = event.getSource().getValue();
+
+          const filters = [
+            new Filter({
+              filters: paths.map((path) => new Filter(path, operator, query)),
+            }),
+          ];
+
+          this.byId("tableWorkItems").getBinding("items").filter(filters);
         },
 
         async updateWorkItem(event) {
