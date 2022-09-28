@@ -9,7 +9,7 @@ function calcDurationInH({ start, end }) {
   return durationInHRounded;
 }
 
-function calcDates({ activatedDate, completedDate }) {
+function calcDates(activatedDate, completedDate) {
   const aDate = new Date(activatedDate);
   const cDate = new Date(completedDate);
   return {
@@ -198,13 +198,16 @@ module.exports = cds.service.impl(async function () {
     item.confirmed = true;
     item.tenant = req.user.tenant;
     item.assignedTo_userPrincipalName = req.user.id;
-    item.duration = calcDurationInH({
-      start: item.activatedDate,
-      end: item.completedDate,
-    });
 
-    const dates = calcDates(item);
-    Object.assign(item, dates);
+    if (item.activatedDate && item.completedDate) {
+      item.duration = calcDurationInH({
+        start: item.activatedDate,
+        end: item.completedDate,
+      });
+
+      const dates = calcDates(item.activatedDate, item.completedDate);
+      Object.assign(item, dates);
+    }
 
     delete item.tags;
 
