@@ -15,7 +15,7 @@ sap.ui.define(
         async onInit() {
           const viewModel = new JSONModel({
             busy: false,
-            tableBusy: true,
+            tableBusy: false,
             MyCategories: {},
             categoriesNested: {},
             activities: [
@@ -69,6 +69,19 @@ sap.ui.define(
             .attachPatternMatched(() => this.onRouteMatched(), this);
         },
 
+        onAfterRendering() {
+          const viewModel = this.getModel("viewModel");
+          const binding = this.byId("tableWorkItems").getBinding("items");
+
+          binding.attachDataRequested(() =>
+            viewModel.setProperty("/tableBusy", true)
+          );
+
+          binding.attachDataReceived(() =>
+            viewModel.setProperty("/tableBusy", false)
+          );
+        },
+
         async onRouteMatched() {
           try {
             await Promise.all([this._loadHierarchy()]);
@@ -112,10 +125,15 @@ sap.ui.define(
           }
         },
 
-        onFilterWorkItems(event) {
+        async onFilterWorkItems(event) {
           const binding = this.byId("tableWorkItems").getBinding("items");
           const key = event.getSource().getSelectedKey();
-          binding.filter(this._filters[key]);
+
+          try {
+            binding.filter(this._filters[key]);
+          } catch (error) {
+            Log.error(error);
+          }
         },
 
         onUpdateTableFinished(event) {
@@ -200,7 +218,6 @@ sap.ui.define(
           const paths = ["parentPath", "title", "activity", "location"];
           const operator = "Contains";
           const query = event.getSource().getValue();
-          // const caseSensitive = false;
           const filters = [
             new Filter({
               filters: paths.map((path) => new Filter(path, operator, query)),
