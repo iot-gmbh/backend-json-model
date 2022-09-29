@@ -3,11 +3,12 @@ sap.ui.define(
     "./BaseController",
     "../model/formatter",
     "sap/ui/model/Filter",
+    "sap/ui/model/Sorter",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/base/Log",
   ],
-  (BaseController, formatter, Filter, JSONModel, MessageToast, Log) => {
+  (BaseController, formatter, Filter, Sorter, JSONModel, MessageToast, Log) => {
     BaseController.extend(
       "iot.planner.components.workitems.controller.WorkItems",
       {
@@ -29,9 +30,9 @@ sap.ui.define(
               { title: "Rottendorf" },
             ],
             // TODO: evtl. entfernen, da nicht mehr benoetigt
-            countAll: 0,
-            countCompleted: 0,
-            countIncompleted: 0,
+            countAll: "...",
+            countCompleted: "...",
+            countIncompleted: "...",
             checkedProperties: [
               "title",
               "date",
@@ -46,7 +47,13 @@ sap.ui.define(
           });
           this.setModel(viewModel, "viewModel");
 
-          this._filters = {
+          this._initialFilter = new Filter({
+            path: "deleted",
+            operator: "NE",
+            value1: true,
+          });
+
+          this._stateFilters = {
             all: new Filter({
               path: "state",
               operator: "NE",
@@ -71,7 +78,21 @@ sap.ui.define(
 
         onAfterRendering() {
           const viewModel = this.getModel("viewModel");
-          const binding = this.byId("tableWorkItems").getBinding("items");
+          const table = this.byId("tableWorkItems");
+          const { template } = table.getBindingInfo("items");
+
+          table.bindItems({
+            path: "/MyWorkItems",
+            template,
+            templateShareable: false,
+            filters: this._initialFilter,
+            sorter: new Sorter({
+              path: "completedDate",
+              descending: false,
+            }),
+          });
+
+          const binding = table.getBinding("items");
 
           binding.attachDataRequested(() =>
             viewModel.setProperty("/tableBusy", true)
@@ -80,6 +101,8 @@ sap.ui.define(
           binding.attachDataReceived(() =>
             viewModel.setProperty("/tableBusy", false)
           );
+
+          binding.refresh();
         },
 
         async onRouteMatched() {
@@ -130,7 +153,7 @@ sap.ui.define(
           const key = event.getSource().getSelectedKey();
 
           try {
-            binding.filter(this._filters[key]);
+            binding.filter(this._stateFilters[key]);
           } catch (error) {
             Log.error(error);
           }
@@ -142,6 +165,7 @@ sap.ui.define(
         },
 
         async setItemCountsFilters(event) {
+          const viewModel = this.getModel("viewModel");
           const totalItems = event.getParameter("total");
 
           if (
@@ -149,7 +173,6 @@ sap.ui.define(
             event.getSource().getBinding("items").isLengthFinal()
           ) {
             const model = this.getModel();
-            const viewModel = this.getModel("viewModel");
 
             let workItems;
 
@@ -167,7 +190,9 @@ sap.ui.define(
             }
 
             const countAll = workItems.results.filter(
-              (workItem) => workItem.state !== ""
+              (workItem) =>
+                workItem.state === "completed" ||
+                workItem.state === "incompleted"
             ).length;
 
             const countCompleted = workItems.results.filter(

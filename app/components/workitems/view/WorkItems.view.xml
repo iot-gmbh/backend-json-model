@@ -45,13 +45,7 @@
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
-							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{viewModel>/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{
-								path: '/MyWorkItems',
-								sorter: {
-									path: 'completedDate',
-									descending: false
-								}
-							}">
+							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{viewModel>/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{}">
 								<headerToolbar>
 									<OverflowToolbar>
 										<SegmentedButton selectedKey="all" selectionChange=".onFilterWorkItems">
