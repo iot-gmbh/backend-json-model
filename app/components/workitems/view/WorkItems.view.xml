@@ -63,9 +63,9 @@
 										</SegmentedButton>
 										<ToolbarSpacer/>
 										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
-										<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
+										<!-- <Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
 										<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
-										<SearchField liveChange=".onSearch" width="20rem"/>
+										<SearchField liveChange=".onSearch" width="20rem"/> -->
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
