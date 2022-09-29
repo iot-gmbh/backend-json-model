@@ -98,6 +98,10 @@ module.exports = cds.service.impl(async function () {
 
   this.on("READ", "MSGraphWorkItems", async (req) => MSGraphSrv.run(req.query));
 
+  this.on("READ", "MyWorkItems", async () =>
+    SELECT.from(WorkItems).where({ confirmed: true })
+  );
+
   this.on("getMyCategoryTree", async (req) => {
     const categories = await catService.send("getMyCategoryTree", req.data);
 
