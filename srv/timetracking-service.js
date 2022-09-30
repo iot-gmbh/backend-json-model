@@ -113,7 +113,7 @@ module.exports = cds.service.impl(async function () {
     } = req;
     const [MSGraphEvent, [localWorkItem]] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
-      cds.run(SELECT.from(MyWorkItems).where({ ID })),
+      this.run(SELECT.from(MyWorkItems).where({ ID })),
     ]);
 
     const parent = await catService.run(
@@ -141,7 +141,7 @@ module.exports = cds.service.impl(async function () {
 
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv.send("getCalendarView", req.data),
-      cds.run(
+      this.run(
         SELECT.from(MyWorkItems).where(
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )
