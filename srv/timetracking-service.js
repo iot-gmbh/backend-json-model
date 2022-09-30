@@ -54,7 +54,8 @@ function categorizeWorkItem(workItem, categories) {
 
       if (bestMatch) {
         category = categories.find(
-          (cat) => cat.path.replaceAll(" > ", " ") === bestMatch
+          (cat) =>
+            cat && cat.path && cat.path.replaceAll(" > ", " ") === bestMatch
         );
       } else category = {};
     }
