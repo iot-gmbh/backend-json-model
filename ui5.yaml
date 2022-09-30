@@ -30,7 +30,7 @@ framework:
     - name: sap.ushell
     - name: sap.suite.ui.generic.template
     - name: sap.ui.generic.app
-    # - name: sap.fe.templates
+    - name: sap.fe.templates
     # - name: sap.fe.core
     - name: sap.ui.comp
     - name: sap.ui.core
