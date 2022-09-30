@@ -44,7 +44,9 @@ function categorizeWorkItem(workItem, categories) {
     } else {
       const allSortedMatches = didYouMean(
         workItem.title,
-        categories.map((cat) => cat.path.replaceAll(" > ", " ")),
+        categories
+          .filter((cat) => cat && cat.path)
+          .map((cat) => cat.path.replaceAll(" > ", " ")),
         { threshold: 0.4, returnType: ReturnTypeEnums.ALL_SORTED_MATCHES }
       );
 
