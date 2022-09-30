@@ -253,6 +253,7 @@ module.exports = cds.service.impl(async function () {
       user,
     } = req;
 
+    await db.run(DELETE.from(MyWorkItems).where({ ID }));
     await db.run(
       INSERT.into(MyWorkItems).entries({
         ID,
