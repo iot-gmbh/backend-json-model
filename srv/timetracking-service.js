@@ -81,7 +81,7 @@ module.exports = cds.service.impl(async function () {
     req.data.assignedTo_userPrincipalName = req.user.id;
     req.data.tenant = req.user.tenant;
 
-    const dates = calcDates(req.data);
+    const dates = calcDates(req.data.activatedDate, req.data.completedDate);
     Object.assign(req.data, dates);
 
     return next();
