@@ -54,6 +54,10 @@ module.exports = async function (srv) {
     };
   }
 
+  function removeAllDayEvents(events) {
+    return events.filter((event) => event.isAllDay === false);
+  }
+
   const transformEventsToWorkItems = (events) => {
     if (Array.isArray(events)) {
       return events
@@ -61,7 +65,9 @@ module.exports = async function (srv) {
         .map((event) => transformEventToWorkItem(event));
     }
 
-    return transformEventToWorkItem(events);
+    const filteredEvents = removeAllDayEvents(events);
+
+    return transformEventToWorkItem(filteredEvents);
   };
 
   this.on("getCalendarView", async (req) => {
@@ -76,7 +82,9 @@ module.exports = async function (srv) {
       },
     });
 
-    return transformEventsToWorkItems(events);
+    const filteredEvents = removeAllDayEvents(events);
+
+    return transformEventsToWorkItems(filteredEvents);
   });
 
   this.on("getWorkItemByID", async (req) => {
@@ -106,7 +114,9 @@ module.exports = async function (srv) {
       },
     });
 
-    return transformEventsToWorkItems(events);
+    const filteredEvents = removeAllDayEvents(events);
+
+    return transformEventsToWorkItems(filteredEvents);
   });
 
   srv.on("READ", "Users", async (req) => {
