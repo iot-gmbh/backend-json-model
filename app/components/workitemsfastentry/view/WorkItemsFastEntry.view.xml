@@ -10,23 +10,24 @@
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
 				<dependents>
-					<Popover id="hierarchyPopover" contentWidth="24vw" placement="VerticalPreferredBottom">
+					<Popover id="hierarchyPopover" contentWidth="42vw" placement="VerticalPreferredBottom">
 						<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeTable')" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
 							<t:noData>
 								<Text text=""/>
 							</t:noData>
 							<t:columns>
-								<t:Column label="{i18n>title}">
+								<t:Column>
 									<t:template>
-										<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+										<FormattedText htmlText="{parts: ['title', 'deepReference'], formatter: '.formatter.braceDeepReference'}"/>
+										<!-- <Text text="{title}"/> -->
 									</t:template>
 								</t:Column>
-								<t:Column label="{i18n>WorkItems.reference}" width="20%">
-									<t:template>
-										<Text text="{deepReference}"/>
-									</t:template>
-								</t:Column>
-								<t:Column label="{i18n>WorkItems.reference}" width="15%">
+								<!-- <t:Column width="163px">
+										<t:template>
+											<Text text="{deepReference}"/>
+										</t:template>
+									</t:Column> -->
+								<t:Column width="57px">
 									<t:template>
 										<Text text="{absoluteReference}"/>
 									</t:template>
@@ -93,17 +94,18 @@
 																<Text text=""/>
 															</t:noData>
 															<t:columns>
-																<t:Column label="{i18n>title}">
+																<t:Column>
 																	<t:template>
-																		<FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}"/>
+																		<!-- <FormattedText htmlText="{parts: ['title', 'deepReference'], formatter: '.formatter.braceDeepReference'}"/> -->
+																		<Text text="{title}"/>
 																	</t:template>
 																</t:Column>
-																<t:Column label="{i18n>WorkItems.reference}" width="20%">
+																<t:Column width="163px">
 																	<t:template>
 																		<Text text="{deepReference}"/>
 																	</t:template>
 																</t:Column>
-																<t:Column label="{i18n>WorkItems.reference}" width="15%">
+																<t:Column width="57px">
 																	<t:template>
 																		<Text text="{absoluteReference}"/>
 																	</t:template>
