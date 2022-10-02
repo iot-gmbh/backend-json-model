@@ -98,7 +98,8 @@
                     <Input id="shallowReferenceInput" value="{shallowReference}" />
                     <Label text="{i18n>absoluteReference}"/>
                     <Input id="referenceInput" value="{absoluteReference}" />
-                    <Label text="{i18n>absoluteReference}"/>
+                    <Label text="{i18n>mappingID}"/>
+                    <Input id="mappingIdInput" value="{mappingID}" />
                     <Label text="{i18n>validFrom}"/>
                     <DatePicker value="{path: 'validFrom', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     <Label text="{i18n>validTo}"/>

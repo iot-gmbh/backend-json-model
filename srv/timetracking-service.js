@@ -44,7 +44,9 @@ function categorizeWorkItem(workItem, categories) {
     } else {
       const allSortedMatches = didYouMean(
         workItem.title,
-        categories.map((cat) => cat.path.replaceAll(" > ", " ")),
+        categories
+          .filter((cat) => cat && cat.path)
+          .map((cat) => cat.path.replaceAll(" > ", " ")),
         { threshold: 0.4, returnType: ReturnTypeEnums.ALL_SORTED_MATCHES }
       );
 
@@ -52,7 +54,8 @@ function categorizeWorkItem(workItem, categories) {
 
       if (bestMatch) {
         category = categories.find(
-          (cat) => cat.path.replaceAll(" > ", " ") === bestMatch
+          (cat) =>
+            cat && cat.path && cat.path.replaceAll(" > ", " ") === bestMatch
         );
       } else category = {};
     }
@@ -81,7 +84,7 @@ module.exports = cds.service.impl(async function () {
     req.data.assignedTo_userPrincipalName = req.user.id;
     req.data.tenant = req.user.tenant;
 
-    const dates = calcDates(req.data);
+    const dates = calcDates(req.data.activatedDate, req.data.completedDate);
     Object.assign(req.data, dates);
 
     return next();
@@ -110,7 +113,7 @@ module.exports = cds.service.impl(async function () {
     } = req;
     const [MSGraphEvent, [localWorkItem]] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
-      cds.run(SELECT.from(MyWorkItems).where({ ID })),
+      this.run(SELECT.from(MyWorkItems).where({ ID })),
     ]);
 
     const parent = await catService.run(
@@ -138,7 +141,7 @@ module.exports = cds.service.impl(async function () {
 
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv.send("getCalendarView", req.data),
-      cds.run(
+      this.run(
         SELECT.from(MyWorkItems).where(
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )

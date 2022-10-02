@@ -70,12 +70,15 @@ sap.ui.define(
             })
           );
 
-          // Initialize with empty arrays
-          this.setData(
-            this.entityTypes
-              .map(({ name }) => name)
-              .reduce((acc, curr) => ({ ...acc, [curr]: [] }), {})
-          );
+          // const data = this.getData();
+
+          // // Initialize with empty arrays
+          // this.setData({
+          //   ...data,
+          //   ...this.entityTypes
+          //     .map(({ name }) => name)
+          //     .reduce((acc, curr) => ({ ...acc, [curr]: [] }), {}),
+          // });
         });
 
         this._serviceURL = serviceURL;
