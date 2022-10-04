@@ -23,7 +23,7 @@ server:
         baseUri: http://localhost:4004/
 framework:
   name: SAPUI5
-  version: 1.105.1
+  version: 1.106.1
   libraries:
     - name: sap.m
     - name: sap.f

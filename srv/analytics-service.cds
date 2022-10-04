@@ -6,9 +6,8 @@ service AnalyticsService {
   // // With this annotation the Fiori Application Generator also works
   // // with the CAP Project and shows the entity in the drop-down
   @Aggregation.ApplySupported                      : {
-    Transformations        : [
-      'aggregate',
-      'groupby'
+    Transformations        : ['aggregate',
+    // 'groupby'
     ],
     AggregatableProperties : [{
       $Type    : 'Aggregation.AggregatablePropertyType',
@@ -51,8 +50,6 @@ service AnalyticsService {
       @Aggregation.default           : #SUM
       wi.duration,
 
-      @Analytics.Dimension           : true
-      wi.title   as parentTitle,
       @Analytics.Dimension           : true
       ''         as parent         : UUID,
       @Analytics.Dimension           : true

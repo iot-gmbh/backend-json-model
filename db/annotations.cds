@@ -2,19 +2,19 @@ using {iot.planner as my} from './schema';
 
 @cds.odata.valuelist
 annotate my.WorkItems with @(UI : {
-  PresentationVariant : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{Property : title}],
-    Visualizations : ['@UI.LineItem'],
-    RequestAtLeast : [title]
-  },
-  HeaderInfo          : {
+  // PresentationVariant : {
+  //   $Type          : 'UI.PresentationVariantType',
+  //   SortOrder      : [{Property : title}],
+  //   Visualizations : ['@UI.LineItem'],
+  //   RequestAtLeast : [title]
+  // },
+  HeaderInfo      : {
     TypeName       : '{i18n>WorkItem}',
     TypeNamePlural : '{i18n>WorkItems}',
     Title          : {Value : title},
   },
-  Identification      : [{Value : title}],
-  FieldGroup          : {
+  Identification  : [{Value : title}],
+  FieldGroup      : {
     $Type : 'UI.FieldGroupType',
     Label : '{i18n>Classification}',
     Data  : [
@@ -23,8 +23,8 @@ annotate my.WorkItems with @(UI : {
       {Value : bonusRelevance},
     ],
   },
-  SelectionFields     : [title, ],
-  LineItem            : [
+  SelectionFields : [title, ],
+  LineItem        : [
     {
       $Type : 'UI.DataField',
       Value : title,
@@ -54,7 +54,7 @@ annotate my.WorkItems with @(UI : {
       Value : hierarchy.level3,
     },
   ],
-  Facets              : [
+  Facets          : [
     {
       $Type  : 'UI.ReferenceFacet',
       Label  : '{i18n>Identification}',

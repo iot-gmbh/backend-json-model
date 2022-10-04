@@ -103,6 +103,22 @@
           }
         },
         {
+          "name": "analyticsALP",
+          "pattern": "analyticsALP",
+          "target": {
+            "name": "analyticsALP",
+            "prefix": "alp"
+          }
+        },
+        {
+          "name": "analyticsALPv2",
+          "pattern": "analyticsALPv2",
+          "target": {
+            "name": "analyticsALPv2",
+            "prefix": "alpv2"
+          }
+        },
+        {
           "name": "Users",
           "pattern": "Users",
           "target": {
@@ -148,6 +164,18 @@
           "title": "IOTWorkItems",
           "id": "IOTWorkItems"
         },
+        "analyticsALP": {
+          "type": "Component",
+          "usage": "analyticsALPComponent",
+          "title": "Analytics (ALP)",
+          "id": "analyticsALP"
+        },
+        "analyticsALPv2": {
+          "type": "Component",
+          "usage": "analyticsALPv2Component",
+          "title": "Analytics (ALP v2)",
+          "id": "analyticsALPv2"
+        },
         "Users": {
           "type": "Component",
           "usage": "UsersComponent",
@@ -183,6 +211,18 @@
       },
       "IOTWorkItemsComponent": {
         "name": "iot.planner.components.workitemsiot",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "analyticsALPComponent": {
+        "name": "iot.planner.components.analyticsalp",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "analyticsALPv2Component": {
+        "name": "iot.planner.components.analyticsalpv2",
         "settings": {},
         "componentData": {},
         "lazy": true

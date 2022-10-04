@@ -1,81 +1,33 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.Categories with @(UI : {
-
   // =====================================================
   // Default
   //
-  PresentationVariant                       : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{
-      Property   : duration,
-      Descending : true,
-    }],
-    Visualizations : ['@UI.Chart'],
-  },
-  Chart                                     : {
-    $Type               : 'UI.ChartDefinitionType',
-    ChartType           : #Column,
-    DimensionAttributes : [{
-      $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : parentTitle,
-      Role      : #Category
-    }, ],
-    MeasureAttributes   : [{
-      $Type   : 'UI.ChartMeasureAttributeType',
-      Measure : duration,
-      Role    : #Axis1
-    }],
-    Dimensions          : [parentTitle],
-    Measures            : [duration],
-  },
+  SelectionPresentationVariant : {
+    $Type               : 'UI.SelectionPresentationVariantType',
+    SelectionVariant    : {$Type : 'UI.SelectionVariantType',
 
-  // =====================================================
-  // Duration by Month
-  //
-  PresentationVariant #DurationByMonth      : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{
-      Property   : duration,
-      Descending : true,
-    }],
-    Visualizations : ['@UI.Chart#DurationByMonth', ],
-  },
-  Chart #DurationByMonth                    : {
-    $Type               : 'UI.ChartDefinitionType',
-    ChartType           : #Column,
-    DimensionAttributes : [{
-      $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : activatedDateMonth,
-      Role      : #Series
-    }, ],
-    MeasureAttributes   : [{
-      $Type   : 'UI.ChartMeasureAttributeType',
-      Measure : duration,
-      Role    : #Axis1
-    }],
-    Dimensions          : [activatedDateMonth],
-    Measures            : [duration],
-  },
+    },
+    PresentationVariant : {$Type : 'UI.PresentationVariantType',
 
-  // =====================================================
-  // Duration by AssignedTo
-  //
-  PresentationVariant #DurationByAssignedTo : {
+    },
+  },
+  PresentationVariant #ALP     : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
       Property   : duration,
       Descending : true,
     }],
-    Visualizations : ['@UI.Chart#DurationByAssignedTo', ],
+    Visualizations : ['@UI.Chart#ALP'],
   },
-  Chart #DurationByAssignedTo               : {
+  Chart #ALP                   : {
     $Type               : 'UI.ChartDefinitionType',
     ChartType           : #Column,
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
       Dimension : assignedToUserPrincipalName,
-      Role      : #Series
+      Role      : #Category
     }, ],
     MeasureAttributes   : [{
       $Type   : 'UI.ChartMeasureAttributeType',
@@ -86,36 +38,21 @@ annotate my.Categories with @(UI : {
     Measures            : [duration],
   },
 
-  // =====================================================
-  // Duration by Category
-  //
-  PresentationVariant #DurationByCategory   : {
-    $Type          : 'UI.PresentationVariantType',
-    SortOrder      : [{
-      Property   : duration,
-      Descending : true,
-    }],
-    Visualizations : ['@UI.Chart'],
-  },
 
   // =====================================================
   // Table config
   //
-  SelectionFields                           : [
+  SelectionFields              : [
     activatedDate,
     completedDate,
     assignedToUserPrincipalName,
     activatedDateMonth,
-    parentTitle,
+  // title,
   ],
-  LineItem                                  : [
+  LineItem                     : [
     {
       $Type : 'UI.DataField',
       Value : assignedToUserPrincipalName,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : parentTitle,
     },
     {
       $Type : 'UI.DataField',
@@ -123,15 +60,6 @@ annotate my.Categories with @(UI : {
     },
   ]
 }) {
-  parentTitle                 @Common.ValueList : {
-    CollectionPath               : 'Categories',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'parentTitle',
-      ValueListProperty : 'ID'
-    }],
-    PresentationVariantQualifier : 'DurationByCategory'
-  };
   activatedDateMonth          @Common.ValueList : {
     CollectionPath               : 'Categories',
     Parameters                   : [{
@@ -151,35 +79,3 @@ annotate my.Categories with @(UI : {
     PresentationVariantQualifier : 'DurationByAssignedTo'
   }
 };
-
-// annotate my.Categories with @(UI : {
-
-//   // =====================================================
-//   // Default
-//   //
-//   PresentationVariant : {
-//     $Type          : 'UI.PresentationVariantType',
-//     SortOrder      : [{
-//       Descending : true,
-//       Property   : duration,
-//     }],
-//     Visualizations : ['@UI.Chart'],
-//   },
-//   Chart               : {
-//     $Type               : 'UI.ChartDefinitionType',
-//     ChartType           : #Column,
-//     DimensionAttributes : [{
-//       $Type     : 'UI.ChartDimensionAttributeType',
-//       Dimension : parentTitle,
-//       Role      : #Category
-//     }, ],
-//     MeasureAttributes   : [{
-//       $Type   : 'UI.ChartMeasureAttributeType',
-//       Measure : duration,
-//       Role    : #Axis1
-//     }],
-//     Dimensions          : [parentTitle],
-//     Measures            : [duration],
-//   },
-// })
-//

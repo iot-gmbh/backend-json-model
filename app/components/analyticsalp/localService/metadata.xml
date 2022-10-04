@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml">
+        <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Analytics.xml">
+        <edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="AnalyticsService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Categories" EntityType="AnalyticsService.Categories">
+                    <NavigationPropertyBinding Path="assignedTo" Target="Users"/>
+                </EntitySet>
+                <EntitySet Name="Users" EntityType="AnalyticsService.Users">
+                    <NavigationPropertyBinding Path="manager" Target="Users"/>
+                    <NavigationPropertyBinding Path="teamMembers" Target="Users"/>
+                    <NavigationPropertyBinding Path="workItems" Target="Categories"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="assignedToUserPrincipalName" Type="Edm.String"/>
+                <Property Name="activatedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="completedDate" Type="Edm.DateTimeOffset"/>
+                <Property Name="activatedDateMonth" Type="Edm.Int32"/>
+                <Property Name="activatedDateYear" Type="Edm.Int32"/>
+                <Property Name="duration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="parentTitle" Type="Edm.String"/>
+                <Property Name="parent" Type="Edm.Guid"/>
+                <NavigationProperty Name="assignedTo" Type="AnalyticsService.Users" Partner="workItems">
+                    <ReferentialConstraint Property="assignedTo_userPrincipalName" ReferencedProperty="userPrincipalName"/>
+                </NavigationProperty>
+                <Property Name="assignedTo_userPrincipalName" Type="Edm.String"/>
+                <Property Name="drillDownState" Type="Edm.String"/>
+                <Property Name="hierarchyLevel" Type="Edm.String"/>
+                <Property Name="tenant" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Users">
+                <Key>
+                    <PropertyRef Name="userPrincipalName"/>
+                </Key>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="userPrincipalName" Type="Edm.String" Nullable="false"/>
+                <Property Name="displayName" Type="Edm.String"/>
+                <Property Name="givenName" Type="Edm.String"/>
+                <Property Name="jobTitle" Type="Edm.String"/>
+                <Property Name="mail" Type="Edm.String"/>
+                <Property Name="mobilePhone" Type="Edm.String"/>
+                <Property Name="officeLocation" Type="Edm.String"/>
+                <Property Name="preferredLanguage" Type="Edm.String"/>
+                <Property Name="surname" Type="Edm.String"/>
+                <NavigationProperty Name="manager" Type="AnalyticsService.Users" Partner="teamMembers">
+                    <ReferentialConstraint Property="manager_userPrincipalName" ReferencedProperty="userPrincipalName"/>
+                </NavigationProperty>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="teamMembers" Type="Collection(AnalyticsService.Users)" Partner="manager"/>
+                <NavigationProperty Name="workItems" Type="Collection(AnalyticsService.Categories)" Partner="assignedTo"/>
+            </EntityType>
+            <Annotations Target="AnalyticsService.Categories">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="AggregatableProperties">
+                            <Collection>
+                                <Record Type="Aggregation.AggregatablePropertyType">
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Analytics.AggregatedProperties">
+                    <Collection>
+                        <Record Type="Analytics.AggregatedPropertyType">
+                            <PropertyValue Property="Name" String="totalDuration"/>
+                            <PropertyValue Property="AggregationMethod" String="sum"/>
+                            <PropertyValue Property="AggregatableProperty" PropertyPath="duration"/>
+                            <Annotation Term="Common.Label" String="Total duration"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.EntityContainer/Categories">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record Type="Aggregation.ApplySupportedType">
+                        <PropertyValue Property="PropertyRestrictions" Bool="true"/>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="AggregatableProperties">
+                            <Collection>
+                                <Record Type="Aggregation.AggregatablePropertyType">
+                                    <PropertyValue Property="Property" PropertyPath="duration"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/ID">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/assignedToUserPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/activatedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/completedDate">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/activatedDateMonth">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/activatedDateYear">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/duration">
+                <Annotation Term="Analytics.Measure" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/parentTitle">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/parent">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/assignedTo_userPrincipalName">
+                <Annotation Term="Analytics.Dimension" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/drillDownState">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="AnalyticsService.Categories/hierarchyLevel">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

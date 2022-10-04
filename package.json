@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
-    "@sap/ux-specification": "^1.102.1",
+    "@sap/ux-specification": "^1.102.9",
     "@ui5/cli": "^2.14.9",
     "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",
@@ -77,7 +77,8 @@
     "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
     "set-default-env:dev": "bash ./set-env.sh development",
     "set-default-env:test": "bash ./set-env.sh test",
-    "set-default-env:prod": "bash ./set-env.sh production"
+    "set-default-env:prod": "bash ./set-env.sh production",
+    "watch-analytics-alp": "cds watch --open analytics-alp/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
     "db",
@@ -101,5 +102,8 @@
         }
       }
     }
-  }
+  },
+  "sapux": [
+    "app/analytics-alp"
+  ]
 }
