@@ -96,15 +96,15 @@
 															<t:columns>
 																<t:Column>
 																	<t:template>
-																		<!-- <FormattedText htmlText="{parts: ['title', 'deepReference'], formatter: '.formatter.braceDeepReference'}"/> -->
-																		<Text text="{title}"/>
+																		<FormattedText htmlText="{parts: ['title', 'deepReference'], formatter: '.formatter.braceDeepReference'}"/>
+																		<!-- <Text text="{title}"/> -->
 																	</t:template>
 																</t:Column>
-																<t:Column width="163px">
+																<!-- <t:Column width="163px">
 																	<t:template>
 																		<Text text="{deepReference}"/>
 																	</t:template>
-																</t:Column>
+																</t:Column> -->
 																<t:Column width="57px">
 																	<t:template>
 																		<Text text="{absoluteReference}"/>
