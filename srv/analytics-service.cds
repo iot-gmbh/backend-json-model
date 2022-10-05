@@ -45,6 +45,14 @@ service AnalyticsService {
       activatedDateMonth,
       @Analytics.Dimension           : true
       activatedDateYear,
+      @Analytics.Dimension           : true
+      hierarchy.level0Title,
+      @Analytics.Dimension           : true
+      hierarchy.level1Title,
+      @Analytics.Dimension           : true
+      hierarchy.level2Title,
+      @Analytics.Dimension           : true
+      hierarchy.level3Title,
 
       @Analytics.Measure             : true
       @Aggregation.default           : #SUM

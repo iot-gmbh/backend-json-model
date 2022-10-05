@@ -1,4 +1,5 @@
 using from './analytics-service';
+using from './analytics-annotations';
 // using from './azure-devops';
 using from './categories-service';
 using from './external/msgraph';
