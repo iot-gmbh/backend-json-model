@@ -6,21 +6,22 @@ service AnalyticsService {
   // // With this annotation the Fiori Application Generator also works
   // // with the CAP Project and shows the entity in the drop-down
   @Aggregation.ApplySupported                      : {
-    Transformations        : ['aggregate',
-    // 'groupby'
+    Transformations        : [
+      'aggregate',
+      'groupby'
     ],
     AggregatableProperties : [{
       $Type    : 'Aggregation.AggregatablePropertyType',
       Property : duration,
     }, ],
   }
-  // @Aggregation                                     : {RecursiveHierarchy : {
-  //   $Type          : 'Aggregation.RecursiveHierarchyType',
-  //   NodeProperty   : ID,
-  //   // ParentNavigationProperty : parent,
-  //   // DistanceFromRootProperty : hierarchyLevel,
-  //   IsLeafProperty : drillDownState,
-  // }, }
+  @Aggregation                                     : {RecursiveHierarchy : {
+    $Type                    : 'Aggregation.RecursiveHierarchyType',
+    NodeProperty             : ID,
+    ParentNavigationProperty : parent,
+    DistanceFromRootProperty : hierarchyLevel,
+    IsLeafProperty           : drillDownState,
+  }, }
   @(Analytics.AggregatedProperties : [{
     Name                 : 'totalDuration',
     AggregationMethod    : 'sum',
@@ -28,15 +29,17 @@ service AnalyticsService {
     $Type                : 'Analytics.AggregatedPropertyType',
     ![@Common.Label]     : 'Total duration'
   }])
-  entity Categories as
-    select from my.WorkItems as wi
-    // left outer join my.WorkItems as wi
-    //   on wi.parent.ID = cat.ID
-    {
+  entity WorkItems as
+    select from my.WorkItems {
       @Analytics.Dimension           : true
-      wi.ID,
+      ID,
       @Analytics.Dimension           : true
       assignedToUserPrincipalName,
+
+      @Analytics.Dimension           : true
+      TO_CHAR(
+        activatedDate, 'dd.mm.yyyy') as date           : String,
+
       @Analytics.Dimension           : true
       activatedDate,
       @Analytics.Dimension           : true
@@ -45,6 +48,9 @@ service AnalyticsService {
       activatedDateMonth,
       @Analytics.Dimension           : true
       activatedDateYear,
+      @Analytics.Dimension           : true
+      parent.title                   as category,
+
       @Analytics.Dimension           : true
       hierarchy.level0Title,
       @Analytics.Dimension           : true
@@ -56,21 +62,21 @@ service AnalyticsService {
 
       @Analytics.Measure             : true
       @Aggregation.default           : #SUM
-      wi.duration,
+      duration,
 
-      @Analytics.Dimension           : true
-      ''         as parent         : UUID,
+      // @Analytics.Dimension           : true
+      // ''                             as parent         : UUID,
       @Analytics.Dimension           : true
       assignedTo,
 
       @sap.hierarchy.drill.state.for : 'ID'
-      'expanded' as drillDownState : String,
-      ''         as hierarchyLevel : String,
-      wi.tenant,
+      'expanded'                     as drillDownState : String,
+      ''                             as hierarchyLevel : String,
+      tenant,
+      parent
     }
     where
       deleted is null;
 
-  entity Users      as projection on my.Users;
-// entity Categories as projection on my.Categories;
+  entity Users     as projection on my.Users;
 }

@@ -1,6 +1,6 @@
 using {AnalyticsService as my} from './analytics-service';
 
-annotate my.Categories with @(UI : {
+annotate my.WorkItems with @(UI : {
 
   // =====================================================
   // Default
@@ -8,9 +8,10 @@ annotate my.Categories with @(UI : {
   PresentationVariant                       : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
-      Property   : duration,
+      Property   : date,
       Descending : true,
     }],
+    GroupBy        : [date],
     Visualizations : ['@UI.Chart'],
   },
   Chart                                     : {
@@ -18,7 +19,7 @@ annotate my.Categories with @(UI : {
     ChartType           : #Column,
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : assignedToUserPrincipalName,
+      Dimension : level0Title,
       Role      : #Category
     }, ],
     MeasureAttributes   : [{
@@ -26,7 +27,7 @@ annotate my.Categories with @(UI : {
       Measure : duration,
       Role    : #Axis1
     }],
-    Dimensions          : [assignedToUserPrincipalName],
+    Dimensions          : [level0Title],
     Measures            : [duration],
   },
 
@@ -110,19 +111,7 @@ annotate my.Categories with @(UI : {
   LineItem                                  : [
     {
       $Type : 'UI.DataField',
-      Value : assignedToUserPrincipalName,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : level0Title,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : level1Title,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : level2Title,
+      Value : date,
     },
     {
       $Type : 'UI.DataField',
@@ -130,17 +119,17 @@ annotate my.Categories with @(UI : {
     },
   ]
 }) {
-  parentTitle                 @Common.ValueList : {
-    CollectionPath               : 'Categories',
+  category                    @Common.ValueList : {
+    CollectionPath               : 'WorkItems',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'parentTitle',
+      LocalDataProperty : 'category',
       ValueListProperty : 'ID'
     }],
     PresentationVariantQualifier : 'DurationByCategory'
   };
   activatedDateMonth          @Common.ValueList : {
-    CollectionPath               : 'Categories',
+    CollectionPath               : 'WorkItems',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
       LocalDataProperty : 'activatedDateMonth',
@@ -149,7 +138,7 @@ annotate my.Categories with @(UI : {
     PresentationVariantQualifier : 'DurationByMonth'
   };
   assignedToUserPrincipalName @Common.ValueList : {
-    CollectionPath               : 'Categories',
+    CollectionPath               : 'WorkItems',
     Parameters                   : [{
       $Type             : 'Common.ValueListParameterInOut',
       LocalDataProperty : 'assignedToUserPrincipalName',
@@ -158,35 +147,3 @@ annotate my.Categories with @(UI : {
     PresentationVariantQualifier : 'DurationByAssignedTo'
   }
 };
-
-// annotate my.Categories with @(UI : {
-
-//   // =====================================================
-//   // Default
-//   //
-//   PresentationVariant : {
-//     $Type          : 'UI.PresentationVariantType',
-//     SortOrder      : [{
-//       Descending : true,
-//       Property   : duration,
-//     }],
-//     Visualizations : ['@UI.Chart'],
-//   },
-//   Chart               : {
-//     $Type               : 'UI.ChartDefinitionType',
-//     ChartType           : #Column,
-//     DimensionAttributes : [{
-//       $Type     : 'UI.ChartDimensionAttributeType',
-//       Dimension : parentTitle,
-//       Role      : #Category
-//     }, ],
-//     MeasureAttributes   : [{
-//       $Type   : 'UI.ChartMeasureAttributeType',
-//       Measure : duration,
-//       Role    : #Axis1
-//     }],
-//     Dimensions          : [parentTitle],
-//     Measures            : [duration],
-//   },
-// })
-//

@@ -1,12 +1,20 @@
 using WorkItemsService as my from './work-items-service';
 
 annotate my.IOTWorkItems with @(UI : {
-  HeaderInfo          : {
+  HeaderInfo                                 : {
     TypeName       : '{i18n>IOTWorkItem}',
     TypeNamePlural : '{i18n>IOTWorkItems}',
     Title          : {Value : Taetigkeit},
   },
-  PresentationVariant : {
+  SelectionPresentationVariant #IOTWorkItems : {
+    $Type               : 'UI.SelectionPresentationVariantType',
+    SelectionVariant    : {
+      $Type : 'UI.SelectionVariantType',
+      Text  : 'Hi',
+    },
+    PresentationVariant : ![@UI.PresentationVariant#IOTWorkItems]
+  },
+  PresentationVariant #IOTWorkItems          : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
       Property   : Datum,
@@ -15,7 +23,7 @@ annotate my.IOTWorkItems with @(UI : {
     Visualizations : ['@UI.LineItem'],
     RequestAtLeast : ['Datum']
   },
-  SelectionFields     : [
+  SelectionFields                            : [
     Datum,
     Beginn,
     Ende,
@@ -23,7 +31,7 @@ annotate my.IOTWorkItems with @(UI : {
     Nutzer,
     Bemerkung
   ],
-  LineItem            : [
+  LineItem                                   : [
     {
       $Type : 'UI.DataField',
       Value : Datum,

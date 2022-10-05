@@ -97,28 +97,28 @@
       "routes": [
         {
           "pattern": ":?query:",
-          "name": "CategoriesList",
-          "target": "CategoriesList"
+          "name": "WorkItemsList",
+          "target": "WorkItemsList"
         },
         {
-          "pattern": "Categories({key}):?query:",
-          "name": "CategoriesObjectPage",
-          "target": "CategoriesObjectPage"
+          "pattern": "WorkItems({key}):?query:",
+          "name": "WorkItemsObjectPage",
+          "target": "WorkItemsObjectPage"
         }
       ],
       "targets": {
-        "CategoriesList": {
+        "WorkItemsList": {
           "type": "Component",
-          "id": "CategoriesList",
+          "id": "WorkItemsList",
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "entitySet": "Categories",
+              "entitySet": "WorkItems",
               "variantManagement": "Page",
               "navigation": {
-                "Categories": {
+                "WorkItems": {
                   "detail": {
-                    "route": "CategoriesObjectPage"
+                    "route": "WorkItemsObjectPage"
                   }
                 }
               },
@@ -150,14 +150,14 @@
             }
           }
         },
-        "CategoriesObjectPage": {
+        "WorkItemsObjectPage": {
           "type": "Component",
-          "id": "CategoriesObjectPage",
+          "id": "WorkItemsObjectPage",
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "entitySet": "Categories"
+              "entitySet": "WorkItems"
             }
           }
         }

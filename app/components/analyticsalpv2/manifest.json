@@ -102,8 +102,8 @@
       "showDraftToggle": false
     },
     "pages": {
-      "AnalyticalListPage|Categories": {
-        "entitySet": "Categories",
+      "AnalyticalListPage|WorkItems": {
+        "entitySet": "WorkItems",
         "component": {
           "name": "sap.suite.ui.generic.template.AnalyticalListPage",
           "list": true,
@@ -120,8 +120,8 @@
           }
         },
         "pages": {
-          "ObjectPage|Categories": {
-            "entitySet": "Categories",
+          "ObjectPage|WorkItems": {
+            "entitySet": "WorkItems",
             "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
             "component": {
               "name": "sap.suite.ui.generic.template.ObjectPage"

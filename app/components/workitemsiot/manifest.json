@@ -113,6 +113,7 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
+              "defaultTemplateAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#IOTWorkItems",
               "entitySet": "IOTWorkItems",
               "variantManagement": "Page",
               "navigation": {
