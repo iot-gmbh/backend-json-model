@@ -135,7 +135,7 @@
                   {
                     "primary": [
                       {
-                        "annotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+                        "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant"
                       }
                     ],
                     "secondary": [

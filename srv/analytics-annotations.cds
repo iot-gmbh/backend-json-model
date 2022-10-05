@@ -5,6 +5,14 @@ annotate my.WorkItems with @(UI : {
   // =====================================================
   // Default
   //
+  SelectionPresentationVariant              : {
+    $Type               : 'UI.SelectionPresentationVariantType',
+    SelectionVariant    : {
+      $Type : 'UI.SelectionVariantType',
+      Text  : 'Hi',
+    },
+    PresentationVariant : ![@UI.PresentationVariant]
+  },
   PresentationVariant                       : {
     $Type          : 'UI.PresentationVariantType',
     SortOrder      : [{
@@ -119,15 +127,15 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  category                    @Common.ValueList : {
-    CollectionPath               : 'WorkItems',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'category',
-      ValueListProperty : 'ID'
-    }],
-    PresentationVariantQualifier : 'DurationByCategory'
-  };
+  // category                    @Common.ValueList : {
+  //   CollectionPath               : 'WorkItems',
+  //   Parameters                   : [{
+  //     $Type             : 'Common.ValueListParameterInOut',
+  //     LocalDataProperty : 'category',
+  //     ValueListProperty : 'ID'
+  //   }],
+  //   PresentationVariantQualifier : 'DurationByCategory'
+  // };
   activatedDateMonth          @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{

@@ -10,18 +10,19 @@ service AnalyticsService {
       'aggregate',
       'groupby'
     ],
+    GroupableProperties    : [level0Title],
     AggregatableProperties : [{
       $Type    : 'Aggregation.AggregatablePropertyType',
       Property : duration,
     }, ],
   }
-  @Aggregation                                     : {RecursiveHierarchy : {
-    $Type                    : 'Aggregation.RecursiveHierarchyType',
-    NodeProperty             : ID,
-    ParentNavigationProperty : parent,
-    DistanceFromRootProperty : hierarchyLevel,
-    IsLeafProperty           : drillDownState,
-  }, }
+  // @Aggregation                                     : {RecursiveHierarchy : {
+  //   $Type                    : 'Aggregation.RecursiveHierarchyType',
+  //   NodeProperty             : ID,
+  //   ParentNavigationProperty : parent,
+  //   DistanceFromRootProperty : hierarchyLevel,
+  //   IsLeafProperty           : drillDownState,
+  // }, }
   @(Analytics.AggregatedProperties : [{
     Name                 : 'totalDuration',
     AggregationMethod    : 'sum',
@@ -31,49 +32,50 @@ service AnalyticsService {
   }])
   entity WorkItems as
     select from my.WorkItems {
-      @Analytics.Dimension           : true
-      ID,
-      @Analytics.Dimension           : true
-      assignedToUserPrincipalName,
+          @Analytics.Dimension           : true
+      key ID,
+          @Analytics.Dimension           : true
+          assignedToUserPrincipalName,
 
-      @Analytics.Dimension           : true
-      TO_CHAR(
-        activatedDate, 'dd.mm.yyyy') as date           : String,
+          @Analytics.Dimension           : true
+          TO_CHAR(
+            activatedDate, 'dd.mm.yyyy') as date           : String,
 
-      @Analytics.Dimension           : true
-      activatedDate,
-      @Analytics.Dimension           : true
-      completedDate,
-      @Analytics.Dimension           : true
-      activatedDateMonth,
-      @Analytics.Dimension           : true
-      activatedDateYear,
-      @Analytics.Dimension           : true
-      parent.title                   as category,
+          @Analytics.Dimension           : true
+          activatedDate,
+          @Analytics.Dimension           : true
+          completedDate,
+          @Analytics.Dimension           : true
+          activatedDateMonth,
+          @Analytics.Dimension           : true
+          activatedDateYear,
+          @Analytics.Dimension           : true
+          parent.title                   as category,
 
-      @Analytics.Dimension           : true
-      hierarchy.level0Title,
-      @Analytics.Dimension           : true
-      hierarchy.level1Title,
-      @Analytics.Dimension           : true
-      hierarchy.level2Title,
-      @Analytics.Dimension           : true
-      hierarchy.level3Title,
+          @Analytics.Dimension           : true
+          @title                         : 'Customer'
+          hierarchy.level0Title,
+          @Analytics.Dimension           : true
+          hierarchy.level1Title,
+          @Analytics.Dimension           : true
+          hierarchy.level2Title,
+          @Analytics.Dimension           : true
+          hierarchy.level3Title,
 
-      @Analytics.Measure             : true
-      @Aggregation.default           : #SUM
-      duration,
+          @Analytics.Measure             : true
+          @Aggregation.default           : #SUM
+          duration,
 
-      // @Analytics.Dimension           : true
-      // ''                             as parent         : UUID,
-      @Analytics.Dimension           : true
-      assignedTo,
+          // @Analytics.Dimension           : true
+          // ''                             as parent         : UUID,
+          @Analytics.Dimension           : true
+          assignedTo,
 
-      @sap.hierarchy.drill.state.for : 'ID'
-      'expanded'                     as drillDownState : String,
-      ''                             as hierarchyLevel : String,
-      tenant,
-      parent
+          @sap.hierarchy.drill.state.for : 'ID'
+          'expanded'                     as drillDownState : String,
+          ''                             as hierarchyLevel : String,
+          tenant,
+          parent
     }
     where
       deleted is null;
