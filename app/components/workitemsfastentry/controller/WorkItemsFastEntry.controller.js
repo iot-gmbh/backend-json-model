@@ -136,18 +136,30 @@ sap.ui.define(
         async _loadWorkItems({ startDateTime, endDateTime }) {
           const model = this.getModel();
 
+          const filters = [
+            new Filter({
+              filters: [
+                new Filter({
+                  path: "activatedDate",
+                  operator: "GT",
+                  value1: startDateTime,
+                }),
+                new Filter({
+                  path: "completedDate",
+                  operator: "LE",
+                  value1: endDateTime,
+                }),
+              ],
+              and: true,
+            }),
+          ];
+
           model.setProperty("/busy", true);
 
           try {
-            const { results: workItems } = await model.callFunction(
-              "/getCalendarView",
-              {
-                urlParameters: {
-                  startDateTime,
-                  endDateTime,
-                },
-              }
-            );
+            const workItems = await model.read("/MyWorkItems", {
+              filters,
+            });
 
             const appointments = workItems.map(
               ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
@@ -170,6 +182,8 @@ sap.ui.define(
             model.setProperty("/busy", false);
           } catch (error) {
             Log.error(error);
+          } finally {
+            model.setProperty("/busy", false);
           }
         },
 
