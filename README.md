@@ -21,9 +21,10 @@ It contains these folders and files, following our recommended project layout:
 # Getting started
 
 - Install [Postgres](https://www.postgresql.org/download/) / use a docker image via docker-compose.yaml (more performance-intensive)
-- Install [pgAdmin](https://www.pgadmin.org/)
 - Install [python](https://www.python.org/downloads/)
-- Install [migra] (https://databaseci.com/docs/migra)
+- Install [migra](https://databaseci.com/docs/migra)
+- Create 2 postgres-databases: "original" and "reference" (will be obsolete, as soon as cds-pg-migra is improved)
+- Clone `/default-envs/example.json` into `/default-envs/development.json` and `/default-envs/production.json` and edit credentials
 - Provide a .env file, corresponding to the .env-example file and fill out all the entries with the corresponding information from Azure AD
 - Install dependencies `npm i`
 - Run `npm start`
