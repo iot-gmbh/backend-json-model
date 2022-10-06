@@ -61,9 +61,9 @@ sap.ui.define(
         async onRouteMatched() {
           const model = this.getModel();
           const loadFrom = new Date();
-          loadFrom.setHours(0, 0, 0, 0); // last midnight
-          const loadUntil = new Date();
-          loadUntil.setHours(24, 0, 0, 0); // next midnight
+          loadFrom.setHours(2, 0, 0, 0); // set UTC datetime due to behaviour of CDS
+          const loadUntil = addDays(new Date(), 1);
+          loadUntil.setHours(2, 0, 0, 0); // set UTC datetime due to behaviour of CDS
 
           model.setData({
             newWorkItem: {},
