@@ -140,6 +140,11 @@ sap.ui.define(
             new Filter({
               filters: [
                 new Filter({
+                  path: "deleted",
+                  operator: "NE",
+                  value1: true,
+                }),
+                new Filter({
                   path: "activatedDate",
                   operator: "GT",
                   value1: startDateTime,
