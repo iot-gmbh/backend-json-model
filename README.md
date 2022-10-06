@@ -18,10 +18,13 @@ It contains these folders and files, following our recommended project layout:
 
 - Azure AD tenant
 
-Provide a .env file, corresponding to the .env-example file and fill out all the entries with the corresponding information from Azure AD
-
 # Getting started
 
+- Install [Postgres](https://www.postgresql.org/download/) / use a docker image via docker-compose.yaml (more performance-intensive)
+- Install [pgAdmin](https://www.pgadmin.org/)
+- Install [python](https://www.python.org/downloads/)
+- Install [migra] (https://databaseci.com/docs/migra)
+- Provide a .env file, corresponding to the .env-example file and fill out all the entries with the corresponding information from Azure AD
 - Install dependencies `npm i`
 - Run `npm start`
 
