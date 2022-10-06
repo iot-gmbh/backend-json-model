@@ -161,22 +161,14 @@ sap.ui.define(
               filters,
             });
 
-            const appointments = workItems.map(
-              ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
-                ...appointment,
-                tags: appointment.tags.results,
-                activity:
-                  appointment.activity === null || undefined
-                    ? model.getProperty("/activities")[0].title
-                    : appointment.activity,
-                activatedDate: isAllDay
-                  ? new Date(activatedDate.setHours(0))
-                  : activatedDate,
-                completedDate: isAllDay
-                  ? addDays(completedDate.setHours(0), -1)
-                  : completedDate,
-              })
-            );
+            const appointments = workItems.map(({ ...appointment }) => ({
+              ...appointment,
+              tags: appointment.tags.results,
+              activity:
+                appointment.activity === null || undefined
+                  ? model.getProperty("/activities")[0].title
+                  : appointment.activity,
+            }));
 
             model.setProperty("/MyWorkItems", appointments);
             model.setProperty("/busy", false);
