@@ -158,7 +158,7 @@
 					<Column hAlign="End">
 						<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
 						<footer>
-							<ObjectNumber number="{/totalDuration}" unit="h" id="footer"/>
+							<ObjectNumber number="{/totalDuration}" unit="h"/>
 						</footer>
 					</Column>
 					<Column minScreenWidth="Desktop">

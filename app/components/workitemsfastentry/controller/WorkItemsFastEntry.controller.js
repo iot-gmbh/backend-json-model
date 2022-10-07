@@ -228,11 +228,6 @@ sap.ui.define(
             .getPath();
           this.getModel().setProperty("/selectedItemPath", selectedItemPath);
 
-          const vbox = event.getSource().getParent();
-          const hierarchyTreeTable = this.byId("hierarchyTreeTable");
-
-          vbox.addItem(hierarchyTreeTable);
-
           // const popover = this.byId("hierarchyPopover");
           // const input = event.getSource();
 
