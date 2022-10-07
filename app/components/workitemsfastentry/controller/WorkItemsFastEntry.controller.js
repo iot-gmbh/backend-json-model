@@ -222,12 +222,19 @@ sap.ui.define(
               .getBindingContext()
               .getPath();
             this.getModel().setProperty("/selectedItemPath", selectedItemPath);
-            const popover = this.byId("hierarchyPopover");
-            const input = event.getSource();
 
-            popover.openBy(input);
-            setTimeout(() => input.focus());
+            const vbox = event.getSource().getParent();
+            const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+
+            vbox.addItem(hierarchyTreeTable);
+
+            // const popover = this.byId("hierarchyPopover");
+            // const input = event.getSource();
+
+            // popover.openBy(input);
+            // setTimeout(() => input.focus());
           }
+
           const { newValue } = event.getParameters();
 
           this._filterHierarchyByPath(elementID, newValue);
@@ -353,6 +360,32 @@ sap.ui.define(
         onUpdateTableFinished(event) {
           this.setItemCountsFilters(event);
           this.calcTotalDuration();
+
+          const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+          const workItemsTable = this.byId("tableWorkItems");
+          const page = this.byId("page");
+
+          workItemsTable.getItems().forEach((item, index) => {
+            const vbox = item.getCells()[0];
+            const nextItem = item.getParent().getItems()[index];
+
+            vbox.getItems()[0].addEventDelegate({
+              onfocusin: () => {
+                vbox.addItem(hierarchyTreeTable);
+
+                setTimeout(() => {
+                  if (nextItem) {
+                    page.scrollToElement(nextItem);
+                  } else {
+                    page.scrollTo(20000);
+                  }
+                });
+              },
+              onsapfocusleave: () => {
+                vbox.removeItem(hierarchyTreeTable);
+              },
+            });
+          });
         },
 
         setItemCountsFilters(event) {
