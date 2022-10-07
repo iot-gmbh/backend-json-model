@@ -215,25 +215,29 @@ sap.ui.define(
           }
         },
 
-        onChangeHierarchy(event, elementID) {
-          if (elementID === "hierarchyTreeTable") {
-            const selectedItemPath = event
-              .getSource()
-              .getBindingContext()
-              .getPath();
-            this.getModel().setProperty("/selectedItemPath", selectedItemPath);
+        onLiveChangeHierarchyForm(event, elementID) {
+          const { newValue } = event.getParameters();
 
-            const vbox = event.getSource().getParent();
-            const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+          this._filterHierarchyByPath(elementID, newValue);
+        },
 
-            vbox.addItem(hierarchyTreeTable);
+        onLiveChangeHierarchyTable(event, elementID) {
+          const selectedItemPath = event
+            .getSource()
+            .getBindingContext()
+            .getPath();
+          this.getModel().setProperty("/selectedItemPath", selectedItemPath);
 
-            // const popover = this.byId("hierarchyPopover");
-            // const input = event.getSource();
+          const vbox = event.getSource().getParent();
+          const hierarchyTreeTable = this.byId("hierarchyTreeTable");
 
-            // popover.openBy(input);
-            // setTimeout(() => input.focus());
-          }
+          vbox.addItem(hierarchyTreeTable);
+
+          // const popover = this.byId("hierarchyPopover");
+          // const input = event.getSource();
+
+          // popover.openBy(input);
+          // setTimeout(() => input.focus());
 
           const { newValue } = event.getParameters();
 

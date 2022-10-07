@@ -75,7 +75,7 @@
 						<form:formElements>
 							<form:FormElement label="{i18n>formInputHierarchy}">
 								<form:fields>
-									<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy($event, 'hierarchyTreeForm')">
+									<Input id="hierarchySearchForm" value="{/newWorkItem/parentPath}" suggestionItems="{/MyCategories}" liveChange="onLiveChangeHierarchyForm($event, 'hierarchyTreeForm')">
 										<suggestionItems>
 											<core:Item text="{path}" key="{ID}"/>
 										</suggestionItems>
@@ -175,7 +175,7 @@
 					<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}" vAlign="Top">
 						<cells>
 							<VBox>
-								<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onChangeHierarchy($event, 'hierarchyTreeTable')" width="24vw" change="updateWorkItem">
+								<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: '/MyCategories', templateShareable: false}" liveChange="onLiveChangeHierarchyTable($event, 'hierarchyTreeTable')" width="24vw" change="updateWorkItem">
 									<suggestionItems>
 										<core:Item key="{ID}" text="{path}"/>
 									</suggestionItems>
