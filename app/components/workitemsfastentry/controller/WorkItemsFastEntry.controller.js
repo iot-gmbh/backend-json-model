@@ -359,29 +359,29 @@ sap.ui.define(
         onUpdateTableFinished(event) {
           this.setItemCountsFilters(event);
           this.calcTotalDuration();
+          this.addEventDelegations();
+        },
 
+        addEventDelegations() {
           const hierarchyTreeTable = this.byId("hierarchyTreeTable");
           const workItemsTable = this.byId("tableWorkItems");
           const page = this.byId("page");
 
-          workItemsTable.getItems().forEach((item, index) => {
+          workItemsTable.getItems().forEach((item) => {
             const vbox = item.getCells()[0];
-            const nextItem = item.getParent().getItems()[index];
 
             vbox.getItems()[0].addEventDelegate({
               onfocusin: () => {
                 vbox.addItem(hierarchyTreeTable);
-
-                setTimeout(() => {
-                  if (nextItem) {
-                    page.scrollToElement(nextItem);
-                  } else {
-                    page.scrollTo(20000);
-                  }
-                });
               },
               onsapfocusleave: () => {
                 vbox.removeItem(hierarchyTreeTable);
+              },
+            });
+
+            hierarchyTreeTable.addEventDelegate({
+              onAfterRendering: () => {
+                page.scrollToElement(hierarchyTreeTable);
               },
             });
           });
