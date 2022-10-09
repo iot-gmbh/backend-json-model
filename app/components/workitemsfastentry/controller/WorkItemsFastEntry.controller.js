@@ -371,9 +371,16 @@ sap.ui.define(
                   const selectedItemPath = hierarchyInput
                     .getBindingContext()
                     .getPath();
+                  const hierarchyPath = this.getModel().getProperty(
+                    `${selectedItemPath}/parentPath`
+                  );
                   this.getModel().setProperty(
                     "/selectedItemPath",
                     selectedItemPath
+                  );
+                  this._filterHierarchyByPath(
+                    "hierarchyTreeTable",
+                    hierarchyPath
                   );
 
                   vBox.addItem(hierarchyTreeTable);
