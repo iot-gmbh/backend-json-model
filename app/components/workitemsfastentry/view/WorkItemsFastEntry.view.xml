@@ -9,7 +9,7 @@
 	<Page id="page" class="sapUiSizeCompact">
 		<dependents>
 			<!-- <Popover id="hierarchyPopover" contentWidth="42vw" placement="VerticalPreferredBottom"> -->
-			<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeTable')" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
+			<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeTable')" id="hierarchyTreeTable" rows="{path: '/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="auto" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false" width="24vw">
 				<t:noData>
 					<Text text=""/>
 				</t:noData>
