@@ -460,6 +460,8 @@ sap.ui.define(
             location: newWorkItem.location,
           });
 
+          this._filterHierarchyByPath("hierarchyTreeForm", "");
+
           model.setProperty("/busy", false);
         },
 
