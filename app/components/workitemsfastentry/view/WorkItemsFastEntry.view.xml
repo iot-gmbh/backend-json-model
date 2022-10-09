@@ -111,7 +111,7 @@
 							</form:FormElement>
 							<form:FormElement>
 								<FlexBox justifyContent="End">
-									<Button text="{i18n>formButtonSubmit}" press=".onPressAddWorkItem" type="Emphasized"/>
+									<Button text="{i18n>formButtonSubmit}" press=".onPressSubmitWorkItem" type="Emphasized"/>
 								</FlexBox>
 							</form:FormElement>
 						</form:formElements>

@@ -415,7 +415,7 @@ sap.ui.define(
           }
         },
 
-        async onPressAddWorkItem() {
+        async onPressSubmitWorkItem() {
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
 
