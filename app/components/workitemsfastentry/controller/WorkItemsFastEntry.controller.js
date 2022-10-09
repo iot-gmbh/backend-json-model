@@ -222,12 +222,6 @@ sap.ui.define(
         },
 
         onLiveChangeHierarchyTable(event, elementID) {
-          const selectedItemPath = event
-            .getSource()
-            .getBindingContext()
-            .getPath();
-          this.getModel().setProperty("/selectedItemPath", selectedItemPath);
-
           // const popover = this.byId("hierarchyPopover");
           // const input = event.getSource();
 
@@ -364,27 +358,34 @@ sap.ui.define(
 
         addEventDelegations() {
           const hierarchyTreeTable = this.byId("hierarchyTreeTable");
-          const workItemsTable = this.byId("tableWorkItems");
           const page = this.byId("page");
 
-          workItemsTable.getItems().forEach((item) => {
-            const vbox = item.getCells()[0];
+          this.byId("tableWorkItems")
+            .getItems()
+            .forEach((item) => {
+              const vBox = item.getCells()[0];
+              const hierarchyInput = vBox.getItems()[0];
 
-            vbox.getItems()[0].addEventDelegate({
-              onfocusin: () => {
-                vbox.addItem(hierarchyTreeTable);
-              },
-              onsapfocusleave: () => {
-                vbox.removeItem(hierarchyTreeTable);
-              },
-            });
+              hierarchyInput.addEventDelegate({
+                onfocusin: () => {
+                  const selectedItemPath = hierarchyInput
+                    .getBindingContext()
+                    .getPath();
+                  this.getModel().setProperty(
+                    "/selectedItemPath",
+                    selectedItemPath
+                  );
 
-            hierarchyTreeTable.addEventDelegate({
-              onAfterRendering: () => {
-                page.scrollToElement(hierarchyTreeTable);
-              },
+                  vBox.addItem(hierarchyTreeTable);
+                },
+              });
+
+              hierarchyTreeTable.addEventDelegate({
+                onAfterRendering: () => {
+                  page.scrollToElement(hierarchyTreeTable);
+                },
+              });
             });
-          });
         },
 
         setItemCountsFilters(event) {
