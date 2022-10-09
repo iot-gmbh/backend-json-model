@@ -360,6 +360,12 @@ sap.ui.define(
           const hierarchyTreeTable = this.byId("hierarchyTreeTable");
           const page = this.byId("page");
 
+          this.byId("hierarchySearchForm").addEventDelegate({
+            onfocusin: () => {
+              this.byId("hierarchyTreeForm").getBinding("rows").filter([]);
+            },
+          });
+
           this.byId("tableWorkItems")
             .getItems()
             .forEach((item) => {
