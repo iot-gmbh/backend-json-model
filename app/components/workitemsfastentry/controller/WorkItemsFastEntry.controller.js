@@ -238,6 +238,8 @@ sap.ui.define(
 
           if (!query) {
             filters = new Filter("title", "EQ", null);
+          } else if (query === "*") {
+            filters = [];
           } else if (query.includes(">")) {
             filters = [
               new Filter({
@@ -360,12 +362,6 @@ sap.ui.define(
           const hierarchyTreeTable = this.byId("hierarchyTreeTable");
           const page = this.byId("page");
 
-          this.byId("hierarchySearchForm").addEventDelegate({
-            onfocusin: () => {
-              this.byId("hierarchyTreeForm").getBinding("rows").filter([]);
-            },
-          });
-
           this.byId("tableWorkItems")
             .getItems()
             .forEach((item) => {
@@ -380,6 +376,7 @@ sap.ui.define(
                   const hierarchyPath = this.getModel().getProperty(
                     `${selectedItemPath}/parentPath`
                   );
+
                   this.getModel().setProperty(
                     "/selectedItemPath",
                     selectedItemPath
