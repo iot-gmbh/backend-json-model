@@ -215,22 +215,22 @@ sap.ui.define(
           }
         },
 
-        onLiveChangeHierarchyForm(event, elementID) {
-          const { newValue } = event.getParameters();
+        onLiveChangeHierarchyForm(event) {
+          const query = event.getParameters().newValue;
 
-          this._filterHierarchyByPath(elementID, newValue);
+          this._filterHierarchyByPath("hierarchyTreeForm", query);
         },
 
-        onLiveChangeHierarchyTable(event, elementID) {
+        onLiveChangeHierarchyTable(event) {
           // const popover = this.byId("hierarchyPopover");
           // const input = event.getSource();
 
           // popover.openBy(input);
           // setTimeout(() => input.focus());
 
-          const { newValue } = event.getParameters();
+          const query = event.getParameters().newValue;
 
-          this._filterHierarchyByPath(elementID, newValue);
+          this._filterHierarchyByPath("hierarchyTreeTable", query);
         },
 
         _filterHierarchyByPath(elementID, query) {
