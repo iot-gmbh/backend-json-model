@@ -230,7 +230,25 @@ sap.ui.define(
 
           const query = event.getParameters().newValue;
 
-          this._filterHierarchyByPath("hierarchyTreeTable", query);
+          if (query) {
+            const hierarchyTree = this.byId("hierarchyTreeTable");
+            const hierarchyInput = event.getSource();
+            const vBox = hierarchyInput.getParent();
+
+            if (vBox.getItems().length === 1) {
+              const selectedItemPath = hierarchyInput
+                .getBindingContext()
+                .getPath();
+              this.getModel().setProperty(
+                "/selectedItemPath",
+                selectedItemPath
+              );
+
+              vBox.addItem(hierarchyTree);
+            }
+
+            this._filterHierarchyByPath("hierarchyTreeTable", query);
+          }
         },
 
         _filterHierarchyByPath(elementID, query) {
@@ -337,6 +355,16 @@ sap.ui.define(
           let workItemPath = "/newWorkItem";
 
           if (elementID === "hierarchyTreeTable") {
+            const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+            const item = event.getSource().getParent().getParent();
+            const titleInputTable = item.getCells()[1];
+            const vBox = event.getSource().getParent();
+
+            vBox.removeItem(hierarchyTreeTable);
+            setTimeout(() => {
+              titleInputTable.focus();
+            }, 1);
+
             workItemPath = this.getModel().getProperty("/selectedItemPath");
           }
 
@@ -362,40 +390,15 @@ sap.ui.define(
           const hierarchyTreeTable = this.byId("hierarchyTreeTable");
           const page = this.byId("page");
 
-          this.byId("tableWorkItems")
-            .getItems()
-            .forEach((item) => {
-              const vBox = item.getCells()[0];
-              const hierarchyInput = vBox.getItems()[0];
-
-              hierarchyInput.addEventDelegate({
-                onfocusin: () => {
-                  const selectedItemPath = hierarchyInput
-                    .getBindingContext()
-                    .getPath();
-                  const hierarchyPath = this.getModel().getProperty(
-                    `${selectedItemPath}/parentPath`
-                  );
-
-                  this.getModel().setProperty(
-                    "/selectedItemPath",
-                    selectedItemPath
-                  );
-                  this._filterHierarchyByPath(
-                    "hierarchyTreeTable",
-                    hierarchyPath
-                  );
-
-                  vBox.addItem(hierarchyTreeTable);
-                },
-              });
-
-              hierarchyTreeTable.addEventDelegate({
-                onAfterRendering: () => {
-                  page.scrollToElement(hierarchyTreeTable);
-                },
-              });
-            });
+          hierarchyTreeTable.addEventDelegate({
+            onAfterRendering: () => {
+              page.scrollToElement(hierarchyTreeTable);
+            },
+            // vBox must be passed as a parameter; passing an event doesn't work
+            // onsapfocusleave: () => {
+            //   vBox.removeItem(hierarchyTreeTable);
+            // },
+          });
         },
 
         setItemCountsFilters(event) {
