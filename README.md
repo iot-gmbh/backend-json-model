@@ -18,11 +18,17 @@ It contains these folders and files, following our recommended project layout:
 
 - Azure AD tenant
 
-Provide a .env file, corresponding to the .env-example file and fill out all the entries with the corresponding information from Azure AD
-
 # Getting started
 
+- Make sure you pulled all git-submodules (`git submodule update --init --recursive`)
+- Install [Postgres](https://www.postgresql.org/download/) / use a docker image via docker-compose.yaml (more performance-intensive)
+- Install [python](https://www.python.org/downloads/)
+- Install [migra](https://databaseci.com/docs/migra)
+- Create 2 postgres-databases: "original" and "reference" (will be obsolete, as soon as cds-pg-migra is improved)
+- Clone `/default-envs/example.json` into `/default-envs/development.json` and `/default-envs/production.json` and enter your credentials
+- Provide a .env file, corresponding to the .env-example file and fill out all the entries with the corresponding information from Azure AD
 - Install dependencies `npm i`
+- Deploy to the PostgresDB with `npm run deploy`
 - Run `npm start`
 
 # UI5-apps
