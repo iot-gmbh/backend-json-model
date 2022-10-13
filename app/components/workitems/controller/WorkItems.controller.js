@@ -191,8 +191,6 @@ sap.ui.define(
               (filter) => filter.getPath() !== "state"
             );
 
-            viewModel.setProperty("/tableBusy", true);
-
             let workItems;
 
             try {
@@ -224,7 +222,6 @@ sap.ui.define(
             viewModel.setProperty("/countAll", countAll);
             viewModel.setProperty("/countCompleted", countCompleted);
             viewModel.setProperty("/countIncompleted", countIncompleted);
-            viewModel.setProperty("/tableBusy", false);
           }
         },
 
