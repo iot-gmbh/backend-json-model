@@ -148,7 +148,7 @@ sap.ui.define(
           }
         },
 
-        async onFilterWorkItems(event) {
+        async onFilterState(event) {
           const binding = this.byId("tableWorkItems").getBinding("items");
           const filtersApplication = binding.getFilters("Application");
           const filtersControl = binding.getFilters("Control");
@@ -225,7 +225,7 @@ sap.ui.define(
           }
         },
 
-        onChangeDateRange(event) {
+        onFilterDateRange(event) {
           const startDate = event.getParameter("from");
           const endDate = event.getParameter("to");
           const binding = this.byId("tableWorkItems").getBinding("items");
