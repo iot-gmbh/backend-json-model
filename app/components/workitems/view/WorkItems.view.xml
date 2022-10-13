@@ -4,6 +4,7 @@
 	xmlns:layout="sap.ui.layout"
 	xmlns:form="sap.ui.layout.form"
 	xmlns:f="sap.f"
+	xmlns:fb="sap.ui.comp.filterbar"
 	xmlns:c="iot.planner.components.workitems.control"
 	xmlns:t="sap.ui.table" controllerName="iot.planner.components.workitems.controller.WorkItems">
 	<Shell id="shell" appWidthLimited="false">
@@ -43,6 +44,31 @@
 					<f:DynamicPage showFooter="true">
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
+								<f:content>
+									<fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch" filterChange=".onFilterChange">
+										<fb:filterGroupItems>
+											<fb:FilterGroupItem groupName="filterItems" name="Time" label="{i18n>filterTime}" visibleInFilterBar="true">
+												<fb:control>
+													<DateRangeSelection id="DRS3" showCurrentDateButton="true" change="onChangeDateRange"/>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox selectionChange=".onSelectionChange" items="{}">
+														<core:Item key="{key}" text="{name}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="User" label="{i18n>filterUser}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox selectionChange=".onSelectionChange" items="{}">
+														<core:Item key="{key}" text="{name}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+										</fb:filterGroupItems>
+									</fb:FilterBar>
+								</f:content>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
