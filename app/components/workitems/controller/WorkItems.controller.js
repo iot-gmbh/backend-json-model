@@ -178,12 +178,8 @@ sap.ui.define(
 
         async setItemCountsFilters(event) {
           const viewModel = this.getModel("viewModel");
-          const totalItems = event.getParameter("total");
 
-          if (
-            totalItems &&
-            event.getSource().getBinding("items").isLengthFinal()
-          ) {
+          if (event.getSource().getBinding("items").isLengthFinal()) {
             const binding = this.byId("tableWorkItems").getBinding("items");
             const filtersApplication = binding.getFilters("Application");
             const filtersControl = binding.getFilters("Control");
