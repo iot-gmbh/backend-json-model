@@ -52,6 +52,40 @@
 													<DateRangeSelection id="DRS3" showCurrentDateButton="true" change=".onFilterDateRange"/>
 												</fb:control>
 											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
+												<fb:control>
+													<vBox>
+														<Input id="hierarchySearchForm" value="{viewModel>/filterHierarchy/parentPath}" suggestionItems="{viewModel>/MyCategories}" liveChange="onLiveChangeHierarchyForm">
+															<suggestionItems>
+																<core:Item text="{path}" key="{ID}"/>
+															</suggestionItems>
+														</Input>
+														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy($event, 'hierarchyTreeForm')" id="hierarchyTreeForm" rows="{path: 'viewModel>/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="10" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
+															<t:noData>
+																<Text text=""/>
+															</t:noData>
+															<t:columns>
+																<t:Column>
+																	<t:template>
+																		<Text text="{parts: ['viewModel>title', 'viewModel>deepReference'], formatter: '.formatter.braceDeepReference'}"/>
+																		<!-- <Text text="{title}"/> -->
+																	</t:template>
+																</t:Column>
+																<!-- <t:Column width="163px">
+																		<t:template>
+																			<Text text="{deepReference}"/>
+																		</t:template>
+																	</t:Column> -->
+																<t:Column width="57px">
+																	<t:template>
+																		<Text text="{viewModel>absoluteReference}"/>
+																	</t:template>
+																</t:Column>
+															</t:columns>
+														</t:TreeTable>
+													</vBox>
+												</fb:control>
+											</fb:FilterGroupItem>
 										</fb:filterGroupItems>
 									</fb:FilterBar>
 								</f:content>
