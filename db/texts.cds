@@ -1,4 +1,5 @@
 using {iot.planner as my} from './schema';
+using {iot.planner.hierarchies as hierarchies} from './hierarchies';
 
 annotate my.Users with {
   userPrincipalName @title : '{i18n>Users.principalName}';
@@ -71,4 +72,57 @@ annotate my.WorkItems {
   resetEntry                   @title : '{i18n>WorkItems.resetEntry}';
   deleted                      @title : '{i18n>WorkItems.deleted}';
   confirmed                    @title : '{i18n>WorkItems.confirmed}';
+};
+
+annotate hierarchies.WorkItems with {
+  level0      @title : '{i18n>level0}';
+  level0Title @title : '{i18n>level0Title}';
+  level0Alias @title : '{i18n>level0Alias}';
+  level1      @title : '{i18n>level1}';
+  level1Title @title : '{i18n>level1Title}';
+  level1Alias @title : '{i18n>level1Alias}';
+  level2      @title : '{i18n>level2}';
+  level2Title @title : '{i18n>level2Title}';
+  level2Alias @title : '{i18n>level2Alias}';
+  level3      @title : '{i18n>level3}';
+  level3Title @title : '{i18n>level3Title}';
+  level3Alias @title : '{i18n>level3Alias}';
+};
+
+
+annotate hierarchies.Hierarchies with {
+  level0      @title : '{i18n>level0}';
+  level0Title @title : '{i18n>level0Title}';
+  level0Alias @title : '{i18n>level0Alias}';
+  level1      @title : '{i18n>level1}';
+  level1Title @title : '{i18n>level1Title}';
+  level1Alias @title : '{i18n>level1Alias}';
+  level2      @title : '{i18n>level2}';
+  level2Title @title : '{i18n>level2Title}';
+  level2Alias @title : '{i18n>level2Alias}';
+  level3      @title : '{i18n>level3}';
+  level3Title @title : '{i18n>level3Title}';
+  level3Alias @title : '{i18n>level3Alias}';
+};
+
+annotate hierarchies.CategoriesLevel0 with {
+  level0 @title : '{i18n>level0}';
+};
+
+annotate hierarchies.CategoriesLevel1 with {
+  level0 @title : '{i18n>level0}';
+  level1 @title : '{i18n>level1}';
+};
+
+annotate hierarchies.CategoriesLevel2 with {
+  level0 @title : '{i18n>level0}';
+  level1 @title : '{i18n>level1}';
+  level2 @title : '{i18n>level2}';
+};
+
+annotate hierarchies.CategoriesLevel3 with {
+  level0 @title : '{i18n>level0}';
+  level1 @title : '{i18n>level1}';
+  level2 @title : '{i18n>level2}';
+  level3 @title : '{i18n>level3}';
 };

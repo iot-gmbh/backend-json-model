@@ -108,6 +108,7 @@
           "name": "sap.suite.ui.generic.template.AnalyticalListPage",
           "list": true,
           "settings": {
+            "hideVisualFilter": true,
             "condensedTableLayout": true,
             "showGoButtonOnFilterBar": true,
             "tableType": "AnalyticalTable",

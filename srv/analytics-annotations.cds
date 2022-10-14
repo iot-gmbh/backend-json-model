@@ -1,7 +1,6 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
-
   // =====================================================
   // Default
   //
@@ -113,10 +112,11 @@ annotate my.WorkItems with @(UI : {
   SelectionFields                           : [
     activatedDate,
     assignedToUserPrincipalName,
-    level0Title,
-    level1Title,
-    level2Title,
-    level3Title,
+    level0,
+    level1,
+    level2,
+    level3,
+    activatedDateMonth
   ],
   LineItem                                  : [
     {
@@ -129,74 +129,6 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  level0Title                 @Common.ValueList : {
-    CollectionPath : 'Customers',
-    Parameters     : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'level0Title',
-      ValueListProperty : 'title'
-    }],
-  };
-  level1Title                 @Common.ValueList : {
-    CollectionPath : 'Projects',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
-  level2Title                 @Common.ValueList : {
-    CollectionPath : 'SubProjects',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'projectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
-  level3Title                 @Common.ValueList : {
-    CollectionPath : 'Packages',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level3Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'subProjectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'projectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
   activatedDateMonth          @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{

@@ -1,5 +1,5 @@
-using {WorkItemsService as my} from './work-items-service';
-
+using {iot.planner as my} from '../db/schema';
+using {iot.planner.hierarchies as hierarchies} from '../db/hierarchies';
 
 service AnalyticsService {
   @Aggregation.ApplySupported.PropertyRestrictions : true
@@ -28,84 +28,76 @@ service AnalyticsService {
     AggregationMethod    : 'sum',
     AggregatableProperty : 'duration',
     $Type                : 'Analytics.AggregatedPropertyType',
-    ![@Common.Label]     : 'Total duration'
+    ![@Common.Label]     : '{i18n>WorkItems.totalDuration}'
   }])
-  entity WorkItems   as
-    select from my.WorkItems {
-          @Analytics.Dimension           : true
-      key ID,
-          @Analytics.Dimension           : true
-          assignedToUserPrincipalName,
+  @(restrict : [
+    {
+      grant : 'READ',
+      to    : 'team-lead',
+      // Association paths are currently supported on SAP HANA only
+      // https://cap.cloud.sap/docs/guides/authorization#association-paths
+      where : 'managerUserPrincipalName = $user'
+    },
+    {
+      grant : 'READ',
+      to    : 'authenticated-user',
+      where : 'assignedToUserPrincipalName = $user'
+    },
+    {
+      grant : 'READ',
+      to    : 'admin',
+    },
+  ])
+  entity WorkItems as projection on my.WorkItems {
+        @Analytics.Dimension           : true
+    key ID,
+        @Analytics.Dimension           : true
+        assignedTo.userPrincipalName         as assignedToUserPrincipalName,
+        @Analytics.Dimension           : true
+        assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+        @Analytics.Dimension           : true
+        assignedTo.userPrincipalName,
 
-          @Analytics.Dimension           : true
-          TO_CHAR(
-            activatedDate, 'dd.mm.yyyy'
-          )            as date           : String,
+        @Analytics.Dimension           : true
+        TO_CHAR(
+          activatedDate, 'dd.mm.yyyy'
+        )                                    as date           : String,
 
-          @Analytics.Dimension           : true
-          activatedDate,
-          @Analytics.Dimension           : true
-          completedDate,
-          @Analytics.Dimension           : true
-          activatedDateMonth,
-          @Analytics.Dimension           : true
-          activatedDateYear,
-          @Analytics.Dimension           : true
-          parent.title as category,
+        @Analytics.Dimension           : true
+        activatedDate,
+        @Analytics.Dimension           : true
+        completedDate,
+        @Analytics.Dimension           : true
+        activatedDateMonth,
+        @Analytics.Dimension           : true
+        activatedDateYear,
+        @Analytics.Dimension           : true
+        parent.title                         as category,
 
-          @title                         : 'Customer'
-          @Analytics.Dimension           : true
-          hierarchy.level0Title,
-          @title                         : 'Project'
-          @Analytics.Dimension           : true
-          hierarchy.level1Title,
-          @title                         : 'SubProject'
-          @Analytics.Dimension           : true
-          hierarchy.level2Title,
-          @title                         : 'Package'
-          @Analytics.Dimension           : true
-          hierarchy.level3Title,
+        @Analytics.Dimension           : true
+        level0,
+        @Analytics.Dimension           : true
+        hierarchy.level1,
+        @Analytics.Dimension           : true
+        hierarchy.level2,
+        @Analytics.Dimension           : true
+        hierarchy.level3,
 
-          @Analytics.Measure             : true
-          @Aggregation.default           : #SUM
-          duration,
+        @Analytics.Measure             : true
+        @Aggregation.default           : #SUM
+        duration,
 
-          // @Analytics.Dimension           : true
-          // parent,
-          @Analytics.Dimension           : true
-          assignedTo,
+        // @Analytics.Dimension           : true
+        // parent,
+        @Analytics.Dimension           : true
+        assignedTo,
 
-          @sap.hierarchy.drill.state.for : 'ID'
-          'expanded'   as drillDownState : String,
-          ''           as hierarchyLevel : String,
-          tenant,
-          parent
-    }
-    where
-      deleted is null;
+        @sap.hierarchy.drill.state.for : 'ID'
+        'expanded'                           as drillDownState : String,
+        ''                                   as hierarchyLevel : String,
+        tenant,
+        parent
+  } where deleted is null;
 
-  entity Users       as projection on my.Users;
-
-  @cds.redirection.target
-  entity Categories  as projection on my.Categories;
-
-  entity Customers   as projection on my.Categories where hierarchyLevel = '0';
-
-  entity Projects    as projection on my.Categories {
-    *,
-    parent.title as customerTitle
-  } where hierarchyLevel = '1';
-
-  entity SubProjects as projection on my.Categories {
-    *,
-    parent.title        as projectTitle,
-    parent.parent.title as customerTitle
-  } where hierarchyLevel = '2';
-
-  entity Packages    as projection on my.Categories {
-    *,
-    parent.title               as subProjectTitle,
-    parent.parent.title        as projectTitle,
-    parent.parent.parent.title as customerTitle
-  } where hierarchyLevel = '3';
+  entity Users     as projection on my.Users;
 }

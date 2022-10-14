@@ -2,6 +2,47 @@ using {iot.planner as my} from './schema';
 
 namespace iot.planner.hierarchies;
 
+@cds.autoexpose
+entity CategoriesLevel0 as projection on my.Categories where hierarchyLevel = '0';
+
+@cds.autoexpose
+entity CategoriesLevel1 as projection on my.Categories {
+  *,
+  parent.title as level0Title
+} where hierarchyLevel = '1';
+
+@cds.autoexpose
+entity CategoriesLevel2 as projection on my.Categories {
+  *,
+  parent.title        as level1Title,
+  parent.parent.title as level0Title
+} where hierarchyLevel = '2';
+
+@cds.autoexpose
+entity CategoriesLevel3 as projection on my.Categories {
+  *,
+  parent.title               as level2Title,
+  parent.parent.title        as level1Title,
+  parent.parent.parent.title as level0Title
+} where hierarchyLevel = '3';
+
+entity WorkItems        as
+  select from my.WorkItems {
+    *,
+    hierarchy.level0,
+    hierarchy.level0Title,
+    hierarchy.level0Alias,
+    hierarchy.level1,
+    hierarchy.level1Title,
+    hierarchy.level1Alias,
+    hierarchy.level2,
+    hierarchy.level2Title,
+    hierarchy.level2Alias,
+    hierarchy.level3,
+    hierarchy.level3Title,
+    hierarchy.level3Alias,
+  };
+
 view Hierarchies as
   select from my.Categories {
     key ID,
@@ -146,7 +187,6 @@ view Hierarchies as
           then
             parent.parent.mappingID
         end as level1Alias : String,
-
         case hierarchyLevel
           when
             '2'
