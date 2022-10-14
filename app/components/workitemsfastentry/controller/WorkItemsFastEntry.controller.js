@@ -222,15 +222,10 @@ sap.ui.define(
         },
 
         onLiveChangeHierarchyTable(event) {
-          // const popover = this.byId("hierarchyPopover");
-          // const input = event.getSource();
-
-          // popover.openBy(input);
-          // setTimeout(() => input.focus());
-
           const query = event.getParameters().newValue;
+          const oldQuery = event.getSource()._lastValue;
 
-          if (query) {
+          if (query && query !== oldQuery) {
             const hierarchyTree = this.byId("hierarchyTreeTable");
             const hierarchyInput = event.getSource();
             const vBox = hierarchyInput.getParent();

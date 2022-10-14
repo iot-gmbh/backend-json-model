@@ -148,12 +148,24 @@ sap.ui.define(
           }
         },
 
-        async onFilterWorkItems(event) {
+        async onFilterState(event) {
           const binding = this.byId("tableWorkItems").getBinding("items");
+          const filtersApplication = binding.getFilters("Application");
+          const filtersControl = binding.getFilters("Control");
+          const filtersCombined = filtersApplication.concat(filtersControl);
+          const filtersWithoutDuplicates = [...new Set(filtersCombined)];
+
+          // Remove old stateFilters
+          const filters = filtersWithoutDuplicates.filter(
+            (filter) => filter.getPath() !== "state"
+          );
+
           const key = event.getSource().getSelectedKey();
 
+          filters.push(this._stateFilters[key]);
+
           try {
-            binding.filter(this._stateFilters[key]);
+            binding.filter(filters);
           } catch (error) {
             Log.error(error);
           }
@@ -166,27 +178,31 @@ sap.ui.define(
 
         async setItemCountsFilters(event) {
           const viewModel = this.getModel("viewModel");
-          const totalItems = event.getParameter("total");
 
-          if (
-            totalItems &&
-            event.getSource().getBinding("items").isLengthFinal()
-          ) {
-            const model = this.getModel();
+          if (event.getSource().getBinding("items").isLengthFinal()) {
+            const binding = this.byId("tableWorkItems").getBinding("items");
+            const filtersApplication = binding.getFilters("Application");
+            const filtersControl = binding.getFilters("Control");
+            const filtersCombined = filtersApplication.concat(filtersControl);
+            const filtersWithoutDuplicates = [...new Set(filtersCombined)];
+
+            // Remove stateFilters to correctly calculate the item counts of each state
+            const filters = filtersWithoutDuplicates.filter(
+              (filter) => filter.getPath() !== "state"
+            );
 
             let workItems;
 
-            viewModel.setProperty("/busy", true);
-
             try {
               workItems = await new Promise((resolve, reject) => {
-                model.read("/MyWorkItems", {
+                this.getModel().read("/MyWorkItems", {
+                  filters,
                   success: resolve,
                   error: reject,
                 });
               });
-            } finally {
-              viewModel.setProperty("/busy", false);
+            } catch (error) {
+              Log.error(error);
             }
 
             const countAll = workItems.results.filter(
@@ -208,6 +224,75 @@ sap.ui.define(
             viewModel.setProperty("/countIncompleted", countIncompleted);
           }
         },
+
+        onFilterDateRange(event) {
+          const startDate = event.getParameter("from");
+          const endDate = event.getParameter("to");
+          const binding = this.byId("tableWorkItems").getBinding("items");
+
+          const filtersApplication = binding.getFilters("Application");
+          const filtersControl = binding.getFilters("Control");
+          const filtersCombined = filtersApplication.concat(filtersControl);
+          const filtersWithoutDuplicates = [...new Set(filtersCombined)];
+
+          // Remove old dateFilters
+          const filters = filtersWithoutDuplicates.filter(
+            (filter) =>
+              filter.getPath() !== "activatedDate" &&
+              filter.getPath() !== "completedDate" &&
+              filter.getPath() !== "date"
+          );
+
+          const filterStartDate = new Filter({
+            path: "activatedDate",
+            operator: "GE",
+            value1: startDate,
+          });
+          const filterEndDate = new Filter({
+            path: "completedDate",
+            operator: "LE",
+            value1: endDate,
+          });
+          const filterDate = new Filter({
+            path: "date",
+            operator: "EQ",
+            value1: startDate,
+          });
+
+          if (endDate) {
+            try {
+              filters.push(filterStartDate, filterEndDate);
+              binding.filter(filters);
+            } catch (error) {
+              Log.error(error);
+            }
+          } else if (startDate) {
+            try {
+              filters.push(filterDate);
+              binding.filter(filters);
+            } catch (error) {
+              Log.error(error);
+            }
+          } else {
+            binding.filter(filters);
+          }
+
+          binding.refresh();
+        },
+
+        onLiveChangeHierarchyFilter(event) {
+          const query = event.getParameters().newValue;
+
+          this._filterHierarchyByPath("hierarchyTreeFilter", query);
+        },
+
+        // onSelectHierarchyFilter(event) {
+        //   const { rowContext } = event.getParameters();
+
+        //   if (!rowContext) return;
+
+        //   const parentPath = rowContext.getProperty("path");
+        // },
 
         async onPressDeleteWorkItems() {
           const backendJSONModel = this.getModel("backendJSONModel");
@@ -279,7 +364,7 @@ sap.ui.define(
           this.onChangeWorkItemValue(event);
         },
 
-        onChangeHierarchy(event) {
+        onLiveChangeHierarchyTable(event) {
           const selectedItemPath = event
             .getSource()
             .getBindingContext()
@@ -293,12 +378,12 @@ sap.ui.define(
 
           popover.openBy(input);
           setTimeout(() => input.focus());
-          const { newValue } = event.getParameters();
+          const query = event.getParameters().newValue;
 
-          this._filterHierarchyByPath(newValue);
+          this._filterHierarchyByPath("hierarchyTreeTable", query);
         },
 
-        _filterHierarchyByPath(query) {
+        _filterHierarchyByPath(elementID, query) {
           let filters = [];
 
           if (!query) {
@@ -363,7 +448,7 @@ sap.ui.define(
             ];
           }
 
-          const tree = this.byId("hierarchyTreeTable");
+          const tree = this.byId(elementID);
           tree.getBinding("rows").filter(filters);
 
           // tree.getRows().forEach((row) => {
@@ -391,7 +476,7 @@ sap.ui.define(
           // });
         },
 
-        onSelectHierarchy(event) {
+        onSelectHierarchyTable(event) {
           const { rowContext } = event.getParameters();
 
           if (!rowContext) return;
@@ -448,7 +533,7 @@ sap.ui.define(
             return Promise.resolve();
           }
 
-          viewModel.setProperty("/busy", true);
+          viewModel.setProperty("/tableBusy", true);
 
           return new Promise((resolve, reject) => {
             model.submitChanges({
@@ -462,7 +547,7 @@ sap.ui.define(
               error: reject,
             });
           }).finally(() => {
-            viewModel.setProperty("/busy", false);
+            viewModel.setProperty("/tableBusy", false);
           });
         },
       }
