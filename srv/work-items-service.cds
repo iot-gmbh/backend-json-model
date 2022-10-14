@@ -1,10 +1,6 @@
 using {iot.planner as my} from '../db/schema';
-// using {AzureDevopsService as AzDevOps} from './azure-devops';
-// using {MSGraphService as MSGraph} from './msgraph-service';
 
 service WorkItemsService @(requires : 'authenticated-user') {
-  // entity AzDevWorkItems as projection on AzDevOps.WorkItems;
-  // entity MSGraphEvents  as projection on MSGraph.Events;
 
   entity Hierarchies as projection on my.hierarchies.Hierarchies;
 
@@ -42,6 +38,11 @@ service WorkItemsService @(requires : 'authenticated-user') {
   // hierarchy.level3Title                as workPackageText
   } where deleted is null
 
+  /*
+  IOT Projektaufschreibung
+
+  Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
+   */
   @cds.redirection.target : true
   entity IOTWorkItems                                                           @(restrict : [
     {
@@ -68,13 +69,9 @@ service WorkItemsService @(requires : 'authenticated-user') {
         ''                                   as Beginn            : String(5)   @(title : '{i18n>IOTWorkItems.Beginn}'),
         ''                                   as Ende              : String(5)   @(title : '{i18n>IOTWorkItems.Ende}'),
         ''                                   as P1                : String      @(title : '{i18n>IOTWorkItems.P1}'),
-        // hierarchy.level0Title                as Kunde             : String @(title : '{i18n>IOTWorkItems.Kunde}'),
-        // hierarchy.level0Title                as Projekt           : String @(title : '{i18n>IOTWorkItems.Projekt}'),
-        hierarchy.level0Alias                as ProjektAlias      : String(150) @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
-        // hierarchy.level1Title                as Teilprojekt       : String @(title : '{i18n>IOTWorkItems.Teilprojekt}'),
-        hierarchy.level1Alias                as TeilprojektAlias  : String(150) @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
-        // hierarchy.level2Title                as Arbeitspaket      : String @(title : '{i18n>IOTWorkItems.Arbeitspaket}'),
-        hierarchy.level2Alias                as ArbeitspaketAlias : String(150) @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
+        hierarchy.level1Alias                as ProjektAlias      : String(150) @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
+        hierarchy.level2Alias                as TeilprojektAlias  : String(150) @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
+        hierarchy.level3Alias                as ArbeitspaketAlias : String(150) @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
         'Durchführung'                       as Taetigkeit        : String(30)  @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
         assignedTo.userPrincipalName         as Nutzer            : String      @(title : '{i18n>IOTWorkItems.Nutzer}'),
         'GE'                                 as Einsatzort        : String      @(title : '{i18n>IOTWorkItems.Einsatzort}'),
@@ -84,12 +81,6 @@ service WorkItemsService @(requires : 'authenticated-user') {
         @UI.Hidden
         assignedTo.manager.userPrincipalName as managerUserPrincipalName,
   } where deleted is null;
-
-  /*
-  IOT Projektaufschreibung
-
-  Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
-   */
 
   entity Users       as projection on my.Users {
     *,
