@@ -45,7 +45,7 @@
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
 								<f:content>
-									<fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch">
+									<fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch" showGoOnFB="false">
 										<fb:filterGroupItems>
 											<fb:FilterGroupItem groupName="filterItems" name="Time" label="{i18n>filterTime}" visibleInFilterBar="true">
 												<fb:control>
