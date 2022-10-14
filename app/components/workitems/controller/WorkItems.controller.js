@@ -239,7 +239,8 @@ sap.ui.define(
           const filters = filtersWithoutDuplicates.filter(
             (filter) =>
               filter.getPath() !== "activatedDate" &&
-              filter.getPath() !== "completedDate"
+              filter.getPath() !== "completedDate" &&
+              filter.getPath() !== "date"
           );
 
           const filterStartDate = new Filter({
