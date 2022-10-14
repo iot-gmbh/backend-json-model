@@ -366,29 +366,29 @@ sap.ui.define(
           const tree = this.byId("hierarchyTreeTable");
           tree.getBinding("rows").filter(filters);
 
-          tree.getRows().forEach((row) => {
-            const titleCell = row.getCells()[0];
+          // tree.getRows().forEach((row) => {
+          //   const titleCell = row.getCells()[0];
 
-            if (!titleCell) return;
+          //   if (!titleCell) return;
 
-            const htmlText = titleCell
-              .getHtmlText()
-              .replaceAll("<strong>", "")
-              .replaceAll("</strong>", "");
+          //   const htmlText = titleCell
+          //     .getHtmlText()
+          //     .replaceAll("<strong>", "")
+          //     .replaceAll("</strong>", "");
 
-            titleCell.setHtmlText(htmlText);
+          //   titleCell.setHtmlText(htmlText);
 
-            if (!query) return;
+          //   if (!query) return;
 
-            const querySubstrings = query.split(/>| /);
+          //   const querySubstrings = query.split(/>| /);
 
-            const newText = querySubstrings.reduce(
-              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
-              htmlText
-            );
+          //   const newText = querySubstrings.reduce(
+          //     (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+          //     htmlText
+          //   );
 
-            titleCell.setHtmlText(newText);
-          });
+          //   titleCell.setHtmlText(newText);
+          // });
         },
 
         onSelectHierarchy(event) {

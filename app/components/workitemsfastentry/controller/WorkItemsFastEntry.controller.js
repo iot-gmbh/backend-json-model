@@ -61,9 +61,9 @@ sap.ui.define(
         async onRouteMatched() {
           const model = this.getModel();
           const loadFrom = new Date();
-          loadFrom.setHours(0, 0, 0, 0); // last midnight
-          const loadUntil = new Date();
-          loadUntil.setHours(24, 0, 0, 0); // next midnight
+          loadFrom.setHours(2, 0, 0, 0); // set UTC datetime due to behaviour of CDS
+          const loadUntil = addDays(new Date(), 1);
+          loadUntil.setHours(2, 0, 0, 0); // set UTC datetime due to behaviour of CDS
 
           model.setData({
             newWorkItem: {},
@@ -136,40 +136,51 @@ sap.ui.define(
         async _loadWorkItems({ startDateTime, endDateTime }) {
           const model = this.getModel();
 
+          const filters = [
+            new Filter({
+              filters: [
+                new Filter({
+                  path: "deleted",
+                  operator: "NE",
+                  value1: true,
+                }),
+                new Filter({
+                  path: "activatedDate",
+                  operator: "GT",
+                  value1: startDateTime,
+                }),
+                new Filter({
+                  path: "completedDate",
+                  operator: "LE",
+                  value1: endDateTime,
+                }),
+              ],
+              and: true,
+            }),
+          ];
+
           model.setProperty("/busy", true);
 
           try {
-            const { results: workItems } = await model.callFunction(
-              "/getCalendarView",
-              {
-                urlParameters: {
-                  startDateTime,
-                  endDateTime,
-                },
-              }
-            );
+            const workItems = await model.read("/MyWorkItems", {
+              filters,
+            });
 
-            const appointments = workItems.map(
-              ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
-                ...appointment,
-                tags: appointment.tags.results,
-                activity:
-                  appointment.activity === null || undefined
-                    ? model.getProperty("/activities")[0].title
-                    : appointment.activity,
-                activatedDate: isAllDay
-                  ? new Date(activatedDate.setHours(0))
-                  : activatedDate,
-                completedDate: isAllDay
-                  ? addDays(completedDate.setHours(0), -1)
-                  : completedDate,
-              })
-            );
+            const appointments = workItems.map(({ ...appointment }) => ({
+              ...appointment,
+              tags: appointment.tags.results,
+              activity:
+                appointment.activity === null || undefined
+                  ? model.getProperty("/activities")[0].title
+                  : appointment.activity,
+            }));
 
             model.setProperty("/MyWorkItems", appointments);
             model.setProperty("/busy", false);
           } catch (error) {
             Log.error(error);
+          } finally {
+            model.setProperty("/busy", false);
           }
         },
 
@@ -204,22 +215,40 @@ sap.ui.define(
           }
         },
 
-        onChangeHierarchy(event, elementID) {
-          if (elementID === "hierarchyTreeTable") {
-            const selectedItemPath = event
-              .getSource()
-              .getBindingContext()
-              .getPath();
-            this.getModel().setProperty("/selectedItemPath", selectedItemPath);
-            const popover = this.byId("hierarchyPopover");
-            const input = event.getSource();
+        onLiveChangeHierarchyForm(event) {
+          const query = event.getParameters().newValue;
 
-            popover.openBy(input);
-            setTimeout(() => input.focus());
+          this._filterHierarchyByPath("hierarchyTreeForm", query);
+        },
+
+        onLiveChangeHierarchyTable(event) {
+          // const popover = this.byId("hierarchyPopover");
+          // const input = event.getSource();
+
+          // popover.openBy(input);
+          // setTimeout(() => input.focus());
+
+          const query = event.getParameters().newValue;
+
+          if (query) {
+            const hierarchyTree = this.byId("hierarchyTreeTable");
+            const hierarchyInput = event.getSource();
+            const vBox = hierarchyInput.getParent();
+
+            if (vBox.getItems().length === 1) {
+              const selectedItemPath = hierarchyInput
+                .getBindingContext()
+                .getPath();
+              this.getModel().setProperty(
+                "/selectedItemPath",
+                selectedItemPath
+              );
+
+              vBox.addItem(hierarchyTree);
+            }
+
+            this._filterHierarchyByPath("hierarchyTreeTable", query);
           }
-          const { newValue } = event.getParameters();
-
-          this._filterHierarchyByPath(elementID, newValue);
         },
 
         _filterHierarchyByPath(elementID, query) {
@@ -227,6 +256,8 @@ sap.ui.define(
 
           if (!query) {
             filters = new Filter("title", "EQ", null);
+          } else if (query === "*") {
+            filters = [];
           } else if (query.includes(">")) {
             filters = [
               new Filter({
@@ -290,29 +321,29 @@ sap.ui.define(
           const tree = this.byId(elementID);
           tree.getBinding("rows").filter(filters);
 
-          tree.getRows().forEach((row) => {
-            const titleCell = row.getCells()[0];
+          // tree.getRows().forEach((row) => {
+          //   const titleCell = row.getCells()[0];
 
-            if (!titleCell) return;
+          //   if (!titleCell) return;
 
-            const htmlText = titleCell
-              .getHtmlText()
-              .replaceAll("<strong>", "")
-              .replaceAll("</strong>", "");
+          //   const htmlText = titleCell
+          //     .getHtmlText()
+          //     .replaceAll("<strong>", "")
+          //     .replaceAll("</strong>", "");
 
-            titleCell.setHtmlText(htmlText);
+          //   titleCell.setHtmlText(htmlText);
 
-            if (!query) return;
+          //   if (!query) return;
 
-            const querySubstrings = query.split(/>| /);
+          //   const querySubstrings = query.split(/>| /);
 
-            const newText = querySubstrings.reduce(
-              (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
-              htmlText
-            );
+          //   const newText = querySubstrings.reduce(
+          //     (text, sub) => text.replace(sub, `<strong>${sub}</strong>`),
+          //     htmlText
+          //   );
 
-            titleCell.setHtmlText(newText);
-          });
+          //   titleCell.setHtmlText(newText);
+          // });
         },
 
         onSelectHierarchy(event, elementID) {
@@ -324,6 +355,16 @@ sap.ui.define(
           let workItemPath = "/newWorkItem";
 
           if (elementID === "hierarchyTreeTable") {
+            const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+            const item = event.getSource().getParent().getParent();
+            const titleInputTable = item.getCells()[1];
+            const vBox = event.getSource().getParent();
+
+            vBox.removeItem(hierarchyTreeTable);
+            setTimeout(() => {
+              titleInputTable.focus();
+            }, 1);
+
             workItemPath = this.getModel().getProperty("/selectedItemPath");
           }
 
@@ -342,6 +383,22 @@ sap.ui.define(
         onUpdateTableFinished(event) {
           this.setItemCountsFilters(event);
           this.calcTotalDuration();
+          this.addEventDelegations();
+        },
+
+        addEventDelegations() {
+          const hierarchyTreeTable = this.byId("hierarchyTreeTable");
+          const page = this.byId("page");
+
+          hierarchyTreeTable.addEventDelegate({
+            onAfterRendering: () => {
+              page.scrollToElement(hierarchyTreeTable);
+            },
+            // vBox must be passed as a parameter; passing an event doesn't work
+            // onsapfocusleave: () => {
+            //   vBox.removeItem(hierarchyTreeTable);
+            // },
+          });
         },
 
         setItemCountsFilters(event) {
@@ -371,7 +428,7 @@ sap.ui.define(
           }
         },
 
-        async onPressAddWorkItem() {
+        async onPressSubmitWorkItem() {
           const model = this.getModel();
           const newWorkItem = model.getProperty("/newWorkItem");
 
@@ -402,6 +459,8 @@ sap.ui.define(
             ),
             location: newWorkItem.location,
           });
+
+          this._filterHierarchyByPath("hierarchyTreeForm", "");
 
           model.setProperty("/busy", false);
         },
