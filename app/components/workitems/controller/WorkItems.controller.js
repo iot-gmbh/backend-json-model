@@ -230,15 +230,6 @@ sap.ui.define(
           const endDate = event.getParameter("to");
           const binding = this.byId("tableWorkItems").getBinding("items");
 
-          if (!startDate && !endDate) {
-            try {
-              binding.filter(this._initialFilter);
-            } catch (error) {
-              Log.error(error);
-            }
-            return;
-          }
-
           const filtersApplication = binding.getFilters("Application");
           const filtersControl = binding.getFilters("Control");
           const filtersCombined = filtersApplication.concat(filtersControl);
@@ -261,13 +252,28 @@ sap.ui.define(
             operator: "LE",
             value1: endDate,
           });
+          const filterDate = new Filter({
+            path: "date",
+            operator: "EQ",
+            value1: startDate,
+          });
 
-          filters.push(filterStartDate, filterEndDate);
-
-          try {
+          if (endDate) {
+            try {
+              filters.push(filterStartDate, filterEndDate);
+              binding.filter(filters);
+            } catch (error) {
+              Log.error(error);
+            }
+          } else if (startDate) {
+            try {
+              filters.push(filterDate);
+              binding.filter(filters);
+            } catch (error) {
+              Log.error(error);
+            }
+          } else {
             binding.filter(filters);
-          } catch (error) {
-            Log.error(error);
           }
 
           binding.refresh();
