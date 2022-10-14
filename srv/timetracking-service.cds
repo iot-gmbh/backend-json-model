@@ -40,7 +40,6 @@ service TimetrackingService @(requires : 'authenticated-user') {
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;
 
-  // entity Events           as projection on events;
   entity Categories       as projection on my.Categories;
   entity Users2Categories as projection on my.Users2Categories;
   entity Tags             as projection on my.Tags;
