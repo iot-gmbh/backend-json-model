@@ -279,6 +279,20 @@ sap.ui.define(
           binding.refresh();
         },
 
+        onLiveChangeHierarchyFilter(event) {
+          const query = event.getParameters().newValue;
+
+          this._filterHierarchyByPath("hierarchyTreeFilter", query);
+        },
+
+        // onSelectHierarchyFilter(event) {
+        //   const { rowContext } = event.getParameters();
+
+        //   if (!rowContext) return;
+
+        //   const parentPath = rowContext.getProperty("path");
+        // },
+
         async onPressDeleteWorkItems() {
           const backendJSONModel = this.getModel("backendJSONModel");
           const table = this.byId("tableWorkItems");
@@ -349,7 +363,7 @@ sap.ui.define(
           this.onChangeWorkItemValue(event);
         },
 
-        onChangeHierarchy(event) {
+        onLiveChangeHierarchyTable(event) {
           const selectedItemPath = event
             .getSource()
             .getBindingContext()
@@ -363,12 +377,12 @@ sap.ui.define(
 
           popover.openBy(input);
           setTimeout(() => input.focus());
-          const { newValue } = event.getParameters();
+          const query = event.getParameters().newValue;
 
-          this._filterHierarchyByPath(newValue);
+          this._filterHierarchyByPath("hierarchyTreeTable", query);
         },
 
-        _filterHierarchyByPath(query) {
+        _filterHierarchyByPath(elementID, query) {
           let filters = [];
 
           if (!query) {
@@ -433,7 +447,7 @@ sap.ui.define(
             ];
           }
 
-          const tree = this.byId("hierarchyTreeTable");
+          const tree = this.byId(elementID);
           tree.getBinding("rows").filter(filters);
 
           // tree.getRows().forEach((row) => {
@@ -461,7 +475,7 @@ sap.ui.define(
           // });
         },
 
-        onSelectHierarchy(event) {
+        onSelectHierarchyTable(event) {
           const { rowContext } = event.getParameters();
 
           if (!rowContext) return;
