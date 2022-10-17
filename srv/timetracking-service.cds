@@ -6,7 +6,7 @@ using {MSGraphService} from './msgraph-service';
 service TimetrackingService @(requires : 'authenticated-user') {
 
   @cds.redirection.target : true
-  entity MyWorkItems                                                            @(restrict : [
+  entity MyWorkItems @(restrict : [
     {
       grant : 'READ',
       where : 'assignedTo_userPrincipalName = $user'
@@ -15,34 +15,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
       grant : 'WRITE',
       to    : 'authenticated-user'
     }
-  // ])                      as projection on my.WorkItems excluding {
-  //   hierarchy
-  // };
-  ])                      as projection on my.WorkItems {
-    key ID                                                                      @UI.Hidden,
-        activatedDate                        as Datum             : String(10)  @(title : '{i18n>IOTWorkItems.Datum}'),
-        completedDate                        as DatumBis          : String(10)  @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-        // Casting findet in work-items-service.js statt (mittels moment.js)
-        ''                                   as Beginn            : String(5)   @(title : '{i18n>IOTWorkItems.Beginn}'),
-        ''                                   as Ende              : String(5)   @(title : '{i18n>IOTWorkItems.Ende}'),
-        ''                                   as P1                : String      @(title : '{i18n>IOTWorkItems.P1}'),
-        hierarchy.level1Alias                as ProjektAlias      : String(150) @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
-        hierarchy.level2Alias                as TeilprojektAlias  : String(150) @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
-        hierarchy.level3Alias                as ArbeitspaketAlias : String(150) @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
-        'Durchführung'                       as Taetigkeit        : String(30)  @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
-        assignedTo.userPrincipalName         as Nutzer            : String      @(title : '{i18n>IOTWorkItems.Nutzer}'),
-        'GE'                                 as Einsatzort        : String      @(title : '{i18n>IOTWorkItems.Einsatzort}'),
-        title                                as Bemerkung         : String      @(title : '{i18n>IOTWorkItems.Bemerkung}'),
-        @UI.Hidden
-        tenant,
-        @UI.Hidden
-        assignedTo.manager.userPrincipalName as managerUserPrincipalName,
-        // Ergaenzt für diesen Service
-        activatedDate                        as activatedDate     : String(10)  @(title : '{i18n>IOTWorkItems.Datum}'),
-        completedDate                        as completedDate     : String(10)  @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-        deleted,
-
-  } where deleted is null;
+  ])                      as projection on my.WorkItems excluding {
+    hierarchy
+  };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
