@@ -88,7 +88,7 @@ sap.ui.define(
             filters: this._initialFilter,
             sorter: new Sorter({
               path: "completedDate",
-              descending: false,
+              descending: true,
             }),
           });
 
@@ -278,6 +278,32 @@ sap.ui.define(
           }
 
           binding.refresh();
+        },
+
+        onFilter() {
+          const {
+            filterCustomer,
+            filterProject,
+            filterSubProject,
+            filterWorkPackage,
+            // filterUser,
+          } = this.getModel("viewModel").getData();
+
+          const filters = [];
+          if (filterCustomer)
+            filters.push(new Filter("customerAlias", "EQ", filterCustomer));
+          if (filterCustomer)
+            filters.push(new Filter("projectAlias", "EQ", filterProject));
+          if (filterCustomer)
+            filters.push(new Filter("subProjectAlias", "EQ", filterSubProject));
+          if (filterCustomer)
+            filters.push(
+              new Filter("workPackageAlias", "EQ", filterWorkPackage)
+            );
+          // if (filterUser)
+          // filters.push(new Filter("userPrincipalName", "EQ", filterCustomer));
+
+          this.byId("tableWorkItems").getBinding("items").filter(filters);
         },
 
         onLiveChangeHierarchyFilter(event) {
