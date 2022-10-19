@@ -10,7 +10,7 @@ service AnalyticsService {
       'aggregate',
       'groupby'
     ],
-    GroupableProperties    : [level0Title],
+    GroupableProperties    : [],
     AggregatableProperties : [{
       $Type    : 'Aggregation.AggregatablePropertyType',
       Property : duration,
@@ -75,7 +75,7 @@ service AnalyticsService {
         parent.title                         as category,
 
         @Analytics.Dimension           : true
-        level0,
+        hierarchy.level0,
         @Analytics.Dimension           : true
         hierarchy.level1,
         @Analytics.Dimension           : true

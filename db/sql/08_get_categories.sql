@@ -40,7 +40,7 @@ begin RETURN QUERY WITH RECURSIVE cte AS (
         and validTo > p_valid_at
         and (
             p_root is null
-            and hierarchyLevel = '-1'
+            and hierarchyLevel = '0'
             or ID = p_root
         )
     UNION
