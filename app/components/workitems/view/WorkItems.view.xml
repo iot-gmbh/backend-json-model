@@ -49,10 +49,45 @@
 										<fb:filterGroupItems>
 											<fb:FilterGroupItem groupName="filterItems" name="Time" label="{i18n>filterTime}" visibleInFilterBar="true">
 												<fb:control>
-													<DateRangeSelection id="DRS3" showCurrentDateButton="true" change=".onFilterDateRange"/>
+													<DateRangeSelection displayFormat="dd.MM.yyyy" showCurrentDateButton="true" change=".onFilterDateRange"/>
 												</fb:control>
 											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
+											<fb:FilterGroupItem groupName="filterItems" name="Customer" label="{i18n>filterCustomer}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox items="{/Customers}" selectionChange=".onFilter">
+														<core:Item key="{title}" text="{title}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="Project" label="{i18n>filterProject}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox items="{/Projects}" selectionChange=".onFilter">
+														<core:Item key="{title}" text="{title}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="SubProject" label="{i18n>filterSubProject}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox items="{/SubProjects}" selectionChange=".onFilter">
+														<core:Item key="{title}" text="{title}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="WorkPackage" label="{i18n>filterWorkPackage}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox items="{/WorkPackages}" selectionChange=".onFilter">
+														<core:Item key="{title}" text="{title}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<fb:FilterGroupItem groupName="filterItems" name="User" label="{i18n>filterUser}" visibleInFilterBar="true">
+												<fb:control>
+													<MultiComboBox items="{/Users}" selectionChange=".onFilter">
+														<core:Item key="{title}" text="{displayName}"/>
+													</MultiComboBox>
+												</fb:control>
+											</fb:FilterGroupItem>
+											<!-- <fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
 												<fb:control>
 													<vBox>
 														<Input id="hierarchySearchFilter" value="{viewModel>/filterHierarchy/parentPath}" suggestionItems="{viewModel>/MyCategories}" liveChange="onLiveChangeHierarchyFilter">
@@ -68,14 +103,14 @@
 																<t:Column>
 																	<t:template>
 																		<Text text="{parts: ['viewModel>title', 'viewModel>deepReference'], formatter: '.formatter.braceDeepReference'}"/>
-																		<!-- <Text text="{title}"/> -->
+																		<Text text="{title}"/>
 																	</t:template>
 																</t:Column>
-																<!-- <t:Column width="163px">
+																<t:Column width="163px">
 																		<t:template>
 																			<Text text="{deepReference}"/>
 																		</t:template>
-																	</t:Column> -->
+																	</t:Column>
 																<t:Column width="57px">
 																	<t:template>
 																		<Text text="{viewModel>absoluteReference}"/>
@@ -85,7 +120,7 @@
 														</t:TreeTable>
 													</vBox>
 												</fb:control>
-											</fb:FilterGroupItem>
+											</fb:FilterGroupItem> -->
 										</fb:filterGroupItems>
 									</fb:FilterBar>
 								</f:content>
@@ -95,13 +130,13 @@
 							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{viewModel>/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{}">
 								<headerToolbar>
 									<OverflowToolbar>
-										<SegmentedButton selectedKey="all" selectionChange=".onFilterState">
+										<!-- <SegmentedButton selectedKey="all" selectionChange=".onFilterState">
 											<items>
 												<SegmentedButtonItem key="all" text="{i18n>tableFilterShowAll} ({viewModel>/countAll})"/>
 												<SegmentedButtonItem key="completed" text="{i18n>tableFilterCompleted} ({viewModel>/countCompleted})"/>
 												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({viewModel>/countIncompleted})"/>
 											</items>
-										</SegmentedButton>
+										</SegmentedButton> -->
 										<ToolbarSpacer/>
 										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
 										<!-- <Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
@@ -110,9 +145,21 @@
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
-									<Column minScreenWidth="Tablet">
-										<Text text="{i18n>tableColumnHierarchy}"/>
+									<Column>
+										<Text text="{i18n>tableColumnCustomer}"/>
 									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnProject}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnSubProject}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnWorkPackage}"/>
+									</Column>
+									<!-- <Column minScreenWidth="Tablet">
+										<Text text="{i18n>tableColumnHierarchy}"/>
+									</Column> -->
 									<Column>
 										<Text text="{i18n>tableColumnTitle}"/>
 									</Column>
@@ -144,11 +191,31 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onLiveChangeHierarchyTable" width="24vw" change="onChangeWorkItemValue">
+											<ComboBox id="selectCustomerTable" items="{path: '/Customers', templateShareable: false}" selectedKey="{customerAlias}" change="onChangeWorkItemValue">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</ComboBox>
+											<ComboBox id="selectProjectTable" items="{path: '/Projects', templateShareable: false}" selectedKey="{projectAlias}" change="onChangeWorkItemValue">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</ComboBox>
+											<ComboBox id="selectSubProjectTable" items="{path: '/SubProjects', templateShareable: false}" selectedKey="{subProjectAlias}" change="onChangeWorkItemValue">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</ComboBox>
+											<ComboBox id="selectWorkPackageTable" items="{path: '/WorkPackages', templateShareable: false}" selectedKey="{workPackageAlias}" change="onChangeWorkItemValue">
+												<items>
+													<core:Item key="{title}" text="{title}"/>
+												</items>
+											</ComboBox>
+											<!-- <Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onLiveChangeHierarchyTable" width="24vw" change="onChangeWorkItemValue">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
-											</Input>
+											</Input> -->
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="onChangeWorkItemValue" />
 											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
