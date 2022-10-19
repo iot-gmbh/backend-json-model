@@ -5,8 +5,61 @@ using {MSGraphService} from './msgraph-service';
 
 service TimetrackingService @(requires : 'authenticated-user') {
 
+  entity WorkItems @(restrict : [
+    // {
+    //   grant : '*',
+    //   to    : 'admin',
+    // },
+    // {
+    //   grant : 'READ',
+    //   to    : 'team-lead',
+    //   // Association paths are currently supported on SAP HANA only
+    //   // https://cap.cloud.sap/docs/guides/authorization#association-paths
+    //   where : 'managerUserPrincipalName = $user'
+    // },
+    // {
+    //   grant : 'READ',
+    //   to    : 'project-lead',
+    //   where : 'hierarchy.level1 = '
+    // },
+    // {
+    //   grant : '*',
+    //   to    : 'authenticated-user',
+    //   where : 'assignedToUserPrincipalName = $user'
+    // },
+    {
+      grant : 'READ',
+      to    : 'team-lead',
+      // Association paths are currently supported on SAP HANA only
+      // https://cap.cloud.sap/docs/guides/authorization#association-paths
+      where : 'managerUserPrincipalName = $user'
+    },
+    {
+      grant : 'READ',
+      to    : 'authenticated-user',
+      where : 'assignedToUserPrincipalName = $user'
+    },
+    {
+      grant : 'READ',
+      to    : 'admin',
+    },
+
+  ])                      as projection on my.WorkItems {
+    *,
+    assignedTo.userPrincipalName         as assignedToUserPrincipalName,
+    assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+  // hierarchy.level0                     as customer,
+  // hierarchy.level1                     as project,
+  // hierarchy.level2                     as subProject,
+  // hierarchy.level3                     as workPackage,
+  // hierarchy.level0Title                as customerText,
+  // hierarchy.level1Title                as projectText,
+  // hierarchy.level2Title                as subProjectText,
+  // hierarchy.level3Title                as workPackageText
+  } where deleted is null
+
   @cds.redirection.target : true
-  entity MyWorkItems                                                            @(restrict : [
+  entity MyWorkItems @(restrict : [
     {
       grant : 'READ',
       where : 'assignedTo_userPrincipalName = $user'
@@ -16,30 +69,31 @@ service TimetrackingService @(requires : 'authenticated-user') {
       to    : 'authenticated-user'
     }
   ])                      as projection on my.WorkItems {
-    key ID                                                                      @UI.Hidden,
-        activatedDate                        as Datum             : String(10)  @(title : '{i18n>IOTWorkItems.Datum}'),
-        completedDate                        as DatumBis          : String(10)  @(title : '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden : true,
-        // Casting findet in work-items-service.js statt (mittels moment.js)
-        ''                                   as Beginn            : String(5)   @(title : '{i18n>IOTWorkItems.Beginn}'),
-        ''                                   as Ende              : String(5)   @(title : '{i18n>IOTWorkItems.Ende}'),
-        ''                                   as P1                : String      @(title : '{i18n>IOTWorkItems.P1}'),
-        hierarchy.level1Alias                as ProjektAlias      : String(150) @(title : '{i18n>IOTWorkItems.ProjektAlias}'),
-        hierarchy.level2Alias                as TeilprojektAlias  : String(150) @(title : '{i18n>IOTWorkItems.TeilprojektAlias}'),
-        hierarchy.level3Alias                as ArbeitspaketAlias : String(150) @(title : '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
-        'Durchführung'                       as Taetigkeit        : String(30)  @(title : '{i18n>IOTWorkItems.Taetigkeit}'),
-        assignedTo.userPrincipalName         as Nutzer            : String      @(title : '{i18n>IOTWorkItems.Nutzer}'),
-        'GE'                                 as Einsatzort        : String      @(title : '{i18n>IOTWorkItems.Einsatzort}'),
-        title                                as Bemerkung         : String      @(title : '{i18n>IOTWorkItems.Bemerkung}'),
-        @UI.Hidden
-        tenant,
-        @UI.Hidden
-        assignedTo.manager.userPrincipalName as managerUserPrincipalName,
-        // Fuer diesen Service extra hinzugefuegt
-        activatedDate,
-        completedDate,
-        deleted
+
+    key ID           @UI.Hidden,
+        *,
+        hierarchy.level0Alias        as customerAlias    : String(150),
+        hierarchy.level1Alias        as projectAlias     : String(150),
+        hierarchy.level2Alias        as subProjectAlias  : String(150),
+        hierarchy.level3Alias        as workPackageAlias : String(150),
+        assignedTo.userPrincipalName as user             : String,
+
 
   } where deleted is null;
+
+  // @cds.redirection.target : true
+  // entity MyWorkItems @(restrict : [
+  //   {
+  //     grant : 'READ',
+  //     where : 'assignedTo_userPrincipalName = $user'
+  //   },
+  //   {
+  //     grant : 'WRITE',
+  //     to    : 'authenticated-user'
+  //   }
+  // ])                      as projection on my.WorkItems excluding {
+  //   hierarchy
+  // };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
@@ -68,5 +122,32 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
   entity Tags2Categories  as projection on my.Tags2Categories;
   entity CategoryLevels   as projection on my.CategoryLevels;
-// entity MyUser           as projection on my.Users;
+  // entity MyUser           as projection on my.Users;
+  entity Hierarchies      as projection on my.hierarchies.Hierarchies;
+
+  @cds.redirection.target
+  entity Users            as projection on my.Users {
+    *,
+    workItems : redirected to WorkItems
+  };
+
+  entity Customers        as projection on my.Categories where hierarchyLevel = '0';
+
+  entity Projects         as projection on my.Categories {
+    *,
+    parent.title as customerTitle
+  } where hierarchyLevel = '1';
+
+  entity SubProjects      as projection on my.Categories {
+    *,
+    parent.title        as projectTitle,
+    parent.parent.title as customerTitle
+  } where hierarchyLevel = '2';
+
+  entity WorkPackages     as projection on my.Categories {
+    *,
+    parent.title               as subProjectTitle,
+    parent.parent.title        as projectTitle,
+    parent.parent.parent.title as customerTitle
+  } where hierarchyLevel = '3';
 }
