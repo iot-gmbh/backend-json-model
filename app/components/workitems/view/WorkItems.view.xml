@@ -145,21 +145,9 @@
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
-									<Column>
-										<Text text="{i18n>tableColumnCustomer}"/>
-									</Column>
-									<Column>
-										<Text text="{i18n>tableColumnProject}"/>
-									</Column>
-									<Column>
-										<Text text="{i18n>tableColumnSubProject}"/>
-									</Column>
-									<Column>
-										<Text text="{i18n>tableColumnWorkPackage}"/>
-									</Column>
-									<!-- <Column minScreenWidth="Tablet">
+									<Column minScreenWidth="Tablet">
 										<Text text="{i18n>tableColumnHierarchy}"/>
-									</Column> -->
+									</Column>
 									<Column>
 										<Text text="{i18n>tableColumnTitle}"/>
 									</Column>
@@ -191,31 +179,11 @@
 								<items>
 									<ColumnListItem press=".onPress" highlight="{= ${state} === 'completed' ? 'Success' : 'Warning'}">
 										<cells>
-											<ComboBox id="selectCustomerTable" items="{path: '/Customers', templateShareable: false}" selectedKey="{customerAlias}" change="onChangeWorkItemValue">
-												<items>
-													<core:Item key="{title}" text="{title}"/>
-												</items>
-											</ComboBox>
-											<ComboBox id="selectProjectTable" items="{path: '/Projects', templateShareable: false}" selectedKey="{projectAlias}" change="onChangeWorkItemValue">
-												<items>
-													<core:Item key="{title}" text="{title}"/>
-												</items>
-											</ComboBox>
-											<ComboBox id="selectSubProjectTable" items="{path: '/SubProjects', templateShareable: false}" selectedKey="{subProjectAlias}" change="onChangeWorkItemValue">
-												<items>
-													<core:Item key="{title}" text="{title}"/>
-												</items>
-											</ComboBox>
-											<ComboBox id="selectWorkPackageTable" items="{path: '/WorkPackages', templateShareable: false}" selectedKey="{workPackageAlias}" change="onChangeWorkItemValue">
-												<items>
-													<core:Item key="{title}" text="{title}"/>
-												</items>
-											</ComboBox>
-											<!-- <Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onLiveChangeHierarchyTable" width="24vw" change="onChangeWorkItemValue">
+											<Input id="hierarchySearchTable" value="{parentPath}" suggestionItems="{path: 'viewModel>/MyCategories', templateShareable: false}" liveChange="onLiveChangeHierarchyTable" width="24vw" change="onChangeWorkItemValue">
 												<suggestionItems>
 													<core:Item key="{ID}" text="{path}"/>
 												</suggestionItems>
-											</Input> -->
+											</Input>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="onChangeWorkItemValue" />
 											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
 											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
