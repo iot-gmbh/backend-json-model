@@ -5,95 +5,42 @@ using {MSGraphService} from './msgraph-service';
 
 service TimetrackingService @(requires : 'authenticated-user') {
 
-  entity WorkItems @(restrict : [
-    // {
-    //   grant : '*',
-    //   to    : 'admin',
-    // },
-    // {
-    //   grant : 'READ',
-    //   to    : 'team-lead',
-    //   // Association paths are currently supported on SAP HANA only
-    //   // https://cap.cloud.sap/docs/guides/authorization#association-paths
-    //   where : 'managerUserPrincipalName = $user'
-    // },
-    // {
-    //   grant : 'READ',
-    //   to    : 'project-lead',
-    //   where : 'hierarchy.level1 = '
-    // },
-    // {
-    //   grant : '*',
-    //   to    : 'authenticated-user',
-    //   where : 'assignedToUserPrincipalName = $user'
-    // },
+  entity MyWorkItems @(restrict : [
     {
-      grant : 'READ',
+      grant : '*',
+      to    : 'admin'
+    },
+    {
+      grant : '*',
       to    : 'team-lead',
       // Association paths are currently supported on SAP HANA only
       // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where : 'managerUserPrincipalName = $user'
+      where : 'managerUserPrincipalName = $user',
     },
+    // {
+    //   grant : '*',
+    //   to    : 'project-lead',
+    //   where : 'hierarchyLevel1ManagerUserPrincipalName = $user'
+    // },
     {
-      grant : 'READ',
+      grant : '*',
       to    : 'authenticated-user',
       where : 'assignedToUserPrincipalName = $user'
     },
-    {
-      grant : 'READ',
-      to    : 'admin',
-    },
-
   ])                      as projection on my.WorkItems {
     *,
-    assignedTo.userPrincipalName         as assignedToUserPrincipalName,
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
-  // hierarchy.level0                     as customer,
-  // hierarchy.level1                     as project,
-  // hierarchy.level2                     as subProject,
-  // hierarchy.level3                     as workPackage,
-  // hierarchy.level0Title                as customerText,
-  // hierarchy.level1Title                as projectText,
-  // hierarchy.level2Title                as subProjectText,
-  // hierarchy.level3Title                as workPackageText
+    // hierarchy.level1.manager.userPrincipalName as hierarchyLevel1ManagerUserPrincipalName,
+    hierarchy.level0Title                as customerText,
+    hierarchy.level1Title                as projectText,
+    hierarchy.level2Title                as subProjectText,
+    hierarchy.level3Title                as workPackageText,
+    hierarchy.level0Alias                as customerAlias,
+    hierarchy.level1Alias                as projectAlias,
+    hierarchy.level2Alias                as subProjectAlias,
+    hierarchy.level3Alias                as workPackageAlias,
+
   } where deleted is null
-
-  @cds.redirection.target : true
-  entity MyWorkItems @(restrict : [
-    {
-      grant : 'READ',
-      where : 'assignedTo_userPrincipalName = $user'
-    },
-    {
-      grant : 'WRITE',
-      to    : 'authenticated-user'
-    }
-  ])                      as projection on my.WorkItems {
-
-    key ID           @UI.Hidden,
-        *,
-        hierarchy.level0Alias        as customerAlias    : String(150),
-        hierarchy.level1Alias        as projectAlias     : String(150),
-        hierarchy.level2Alias        as subProjectAlias  : String(150),
-        hierarchy.level3Alias        as workPackageAlias : String(150),
-        assignedTo.userPrincipalName as user             : String,
-
-
-  } where deleted is null;
-
-  // @cds.redirection.target : true
-  // entity MyWorkItems @(restrict : [
-  //   {
-  //     grant : 'READ',
-  //     where : 'assignedTo_userPrincipalName = $user'
-  //   },
-  //   {
-  //     grant : 'WRITE',
-  //     to    : 'authenticated-user'
-  //   }
-  // ])                      as projection on my.WorkItems excluding {
-  //   hierarchy
-  // };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
@@ -128,7 +75,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
   @cds.redirection.target
   entity Users            as projection on my.Users {
     *,
-    workItems : redirected to WorkItems
+    workItems : redirected to MyWorkItems
   };
 
   entity Customers        as projection on my.Categories where hierarchyLevel = '0';
