@@ -94,9 +94,15 @@ entity CategoriesCumulativeDurations as projection on Categories {
       tenant,
       parent,
       title,
-      cast('2021-05-02 14:55:08.091' as DateTime) as activatedDate                : DateTime,
-      cast('2021-05-02 14:55:08.091' as DateTime) as completedDate                : DateTime,
-      cast('' as                        String)   as assignedTo_userPrincipalName : String,
+      cast(
+        '2021-05-02 14:55:08.091' as      DateTime
+      ) as activatedDate                : DateTime,
+      cast(
+        '2021-05-02 14:55:08.091' as      DateTime
+      ) as completedDate                : DateTime,
+      cast(
+        '' as                             String
+      ) as assignedTo_userPrincipalName : String,
       // members,
       // tags,
       children,
@@ -123,71 +129,75 @@ entity Tags2WorkItems : cuid, multitenant {
 
 view CategoryTags as
   select from Tags2Categories {
-    key category.ID       as categoryID : String,
-        tenant                          : String,
+    key category.ID as categoryID : String,
+        tenant                    : String,
         // TODO: Make independent of DB (string_agg) is a postgres-function
         string_agg(
-          tag.title, ' ') as tags       : String,
-    }
-    group by
-      category.ID,
-      tenant;
+          tag.title, ' '
+        )           as tags       : String,
+  }
+  group by
+    category.ID,
+    tenant;
 
 entity WorkItems : managed, relevance, multitenant {
-  key ID                 : String @odata.Type : 'Edm.String';
-      tags               : Composition of many Tags2WorkItems
-                             on tags.workItem = $self;
-      date               : DateTime;
-      activatedDate      : DateTime;
-      activatedDateMonth : Integer;
-      activatedDateYear  : Integer;
-      activatedDateDay   : Integer;
-      completedDate      : DateTime;
-      completedDateMonth : Integer;
-      completedDateYear  : Integer;
-      completedDateDay   : Integer;
-      assignedTo         : Association to Users;
-      changedDate        : DateTime;
-      assignedToName     : String;
-      createdDate        : DateTime;
-      reason             : String;
-      state              : String;
-      teamProject        : String;
-      title              : String;
-      workItemType       : String;
+  key ID                       : String @odata.Type : 'Edm.String';
+      tags                     : Composition of many Tags2WorkItems
+                                   on tags.workItem = $self;
+      date                     : DateTime;
+      activatedDate            : DateTime;
+      activatedDateMonth       : Integer;
+      activatedDateYear        : Integer;
+      activatedDateDay         : Integer;
+      completedDate            : DateTime;
+      completedDateMonth       : Integer;
+      completedDateYear        : Integer;
+      completedDateDay         : Integer;
+      assignedTo               : Association to Users;
+      changedDate              : DateTime;
+      assignedToName           : String;
+      createdDate              : DateTime;
+      reason                   : String;
+      state                    : String;
+      teamProject              : String;
+      title                    : String;
+      workItemType             : String;
       // Scheduling
-      completedWork      : Decimal;
-      remainingWork      : Decimal;
-      originalEstimate   : Decimal;
+      completedWork            : Decimal;
+      remainingWork            : Decimal;
+      originalEstimate         : Decimal;
       // Documentation
-      resolvedDate       : DateTime;
-      closedDate         : DateTime;
-      private            : Boolean;
-      isPrivate          : Boolean;
-      isAllDay           : Boolean;
+      resolvedDate             : DateTime;
+      closedDate               : DateTime;
+      private                  : Boolean;
+      isPrivate                : Boolean;
+      isAllDay                 : Boolean;
       // Custom
-      activity           : String;
-      location           : String;
-      type               : String enum {
+      activity                 : String;
+      location                 : String;
+      type                     : String enum {
         Manual;
         Event;
         WorkItem
       };
-      source             : String enum {
+      source                   : String enum {
         Manual;
         MSGraphEvent;
         AzureDevopsWorkItem;
       //...
       };
-      duration           : Decimal;
-      resetEntry         : Boolean;
-      deleted            : Boolean;
-      confirmed          : Boolean;
-      parent             : Association to Categories;
-      hierarchy          : Association to Hierarchies
-                             on parent.ID = hierarchy.ID;
+      duration                 : Decimal;
+      resetEntry               : Boolean;
+      deleted                  : Boolean;
+      confirmed                : Boolean;
+      parent                   : Association to Categories;
+      hierarchy                : Association to Hierarchies
+                                   on parent.ID = hierarchy.ID;
       // Used by the Frontend's hierarchy input-filter
-      parentPath         : String;
+      parentPath               : String;
+      // Dummy-properties for CRUD-commands
+      managerUserPrincipalName : String;
+
 };
 
 entity CategoryLevels : multitenant {
