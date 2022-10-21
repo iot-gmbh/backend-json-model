@@ -66,6 +66,38 @@ module.exports = cds.service.impl(async function () {
     return transformCategories(results);
   });
 
+  this.on("getMyCustomers", async () => {
+    const customers = await db.run(
+      SELECT.from("iot_planner_my_categories").where`hierarchyLevel = '0'`
+    );
+
+    return transformCategories(customers);
+  });
+
+  this.on("getMyProjects", async () => {
+    const projects = await db.run(
+      SELECT.from("iot_planner_my_categories").where`hierarchyLevel = '1'`
+    );
+
+    return transformCategories(projects);
+  });
+
+  this.on("getMySubProjects", async () => {
+    const subProjects = await db.run(
+      SELECT.from("iot_planner_my_categories").where`hierarchyLevel = '2'`
+    );
+
+    return transformCategories(subProjects);
+  });
+
+  this.on("getMyWorkPackages", async () => {
+    const workPackages = await db.run(
+      SELECT.from("iot_planner_my_categories").where`hierarchyLevel = '3'`
+    );
+
+    return transformCategories(workPackages);
+  });
+
   this.on("getCategoryTree", async (req) => {
     const {
       data: { root, validAt },

@@ -54,29 +54,29 @@
 											</fb:FilterGroupItem>
 											<fb:FilterGroupItem groupName="filterItems" name="Customer" label="{i18n>filterCustomer}" visibleInFilterBar="true">
 												<fb:control>
-													<MultiComboBox items="{/Customers}" selectionChange=".onFilter">
-														<core:Item key="{title}" text="{title}"/>
+													<MultiComboBox items="{viewModel>/MyCustomers}" selectionChange=".onFilter">
+														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 													</MultiComboBox>
 												</fb:control>
 											</fb:FilterGroupItem>
 											<fb:FilterGroupItem groupName="filterItems" name="Project" label="{i18n>filterProject}" visibleInFilterBar="true">
 												<fb:control>
-													<MultiComboBox items="{/Projects}" selectionChange=".onFilter">
-														<core:Item key="{title}" text="{title}"/>
+													<MultiComboBox items="{viewModel>/MyProjects}" selectionChange=".onFilter">
+														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 													</MultiComboBox>
 												</fb:control>
 											</fb:FilterGroupItem>
 											<fb:FilterGroupItem groupName="filterItems" name="SubProject" label="{i18n>filterSubProject}" visibleInFilterBar="true">
 												<fb:control>
-													<MultiComboBox items="{/SubProjects}" selectionChange=".onFilter">
-														<core:Item key="{title}" text="{title}"/>
+													<MultiComboBox items="{viewModel>/MySubProjects}" selectionChange=".onFilter">
+														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 													</MultiComboBox>
 												</fb:control>
 											</fb:FilterGroupItem>
 											<fb:FilterGroupItem groupName="filterItems" name="WorkPackage" label="{i18n>filterWorkPackage}" visibleInFilterBar="true">
 												<fb:control>
-													<MultiComboBox items="{/WorkPackages}" selectionChange=".onFilter">
-														<core:Item key="{title}" text="{title}"/>
+													<MultiComboBox items="{viewModel>/MyWorkPackages}" selectionChange=".onFilter">
+														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 													</MultiComboBox>
 												</fb:control>
 											</fb:FilterGroupItem>

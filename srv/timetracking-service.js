@@ -107,6 +107,30 @@ module.exports = cds.service.impl(async function () {
     return categories;
   });
 
+  this.on("getMyCustomers", async (req) => {
+    const customers = await catService.send("getMyCustomers", req.data);
+
+    return customers;
+  });
+
+  this.on("getMyProjects", async (req) => {
+    const projects = await catService.send("getMyProjects", req.data);
+
+    return projects;
+  });
+
+  this.on("getMySubProjects", async (req) => {
+    const subProjects = await catService.send("getMySubProjects", req.data);
+
+    return subProjects;
+  });
+
+  this.on("getMyWorkPackages", async (req) => {
+    const workPackages = await catService.send("getMyWorkPackages", req.data);
+
+    return workPackages;
+  });
+
   this.on("getWorkItemByID", async (req) => {
     const {
       data: { ID },

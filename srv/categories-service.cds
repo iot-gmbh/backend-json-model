@@ -17,6 +17,10 @@ service CategoriesService @(requires : 'authenticated-user') {
   function getCategoryTree(root : UUID, validAt : DateTime)                                                           returns array of Categories;
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;
+  function getMyCustomers(root : UUID, validAt : DateTime)                                                            returns array of Categories;
+  function getMyProjects(root : UUID, validAt : DateTime)                                                             returns array of Categories;
+  function getMySubProjects(root : UUID, validAt : DateTime)                                                          returns array of Categories;
+  function getMyWorkPackages(root : UUID, validAt : DateTime)                                                         returns array of Categories;
 
   // @odata.draft.enabled : true
   @odata.create.enabled

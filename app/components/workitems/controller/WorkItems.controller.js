@@ -107,7 +107,7 @@ sap.ui.define(
 
         async onRouteMatched() {
           try {
-            await Promise.all([this._loadHierarchy()]);
+            await Promise.all([this._loadHierarchy(), this._loadCategories()]);
           } catch (error) {
             Log.error(error);
           }
@@ -131,6 +131,32 @@ sap.ui.define(
 
         //   this.getModel("viewModel").setProperty("/totalDuration", totalDuration);
         // },
+
+        async _loadCategories() {
+          const backendJSONModel = this.getModel("backendJSONModel");
+          const viewModel = this.getModel("viewModel");
+          try {
+            const { results: customers } = await backendJSONModel.callFunction(
+              "/getMyCustomers"
+            );
+            viewModel.setProperty("/MyCustomers", customers);
+
+            const { results: projects } = await backendJSONModel.callFunction(
+              "/getMyProjects"
+            );
+            viewModel.setProperty("/MyProjects", projects);
+
+            const { results: subProjects } =
+              await backendJSONModel.callFunction("/getMySubProjects");
+            viewModel.setProperty("/MySubProjects", subProjects);
+
+            const { results: workPackages } =
+              await backendJSONModel.callFunction("/getMyWorkPackages");
+            viewModel.setProperty("/MyWorkPackages", workPackages);
+          } catch (error) {
+            Log.error(error);
+          }
+        },
 
         async _loadHierarchy() {
           const backendJSONModel = this.getModel("backendJSONModel");

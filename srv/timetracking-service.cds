@@ -58,7 +58,12 @@ service TimetrackingService @(requires : 'authenticated-user') {
   function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
   function getWorkItemByID(ID : String)                                      returns MyWorkItems;
   function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
-  function getMyCategoryTree()                                               returns array of MyCategories;
+  function getMyCategoryTree()                                               returns array of Categories;
+  function getMyCustomers()                                                  returns array of Categories;
+  function getMyProjects()                                                   returns array of Categories;
+  function getMySubProjects()                                                returns array of Categories;
+  function getMyWorkPackages()                                               returns array of Categories;
+
 
   @cds.redirection.target
   entity MyCategories     as projection on my.Categories;
