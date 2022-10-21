@@ -56,76 +56,7 @@ annotate my.WorkItems with @(UI : {
       Target : '@UI.FieldGroup'
     }
   ]
-}) {
-  level0 @Common.ValueList : {
-    CollectionPath : 'CategoriesLevel0',
-    Parameters     : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'level0Title',
-      ValueListProperty : 'level0Title'
-    }],
-  };
-  level1 @Common.ValueList : {
-    CollectionPath : 'CategoriesLevel1',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'level1Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'level0Title'
-      }
-    ],
-  };
-  level2 @Common.ValueList : {
-    CollectionPath : 'CategoriesLevel2',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'level2Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'level1Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'level0Title'
-      }
-    ],
-  };
-  level3 @Common.ValueList : {
-    CollectionPath : 'CategoriesLevel3',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level3Title',
-        ValueListProperty : 'level3Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'level2Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'level1Title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'level0Title'
-      }
-    ],
-  };
-};
+});
 
 annotate my.hierarchies.Hierarchies with {
   level0 @(Common : {
@@ -314,7 +245,11 @@ annotate my.Categories with @(UI : {
 }) {
   ID             @(
     UI.Hidden,
-    sap.hierarchy.node.for : 'ID'
+    sap.hierarchy.node.for : 'ID',
+    Common.Text            : {
+      $value                 : title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
   );
   parent         @(
     sap.hierarchy.parent.node.for : 'ID',

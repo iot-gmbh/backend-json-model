@@ -48,7 +48,7 @@ service AnalyticsService {
       to    : 'admin',
     },
   ])
-  entity WorkItems as projection on my.WorkItems {
+  entity WorkItems        as projection on my.WorkItems {
         @Analytics.Dimension           : true
     key ID,
         @Analytics.Dimension           : true
@@ -83,6 +83,11 @@ service AnalyticsService {
         @Analytics.Dimension           : true
         hierarchy.level3,
 
+        hierarchy.level0Title,
+        hierarchy.level1Title,
+        hierarchy.level2Title,
+        hierarchy.level3Title,
+
         @Analytics.Measure             : true
         @Aggregation.default           : #SUM
         duration,
@@ -99,5 +104,34 @@ service AnalyticsService {
         parent
   } where deleted is null;
 
-  entity Users     as projection on my.Users;
+  entity Users            as projection on my.Users;
+
+  @cds.redirection.target
+  entity Categories       as projection on my.Categories;
+
+  entity CategoriesLevel0 as projection on my.Categories where hierarchyLevel = '0';
+
+  entity CategoriesLevel1 as projection on my.Categories {
+    *,
+    parent.ID    as level0,
+    parent.title as level0Title,
+  } where hierarchyLevel = '1';
+
+  entity CategoriesLevel2 as projection on my.Categories {
+    *,
+    parent.ID        as level1,
+    parent.parent.ID as level0,
+    parent.title        as level1Title,
+    parent.parent.title as level0Title,
+  } where hierarchyLevel = '2';
+
+  entity CategoriesLevel3 as projection on my.Categories {
+    *,
+    parent.ID                  as level2,
+    parent.parent.ID           as level1,
+    parent.parent.parent.ID    as level0,
+    parent.title               as level2Title,
+    parent.parent.title        as level1Title,
+    parent.parent.parent.title as level0Title,
+  } where hierarchyLevel = '3';
 }
