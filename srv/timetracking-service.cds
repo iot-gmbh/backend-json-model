@@ -46,5 +46,5 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
   entity Tags2Categories  as projection on my.Tags2Categories;
   entity CategoryLevels   as projection on my.CategoryLevels;
-  entity MyUser           as projection on my.Users;
+// entity MyUser           as projection on my.Users;
 }
