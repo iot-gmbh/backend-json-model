@@ -1,7 +1,6 @@
 using {AnalyticsService as my} from './analytics-service';
 
 annotate my.WorkItems with @(UI : {
-
   // =====================================================
   // Default
   //
@@ -27,7 +26,7 @@ annotate my.WorkItems with @(UI : {
     ChartType           : #Column,
     DimensionAttributes : [{
       $Type     : 'UI.ChartDimensionAttributeType',
-      Dimension : level0Title,
+      Dimension : level0,
       Role      : #Category
     }, ],
     MeasureAttributes   : [{
@@ -35,7 +34,7 @@ annotate my.WorkItems with @(UI : {
       Measure : duration,
       Role    : #Axis1
     }],
-    Dimensions          : [level0Title],
+    Dimensions          : [level0],
     Measures            : [duration],
   },
 
@@ -113,10 +112,11 @@ annotate my.WorkItems with @(UI : {
   SelectionFields                           : [
     activatedDate,
     assignedToUserPrincipalName,
-    level0Title,
-    level1Title,
-    level2Title,
-    level3Title,
+    level0,
+    level1,
+    level2,
+    level3,
+    activatedDateMonth
   ],
   LineItem                                  : [
     {
@@ -129,74 +129,6 @@ annotate my.WorkItems with @(UI : {
     },
   ]
 }) {
-  level0Title                 @Common.ValueList : {
-    CollectionPath : 'Customers',
-    Parameters     : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'level0Title',
-      ValueListProperty : 'title'
-    }],
-  };
-  level1Title                 @Common.ValueList : {
-    CollectionPath : 'Projects',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
-  level2Title                 @Common.ValueList : {
-    CollectionPath : 'SubProjects',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'projectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
-  level3Title                 @Common.ValueList : {
-    CollectionPath : 'Packages',
-    Parameters     : [
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level3Title',
-        ValueListProperty : 'title'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level2Title',
-        ValueListProperty : 'subProjectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level1Title',
-        ValueListProperty : 'projectTitle'
-      },
-      {
-        $Type             : 'Common.ValueListParameterInOut',
-        LocalDataProperty : 'level0Title',
-        ValueListProperty : 'customerTitle'
-      }
-    ],
-  };
   activatedDateMonth          @Common.ValueList : {
     CollectionPath               : 'WorkItems',
     Parameters                   : [{
@@ -214,5 +146,137 @@ annotate my.WorkItems with @(UI : {
       ValueListProperty : 'assignedToUserPrincipalName'
     }],
     PresentationVariantQualifier : 'DurationByAssignedTo'
-  }
+  };
+  level0                      @(
+    Common.Text      : {
+      $value                 : level0Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    Common.ValueList : {
+      CollectionPath : 'CategoriesLevel0',
+      Parameters     : [
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0',
+          ValueListProperty : 'ID'
+        },
+        {
+          $Type             : 'Common.ValueListParameterDisplayOnly',
+          ValueListProperty : 'title'
+        }
+      ],
+    }
+  );
+  level1                      @(
+    Common.Text      : {
+      $value                 : level1Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    Common.ValueList : {
+      CollectionPath : 'CategoriesLevel1',
+      Parameters     : [
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level1',
+          ValueListProperty : 'ID'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0',
+          ValueListProperty : 'level0'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0Title',
+          ValueListProperty : 'level0Title'
+        },
+      // {
+      //   $Type             : 'Common.ValueListParameterDisplayOnly',
+      //   ValueListProperty : 'title'
+      // }
+      ],
+    }
+  );
+  level2                      @(
+    Common.Text      : {
+      $value                 : level2Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    Common.ValueList : {
+      CollectionPath : 'CategoriesLevel2',
+      Parameters     : [
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level2',
+          ValueListProperty : 'ID'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level1',
+          ValueListProperty : 'level1'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level1Title',
+          ValueListProperty : 'level1Title'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0',
+          ValueListProperty : 'level0'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0Title',
+          ValueListProperty : 'level0Title'
+        },
+      ],
+    }
+  );
+  level3                      @(
+    Common.Text      : {
+      $value                 : level2Title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    Common.ValueList : {
+      CollectionPath : 'CategoriesLevel3',
+      Parameters     : [
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level3',
+          ValueListProperty : 'ID'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level2',
+          ValueListProperty : 'level2'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level2Title',
+          ValueListProperty : 'level2Title'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level1',
+          ValueListProperty : 'level1'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level1Title',
+          ValueListProperty : 'level1Title'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0',
+          ValueListProperty : 'level0'
+        },
+        {
+          $Type             : 'Common.ValueListParameterInOut',
+          LocalDataProperty : 'level0Title',
+          ValueListProperty : 'level0Title'
+        },
+      ],
+    }
+  );
 };

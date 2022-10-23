@@ -2,12 +2,6 @@ using {iot.planner as my} from './schema';
 
 @cds.odata.valuelist
 annotate my.WorkItems with @(UI : {
-  // PresentationVariant : {
-  //   $Type          : 'UI.PresentationVariantType',
-  //   SortOrder      : [{Property : title}],
-  //   Visualizations : ['@UI.LineItem'],
-  //   RequestAtLeast : [title]
-  // },
   HeaderInfo      : {
     TypeName       : '{i18n>WorkItem}',
     TypeNamePlural : '{i18n>WorkItems}',
@@ -35,22 +29,18 @@ annotate my.WorkItems with @(UI : {
     },
     {
       $Type : 'UI.DataField',
-      Label : 'Customer',
       Value : hierarchy.level0,
     },
     {
       $Type : 'UI.DataField',
-      Label : 'Project',
       Value : hierarchy.level1,
     },
     {
       $Type : 'UI.DataField',
-      Label : 'Subproject',
       Value : hierarchy.level2,
     },
     {
       $Type : 'UI.DataField',
-      Label : 'Workpackage',
       Value : hierarchy.level3,
     },
   ],
@@ -255,7 +245,11 @@ annotate my.Categories with @(UI : {
 }) {
   ID             @(
     UI.Hidden,
-    sap.hierarchy.node.for : 'ID'
+    sap.hierarchy.node.for : 'ID',
+    Common.Text            : {
+      $value                 : title,
+      ![@UI.TextArrangement] : #TextOnly
+    },
   );
   parent         @(
     sap.hierarchy.parent.node.for : 'ID',
