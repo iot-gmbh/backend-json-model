@@ -1,6 +1,11 @@
 using {TimetrackingService as my} from './timetracking-service';
 
-annotate my.MyWorkItems with @(UI : {
+annotate my.MyWorkItems with @(
+                               // Capabilities : {
+                               //   Updatable : true,
+                               //   Deletable : true,
+                               // },
+                             UI : {
   // =====================================================
   // Default
   //
@@ -64,6 +69,8 @@ annotate my.MyWorkItems with @(UI : {
     PresentationVariantQualifier : 'DurationByAssignedTo'
   };
   level0                      @(
+    sap.updatable    : true,
+    sap.creatable    : true,
     Common.Text      : {
       $value                 : level0Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -97,6 +104,10 @@ annotate my.MyWorkItems with @(UI : {
           ValueListProperty : 'ID'
         },
         {
+          $Type             : 'Common.ValueListParameterDisplayOnly',
+          ValueListProperty : 'title'
+        },
+        {
           $Type             : 'Common.ValueListParameterInOut',
           LocalDataProperty : 'level0',
           ValueListProperty : 'level0'
@@ -106,10 +117,6 @@ annotate my.MyWorkItems with @(UI : {
           LocalDataProperty : 'level0Title',
           ValueListProperty : 'level0Title'
         },
-      // {
-      //   $Type             : 'Common.ValueListParameterDisplayOnly',
-      //   ValueListProperty : 'title'
-      // }
       ],
     }
   );
@@ -130,6 +137,10 @@ annotate my.MyWorkItems with @(UI : {
           $Type             : 'Common.ValueListParameterInOut',
           LocalDataProperty : 'level1',
           ValueListProperty : 'level1'
+        },
+        {
+          $Type             : 'Common.ValueListParameterDisplayOnly',
+          ValueListProperty : 'title'
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
@@ -161,6 +172,10 @@ annotate my.MyWorkItems with @(UI : {
           $Type             : 'Common.ValueListParameterInOut',
           LocalDataProperty : 'level3',
           ValueListProperty : 'ID'
+        },
+        {
+          $Type             : 'Common.ValueListParameterDisplayOnly',
+          ValueListProperty : 'title'
         },
         {
           $Type             : 'Common.ValueListParameterInOut',

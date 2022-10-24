@@ -5,6 +5,8 @@ using {MSGraphService} from './msgraph-service';
 
 service TimetrackingService @(requires : 'authenticated-user') {
 
+  @odata.create.enabled
+  @odata.update.enabled
   entity MyWorkItems @(restrict : [
     {
       grant : '*',
@@ -84,32 +86,43 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity Users            as projection on my.Users;
 
   @cds.redirection.target
-  entity Categories       as projection on my.Categories;
+  entity Categories       as projection on my.Categories where validFrom <= NOW()
+  and                                                          validTo   >  NOW();
 
-  entity CategoriesLevel0 as projection on my.Categories where hierarchyLevel = '0';
+  entity CategoriesLevel0 as projection on Categories {
+        *,
+    key ID    @(title : 'Customer'),
+        title @(title : 'Customer')
+  } where hierarchyLevel = '0';
 
-  entity CategoriesLevel1 as projection on my.Categories {
-    *,
-    parent.ID    as level0,
-    parent.title as level0Title,
+  entity CategoriesLevel1 as projection on Categories {
+        *,
+    key ID           as level1      @(title : 'Project'),
+        title        as level1Title @(title : 'Project'),
+        parent.ID    as level0      @(title : 'Customer'),
+        parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '1';
 
-  entity CategoriesLevel2 as projection on my.Categories {
-    *,
-    parent.ID           as level1,
-    parent.parent.ID    as level0,
-    parent.title        as level1Title,
-    parent.parent.title as level0Title,
+  entity CategoriesLevel2 as projection on Categories {
+        *,
+    key ID                                 @(title : 'Subproject'),
+        title                              @(title : 'Subproject'),
+        parent.ID           as level1      @(title : 'Project'),
+        parent.parent.ID    as level0      @(title : 'Customer'),
+        parent.title        as level1Title @(title : 'Project'),
+        parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '2';
 
-  entity CategoriesLevel3 as projection on my.Categories {
-    *,
-    parent.ID                  as level2,
-    parent.parent.ID           as level1,
-    parent.parent.parent.ID    as level0,
-    parent.title               as level2Title,
-    parent.parent.title        as level1Title,
-    parent.parent.parent.title as level0Title,
+  entity CategoriesLevel3 as projection on Categories {
+        *,
+    key ID                                        @(title : 'Package'),
+        title                                     @(title : 'Package'),
+        parent.ID                  as level2      @(title : 'Subproject'),
+        parent.parent.ID           as level1      @(title : 'Project'),
+        parent.parent.parent.ID    as level0      @(title : 'Customer'),
+        parent.title               as level2Title @(title : 'Subproject'),
+        parent.parent.title        as level1Title @(title : 'Project'),
+        parent.parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '3';
 
 // @cds.redirection.target

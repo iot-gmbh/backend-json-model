@@ -76,9 +76,19 @@ sap.ui.define(
             .attachPatternMatched(() => this.onRouteMatched(), this);
         },
 
+        async onBeforeRendering() {
+          const filterBar = this.byId("filterBarItems");
+          const model = this.getModel();
+          await model.metadataLoaded();
+          filterBar.setBindingContext(
+            this.getModel().createEntry("/MyWorkItems")
+          );
+        },
+
         onAfterRendering() {
           const viewModel = this.getModel("viewModel");
           const table = this.byId("tableWorkItems");
+
           // const { template } = table.getBindingInfo("items");
 
           // table.bindItems({
