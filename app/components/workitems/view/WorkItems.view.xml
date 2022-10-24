@@ -6,7 +6,10 @@
 	xmlns:f="sap.f"
 	xmlns:fb="sap.ui.comp.filterbar"
 	xmlns:c="iot.planner.components.workitems.control"
-	xmlns:t="sap.ui.table" controllerName="iot.planner.components.workitems.controller.WorkItems">
+	xmlns:t="sap.ui.table"
+	xmlns:sfb="sap.ui.comp.smartfilterbar"
+	xmlns:sf="sap.ui.comp.smartfield"
+	xmlns:st="sap.ui.comp.smarttable" controllerName="iot.planner.components.workitems.controller.WorkItems">
 	<Shell id="shell" appWidthLimited="false">
 		<App busy="{/busy}" busyIndicatorDelay="0">
 			<Page>
@@ -45,7 +48,24 @@
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
 								<f:content>
-									<fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch" showGoOnFB="false">
+									<sfb:SmartFilterBar id="filterBarItems" entitySet="MyWorkItems" clear="clearFilter" showClearButton="true" showClearOnFB="true" considerSelectionVariants="true">
+										<sfb:controlConfiguration>
+											<sfb:ControlConfiguration key="Search" index="0" label="Search">
+												<!-- <sfb:customControl>
+													<SearchField search="search">
+														<layoutData>
+															<OverflowToolbarLayoutData maxWidth="200px" priority="NeverOverflow"/>
+														</layoutData>
+													</SearchField>
+												</sfb:customControl> -->
+											</sfb:ControlConfiguration>
+											<sfb:ControlConfiguration key="Validated" filterType="multiple"/>
+										</sfb:controlConfiguration>
+										<sfb:layoutData>
+											<FlexItemData shrinkFactor="0"/>
+										</sfb:layoutData>
+									</sfb:SmartFilterBar>
+									<!-- <fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch" showGoOnFB="false">
 										<fb:filterGroupItems>
 											<fb:FilterGroupItem groupName="filterItems" name="Time" label="{i18n>filterTime}" visibleInFilterBar="true">
 												<fb:control>
@@ -87,7 +107,8 @@
 													</MultiComboBox>
 												</fb:control>
 											</fb:FilterGroupItem>
-											<!-- <fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
+											Kommentar Anfang
+											<fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
 												<fb:control>
 													<vBox>
 														<Input id="hierarchySearchFilter" value="{viewModel>/filterHierarchy/parentPath}" suggestionItems="{viewModel>/MyCategories}" liveChange="onLiveChangeHierarchyFilter">
@@ -107,10 +128,10 @@
 																	</t:template>
 																</t:Column>
 																<t:Column width="163px">
-																		<t:template>
-																			<Text text="{deepReference}"/>
-																		</t:template>
-																	</t:Column>
+																	<t:template>
+																		<Text text="{deepReference}"/>
+																	</t:template>
+																</t:Column>
 																<t:Column width="57px">
 																	<t:template>
 																		<Text text="{viewModel>absoluteReference}"/>
@@ -120,28 +141,47 @@
 														</t:TreeTable>
 													</vBox>
 												</fb:control>
-											</fb:FilterGroupItem> -->
+											</fb:FilterGroupItem>
+											Kommentar Ende
 										</fb:filterGroupItems>
-									</fb:FilterBar>
+									</fb:FilterBar> -->
 								</f:content>
 							</f:DynamicPageHeader>
 						</f:header>
 						<f:content>
-							<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{viewModel>/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{}">
+							<st:SmartTable id="tableWorkItems" smartFilterId="filterBarItems" entitySet="MyWorkItems" tableType="ResponsiveTable" header="{i18n>title}" enableAutoBinding="true" class="sapUiResponsiveContentPadding">
+								<st:customToolbar>
+									<OverflowToolbar design="Transparent">
+										<ToolbarSpacer/>
+										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
+									</OverflowToolbar>
+								</st:customToolbar>
+								<st:layoutData>
+									<FlexItemData growFactor="1" baseSize="0%"/>
+								</st:layoutData>
+								<!-- <Table id="js-worklistTable" growing="true" growingScrollToLoad="true" growingThreshold="40">
+									<ColumnListItem type="Navigation" press="navToFBMEntry"/>
+								</Table> -->
+							</st:SmartTable>
+							<!-- <Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{viewModel>/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{}">
 								<headerToolbar>
 									<OverflowToolbar>
-										<!-- <SegmentedButton selectedKey="all" selectionChange=".onFilterState">
+									Kommentar Anfang
+																				<SegmentedButton selectedKey="all" selectionChange=".onFilterState">
 											<items>
 												<SegmentedButtonItem key="all" text="{i18n>tableFilterShowAll} ({viewModel>/countAll})"/>
 												<SegmentedButtonItem key="completed" text="{i18n>tableFilterCompleted} ({viewModel>/countCompleted})"/>
 												<SegmentedButtonItem key="incompleted" text="{i18n>tableFilterIncompleted} ({viewModel>/countIncompleted})"/>
 											</items>
-										</SegmentedButton> -->
+										</SegmentedButton>
+										Kommentar Ende
 										<ToolbarSpacer/>
 										<Button text="{i18n>tableButtonDelete}" press="onPressDeleteWorkItems"/>
-										<!-- <Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
+										Kommentar Anfang
+																				<Button tooltip="Sort" icon="sap-icon://sort" press="handleSortButtonPressed"/>
 										<Button tooltip="Filter" icon="sap-icon://filter" press="handleFilterButtonPressed"/>
-										<SearchField liveChange=".onSearch" width="20rem"/> -->
+										<SearchField liveChange=".onSearch" width="20rem"/>
+										Kommentar Ende
 									</OverflowToolbar>
 								</headerToolbar>
 								<columns>
@@ -162,9 +202,11 @@
 									</Column>
 									<Column hAlign="End">
 										<Text text="{i18n>tableColumnDuration}" wrapping="false"/>
-										<!-- <footer>
+										Kommentar Anfang
+																				<footer>
 											<ObjectNumber number="{/totalDuration}" unit="h"/>
-										</footer> -->
+										</footer>
+										Kommentar Ende
 									</Column>
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnActivity}"/>
@@ -206,7 +248,7 @@
 										</cells>
 									</ColumnListItem>
 								</items>
-							</Table>
+							</Table> -->
 						</f:content>
 					</f:DynamicPage>
 				</content>

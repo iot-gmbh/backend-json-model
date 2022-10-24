@@ -1,62 +1,62 @@
 using {iot.planner as my} from './schema';
 
-@cds.odata.valuelist
-annotate my.WorkItems with @(UI : {
-  HeaderInfo      : {
-    TypeName       : '{i18n>WorkItem}',
-    TypeNamePlural : '{i18n>WorkItems}',
-    Title          : {Value : title},
-  },
-  Identification  : [{Value : title}],
-  FieldGroup      : {
-    $Type : 'UI.FieldGroupType',
-    Label : '{i18n>Classification}',
-    Data  : [
-      {Value : title},
-      {Value : invoiceRelevance},
-      {Value : bonusRelevance},
-    ],
-  },
-  SelectionFields : [title, ],
-  LineItem        : [
-    {
-      $Type : 'UI.DataField',
-      Value : title,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : assignedTo_userPrincipalName,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : hierarchy.level0,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : hierarchy.level1,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : hierarchy.level2,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : hierarchy.level3,
-    },
-  ],
-  Facets          : [
-    {
-      $Type  : 'UI.ReferenceFacet',
-      Label  : '{i18n>Identification}',
-      Target : '@UI.Identification'
-    },
-    {
-      $Type  : 'UI.ReferenceFacet',
-      Label  : '{i18n>Identification}',
-      Target : '@UI.FieldGroup'
-    }
-  ]
-});
+// @cds.odata.valuelist
+// annotate my.WorkItems with @(UI : {
+//   HeaderInfo      : {
+//     TypeName       : '{i18n>WorkItem}',
+//     TypeNamePlural : '{i18n>WorkItems}',
+//     Title          : {Value : title},
+//   },
+//   Identification  : [{Value : title}],
+//   FieldGroup      : {
+//     $Type : 'UI.FieldGroupType',
+//     Label : '{i18n>Classification}',
+//     Data  : [
+//       {Value : title},
+//       {Value : invoiceRelevance},
+//       {Value : bonusRelevance},
+//     ],
+//   },
+//   SelectionFields : [title, ],
+//   LineItem        : [
+//     {
+//       $Type : 'UI.DataField',
+//       Value : title,
+//     },
+//     {
+//       $Type : 'UI.DataField',
+//       Value : assignedTo_userPrincipalName,
+//     },
+//     {
+//       $Type : 'UI.DataField',
+//       Value : hierarchy.level0,
+//     },
+//     {
+//       $Type : 'UI.DataField',
+//       Value : hierarchy.level1,
+//     },
+//     {
+//       $Type : 'UI.DataField',
+//       Value : hierarchy.level2,
+//     },
+//     {
+//       $Type : 'UI.DataField',
+//       Value : hierarchy.level3,
+//     },
+//   ],
+//   Facets          : [
+//     {
+//       $Type  : 'UI.ReferenceFacet',
+//       Label  : '{i18n>Identification}',
+//       Target : '@UI.Identification'
+//     },
+//     {
+//       $Type  : 'UI.ReferenceFacet',
+//       Label  : '{i18n>Identification}',
+//       Target : '@UI.FieldGroup'
+//     }
+//   ]
+// });
 
 annotate my.hierarchies.Hierarchies with {
   level0 @(Common : {

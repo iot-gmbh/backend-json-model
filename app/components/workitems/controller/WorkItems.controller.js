@@ -79,30 +79,30 @@ sap.ui.define(
         onAfterRendering() {
           const viewModel = this.getModel("viewModel");
           const table = this.byId("tableWorkItems");
-          const { template } = table.getBindingInfo("items");
+          // const { template } = table.getBindingInfo("items");
 
-          table.bindItems({
-            path: "/MyWorkItems",
-            template,
-            templateShareable: false,
-            filters: this._initialFilter,
-            sorter: new Sorter({
-              path: "completedDate",
-              descending: true,
-            }),
-          });
+          // table.bindItems({
+          //   path: "/MyWorkItems",
+          //   // template,
+          //   templateShareable: false,
+          //   filters: this._initialFilter,
+          //   sorter: new Sorter({
+          //     path: "completedDate",
+          //     descending: true,
+          //   }),
+          // });
 
-          const binding = table.getBinding("items");
+          // const binding = table.getBinding("items");
 
-          binding.attachDataRequested(() =>
-            viewModel.setProperty("/tableBusy", true)
-          );
+          // binding.attachDataRequested(() =>
+          //   viewModel.setProperty("/tableBusy", true)
+          // );
 
-          binding.attachDataReceived(() =>
-            viewModel.setProperty("/tableBusy", false)
-          );
+          // binding.attachDataReceived(() =>
+          //   viewModel.setProperty("/tableBusy", false)
+          // );
 
-          binding.refresh();
+          // binding.refresh();
         },
 
         async onRouteMatched() {
@@ -501,7 +501,7 @@ sap.ui.define(
           }
 
           const tree = this.byId(elementID);
-          tree.getBinding("rows").filter(filters);
+          // tree.getBinding("rows").filter(filters);
 
           // tree.getRows().forEach((row) => {
           //   const titleCell = row.getCells()[0];

@@ -29,12 +29,17 @@ service TimetrackingService @(requires : 'authenticated-user') {
     },
   ])                      as projection on my.WorkItems {
     *,
+    assignedTo.userPrincipalName         as assignedToUserPrincipalName,
     assignedTo.manager.userPrincipalName as managerUserPrincipalName,
     // hierarchy.level1.manager.userPrincipalName as hierarchyLevel1ManagerUserPrincipalName,
-    hierarchy.level0Title                as customerText,
-    hierarchy.level1Title                as projectText,
-    hierarchy.level2Title                as subProjectText,
-    hierarchy.level3Title                as workPackageText,
+    hierarchy.level0                     as level0,
+    hierarchy.level1                     as level1,
+    hierarchy.level2                     as level2,
+    hierarchy.level3                     as level3,
+    hierarchy.level0Title                as level0Title,
+    hierarchy.level1Title                as level1Title,
+    hierarchy.level2Title                as level2Title,
+    hierarchy.level3Title                as level3Title,
     hierarchy.level0Alias                as customerAlias,
     hierarchy.level1Alias                as projectAlias,
     hierarchy.level2Alias                as subProjectAlias,
@@ -65,10 +70,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
   function getMyWorkPackages()                                               returns array of Categories;
 
 
-  @cds.redirection.target
-  entity MyCategories     as projection on my.Categories;
+  // @cds.redirection.target
+  // entity MyCategories     as projection on my.Categories;
 
-  entity Categories       as projection on my.Categories;
+  // entity Categories       as projection on my.Categories;
   entity Users2Categories as projection on my.Users2Categories;
   entity Tags             as projection on my.Tags;
   entity Tags2WorkItems   as projection on my.Tags2WorkItems;
@@ -76,30 +81,60 @@ service TimetrackingService @(requires : 'authenticated-user') {
   entity CategoryLevels   as projection on my.CategoryLevels;
   // entity MyUser           as projection on my.Users;
   entity Hierarchies      as projection on my.hierarchies.Hierarchies;
+  entity Users            as projection on my.Users;
 
   @cds.redirection.target
-  entity Users            as projection on my.Users {
-    *,
-    workItems : redirected to MyWorkItems
-  };
+  entity Categories       as projection on my.Categories;
 
-  entity Customers        as projection on my.Categories where hierarchyLevel = '0';
+  entity CategoriesLevel0 as projection on my.Categories where hierarchyLevel = '0';
 
-  entity Projects         as projection on my.Categories {
+  entity CategoriesLevel1 as projection on my.Categories {
     *,
-    parent.title as customerTitle
+    parent.ID    as level0,
+    parent.title as level0Title,
   } where hierarchyLevel = '1';
 
-  entity SubProjects      as projection on my.Categories {
+  entity CategoriesLevel2 as projection on my.Categories {
     *,
-    parent.title        as projectTitle,
-    parent.parent.title as customerTitle
+    parent.ID           as level1,
+    parent.parent.ID    as level0,
+    parent.title        as level1Title,
+    parent.parent.title as level0Title,
   } where hierarchyLevel = '2';
 
-  entity WorkPackages     as projection on my.Categories {
+  entity CategoriesLevel3 as projection on my.Categories {
     *,
-    parent.title               as subProjectTitle,
-    parent.parent.title        as projectTitle,
-    parent.parent.parent.title as customerTitle
+    parent.ID                  as level2,
+    parent.parent.ID           as level1,
+    parent.parent.parent.ID    as level0,
+    parent.title               as level2Title,
+    parent.parent.title        as level1Title,
+    parent.parent.parent.title as level0Title,
   } where hierarchyLevel = '3';
+
+// @cds.redirection.target
+// entity Users            as projection on my.Users {
+//   *,
+//   workItems : redirected to MyWorkItems
+// };
+
+// entity Customers        as projection on my.Categories where hierarchyLevel = '0';
+
+// entity Projects         as projection on my.Categories {
+//   *,
+//   parent.title as customerTitle
+// } where hierarchyLevel = '1';
+
+// entity SubProjects      as projection on my.Categories {
+//   *,
+//   parent.title        as projectTitle,
+//   parent.parent.title as customerTitle
+// } where hierarchyLevel = '2';
+
+// entity WorkPackages     as projection on my.Categories {
+//   *,
+//   parent.title               as subProjectTitle,
+//   parent.parent.title        as projectTitle,
+//   parent.parent.parent.title as customerTitle
+// } where hierarchyLevel = '3';
 }
