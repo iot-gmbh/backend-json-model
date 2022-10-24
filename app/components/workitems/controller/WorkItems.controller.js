@@ -78,16 +78,27 @@ sap.ui.define(
 
         async onBeforeRendering() {
           const filterBar = this.byId("filterBarItems");
-          const model = this.getModel();
-          await model.metadataLoaded();
-          filterBar.setBindingContext(
-            this.getModel().createEntry("/MyWorkItems")
-          );
+          // const filterModel = new JSONModel({
+          //   level0: "",
+          //   level1: "",
+          // });
+          // filterBar.setModel(filterModel, "filter");
+          // filterBar.bindElement({ path: "/", model: "filter" });
+          // const model = this.getModel();
+          // await model.metadataLoaded();
+          // filterBar.setBindingContext(
+          //   this.getModel().createEntry("/MyWorkItems", {})
+          // );
         },
 
         onAfterRendering() {
           const viewModel = this.getModel("viewModel");
           const table = this.byId("tableWorkItems");
+          // setTimeout(() =>
+          //   this.byId("filterBarItems")
+          //     .getItems()
+          //     .forEach((item) => item.setEditable(true))
+          // );
 
           // const { template } = table.getBindingInfo("items");
 

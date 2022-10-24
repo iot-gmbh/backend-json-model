@@ -48,7 +48,7 @@
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
 								<f:content>
-									<!-- <sfb:SmartFilterBar id="filterBarItems" entitySet="MyWorkItems" clear="clearFilter" showClearButton="true" showClearOnFB="true" considerSelectionVariants="true">
+									<sfb:SmartFilterBar id="filterBarItems" entitySet="MyWorkItems" clear="clearFilter" showClearButton="true" showClearOnFB="true" considerSelectionVariants="true">
 										<sfb:controlConfiguration>
 											<sfb:ControlConfiguration key="Search" index="0" label="Search">
 												<sfb:customControl>
@@ -64,88 +64,7 @@
 										<sfb:layoutData>
 											<FlexItemData shrinkFactor="0"/>
 										</sfb:layoutData>
-									</sfb:SmartFilterBar> -->
-									<fb:FilterBar id="filterBarItems" useToolbar="false" search=".onSearch" showGoOnFB="false">
-										<fb:filterGroupItems>
-											<fb:FilterGroupItem groupName="filterItems" name="Time" label="{i18n>filterTime}" visibleInFilterBar="true">
-												<fb:control>
-													<DateRangeSelection displayFormat="dd.MM.yyyy" showCurrentDateButton="true" change=".onFilterDateRange"/>
-												</fb:control>
-											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="Customer" label="{i18n>filterCustomer}" visibleInFilterBar="true">
-												<fb:control>
-													<sf:SmartField value="{level0}"/>
-													<!-- <MultiComboBox items="{viewModel>/MyCustomers}" selectionChange=".onFilter">
-														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
-													</MultiComboBox> -->
-												</fb:control>
-											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="Project" label="{i18n>filterProject}" visibleInFilterBar="true">
-												<fb:control>
-													<MultiComboBox items="{viewModel>/MyProjects}" selectionChange=".onFilter">
-														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
-													</MultiComboBox>
-												</fb:control>
-											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="SubProject" label="{i18n>filterSubProject}" visibleInFilterBar="true">
-												<fb:control>
-													<MultiComboBox items="{viewModel>/MySubProjects}" selectionChange=".onFilter">
-														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
-													</MultiComboBox>
-												</fb:control>
-											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="WorkPackage" label="{i18n>filterWorkPackage}" visibleInFilterBar="true">
-												<fb:control>
-													<MultiComboBox items="{viewModel>/MyWorkPackages}" selectionChange=".onFilter">
-														<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
-													</MultiComboBox>
-												</fb:control>
-											</fb:FilterGroupItem>
-											<fb:FilterGroupItem groupName="filterItems" name="User" label="{i18n>filterUser}" visibleInFilterBar="true">
-												<fb:control>
-													<MultiComboBox items="{/Users}" selectionChange=".onFilter">
-														<core:Item key="{title}" text="{displayName}"/>
-													</MultiComboBox>
-												</fb:control>
-											</fb:FilterGroupItem>
-											<!-- Kommentar Anfang
-											<fb:FilterGroupItem groupName="filterItems" name="Category" label="{i18n>filterCategory}" visibleInFilterBar="true">
-												<fb:control>
-													<vBox>
-														<Input id="hierarchySearchFilter" value="{viewModel>/filterHierarchy/parentPath}" suggestionItems="{viewModel>/MyCategories}" liveChange="onLiveChangeHierarchyFilter">
-															<suggestionItems>
-																<core:Item text="{path}" key="{ID}"/>
-															</suggestionItems>
-														</Input>
-														<t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchyFilter" id="hierarchyTreeFilter" rows="{path: 'viewModel>/MyCategoriesNested', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="10" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
-															<t:noData>
-																<Text text=""/>
-															</t:noData>
-															<t:columns>
-																<t:Column>
-																	<t:template>
-																		<Text text="{parts: ['viewModel>title', 'viewModel>deepReference'], formatter: '.formatter.braceDeepReference'}"/>
-																		<Text text="{title}"/>
-																	</t:template>
-																</t:Column>
-																<t:Column width="163px">
-																	<t:template>
-																		<Text text="{deepReference}"/>
-																	</t:template>
-																</t:Column>
-																<t:Column width="57px">
-																	<t:template>
-																		<Text text="{viewModel>absoluteReference}"/>
-																	</t:template>
-																</t:Column>
-															</t:columns>
-														</t:TreeTable>
-													</vBox>
-												</fb:control>
-											</fb:FilterGroupItem>
-											Kommentar Ende -->
-										</fb:filterGroupItems>
-									</fb:FilterBar>
+									</sfb:SmartFilterBar>
 								</f:content>
 							</f:DynamicPageHeader>
 						</f:header>
