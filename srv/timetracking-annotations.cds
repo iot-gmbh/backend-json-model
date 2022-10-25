@@ -32,12 +32,11 @@ annotate my.MyWorkItems with @(
   //
   SelectionFields              : [
     activatedDate,
-    assignedToUserPrincipalName,
     level0,
     level1,
     level2,
     level3,
-    activatedDateMonth
+    assignedToUserPrincipalName,
   ],
   LineItem                     : [
     {
@@ -50,24 +49,6 @@ annotate my.MyWorkItems with @(
     },
   ]
 }) {
-  activatedDateMonth          @Common.ValueList : {
-    CollectionPath               : 'MyWorkItems',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'activatedDateMonth',
-      ValueListProperty : 'activatedDateMonth'
-    }],
-    PresentationVariantQualifier : 'DurationByMonth'
-  };
-  assignedToUserPrincipalName @Common.ValueList : {
-    CollectionPath               : 'MyWorkItems',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'assignedToUserPrincipalName',
-      ValueListProperty : 'assignedToUserPrincipalName'
-    }],
-    PresentationVariantQualifier : 'DurationByAssignedTo'
-  };
   level0                      @(
     sap.updatable    : true,
     sap.creatable    : true,
@@ -210,4 +191,13 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
+  assignedToUserPrincipalName @Common.ValueList : {
+    CollectionPath               : 'MyWorkItems',
+    Parameters                   : [{
+      $Type             : 'Common.ValueListParameterInOut',
+      LocalDataProperty : 'assignedToUserPrincipalName',
+      ValueListProperty : 'assignedToUserPrincipalName'
+    }],
+    PresentationVariantQualifier : 'DurationByAssignedTo'
+  };
 };
