@@ -7,7 +7,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
   @odata.create.enabled
   @odata.update.enabled
-  entity MyWorkItems @(restrict : [
+  entity MyWorkItems                                                    @(restrict : [
     {
       grant : '*',
       to    : 'admin'
@@ -31,8 +31,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
     },
   ])                      as projection on my.WorkItems {
     *,
-    assignedTo.userPrincipalName         as assignedToUserPrincipalName,
-    assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+    activatedDate                                                       @(title : 'Time'),
+    assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title : 'User'),
+    assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title : 'Manager'),
     // hierarchy.level1.manager.userPrincipalName as hierarchyLevel1ManagerUserPrincipalName,
     hierarchy.level0                     as level0,
     hierarchy.level1                     as level1,
@@ -42,10 +43,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
     hierarchy.level1Title                as level1Title,
     hierarchy.level2Title                as level2Title,
     hierarchy.level3Title                as level3Title,
-    hierarchy.level0Alias                as customerAlias,
-    hierarchy.level1Alias                as projectAlias,
-    hierarchy.level2Alias                as subProjectAlias,
-    hierarchy.level3Alias                as workPackageAlias,
+    hierarchy.level0Alias                as level0Alias,
+    hierarchy.level1Alias                as level1Alias,
+    hierarchy.level2Alias                as level2Alias,
+    hierarchy.level3Alias                as level3Alias,
 
   } where deleted is null
 
@@ -70,20 +71,13 @@ service TimetrackingService @(requires : 'authenticated-user') {
   function getMyProjects()                                                   returns array of Categories;
   function getMySubProjects()                                                returns array of Categories;
   function getMyWorkPackages()                                               returns array of Categories;
-
-
-  // @cds.redirection.target
-  // entity MyCategories     as projection on my.Categories;
-
-  // entity Categories       as projection on my.Categories;
+  entity Users            as projection on my.Users;
   entity Users2Categories as projection on my.Users2Categories;
   entity Tags             as projection on my.Tags;
-  entity Tags2WorkItems   as projection on my.Tags2WorkItems;
   entity Tags2Categories  as projection on my.Tags2Categories;
+  entity Tags2WorkItems   as projection on my.Tags2WorkItems;
   entity CategoryLevels   as projection on my.CategoryLevels;
-  // entity MyUser           as projection on my.Users;
   entity Hierarchies      as projection on my.hierarchies.Hierarchies;
-  entity Users            as projection on my.Users;
 
   @cds.redirection.target
   entity Categories       as projection on my.Categories where validFrom <= NOW()
@@ -108,8 +102,8 @@ service TimetrackingService @(requires : 'authenticated-user') {
     key ID                                 @(title : 'Subproject'),
         title                              @(title : 'Subproject'),
         parent.ID           as level1      @(title : 'Project'),
-        parent.parent.ID    as level0      @(title : 'Customer'),
         parent.title        as level1Title @(title : 'Project'),
+        parent.parent.ID    as level0      @(title : 'Customer'),
         parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '2';
 
@@ -118,10 +112,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
     key ID                                        @(title : 'Package'),
         title                                     @(title : 'Package'),
         parent.ID                  as level2      @(title : 'Subproject'),
-        parent.parent.ID           as level1      @(title : 'Project'),
-        parent.parent.parent.ID    as level0      @(title : 'Customer'),
         parent.title               as level2Title @(title : 'Subproject'),
+        parent.parent.ID           as level1      @(title : 'Project'),
         parent.parent.title        as level1Title @(title : 'Project'),
+        parent.parent.parent.ID    as level0      @(title : 'Customer'),
         parent.parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '3';
 
