@@ -76,54 +76,55 @@ sap.ui.define(
             .attachPatternMatched(() => this.onRouteMatched(), this);
         },
 
-        async onBeforeRendering() {
-          const filterBar = this.byId("filterBarItems");
-          // const filterModel = new JSONModel({
-          //   level0: "",
-          //   level1: "",
-          // });
-          // filterBar.setModel(filterModel, "filter");
-          // filterBar.bindElement({ path: "/", model: "filter" });
-          // const model = this.getModel();
-          // await model.metadataLoaded();
-          // filterBar.setBindingContext(
-          //   this.getModel().createEntry("/MyWorkItems", {})
-          // );
-        },
+        // async onBeforeRendering() {
+        //   const filterBar = this.byId("filterBarItems");
+        //   const filterModel = new JSONModel({
+        //     level0: "",
+        //     level1: "",
+        //   });
+        //   filterBar.setModel(filterModel, "filter");
+        //   filterBar.bindElement({ path: "/", model: "filter" });
+        //   const model = this.getModel();
+        //   await model.metadataLoaded();
+        //   filterBar.setBindingContext(
+        //     this.getModel().createEntry("/MyWorkItems", {})
+        //   );
+        // },
 
         onAfterRendering() {
           const viewModel = this.getModel("viewModel");
           const table = this.byId("tableWorkItems");
+
           // setTimeout(() =>
           //   this.byId("filterBarItems")
           //     .getItems()
           //     .forEach((item) => item.setEditable(true))
           // );
 
-          // const { template } = table.getBindingInfo("items");
+          const { template } = table.getBindingInfo("items");
 
-          // table.bindItems({
-          //   path: "/MyWorkItems",
-          //   // template,
-          //   templateShareable: false,
-          //   filters: this._initialFilter,
-          //   sorter: new Sorter({
-          //     path: "completedDate",
-          //     descending: true,
-          //   }),
-          // });
+          table.bindItems({
+            path: "/MyWorkItems",
+            template,
+            templateShareable: false,
+            filters: this._initialFilter,
+            sorter: new Sorter({
+              path: "completedDate",
+              descending: true,
+            }),
+          });
 
-          // const binding = table.getBinding("items");
+          const binding = table.getBinding("items");
 
-          // binding.attachDataRequested(() =>
-          //   viewModel.setProperty("/tableBusy", true)
-          // );
+          binding.attachDataRequested(() =>
+            viewModel.setProperty("/tableBusy", true)
+          );
 
-          // binding.attachDataReceived(() =>
-          //   viewModel.setProperty("/tableBusy", false)
-          // );
+          binding.attachDataReceived(() =>
+            viewModel.setProperty("/tableBusy", false)
+          );
 
-          // binding.refresh();
+          binding.refresh();
         },
 
         async onRouteMatched() {
@@ -328,30 +329,36 @@ sap.ui.define(
         },
 
         onFilter() {
-          const {
-            filterCustomer,
-            filterProject,
-            filterSubProject,
-            filterWorkPackage,
-            // filterUser,
-          } = this.getModel("viewModel").getData();
-
-          const filters = [];
-          if (filterCustomer)
-            filters.push(new Filter("customerAlias", "EQ", filterCustomer));
-          if (filterCustomer)
-            filters.push(new Filter("projectAlias", "EQ", filterProject));
-          if (filterCustomer)
-            filters.push(new Filter("subProjectAlias", "EQ", filterSubProject));
-          if (filterCustomer)
-            filters.push(
-              new Filter("workPackageAlias", "EQ", filterWorkPackage)
-            );
-          // if (filterUser)
-          // filters.push(new Filter("userPrincipalName", "EQ", filterCustomer));
-
+          const filterBar = this.byId("filterBarItems");
+          const filters = filterBar.getFilters();
           this.byId("tableWorkItems").getBinding("items").filter(filters);
         },
+
+        // onFilter() {
+        //   const {
+        //     filterCustomer,
+        //     filterProject,
+        //     filterSubProject,
+        //     filterWorkPackage,
+        //     // filterUser,
+        //   } = this.getModel("viewModel").getData();
+
+        //   const filters = [];
+        //   if (filterCustomer)
+        //     filters.push(new Filter("customerAlias", "EQ", filterCustomer));
+        //   if (filterCustomer)
+        //     filters.push(new Filter("projectAlias", "EQ", filterProject));
+        //   if (filterCustomer)
+        //     filters.push(new Filter("subProjectAlias", "EQ", filterSubProject));
+        //   if (filterCustomer)
+        //     filters.push(
+        //       new Filter("workPackageAlias", "EQ", filterWorkPackage)
+        //     );
+        //   // if (filterUser)
+        //   // filters.push(new Filter("userPrincipalName", "EQ", filterCustomer));
+
+        //   this.byId("tableWorkItems").getBinding("items").filter(filters);
+        // },
 
         onLiveChangeHierarchyFilter(event) {
           const query = event.getParameters().newValue;
@@ -521,7 +528,7 @@ sap.ui.define(
             ];
           }
 
-          const tree = this.byId(elementID);
+          // const tree = this.byId(elementID);
           // tree.getBinding("rows").filter(filters);
 
           // tree.getRows().forEach((row) => {
