@@ -48,8 +48,11 @@
 						<f:header>
 							<f:DynamicPageHeader pinnable="true">
 								<f:content>
-									<sfb:SmartFilterBar id="filterBarItems" entitySet="MyWorkItems" clear="clearFilter" showClearButton="true" showClearOnFB="true" considerSelectionVariants="true">
-										<sfb:controlConfiguration>
+									<sfb:SmartFilterBar id="filterBarItems" entitySet="MyWorkItems" clear="clearFilter" showClearButton="true" showClearOnFB="true" showFilterConfiguration="true" considerSelectionVariants="true" filterChange="onFilter" useDateRangeType="true">
+										<!-- <sfb:controlConfiguration>
+											<sfb:ControlConfiguration index="2" change="onFilter" conditionType="sap.ui.comp.config.condition.DateRangeType" visibleInAdvancedArea="true"/>
+										</sfb:controlConfiguration> -->
+										<!-- <sfb:controlConfiguration>
 											<sfb:ControlConfiguration key="Search" index="0" label="Search">
 												<sfb:customControl>
 													<SearchField search="search">
@@ -60,7 +63,7 @@
 												</sfb:customControl>
 											</sfb:ControlConfiguration>
 											<sfb:ControlConfiguration key="Validated" filterType="multiple"/>
-										</sfb:controlConfiguration>
+										</sfb:controlConfiguration> -->
 										<sfb:layoutData>
 											<FlexItemData shrinkFactor="0"/>
 										</sfb:layoutData>
