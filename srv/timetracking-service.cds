@@ -83,7 +83,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
   function getMyCategoryTree()                                               returns array of Categories;
   function getMyCustomers()                                                  returns array of Categories;
   function getMyProjects()                                                   returns array of Categories;
-  function getMySubProjects()                                                returns array of Categories;
+  function getMySubprojects()                                                returns array of Categories;
   function getMyWorkPackages()                                               returns array of Categories;
   entity Users            as projection on my.Users;
   entity Users2Categories as projection on my.Users2Categories;
@@ -105,9 +105,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
   entity CategoriesLevel1 as projection on Categories {
         *,
-    key ID           as level1      @(title : 'Project'),
-        title        as level1Title @(title : 'Project'),
-        parent.ID    as level0      @(title : 'Customer'),
+    key ID                          @(title : 'Project'),
+        title                       @(title : 'Project'),
+        parent.ID    as level0ID    @(title : 'Customer'),
         parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '1';
 
@@ -115,9 +115,9 @@ service TimetrackingService @(requires : 'authenticated-user') {
         *,
     key ID                                 @(title : 'Subproject'),
         title                              @(title : 'Subproject'),
-        parent.ID           as level1      @(title : 'Project'),
+        parent.ID           as level1ID    @(title : 'Project'),
         parent.title        as level1Title @(title : 'Project'),
-        parent.parent.ID    as level0      @(title : 'Customer'),
+        parent.parent.ID    as level0ID    @(title : 'Customer'),
         parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '2';
 
@@ -125,11 +125,11 @@ service TimetrackingService @(requires : 'authenticated-user') {
         *,
     key ID                                        @(title : 'Package'),
         title                                     @(title : 'Package'),
-        parent.ID                  as level2      @(title : 'Subproject'),
+        parent.ID                  as level2ID    @(title : 'Subproject'),
         parent.title               as level2Title @(title : 'Subproject'),
-        parent.parent.ID           as level1      @(title : 'Project'),
+        parent.parent.ID           as level1ID    @(title : 'Project'),
         parent.parent.title        as level1Title @(title : 'Project'),
-        parent.parent.parent.ID    as level0      @(title : 'Customer'),
+        parent.parent.parent.ID    as level0ID    @(title : 'Customer'),
         parent.parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '3';
 
@@ -146,7 +146,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
 //   parent.title as customerTitle
 // } where hierarchyLevel = '1';
 
-// entity SubProjects      as projection on my.Categories {
+// entity Subprojects      as projection on my.Categories {
 //   *,
 //   parent.title        as projectTitle,
 //   parent.parent.title as customerTitle
@@ -154,7 +154,7 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
 // entity WorkPackages     as projection on my.Categories {
 //   *,
-//   parent.title               as subProjectTitle,
+//   parent.title               as subprojectTitle,
 //   parent.parent.title        as projectTitle,
 //   parent.parent.parent.title as customerTitle
 // } where hierarchyLevel = '3';

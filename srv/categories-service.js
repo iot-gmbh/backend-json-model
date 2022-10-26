@@ -82,7 +82,7 @@ module.exports = cds.service.impl(async function () {
     return transformCategories(projects);
   });
 
-  this.on("getMySubProjects", async () => {
+  this.on("getMySubprojects", async () => {
     const subProjects = await db.run(
       SELECT.from("iot_planner_my_categories").where`hierarchyLevel = '2'`
     );

@@ -131,10 +131,10 @@ module.exports = cds.service.impl(async function () {
     return projects;
   });
 
-  this.on("getMySubProjects", async (req) => {
-    const subProjects = await catService.send("getMySubProjects", req.data);
+  this.on("getMySubprojects", async (req) => {
+    const subprojects = await catService.send("getMySubprojects", req.data);
 
-    return subProjects;
+    return subprojects;
   });
 
   this.on("getMyWorkPackages", async (req) => {

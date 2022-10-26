@@ -168,9 +168,9 @@ sap.ui.define(
             );
             viewModel.setProperty("/MyProjects", projects);
 
-            const { results: subProjects } =
-              await backendJSONModel.callFunction("/getMySubProjects");
-            viewModel.setProperty("/MySubProjects", subProjects);
+            const { results: subprojects } =
+              await backendJSONModel.callFunction("/getMySubprojects");
+            viewModel.setProperty("/MySubprojects", subprojects);
 
             const { results: workPackages } =
               await backendJSONModel.callFunction("/getMyWorkPackages");
@@ -338,7 +338,7 @@ sap.ui.define(
         //   const {
         //     filterCustomer,
         //     filterProject,
-        //     filterSubProject,
+        //     filterSubproject,
         //     filterWorkPackage,
         //     // filterUser,
         //   } = this.getModel("viewModel").getData();
@@ -349,7 +349,7 @@ sap.ui.define(
         //   if (filterCustomer)
         //     filters.push(new Filter("projectAlias", "EQ", filterProject));
         //   if (filterCustomer)
-        //     filters.push(new Filter("subProjectAlias", "EQ", filterSubProject));
+        //     filters.push(new Filter("subprojectAlias", "EQ", filterSubproject));
         //   if (filterCustomer)
         //     filters.push(
         //       new Filter("workPackageAlias", "EQ", filterWorkPackage)
