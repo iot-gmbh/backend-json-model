@@ -117,7 +117,7 @@
 				</form:formContainers>
 			</form:Form>
 			<Table id="tableWorkItems" growing="true" growingScrollToLoad="true" width="auto" mode="MultiSelect" fixedLayout="false" busy="{/tableBusy}" busyIndicatorDelay="0" updateFinished=".onUpdateTableFinished" items="{
-								path: '/MyWorkItems',
+								path: '/WorkItemsFastEntry',
 								sorter: {
 									path: 'completedDate',
 									descending: false

@@ -79,8 +79,9 @@ module.exports = cds.service.impl(async function () {
   const catService = await cds.connect.to("CategoriesService");
   const { Users, WorkItems } = db.entities("iot.planner");
   const { MyWorkItems } = this.entities();
+  const { WorkItemsFastEntry } = this.entities();
 
-  this.on("CREATE", MyWorkItems, async (req, next) => {
+  this.on("CREATE", WorkItemsFastEntry, async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
@@ -148,7 +149,7 @@ module.exports = cds.service.impl(async function () {
     } = req;
     const [MSGraphEvent, [localWorkItem]] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
-      this.run(SELECT.from(MyWorkItems).where({ ID })),
+      this.run(SELECT.from(WorkItemsFastEntry).where({ ID })),
     ]);
 
     const parent = await catService.run(
@@ -177,7 +178,7 @@ module.exports = cds.service.impl(async function () {
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
       MSGraphSrv.send("getCalendarView", req.data),
       this.run(
-        SELECT.from(MyWorkItems).where(
+        SELECT.from(WorkItemsFastEntry).where(
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )
       ),
@@ -265,7 +266,7 @@ module.exports = cds.service.impl(async function () {
       data: { ID },
     } = req;
 
-    const [item] = await db.read(MyWorkItems).where({ ID });
+    const [item] = await db.read(WorkItemsFastEntry).where({ ID });
 
     if (!item) throw Error("Item not found");
     if (item.source === "Manual")
@@ -274,7 +275,7 @@ module.exports = cds.service.impl(async function () {
     const [draft, myCategories] = await Promise.all([
       MSGraphSrv.send("getWorkItemByID", { ID }),
       catService.send("getMyCategoryTree", req.data),
-      db.run(DELETE.from(MyWorkItems).where({ ID })),
+      db.run(DELETE.from(WorkItemsFastEntry).where({ ID })),
     ]);
 
     const parent = categorizeWorkItem(draft, myCategories);
@@ -291,9 +292,9 @@ module.exports = cds.service.impl(async function () {
       user,
     } = req;
 
-    await db.run(DELETE.from(MyWorkItems).where({ ID }));
+    await db.run(DELETE.from(WorkItemsFastEntry).where({ ID }));
     await db.run(
-      INSERT.into(MyWorkItems).entries({
+      INSERT.into(WorkItemsFastEntry).entries({
         ID,
         tenant: user.tenant,
         deleted: true,

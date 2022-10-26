@@ -162,7 +162,7 @@ sap.ui.define(
           model.setProperty("/busy", true);
 
           try {
-            const workItems = await model.read("/MyWorkItems", {
+            const workItems = await model.read("/WorkItemsFastEntry", {
               filters,
             });
 
@@ -175,7 +175,7 @@ sap.ui.define(
                   : appointment.activity,
             }));
 
-            model.setProperty("/MyWorkItems", appointments);
+            model.setProperty("/WorkItemsFastEntry", appointments);
             model.setProperty("/busy", false);
           } catch (error) {
             Log.error(error);
@@ -189,12 +189,12 @@ sap.ui.define(
           const filteredItemsIndices =
             this.byId("tableWorkItems").getBindingInfo("items").binding
               .aIndices;
-          const myWorkItems = model.getProperty("/MyWorkItems");
+          const workItems = model.getProperty("/WorkItemsFastEntry");
           let totalDuration = 0;
 
           totalDuration = filteredItemsIndices.reduce((sum, index) => {
-            if (myWorkItems[index].duration !== "24") {
-              return sum + parseFloat(myWorkItems[index].duration);
+            if (workItems[index].duration !== "24") {
+              return sum + parseFloat(workItems[index].duration);
             }
             return sum;
           }, 0);
@@ -406,15 +406,15 @@ sap.ui.define(
             const model = this.getModel();
 
             const countAll = model
-              .getProperty("/MyWorkItems")
+              .getProperty("/WorkItemsFastEntry")
               .filter((workItem) => workItem.state !== "").length;
 
             const countCompleted = model
-              .getProperty("/MyWorkItems")
+              .getProperty("/WorkItemsFastEntry")
               .filter((workItem) => workItem.state === "completed").length;
 
             const countIncompleted = model
-              .getProperty("/MyWorkItems")
+              .getProperty("/WorkItemsFastEntry")
               .filter((workItem) => workItem.state === "incompleted").length;
 
             model.setProperty("/countAll", countAll);
@@ -439,8 +439,8 @@ sap.ui.define(
           model.setProperty("/busy", true);
 
           try {
-            await model.create("/MyWorkItems", {
-              localPath: "/MyWorkItems/X",
+            await model.create("/WorkItemsFastEntry", {
+              localPath: "/WorkItemsFastEntry/X",
               ...newWorkItem,
             });
           } catch (error) {
@@ -506,14 +506,16 @@ sap.ui.define(
             Log.error(error);
           }
 
-          const data = model.getProperty("/MyWorkItems").filter((entity) => {
-            const keepItem = !workItemsToDelete
-              .map((wi) => wi.__metadata.uri)
-              .includes(entity.__metadata.uri);
-            return keepItem;
-          });
+          const data = model
+            .getProperty("/WorkItemsFastEntry")
+            .filter((entity) => {
+              const keepItem = !workItemsToDelete
+                .map((wi) => wi.__metadata.uri)
+                .includes(entity.__metadata.uri);
+              return keepItem;
+            });
 
-          model.setProperty("/MyWorkItems", data);
+          model.setProperty("/WorkItemsFastEntry", data);
 
           table.removeSelections();
 

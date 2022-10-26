@@ -50,6 +50,20 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
   } where deleted is null
 
+  @cds.redirection.target : true
+  entity WorkItemsFastEntry @(restrict : [
+    {
+      grant : 'READ',
+      where : 'assignedTo_userPrincipalName = $user'
+    },
+    {
+      grant : 'WRITE',
+      to    : 'authenticated-user'
+    }
+  ])                      as projection on my.WorkItems excluding {
+    hierarchy
+  };
+
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
     key ID                       : String @odata.Type : 'Edm.String',
         title,
@@ -62,10 +76,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
   };
 
   action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
-  action   resetToDraft(ID : String)                                         returns MyWorkItems;
-  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
-  function getWorkItemByID(ID : String)                                      returns MyWorkItems;
-  function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
+  action   resetToDraft(ID : String)                                         returns WorkItemsFastEntry;
+  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of WorkItemsFastEntry;
+  function getWorkItemByID(ID : String)                                      returns WorkItemsFastEntry;
+  function categorizeWorkItem(workItem : WorkItemsFastEntry)                 returns WorkItemsFastEntry;
   function getMyCategoryTree()                                               returns array of Categories;
   function getMyCustomers()                                                  returns array of Categories;
   function getMyProjects()                                                   returns array of Categories;
