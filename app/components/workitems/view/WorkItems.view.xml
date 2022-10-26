@@ -137,6 +137,9 @@
 									<Column minScreenWidth="Desktop">
 										<Text text="{i18n>tableColumnLocation}"/>
 									</Column>
+									<Column>
+										<Text text="{i18n>tableColumnUser}" wrapping="false"/>
+									</Column>
 									<Column width="3vw">
 										<Text text="{i18n>tableColumnStatus}" wrapping="false"/>
 									</Column>
@@ -164,6 +167,7 @@
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</ComboBox>
+											<Text text="{assignedToUserPrincipalName}"></Text>
 											<c:If condition="{= ${state} === 'completed'}">
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://sys-enter-2" state="Success"/>
 												<ObjectStatus class="sapUiTinyMargin" icon="sap-icon://alert" state="Warning"/>
