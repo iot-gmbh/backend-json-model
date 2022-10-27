@@ -10,7 +10,7 @@ service AnalyticsService {
       'aggregate',
       'groupby'
     ],
-    GroupableProperties    : [],
+    GroupableProperties    : [level0],
     AggregatableProperties : [{
       $Type    : 'Aggregation.AggregatablePropertyType',
       Property : duration,
@@ -119,8 +119,8 @@ service AnalyticsService {
 
   entity CategoriesLevel2 as projection on my.Categories {
     *,
-    parent.ID        as level1,
-    parent.parent.ID as level0,
+    parent.ID           as level1,
+    parent.parent.ID    as level0,
     parent.title        as level1Title,
     parent.parent.title as level0Title,
   } where hierarchyLevel = '2';
