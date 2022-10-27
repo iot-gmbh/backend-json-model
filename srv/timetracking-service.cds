@@ -19,11 +19,26 @@ service TimetrackingService @(requires : 'authenticated-user') {
       // https://cap.cloud.sap/docs/guides/authorization#association-paths
       where : 'managerUserPrincipalName = $user',
     },
-    // {
-    //   grant : '*',
-    //   to    : 'project-lead',
-    //   where : 'hierarchyLevel1ManagerUserPrincipalName = $user'
-    // },
+    {
+      grant : '*',
+      to    : 'project-lead',
+      where : '$user = level0Manager',
+    },
+    {
+      grant : '*',
+      to    : 'project-lead',
+      where : '$user = level1Manager',
+    },
+    {
+      grant : '*',
+      to    : 'project-lead',
+      where : '$user = level2Manager',
+    },
+    {
+      grant : '*',
+      to    : 'project-lead',
+      where : '$user = level3Manager',
+    },
     {
       grant : '*',
       to    : 'authenticated-user',
@@ -47,6 +62,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
     hierarchy.level1Alias                as level1Alias,
     hierarchy.level2Alias                as level2Alias,
     hierarchy.level3Alias                as level3Alias,
+    hierarchy.level0Manager              as level0Manager,
+    hierarchy.level1Manager              as level1Manager,
+    hierarchy.level2Manager              as level2Manager,
+    hierarchy.level3Manager              as level3Manager
 
   } where deleted is null
 
@@ -132,30 +151,4 @@ service TimetrackingService @(requires : 'authenticated-user') {
         parent.parent.parent.ID    as level0ID    @(title : 'Customer'),
         parent.parent.parent.title as level0Title @(title : 'Customer'),
   } where hierarchyLevel = '3';
-
-// @cds.redirection.target
-// entity Users            as projection on my.Users {
-//   *,
-//   workItems : redirected to MyWorkItems
-// };
-
-// entity Customers        as projection on my.Categories where hierarchyLevel = '0';
-
-// entity Projects         as projection on my.Categories {
-//   *,
-//   parent.title as customerTitle
-// } where hierarchyLevel = '1';
-
-// entity Subprojects      as projection on my.Categories {
-//   *,
-//   parent.title        as projectTitle,
-//   parent.parent.title as customerTitle
-// } where hierarchyLevel = '2';
-
-// entity WorkPackages     as projection on my.Categories {
-//   *,
-//   parent.title               as subprojectTitle,
-//   parent.parent.title        as projectTitle,
-//   parent.parent.parent.title as customerTitle
-// } where hierarchyLevel = '3';
 }

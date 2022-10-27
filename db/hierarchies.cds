@@ -64,7 +64,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.parent.ID
-        end as level0      : String,
+        end as level0        : String,
 
         case hierarchyLevel
           when
@@ -79,7 +79,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.ID
-        end as level1      : String,
+        end as level1        : String,
 
         case hierarchyLevel
           when
@@ -90,14 +90,14 @@ view Hierarchies as
             '3'
           then
             parent.ID
-        end as level2      : String,
+        end as level2        : String,
 
         case hierarchyLevel
           when
             '3'
           then
             ID
-        end as level3      : String,
+        end as level3        : String,
 
         // texts
         case hierarchyLevel
@@ -117,7 +117,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.parent.title
-        end as level0Title : String,
+        end as level0Title   : String,
 
         case hierarchyLevel
           when
@@ -132,7 +132,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.title
-        end as level1Title : String,
+        end as level1Title   : String,
 
         case hierarchyLevel
           when
@@ -143,14 +143,14 @@ view Hierarchies as
             '3'
           then
             parent.title
-        end as level2Title : String,
+        end as level2Title   : String,
 
         case hierarchyLevel
           when
             '3'
           then
             title
-        end as level3Title : String,
+        end as level3Title   : String,
 
 
         // mapping-title's
@@ -171,7 +171,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.parent.mappingID
-        end as level0Alias : String,
+        end as level0Alias   : String,
 
         case hierarchyLevel
           when
@@ -186,7 +186,7 @@ view Hierarchies as
             '3'
           then
             parent.parent.mappingID
-        end as level1Alias : String,
+        end as level1Alias   : String,
         case hierarchyLevel
           when
             '2'
@@ -196,12 +196,65 @@ view Hierarchies as
             '3'
           then
             parent.mappingID
-        end as level2Alias : String,
+        end as level2Alias   : String,
 
         case hierarchyLevel
           when
             '3'
           then
             mappingID
-        end as level3Alias : String,
+        end as level3Alias   : String,
+
+        // manager
+        case hierarchyLevel
+          when
+            '0'
+          then
+            manager.userPrincipalName
+          when
+            '1'
+          then
+            parent.manager.userPrincipalName
+          when
+            '2'
+          then
+            parent.parent.manager.userPrincipalName
+          when
+            '3'
+          then
+            parent.parent.parent.manager.userPrincipalName
+        end as level0Manager : String,
+
+        case hierarchyLevel
+          when
+            '1'
+          then
+            manager.userPrincipalName
+          when
+            '2'
+          then
+            parent.manager.userPrincipalName
+          when
+            '3'
+          then
+            parent.parent.manager.userPrincipalName
+        end as level1Manager : String,
+
+        case hierarchyLevel
+          when
+            '2'
+          then
+            manager.userPrincipalName
+          when
+            '3'
+          then
+            parent.manager.userPrincipalName
+        end as level2Manager : String,
+
+        case hierarchyLevel
+          when
+            '3'
+          then
+            manager.userPrincipalName
+        end as level3Manager : String,
   };
