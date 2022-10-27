@@ -153,16 +153,16 @@
 												</suggestionItems>
 											</Input>
 											<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="onChangeWorkItemValue" />
-											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
-											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+											<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="8.2em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="5.7em" change="updateWorkItemDates"/>
+											<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="5.7em" change="updateWorkItemDates"/>
 											<ObjectNumber number="{duration}" unit="h"/>
-											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" change="onChangeWorkItemValue">
+											<Select id="selectActivityTable" items="{viewModel>/activities}" selectedKey="{activity}" width="9.5em" change="onChangeWorkItemValue">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
 											</Select>
-											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" change="onChangeWorkItemValue">
+											<ComboBox id="selectLocationTable" items="{path: 'viewModel>/locations', templateShareable: false}" selectedKey="{location}" width="8.7em" change="onChangeWorkItemValue">
 												<items>
 													<core:Item key="{viewModel>title}" text="{viewModel>title}"/>
 												</items>
