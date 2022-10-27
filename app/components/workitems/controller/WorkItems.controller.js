@@ -219,59 +219,59 @@ sap.ui.define(
           }
         },
 
-        onUpdateTableFinished(event) {
-          this.setItemCountsFilters(event);
-          // this.calcTotalDuration();
-        },
+        // onUpdateTableFinished(event) {
+        //   this.setItemCountsFilters(event);
+        // this.calcTotalDuration();
+        // },
 
-        async setItemCountsFilters(event) {
-          const viewModel = this.getModel("viewModel");
+        // async setItemCountsFilters(event) {
+        //   const viewModel = this.getModel("viewModel");
 
-          if (event.getSource().getBinding("items").isLengthFinal()) {
-            const binding = this.byId("tableWorkItems").getBinding("items");
-            const filtersApplication = binding.getFilters("Application");
-            const filtersControl = binding.getFilters("Control");
-            const filtersCombined = filtersApplication.concat(filtersControl);
-            const filtersWithoutDuplicates = [...new Set(filtersCombined)];
+        //   if (event.getSource().getBinding("items").isLengthFinal()) {
+        //     const binding = this.byId("tableWorkItems").getBinding("items");
+        //     const filtersApplication = binding.getFilters("Application");
+        //     const filtersControl = binding.getFilters("Control");
+        //     const filtersCombined = filtersApplication.concat(filtersControl);
+        //     const filtersWithoutDuplicates = [...new Set(filtersCombined)];
 
-            // Remove stateFilters to correctly calculate the item counts of each state
-            const filters = filtersWithoutDuplicates.filter(
-              (filter) => filter.getPath() !== "state"
-            );
+        //     // Remove stateFilters to correctly calculate the item counts of each state
+        //     const filters = filtersWithoutDuplicates.filter(
+        //       (filter) => filter.getPath() !== "state"
+        //     );
 
-            let workItems;
+        //     let workItems;
 
-            try {
-              workItems = await new Promise((resolve, reject) => {
-                this.getModel().read("/MyWorkItems", {
-                  filters,
-                  success: resolve,
-                  error: reject,
-                });
-              });
-            } catch (error) {
-              Log.error(error);
-            }
+        //     try {
+        //       workItems = await new Promise((resolve, reject) => {
+        //         this.getModel().read("/MyWorkItems", {
+        //           filters,
+        //           success: resolve,
+        //           error: reject,
+        //         });
+        //       });
+        //     } catch (error) {
+        //       Log.error(error);
+        //     }
 
-            const countAll = workItems.results.filter(
-              (workItem) =>
-                workItem.state === "completed" ||
-                workItem.state === "incompleted"
-            ).length;
+        //     const countAll = workItems.results.filter(
+        //       (workItem) =>
+        //         workItem.state === "completed" ||
+        //         workItem.state === "incompleted"
+        //     ).length;
 
-            const countCompleted = workItems.results.filter(
-              (workItem) => workItem.state === "completed"
-            ).length;
+        //     const countCompleted = workItems.results.filter(
+        //       (workItem) => workItem.state === "completed"
+        //     ).length;
 
-            const countIncompleted = workItems.results.filter(
-              (workItem) => workItem.state === "incompleted"
-            ).length;
+        //     const countIncompleted = workItems.results.filter(
+        //       (workItem) => workItem.state === "incompleted"
+        //     ).length;
 
-            viewModel.setProperty("/countAll", countAll);
-            viewModel.setProperty("/countCompleted", countCompleted);
-            viewModel.setProperty("/countIncompleted", countIncompleted);
-          }
-        },
+        //     viewModel.setProperty("/countAll", countAll);
+        //     viewModel.setProperty("/countCompleted", countCompleted);
+        //     viewModel.setProperty("/countIncompleted", countIncompleted);
+        //   }
+        // },
 
         onFilterDateRange(event) {
           const startDate = event.getParameter("from");
