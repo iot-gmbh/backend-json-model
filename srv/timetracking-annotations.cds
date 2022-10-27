@@ -32,10 +32,10 @@ annotate my.MyWorkItems with @(
   //
   SelectionFields              : [
     activatedDate,
-    level0,
-    level1,
-    level2,
-    level3,
+    level0Title,
+    level1Title,
+    level2Title,
+    level3Title,
     assignedToUserPrincipalName,
   ],
   LineItem                     : [
@@ -49,7 +49,8 @@ annotate my.MyWorkItems with @(
     },
   ]
 }) {
-  level0                      @(
+  // activatedDate @sap.filter-restriction=interval,
+  level0Title                 @(
     sap.updatable    : true,
     sap.creatable    : true,
     Common.Text      : {
@@ -58,20 +59,14 @@ annotate my.MyWorkItems with @(
     },
     Common.ValueList : {
       CollectionPath : 'CategoriesLevel0',
-      Parameters     : [
-        {
-          $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level0',
-          ValueListProperty : 'ID'
-        },
-        {
-          $Type             : 'Common.ValueListParameterDisplayOnly',
-          ValueListProperty : 'title'
-        }
-      ],
+      Parameters     : [{
+        $Type             : 'Common.ValueListParameterInOut',
+        LocalDataProperty : 'level0Title',
+        ValueListProperty : 'title'
+      }, ],
     }
   );
-  level1                      @(
+  level1Title                 @(
     Common.Text      : {
       $value                 : level1Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -81,17 +76,8 @@ annotate my.MyWorkItems with @(
       Parameters     : [
         {
           $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level1',
-          ValueListProperty : 'ID'
-        },
-        {
-          $Type             : 'Common.ValueListParameterDisplayOnly',
+          LocalDataProperty : 'level1Title',
           ValueListProperty : 'title'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level0',
-          ValueListProperty : 'level0'
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
@@ -101,7 +87,7 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
-  level2                      @(
+  level2Title                 @(
     Common.Text      : {
       $value                 : level2Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -111,16 +97,7 @@ annotate my.MyWorkItems with @(
       Parameters     : [
         {
           $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level2',
-          ValueListProperty : 'ID'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level1',
-          ValueListProperty : 'level1'
-        },
-        {
-          $Type             : 'Common.ValueListParameterDisplayOnly',
+          LocalDataProperty : 'level2Title',
           ValueListProperty : 'title'
         },
         {
@@ -130,18 +107,13 @@ annotate my.MyWorkItems with @(
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level0',
-          ValueListProperty : 'level0'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
           LocalDataProperty : 'level0Title',
           ValueListProperty : 'level0Title'
         },
       ],
     }
   );
-  level3                      @(
+  level3Title                 @(
     Common.Text      : {
       $value                 : level2Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -151,17 +123,8 @@ annotate my.MyWorkItems with @(
       Parameters     : [
         {
           $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level3',
-          ValueListProperty : 'ID'
-        },
-        {
-          $Type             : 'Common.ValueListParameterDisplayOnly',
+          LocalDataProperty : 'level3Title',
           ValueListProperty : 'title'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level2',
-          ValueListProperty : 'level2'
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
@@ -170,18 +133,8 @@ annotate my.MyWorkItems with @(
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level1',
-          ValueListProperty : 'level1'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
           LocalDataProperty : 'level1Title',
           ValueListProperty : 'level1Title'
-        },
-        {
-          $Type             : 'Common.ValueListParameterInOut',
-          LocalDataProperty : 'level0',
-          ValueListProperty : 'level0'
         },
         {
           $Type             : 'Common.ValueListParameterInOut',
@@ -191,13 +144,18 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
-  assignedToUserPrincipalName @Common.ValueList : {
-    CollectionPath               : 'MyWorkItems',
-    Parameters                   : [{
-      $Type             : 'Common.ValueListParameterInOut',
-      LocalDataProperty : 'assignedToUserPrincipalName',
-      ValueListProperty : 'assignedToUserPrincipalName'
-    }],
-    PresentationVariantQualifier : 'DurationByAssignedTo'
-  };
+  assignedToUserPrincipalName @(
+    Common.Text      : {
+      $value                 : assignedToUserPrincipalName,
+      ![@UI.TextArrangement] : #TextOnly
+    },
+    Common.ValueList : {
+      CollectionPath : 'Users',
+      Parameters     : [{
+        $Type             : 'Common.ValueListParameterInOut',
+        LocalDataProperty : 'assignedToUserPrincipalName',
+        ValueListProperty : 'userPrincipalName'
+      }, ],
+    }
+  );
 };
