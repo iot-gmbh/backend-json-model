@@ -180,16 +180,16 @@
 								</Input>
 							</VBox>
 							<TextArea value="{title}" rows="1" growing="true" growingMaxLines="6" change="updateWorkItem" />
-							<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="9em" change="updateWorkItemDates"/>
-							<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
-							<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="7em" change="updateWorkItemDates"/>
+							<DatePicker value="{path: 'date' , type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yyyy'}}" width="8.2em" change="updateWorkItemDates"/>
+							<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="5.7em" change="updateWorkItemDates"/>
+							<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" width="5.7em" change="updateWorkItemDates"/>
 							<ObjectNumber number="{duration}" unit="h"/>
-							<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" change="updateWorkItemActivity">
+							<Select id="selectActivityTable" items="{/activities}" selectedKey="{activity}" width="9.5em" change="updateWorkItemActivity">
 								<items>
 									<core:Item key="{title}" text="{title}"/>
 								</items>
 							</Select>
-							<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}" change="updateWorkItemLocation">
+							<ComboBox id="selectLocationTable" items="{path: '/locations', templateShareable: false}" selectedKey="{location}" width="8.7em" change="updateWorkItemLocation">
 								<items>
 									<core:Item key="{title}" text="{title}"/>
 								</items>
