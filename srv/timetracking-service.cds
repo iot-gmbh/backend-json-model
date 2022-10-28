@@ -50,10 +50,14 @@ service TimetrackingService @(requires : 'authenticated-user') {
     assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title : 'User'),
     assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title : 'Manager'),
     // hierarchy.level1.manager.userPrincipalName as hierarchyLevel1ManagerUserPrincipalName,
-    hierarchy.level0                     as level0,
-    hierarchy.level1                     as level1,
-    hierarchy.level2                     as level2,
-    hierarchy.level3                     as level3,
+    // hierarchy.level0                     as level0
+    // default '2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb',
+    // hierarchy.level1                     as level1
+    // default '2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb',
+    // hierarchy.level2                     as level2
+    // default '2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb',
+    // hierarchy.level3                     as level3
+    // default '2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb',
     hierarchy.level0Title                as level0Title,
     hierarchy.level1Title                as level1Title,
     hierarchy.level2Title                as level2Title,
@@ -67,7 +71,8 @@ service TimetrackingService @(requires : 'authenticated-user') {
     hierarchy.level2Manager              as level2Manager,
     hierarchy.level3Manager              as level3Manager
 
-  } where deleted is null
+  }
+  // where deleted is null
 
   @cds.redirection.target : true
   entity WorkItemsFastEntry @(restrict : [
@@ -95,10 +100,10 @@ service TimetrackingService @(requires : 'authenticated-user') {
   };
 
   action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
-  action   resetToDraft(ID : String)                                         returns WorkItemsFastEntry;
-  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of WorkItemsFastEntry;
-  function getWorkItemByID(ID : String)                                      returns WorkItemsFastEntry;
-  function categorizeWorkItem(workItem : WorkItemsFastEntry)                 returns WorkItemsFastEntry;
+  action   resetToDraft(ID : String)                                         returns MyWorkItems;
+  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
+  function getWorkItemByID(ID : String)                                      returns MyWorkItems;
+  function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
   function getMyCategoryTree()                                               returns array of Categories;
   function getMyCustomers()                                                  returns array of Categories;
   function getMyProjects()                                                   returns array of Categories;

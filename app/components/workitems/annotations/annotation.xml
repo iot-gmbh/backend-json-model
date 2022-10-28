@@ -13,6 +13,9 @@
     </edmx:Reference>
     <edmx:DataServices>
         <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
+            <Annotations>
+            
+            </Annotations>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>

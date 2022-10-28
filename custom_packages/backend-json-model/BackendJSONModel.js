@@ -1,7 +1,10 @@
-/* eslint-disable no-restricted-globals */
-
 sap.ui.define(
-  ["sap/ui/model/odata/v2/ODataModel", "sap/ui/model/json/JSONModel"],
+  [
+    "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/model/json/JSONModel",
+    // "sap/base/util/deepExtend",
+    // "thirdparty/deepmerge/dist/umd",
+  ],
   (ODataModel, JSONModel) => {
     function _promisify(model, method, paramsIndex) {
       // eslint-disable-next-line func-names
@@ -23,8 +26,9 @@ sap.ui.define(
 
     return JSONModel.extend("iot.ODataModelV2", {
       // eslint-disable-next-line object-shorthand, func-names
-      constructor: function (serviceURL, ...args) {
-        JSONModel.apply(this, ...args);
+      constructor: function (serviceURL, options = {}) {
+        const { data = {}, observe = false, synchronize = true } = options;
+        JSONModel.apply(this, data, observe);
 
         const odataModel = new ODataModel(serviceURL);
 
@@ -70,19 +74,17 @@ sap.ui.define(
             })
           );
 
-          // const data = this.getData();
-
-          // // Initialize with empty arrays
-          // this.setData({
-          //   ...data,
-          //   ...this.entityTypes
-          //     .map(({ name }) => name)
-          //     .reduce((acc, curr) => ({ ...acc, [curr]: [] }), {}),
-          // });
+          // Initialize with empty arrays
+          this.setData(
+            this.entityTypes
+              .map(({ name }) => name)
+              .reduce((acc, curr) => ({ ...acc, [curr]: [] }), {})
+          );
         });
 
         this._serviceURL = serviceURL;
         this._ODataModel = odataModel;
+        this._synchronize = synchronize;
 
         this._promises = {
           create: _promisify(odataModel, "create", 2),
@@ -163,28 +165,134 @@ sap.ui.define(
           }));
       },
 
-      async create(...args) {
-        const [path, { localPath = `${path}/X`, ...object } = {}] = args;
-        const result = await this._promises.create(path, object);
-        const parentPath = localPath.substring(0, localPath.lastIndexOf("/"));
+      async create(path, { localPath = `${path}/X`, ...object } = {}) {
+        let resultWithoutNavProps = {};
 
-        const resultWithoutNavProps = this.removeNavPropsFrom(result);
+        if (this._synchronize) {
+          const result = await this._promises.create(path, object);
+          resultWithoutNavProps = this.removeNavPropsFrom(result);
+        }
+
         const merge = { ...resultWithoutNavProps, ...object };
-        const data = this.getProperty(parentPath);
+        const dataLocation = localPath.substring(0, localPath.lastIndexOf("/"));
+        const data = this.getProperty(dataLocation);
 
         data.push(merge);
 
-        this.setProperty(parentPath, data);
+        this.setProperty(dataLocation, data);
+      },
+
+      _flattenResults(obj) {
+        if (Array.isArray(obj)) {
+          return obj.map((entry) => this._flattenResults(entry));
+        }
+
+        return Object.entries(obj).reduce((acc, [key, value]) => {
+          if (value && value.results) {
+            acc[key] = this._flattenResults(value.results);
+          } else {
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+      },
+
+      async deepCreate(parentPath, object) {
+        const existingItem = this.findObject(parentPath, object) || {};
+        const { keys } = this.getEntityTypeFrom(parentPath);
+
+        // https://github.com/TehShrike/deepmerge
+        const combineMerge = (target, source, options) => {
+          const destination = target.slice();
+
+          source.forEach((item, index) => {
+            const destIndex = destination.findIndex((destItem) =>
+              keys.every(
+                (key) =>
+                  destItem[key] === item[key] || !destItem[key] || !item[key]
+              )
+            );
+
+            if (destIndex === -1) {
+              destination.push(item);
+            } else if (typeof destination[destIndex] === "undefined") {
+              destination[destIndex] = options.cloneUnlessOtherwiseSpecified(
+                item,
+                options
+              );
+            } else if (options.isMergeableObject(item)) {
+              destination[destIndex] = deepmerge(target[index], item, options);
+            }
+          });
+          return destination;
+        };
+
+        const result = await this._promises.create(parentPath, object);
+
+        const mergeRequestWithResult = deepmerge(
+          object,
+          this._flattenResults(result),
+          {
+            arrayMerge: combineMerge,
+          }
+        );
+
+        const mergeWithExisting = deepmerge(
+          existingItem,
+          mergeRequestWithResult,
+          {
+            arrayMerge: combineMerge,
+          }
+        );
+
+        if (!this.isEmpty(existingItem)) {
+          this.setProperty(existingItem.localPath, mergeWithExisting);
+        } else {
+          const data = this.getProperty(parentPath);
+          data.push(mergeWithExisting);
+          this.setProperty(parentPath, data);
+        }
+      },
+
+      isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+      },
+
+      getEntityTypeFrom(parentPath) {
+        const entitySetName = parentPath.substring(1);
+        const entityType = this.entityTypes.find(
+          ({ name }) => name === entitySetName || `${name}Set` === entitySetName
+        );
+        return entityType;
+      },
+
+      findObject(parentPath, object) {
+        const entityType = this.getEntityTypeFrom(parentPath);
+        const items = this.getProperty(parentPath);
+
+        const index = items.findIndex((item) =>
+          entityType.keys.every((key) => item[key] === object[key])
+        );
+
+        if (index < 0) {
+          return false;
+        }
+
+        const result = items[index];
+        return { ...result, localPath: `${parentPath}/${index}` };
       },
 
       // create new obj => nav-Props will be deleted so don't use reference
       async update({ localPath, ...obj }) {
-        const odataPath = this.getODataPathFrom(obj);
-        const data = this.removeNavPropsFrom(obj);
-        const result = await this._promises.update(odataPath, data);
-        const cleanResult = this.sliceDeferredProperties(result);
+        let merge = obj;
 
-        const merge = { ...obj, ...cleanResult };
+        if (this._synchronize) {
+          const odataPath = this.getODataPathFrom(obj);
+          const data = this.removeNavPropsFrom(obj);
+          const result = await this._promises.update(odataPath, data);
+          const cleanResult = this.sliceDeferredProperties(result);
+          merge = { ...obj, ...cleanResult };
+        }
 
         this.setProperty(localPath, merge);
       },
@@ -193,7 +301,9 @@ sap.ui.define(
         const path = this.getODataPathFrom(obj);
         const entityName = path.split("(")[0];
 
-        await this._promises.remove(path);
+        if (this._synchronize) {
+          await this._promises.remove(path);
+        }
 
         const data = this.getProperty(entityName).filter(
           (entity) => !entity.__metadata.uri.includes(path)

@@ -78,7 +78,7 @@
     "set-default-env:dev": "bash ./set-env.sh development",
     "set-default-env:test": "bash ./set-env.sh test",
     "set-default-env:prod": "bash ./set-env.sh production",
-    "watch-analytics-alp": "cds watch --open analytics-alp/webapp/index.html?sap-ui-xx-viewCache=false"
+    "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning"
   },
   "files": [
     "db",

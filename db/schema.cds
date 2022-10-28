@@ -141,62 +141,63 @@ view CategoryTags as
     tenant;
 
 entity WorkItems : managed, relevance, multitenant {
-  key ID                       : String @odata.Type : 'Edm.String';
-      tags                     : Composition of many Tags2WorkItems
-                                   on tags.workItem = $self;
-      date                     : DateTime;
-      activatedDate            : DateTime;
-      activatedDateMonth       : Integer;
-      activatedDateYear        : Integer;
-      activatedDateDay         : Integer;
-      completedDate            : DateTime;
-      completedDateMonth       : Integer;
-      completedDateYear        : Integer;
-      completedDateDay         : Integer;
-      assignedTo               : Association to Users;
-      changedDate              : DateTime;
-      assignedToName           : String;
-      createdDate              : DateTime;
-      reason                   : String;
-      state                    : String;
-      teamProject              : String;
-      title                    : String;
-      workItemType             : String;
+  key ID                          : String @odata.Type : 'Edm.String';
+      tags                        : Composition of many Tags2WorkItems
+                                      on tags.workItem = $self;
+      date                        : DateTime;
+      activatedDate               : DateTime;
+      activatedDateMonth          : Integer;
+      activatedDateYear           : Integer;
+      activatedDateDay            : Integer;
+      completedDate               : DateTime;
+      completedDateMonth          : Integer;
+      completedDateYear           : Integer;
+      completedDateDay            : Integer;
+      assignedTo                  : Association to Users;
+      changedDate                 : DateTime;
+      assignedToName              : String;
+      createdDate                 : DateTime;
+      reason                      : String;
+      state                       : String;
+      teamProject                 : String;
+      title                       : String;
+      workItemType                : String;
       // Scheduling
-      completedWork            : Decimal;
-      remainingWork            : Decimal;
-      originalEstimate         : Decimal;
+      completedWork               : Decimal;
+      remainingWork               : Decimal;
+      originalEstimate            : Decimal;
       // Documentation
-      resolvedDate             : DateTime;
-      closedDate               : DateTime;
-      private                  : Boolean;
-      isPrivate                : Boolean;
-      isAllDay                 : Boolean;
+      resolvedDate                : DateTime;
+      closedDate                  : DateTime;
+      private                     : Boolean;
+      isPrivate                   : Boolean;
+      isAllDay                    : Boolean;
       // Custom
-      activity                 : String;
-      location                 : String;
-      type                     : String enum {
+      activity                    : String;
+      location                    : String;
+      type                        : String enum {
         Manual;
         Event;
         WorkItem
       };
-      source                   : String enum {
+      source                      : String enum {
         Manual;
         MSGraphEvent;
         AzureDevopsWorkItem;
       //...
       };
-      duration                 : Decimal;
-      resetEntry               : Boolean;
-      deleted                  : Boolean;
-      confirmed                : Boolean;
-      parent                   : Association to Categories;
-      hierarchy                : Association to Hierarchies
-                                   on parent.ID = hierarchy.ID;
+      duration                    : Decimal;
+      resetEntry                  : Boolean;
+      deleted                     : Boolean;
+      confirmed                   : Boolean;
+      parent                      : Association to Categories;
+      hierarchy                   : Association to Hierarchies
+                                      on parent.ID = hierarchy.ID;
       // Used by the Frontend's hierarchy input-filter
-      parentPath               : String;
+      parentPath                  : String;
       // Dummy-properties for CRUD-commands
-      managerUserPrincipalName : String;
+      managerUserPrincipalName    : String;
+      assignedToUserPrincipalName : String;
 
 };
 
