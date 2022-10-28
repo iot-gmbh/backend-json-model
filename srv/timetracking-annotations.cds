@@ -49,8 +49,8 @@ annotate my.MyWorkItems with @(
     },
   ]
 }) {
-  // activatedDate @sap.filter-restriction=interval,
-  level0Title                 @(
+  level0Title
+  @(
     sap.updatable    : true,
     sap.creatable    : true,
     Common.Text      : {
@@ -66,7 +66,9 @@ annotate my.MyWorkItems with @(
       }, ],
     }
   );
-  level1Title                 @(
+  level1Title
+
+  @(
     Common.Text      : {
       $value                 : level1Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -87,7 +89,9 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
-  level2Title                 @(
+  level2Title
+
+  @(
     Common.Text      : {
       $value                 : level2Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -113,7 +117,9 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
-  level3Title                 @(
+  level3Title
+
+  @(
     Common.Text      : {
       $value                 : level2Title,
       ![@UI.TextArrangement] : #TextOnly
@@ -144,7 +150,9 @@ annotate my.MyWorkItems with @(
       ],
     }
   );
-  assignedToUserPrincipalName @(
+  assignedToUserPrincipalName
+
+  @(
     Common.Text      : {
       $value                 : assignedToUserPrincipalName,
       ![@UI.TextArrangement] : #TextOnly

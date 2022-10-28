@@ -18,7 +18,20 @@
 		"dataSources": {
 			"mainService": {
 				"uri": "/v2/timetracking/",
-				"type": "OData"
+				"type": "OData",
+				"settings": {
+					"annotations": [
+						"annotation"
+					],
+					"odataVersion": "2.0"
+				}
+			},
+			"annotation": {
+				"type": "ODataAnnotation",
+				"uri": "annotations/annotation.xml",
+				"settings": {
+					"localUri": "annotations/annotation.xml"
+				}
 			}
 		},
 		"crossNavigation": {
