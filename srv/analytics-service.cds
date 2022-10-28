@@ -60,7 +60,7 @@ service AnalyticsService {
 
         @Analytics.Dimension           : true
         TO_CHAR(
-          activatedDate, 'dd.mm.yyyy'
+          activatedDate, 'yyyy-MM-dd'
         )                                    as date           : String,
 
         @Analytics.Dimension           : true

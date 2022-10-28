@@ -395,8 +395,8 @@ sap.ui.define(
           const day = appointment.date.getUTCDate();
           const year = appointment.date.getUTCFullYear();
 
-          data.activatedDate.setFullYear(year, month, day);
-          data.completedDate.setFullYear(year, month, day);
+          // data.activatedDate.setFullYear(year, month, day);
+          // data.completedDate.setFullYear(year, month, day);
 
           // Update
           if (data.ID) {

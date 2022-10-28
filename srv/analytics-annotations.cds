@@ -147,6 +147,7 @@ annotate my.WorkItems with @(UI : {
     }],
     PresentationVariantQualifier : 'DurationByAssignedTo'
   };
+  activatedDate               @(sap.filter.restriction : 'interval');
   level0                      @(
     Common.Text      : {
       $value                 : level0Title,

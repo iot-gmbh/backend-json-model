@@ -42,12 +42,12 @@
 											<Input value="{title}"/>
 										</f:fields>
 									</f:FormElement>
-									<f:FormElement label="{i18n>WorkItems.date}">
+									<!-- <f:FormElement label="{i18n>WorkItems.date}">
 										<DatePicker id="date" value="{ path: 'date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
-									</f:FormElement>
+									</f:FormElement> -->
 									<f:FormElement label="{i18n>WorkItems.activatedAndCompletedDate}">
-										<TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
-										<TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15"/>
+										<DateTimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
+										<DateTimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {style: 'short'}}" minutesStep="15"/>
 									</f:FormElement>
 								</f:formElements>
 							</f:FormContainer>
