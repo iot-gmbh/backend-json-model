@@ -19,6 +19,7 @@ builder:
           strategy: Advanced-Caching
           offlinePage: offline.html
           preCache:
+            - "sap-ui-custom.js"
             - "controller/*"
             - "*.html"
             - "view/*"
@@ -26,7 +27,8 @@ builder:
           networkFirst:
             - /\/v2\/.*/
           avoidCaching:
-            - /\/v2\/.*/
+            - /\/auth/\/.*/,
+            # - https://login.microsoftonline.com/\/.*/
         manifest:
           short_name: PJP
           name: IOT Project Planning
