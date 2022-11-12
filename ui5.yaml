@@ -19,7 +19,6 @@ builder:
           strategy: Advanced-Caching
           offlinePage: offline.html
           preCache:
-            - "sap-ui-custom.js"
             - "controller/*"
             - "*.html"
             - "view/*"
@@ -27,7 +26,8 @@ builder:
           networkFirst:
             - /\/v2\/.*/
           avoidCaching:
-            - /\/auth/\/.*/,
+            - /\/auth\/signin\/.*/
+            - /\/auth\/.*/
             # - https://login.microsoftonline.com/\/.*/
         manifest:
           short_name: PJP

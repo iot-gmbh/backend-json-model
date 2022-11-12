@@ -38,7 +38,7 @@
     "resources": {
       "css": [
         {
-          "uri": "iot_logo.png"
+          "uri": "images/iot_logo.png"
         }
       ]
     },
