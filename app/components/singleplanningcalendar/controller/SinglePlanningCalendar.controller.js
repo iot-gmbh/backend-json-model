@@ -269,18 +269,17 @@ sap.ui.define(
           // See: https://stackoverflow.com/questions/45289854/how-to-effectively-filter-tree-view-retaining-its-existing-structure
           const getChildren = (result, object) => {
             if (
-              (object.path &&
-                texts.every((text) =>
-                  object.path.toUpperCase().includes(text)
-                )) ||
-              (object.absoluteReference &&
-                texts.every((text) =>
-                  object.absoluteReference.toUpperCase().includes(text)
-                )) ||
-              (object.deepReference &&
-                texts.every((text) =>
-                  object.deepReference.toUpperCase().includes(text)
-                ))
+              object.path &&
+              texts.every((text) => object.path.includes(text))
+              //   ||
+              // (object.absoluteReference &&
+              //   texts.every((text) =>
+              //     object.absoluteReference.toUpperCase().includes(text)
+              //   )) ||
+              // (object.deepReference &&
+              //   texts.every((text) =>
+              //     object.deepReference.toUpperCase().includes(text)
+              //   ))
             ) {
               result.push(object);
               return result;
@@ -308,10 +307,8 @@ sap.ui.define(
 
           const categoriesFiltered = this.filterTree(
             MyCategoriesNested,
-            query
-              .split(" ")
-              .filter(Boolean)
-              .map((text) => text.toUpperCase())
+            query.split(" ").filter(Boolean)
+            // .map((text) => text.toUpperCase())
           );
 
           // const categoriesNested = model.nest({ items: categoriesFiltered });
@@ -370,14 +367,14 @@ sap.ui.define(
 
           appointment.localPath = path;
 
+          model.setProperty("/dialogBusy", false);
+          this._closeDialog("createItemDialog");
+
           try {
             await this._submitEntry(appointment);
           } catch (error) {
             Log.error(error);
           }
-
-          model.setProperty("/dialogBusy", false);
-          this._closeDialog("createItemDialog");
         },
 
         async _submitEntry(appointment) {
