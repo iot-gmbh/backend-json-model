@@ -250,7 +250,7 @@ sap.ui.define(
           let filters = [];
 
           if (!query) {
-            filters = new Filter("title", "EQ", null);
+            filters = new Filter("ID", "EQ", null);
           } else if (query === "*") {
             filters = [];
           } else if (query.includes(">")) {
@@ -358,7 +358,7 @@ sap.ui.define(
             vBox.removeItem(hierarchyTreeTable);
             setTimeout(() => {
               titleInputTable.focus();
-            }, 1);
+            }, 0);
 
             workItemPath = this.getModel().getProperty("/selectedItemPath");
           }
