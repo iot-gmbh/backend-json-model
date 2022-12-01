@@ -1,0 +1,51 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc">
+    <f:Form id="appointmentForm" editable="true" class="sapUiSizeCompact">
+        <f:layout>
+            <f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false" />
+        </f:layout>
+        <f:formContainers>
+            <f:FormContainer >
+                <f:FormElement label="{i18n>WorkItems.title}">
+                    <f:fields>
+                        <Input value="{title}"/>
+                    </f:fields>
+                </f:FormElement>
+                <f:FormElement label="{i18n>WorkItems.hierarchy}">
+                    <f:fields>
+                        <Input id="hierarchySearch" value="{parentPath}" placeholder="{i18n>enterTextToBeginFiltering}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+                            <suggestionItems>
+                                <core:Item text="{path}" key="{ID}"/>
+                            </suggestionItems>
+                        </Input>
+                    </f:fields>
+                </f:FormElement>
+                <f:FormElement>
+                    <f:fields>
+                        <t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNestedAndFiltered', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="14" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
+                            <t:noData>
+                                <Text text=""/>
+                            </t:noData>
+                            <t:columns>
+                                <t:Column label="{i18n>title}">
+                                    <t:template>
+                                        <FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column label="{i18n>WorkItems.reference}" width="30%">
+                                    <t:template>
+                                        <Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+                                    </t:template>
+                                </t:Column>
+                            </t:columns>
+                        </t:TreeTable>
+                    </f:fields>
+                </f:FormElement>
+            </f:FormContainer>
+        </f:formContainers>
+    </f:Form>
+</core:FragmentDefinition>

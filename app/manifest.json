@@ -75,7 +75,7 @@
           "pattern": "trackViaCalendar",
           "target": {
             "name": "calendar",
-            "prefix": "spc"
+            "prefix": "calendar"
           }
         },
         {
