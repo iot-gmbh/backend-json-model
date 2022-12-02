@@ -4,48 +4,76 @@
     xmlns:t="sap.ui.table"
     xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc">
-    <f:Form id="appointmentForm" editable="true" class="sapUiSizeCompact">
-        <f:layout>
-            <f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false" />
-        </f:layout>
-        <f:formContainers>
-            <f:FormContainer >
-                <f:FormElement label="{i18n>WorkItems.title}">
-                    <f:fields>
-                        <Input value="{title}"/>
-                    </f:fields>
-                </f:FormElement>
-                <f:FormElement label="{i18n>WorkItems.hierarchy}">
-                    <f:fields>
-                        <Input id="hierarchySearch" value="{parentPath}" placeholder="{i18n>enterTextToBeginFiltering}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
-                            <suggestionItems>
-                                <core:Item text="{path}" key="{ID}"/>
-                            </suggestionItems>
-                        </Input>
-                    </f:fields>
-                </f:FormElement>
-                <f:FormElement>
-                    <f:fields>
-                        <t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNestedAndFiltered', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="14" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
-                            <t:noData>
-                                <Text text=""/>
-                            </t:noData>
-                            <t:columns>
-                                <t:Column label="{i18n>title}">
-                                    <t:template>
-                                        <FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
-                                    </t:template>
-                                </t:Column>
-                                <t:Column label="{i18n>WorkItems.reference}" width="30%">
-                                    <t:template>
-                                        <Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
-                                    </t:template>
-                                </t:Column>
-                            </t:columns>
-                        </t:TreeTable>
-                    </f:fields>
-                </f:FormElement>
-            </f:FormContainer>
-        </f:formContainers>
-    </f:Form>
+    <l:DynamicSideContent >
+        <f:Form id="appointmentForm" editable="true" class="sapUiSizeCompact">
+            <f:layout>
+                <f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false" />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer >
+                    <f:FormElement label="{i18n>WorkItems.title}">
+                        <f:fields>
+                            <Input value="{title}"/>
+                        </f:fields>
+                    </f:FormElement>
+                    <f:FormElement label="{i18n>WorkItems.hierarchy}">
+                        <f:fields>
+                            <Input id="hierarchySearch" value="{parentPath}" placeholder="{i18n>enterTextToBeginFiltering}" suggestionItems="{/MyCategories}" liveChange="onChangeHierarchy">
+                                <suggestionItems>
+                                    <core:Item text="{path}" key="{ID}"/>
+                                </suggestionItems>
+                            </Input>
+                        </f:fields>
+                    </f:FormElement>
+                    <f:FormElement>
+                        <f:fields>
+                            <t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNestedAndFiltered', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="14" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
+                                <t:noData>
+                                    <Text text=""/>
+                                </t:noData>
+                                <t:columns>
+                                    <t:Column label="{i18n>title}">
+                                        <t:template>
+                                            <FormattedText htmlText="{parts: ['title', 'parentPath'], formatter: '.formatter.highlightFilter'}" />
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column label="{i18n>WorkItems.reference}" width="30%">
+                                        <t:template>
+                                            <Text text="{= ${absoluteReference} ? ${absoluteReference} : ${deepReference}}"/>
+                                        </t:template>
+                                    </t:Column>
+                                </t:columns>
+                            </t:TreeTable>
+                        </f:fields>
+                    </f:FormElement>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+        <l:sideContent>
+            <f:Form id="detailsForm" editable="true" class="sapUiSizeCompact">
+                <f:layout>
+                    <f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false" />
+                </f:layout>
+                <f:formContainers>
+                    <f:FormContainer >
+                        <f:FormElement label="{i18n>WorkItems.activatedAndCompletedDate}">
+                            <TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15">
+                                <layoutData>
+                                    <l:GridData span="XL1 L2 M2 S6" />
+                                </layoutData>
+                            </TimePicker>
+                            <TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15">
+                                <layoutData>
+                                    <l:GridData span="XL1 L2 M2 S6" />
+                                </layoutData>
+                            </TimePicker>
+                        </f:FormElement>
+                        <f:FormElement label="{i18n>WorkItems.date}">
+                            <DatePicker id="date" value="{ path: 'date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
+                        </f:FormElement>
+                    </f:FormContainer>
+                </f:formContainers>
+            </f:Form>
+        </l:sideContent>
+    </l:DynamicSideContent>
 </core:FragmentDefinition>

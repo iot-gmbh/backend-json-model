@@ -39,16 +39,20 @@ sap.ui.define(
 
         async onInit() {
           const bundle = this.getResourceBundle();
+          const router = this.getRouter();
 
-          this.getView().bindElement("/MyWorkItemDrafts/0");
+          this.byId("detailPage").bindElement("/MyWorkItemDrafts/0");
 
-          this.getRouter()
-            .getRoute("singleEntry")
-            .attachPatternMatched(
+          [
+            router.getRoute("singleEntry"),
+            router.getRoute("masterDetail"),
+          ].forEach((route) => {
+            route.attachPatternMatched(
               () =>
                 Promise.all([this._loadAppointments(), this._loadHierarchy()]),
               this
             );
+          });
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -110,6 +114,16 @@ sap.ui.define(
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
+        },
+
+        onSelectionChange(event) {
+          const { listItem } = event.getParameters();
+          const selectedID = listItem.getBindingContext().getProperty("ID");
+          const index = this.getModel()
+            .getProperty("/MyWorkItemDrafts")
+            .findIndex(({ ID }) => ID === selectedID);
+
+          this.byId("detailPage").bindElement(`/MyWorkItemDrafts/${index}`);
         },
 
         onSelectHierarchy(event) {

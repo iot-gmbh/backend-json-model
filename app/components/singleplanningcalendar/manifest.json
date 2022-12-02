@@ -112,6 +112,11 @@
           "pattern": "singleEntry",
           "name": "singleEntry",
           "target": "singleEntry"
+        },
+        {
+          "pattern": "masterDetail",
+          "name": "masterDetail",
+          "target": "masterDetail"
         }
       ],
       "targets": {
@@ -126,6 +131,12 @@
           "viewId": "singleEntry",
           "viewLevel": 0,
           "title": "Single Entry"
+        },
+        "masterDetail": {
+          "viewName": "MasterDetail",
+          "viewId": "masterDetail",
+          "viewLevel": 0,
+          "title": "Entries"
         }
       }
     }
