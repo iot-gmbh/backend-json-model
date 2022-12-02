@@ -17,8 +17,13 @@
         </detailPages>
         <masterPages>
             <Page id="masterPage" title="Work Items">
-                <List items="{/MyWorkItemDrafts}" mode="SingleSelectMaster" selectionChange="onSelectionChange">
-                    <StandardListItem title="{title}" description="{= ${path: 'activatedDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yy'}} + ', ' +  ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}}}" />
+                <Toolbar >
+                    <DateRangeSelection dateValue="{/dateFilter/start}" secondDateValue="{/dateFilter/end}" change="refreshMasterList" />
+                </Toolbar>
+                <List id="workItemsList" mode="SingleSelectMaster" selectionChange="onSelectionChange">
+                    <dependents>
+                        <StandardListItem id="workItemsListItem" title="{title}" description="{= ${path: 'activatedDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yy'}} + ', ' +  ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}}}" />
+                    </dependents>
                 </List>
             </Page>
         </masterPages>

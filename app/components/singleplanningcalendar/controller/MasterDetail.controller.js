@@ -9,6 +9,7 @@ sap.ui.define(
     "sap/base/Log",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "sap/ui/model/Sorter",
   ],
   (
     BaseController,
@@ -17,7 +18,8 @@ sap.ui.define(
     legendItems,
     Log,
     MessageBox,
-    MessageToast
+    MessageToast,
+    Sorter
   ) => {
     function addDays(date, days) {
       const result = new Date(date);
@@ -98,10 +100,16 @@ sap.ui.define(
         onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
+          const now = new Date();
+          const dateFilter = {
+            start: new Date(now.getFullYear(), now.getMonth(), 1),
+            end: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+          };
 
           model.setData({
             MyWorkItems: { NEW: {} },
             busy: true,
+            dateFilter,
             categories: {},
             hierarchySuggestion: "",
             legendItems: Object.entries(legendItems.getItems()).map(
@@ -112,8 +120,28 @@ sap.ui.define(
             ),
           });
 
+          this._bindMasterList();
+
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
+        },
+
+        refreshMasterList() {
+          this._bindMasterList();
+        },
+
+        _bindMasterList() {
+          const dateFilter = this.getModel().getProperty("/dateFilter");
+
+          this.byId("workItemsList").bindItems({
+            path: "/MyWorkItemDrafts",
+            sorter: new Sorter({ path: "activatedDate" }),
+            template: this.byId("workItemsListItem"),
+            filters: [
+              new Filter("activatedDate", "GE", dateFilter.start),
+              new Filter("completedDate", "LE", dateFilter.end),
+            ],
+          });
         },
 
         onSelectionChange(event) {
