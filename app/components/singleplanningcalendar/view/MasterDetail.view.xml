@@ -3,7 +3,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc">
-    <SplitApp >
+    <SplitApp>
         <detailPages>
             <Page id="detailPage" title="{title}" backgroundDesign="Solid" showFooter="true">
                 <core:Fragment fragmentName="iot.planner.components.singleplanningcalendar.view.dialogs.CreateEntry" type="XML"/>
@@ -18,9 +18,14 @@
         <masterPages>
             <Page id="masterPage" title="Work Items">
                 <Toolbar >
-                    <DateRangeSelection dateValue="{/dateFilter/start}" secondDateValue="{/dateFilter/end}" change="refreshMasterList" />
+                    <DateRangeSelection dateValue="{/filters/date/start}" secondDateValue="{/filters/date/end}" change="refreshMasterList" />
                 </Toolbar>
-                <List id="workItemsList" mode="SingleSelectMaster" selectionChange="onSelectionChange">
+                <Toolbar >
+                    <CheckBox selected="{/filters/showConfirmed}" text="Show Confirmed?" select="refreshMasterList" />
+                </Toolbar>
+                <List busyIndicatorDelay="0" id="workItemsList" mode="SingleSelectMaster" selectionChange="onSelectionChange">
+                    <headerToolbar>
+                    </headerToolbar>
                     <dependents>
                         <StandardListItem id="workItemsListItem" description="{title}" title="{= ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}}}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}"/>
                     </dependents>

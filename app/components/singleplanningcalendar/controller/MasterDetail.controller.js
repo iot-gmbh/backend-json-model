@@ -48,7 +48,7 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const router = this.getRouter();
 
-          this.byId("detailPage").bindElement("/MyWorkItemDrafts/0");
+          this.byId("detailPage").bindElement("/MyWorkItems/0");
 
           [
             router.getRoute("singleEntry"),
@@ -106,15 +106,18 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const model = this.getModel();
           const now = new Date();
-          const dateFilter = {
-            start: new Date(now.getFullYear(), now.getMonth(), 1),
-            end: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+          const filters = {
+            showConfirmed: true,
+            date: {
+              start: new Date(now.getFullYear(), now.getMonth(), 1),
+              end: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+            },
           };
 
           model.setData({
             MyWorkItems: { NEW: {} },
             busy: true,
-            dateFilter,
+            filters,
             categories: {},
             hierarchySuggestion: "",
             legendItems: Object.entries(legendItems.getItems()).map(
@@ -131,19 +134,35 @@ sap.ui.define(
           model.setSizeLimit(300);
         },
 
-        refreshMasterList() {
+        onChangeTime() {
+          this._bindMasterList();
+        },
+
+        async refreshMasterList() {
+          await this._loadAppointments();
+
           this._bindMasterList();
         },
 
         _bindMasterList() {
           const model = this.getModel();
-          const dateFilter = model.getProperty("/dateFilter");
+          const { date: dateFilter, showConfirmed } =
+            model.getProperty("/filters");
+
+          const filters = [
+            new Filter("activatedDate", "GE", dateFilter.start),
+            new Filter("completedDate", "LE", dateFilter.end),
+          ];
+
+          if (showConfirmed === false) {
+            filters.push(new Filter("confirmed", "EQ", false));
+          }
 
           this.byId("workItemsList").bindItems({
-            path: "/MyWorkItemDrafts",
+            path: "/MyWorkItems",
             sorter: [
               new Sorter("date", null, (context) => {
-                const workItems = model.getProperty("/MyWorkItemDrafts") || [];
+                const workItems = model.getProperty("/MyWorkItems") || [];
                 const myDate = context.getProperty("date");
                 const totalDuration = workItems
                   .filter(({ date }) => date === myDate)
@@ -176,10 +195,7 @@ sap.ui.define(
               return item;
             },
             template: this.byId("workItemsListItem"),
-            filters: [
-              new Filter("activatedDate", "GE", dateFilter.start),
-              new Filter("completedDate", "LE", dateFilter.end),
-            ],
+            filters,
           });
         },
 
@@ -187,10 +203,10 @@ sap.ui.define(
           const { listItem } = event.getParameters();
           const selectedID = listItem.getBindingContext().getProperty("ID");
           const index = this.getModel()
-            .getProperty("/MyWorkItemDrafts")
+            .getProperty("/MyWorkItems")
             .findIndex(({ ID }) => ID === selectedID);
 
-          this.byId("detailPage").bindElement(`/MyWorkItemDrafts/${index}`);
+          this.byId("detailPage").bindElement(`/MyWorkItems/${index}`);
         },
 
         onSelectHierarchy(event) {
@@ -303,11 +319,11 @@ sap.ui.define(
           if (data.ID) {
             await model.update(data);
 
-            const appointments = model.getProperty("/MyWorkItemDrafts");
-            model.setProperty(
-              "/MyWorkItemDrafts",
-              appointments.filter(({ confirmed }) => !confirmed)
-            );
+            // const appointments = model.getProperty("/MyWorkItemDrafts");
+            // model.setProperty(
+            //   "/MyWorkItemDrafts",
+            //   appointments.filter(({ confirmed }) => !confirmed)
+            // );
 
             this.byId("hierarchySearch").focus();
             model.setProperty("/MyCategoriesNestedAndFiltered", []);
@@ -318,37 +334,9 @@ sap.ui.define(
           }
         },
 
-        onChangeView() {
-          this._loadAppointments();
-        },
-
-        onStartDateChange() {
-          this._loadAppointments();
-        },
-
-        _getCalendarEndDate() {
-          const calendar = this.byId("SPCalendar");
-          const startDate = calendar.getStartDate();
-          const selectedView = calendar._getSelectedView().getKey();
-
-          const mapDaysToAdd = {
-            Day: 1,
-            WorkWeek: 5,
-            Week: 7,
-            // Sicher ist sicher, im Zweifel zu viele Daten laden => 31 Tage
-            Month: 31,
-          };
-
-          const daysToAdd = mapDaysToAdd[selectedView];
-          const endDate = addDays(startDate, daysToAdd);
-
-          return endDate;
-        },
-
         async _loadAppointments() {
           const model = this.getModel();
-          const startDate = addDays(Date.now(), -31);
-          const endDate = Date.now();
+          const { start, end } = model.getProperty("/filters/date");
 
           model.setProperty("/busy", true);
 
@@ -356,8 +344,8 @@ sap.ui.define(
             "/getCalendarView",
             {
               urlParameters: {
-                startDateTime: startDate,
-                endDateTime: endDate,
+                startDateTime: start,
+                endDateTime: end,
               },
             }
           );
@@ -378,10 +366,10 @@ sap.ui.define(
           );
 
           model.setProperty("/MyWorkItems", appointments);
-          model.setProperty(
-            "/MyWorkItemDrafts",
-            appointments.filter(({ confirmed }) => !confirmed)
-          );
+          // model.setProperty(
+          //   "/MyWorkItemDrafts",
+          //   appointments.filter(({ confirmed }) => !confirmed)
+          // );
 
           model.setProperty("/busy", false);
         },
