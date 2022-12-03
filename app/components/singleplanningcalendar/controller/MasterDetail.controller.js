@@ -131,11 +131,37 @@ sap.ui.define(
         },
 
         _bindMasterList() {
-          const dateFilter = this.getModel().getProperty("/dateFilter");
+          const model = this.getModel();
+          const dateFilter = model.getProperty("/dateFilter");
 
           this.byId("workItemsList").bindItems({
             path: "/MyWorkItemDrafts",
-            sorter: new Sorter({ path: "activatedDate" }),
+            sorter: [
+              new Sorter("date", null, (context) => {
+                const workItems = model.getProperty("/MyWorkItemDrafts") || [];
+                const myDate = context.getProperty("date");
+                const totalDuration = workItems
+                  .filter(({ date }) => date === myDate)
+                  .reduce((sum, { duration }) => sum + +duration, 0)
+                  .toFixed(2);
+                return {
+                  key: myDate,
+                  title: `${myDate} ${totalDuration}`,
+                  number: totalDuration,
+                };
+              }),
+              new Sorter("activatedDate"),
+            ],
+            groupHeaderFactory({ key, number, title }) {
+              const item = new sap.m.StandardListItem({
+                title: key,
+                info: `${number} h`,
+              });
+              const styleClasses = [
+                "sapMLIB sapMLIB-CTX sapMLIBShowSeparator sapMLIBTypeInactive sapMGHLI",
+              ].forEach((styleClass) => item.addStyleClass(styleClass));
+              return item;
+            },
             template: this.byId("workItemsListItem"),
             filters: [
               new Filter("activatedDate", "GE", dateFilter.start),

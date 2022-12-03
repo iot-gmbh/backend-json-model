@@ -22,7 +22,7 @@
                 </Toolbar>
                 <List id="workItemsList" mode="SingleSelectMaster" selectionChange="onSelectionChange">
                     <dependents>
-                        <StandardListItem id="workItemsListItem" title="{title}" description="{= ${path: 'activatedDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MM.yy'}} + ', ' +  ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}}}" />
+                        <StandardListItem id="workItemsListItem" description="{title}" title="{= ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}}}" info="{duration} h"/>
                     </dependents>
                 </List>
             </Page>

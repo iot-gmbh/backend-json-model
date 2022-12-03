@@ -27,7 +27,7 @@
                     </f:FormElement>
                     <f:FormElement>
                         <f:fields>
-                            <t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNestedAndFiltered', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="14" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
+                            <t:TreeTable selectionMode="Single" rowSelectionChange="onSelectHierarchy" id="hierarchyTree" rows="{path: '/MyCategoriesNestedAndFiltered', sorter: [{path: 'shallowReference'}], parameters: {numberOfExpandedLevels: 5, arrayNames: ['children']}}" visibleRowCount="10" selectionBehavior="RowOnly" sort="onSort" columnHeaderVisible="false">
                                 <t:noData>
                                     <Text text=""/>
                                 </t:noData>

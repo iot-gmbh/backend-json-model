@@ -4,7 +4,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) =>
       this.getOwnerComponent().getRouter().navTo(target, {}, {});
     },
 
-    navToSingleEntry() {
+    navToMasterDetail() {
       // navTo($event, "trackViaCalendar&/calendar/singleEntry");
       this.getOwnerComponent()
         .getRouter()
@@ -13,7 +13,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) =>
           {},
           {
             calendar: {
-              route: "singleEntry",
+              route: "masterDetail",
             },
           }
         );

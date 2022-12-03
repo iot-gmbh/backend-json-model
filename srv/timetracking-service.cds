@@ -46,7 +46,11 @@ service TimetrackingService @(requires : 'authenticated-user') {
     },
   ])                      as projection on my.WorkItems {
     *,
-    activatedDate                                                       @(title : 'Time'),
+    // TO_CHAR(
+    TO_CHAR(
+      activatedDate, 'YYYY-MM-DD'
+    )                                    as date : String               @(title : 'Date'),
+    activatedDate                                                       @(title : 'Activated Date'),
     assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title : 'User'),
     assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title : 'Manager'),
     // hierarchy.level1.manager.userPrincipalName as hierarchyLevel1ManagerUserPrincipalName,
