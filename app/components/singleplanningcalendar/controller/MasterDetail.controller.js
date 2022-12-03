@@ -34,6 +34,11 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
+    function msToHM(ms) {
+      // https://stackoverflow.com/questions/29816872/how-can-i-convert-milliseconds-to-hhmmss-format-using-javascript
+      return new Date(parseInt(ms, 10)).toISOString().substring(11, 16);
+    }
+
     return BaseController.extend(
       "iot.planner.components.singleplanningcalendar.controller.SingleEntry",
       {
@@ -142,12 +147,16 @@ sap.ui.define(
                 const myDate = context.getProperty("date");
                 const totalDuration = workItems
                   .filter(({ date }) => date === myDate)
-                  .reduce((sum, { duration }) => sum + +duration, 0)
+                  .reduce(
+                    (sum, { activatedDate, completedDate }) =>
+                      sum + (completedDate - activatedDate),
+                    0
+                  )
                   .toFixed(2);
                 return {
                   key: myDate,
                   title: `${myDate} ${totalDuration}`,
-                  number: totalDuration,
+                  number: msToHM(totalDuration),
                 };
               }),
               new Sorter("activatedDate"),
@@ -155,11 +164,15 @@ sap.ui.define(
             groupHeaderFactory({ key, number, title }) {
               const item = new sap.m.StandardListItem({
                 title: key,
-                info: `${number} h`,
+                info: `${number}`,
               });
               const styleClasses = [
                 "sapMLIB sapMLIB-CTX sapMLIBShowSeparator sapMLIBTypeInactive sapMGHLI",
-              ].forEach((styleClass) => item.addStyleClass(styleClass));
+              ];
+
+              styleClasses.forEach((styleClass) =>
+                item.addStyleClass(styleClass)
+              );
               return item;
             },
             template: this.byId("workItemsListItem"),
