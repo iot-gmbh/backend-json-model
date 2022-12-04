@@ -99,7 +99,7 @@ sap.ui.define(
                   .getBindingContext()
                   .getObject();
 
-                this._deleteAppointment(appointment);
+                this._deleteWorkItem(appointment);
               }
             }
           });
@@ -134,6 +134,13 @@ sap.ui.define(
           this._loadWorkItems();
           this._loadHierarchy();
 
+          // Otherwise new entries won't be displayed in the calendar
+          model.setSizeLimit(300);
+        },
+
+        onAfterRendering() {
+          this._bindMasterList();
+
           const router = this.getRouter();
           [
             router.getRoute("singleEntry"),
@@ -144,11 +151,37 @@ sap.ui.define(
               this
             );
           });
+        },
 
-          this._bindMasterList();
+        onPressDeleteWorkItem(event) {
+          const workItem = event.getSource().getBindingContext().getObject();
 
-          // Otherwise new entries won't be displayed in the calendar
-          model.setSizeLimit(300);
+          this._deleteWorkItem(workItem);
+        },
+
+        async _deleteWorkItem(workItem) {
+          const model = this.getModel();
+
+          model.setProperty("/busy", true);
+
+          try {
+            await model.remove(workItem);
+
+            if (workItem.source !== "Manual") {
+              await model.callFunction("/removeDraft", {
+                method: "POST",
+                urlParameters: {
+                  ID: workItem.ID,
+                  activatedDate: workItem.activatedDate,
+                  completedDate: workItem.completedDate,
+                },
+              });
+            }
+          } catch (error) {
+            Log.error(error);
+          }
+
+          model.setProperty("/busy", false);
         },
 
         onChangeTime() {
@@ -414,11 +447,6 @@ sap.ui.define(
           );
 
           model.setProperty("/MyWorkItems", myWorkItems);
-          // model.setProperty(
-          //   "/MyWorkItemDrafts",
-          //   appointments.filter(({ confirmed }) => !confirmed)
-          // );
-
           model.setProperty("/busy", false);
         },
 
