@@ -42,8 +42,9 @@ module.exports = async function (srv) {
       The original format is: '2022-06-23T14:30:00.0000000'
       OData needs a format like this: '2022-06-23T00:00:00Z'
       */
-      // date: new Date(new Date(start.dateTime).setHours(0, 0, 0)).toISOString(),
-      date: new Date(start.dateTime).toISOString().substring(0, 10),
+      date: new Date(new Date(start.dateTime).toISOString()),
+      dateString: new Date(start.dateTime).toISOString().substring(0, 10),
+      // dateISOString: new Date(start.dateTime).toISOString(),
       activatedDate: `${start.dateTime.substring(0, 19)}Z`,
       completedDate: `${end.dateTime.substring(0, 19)}Z`,
       assignedTo_userPrincipalName: user,

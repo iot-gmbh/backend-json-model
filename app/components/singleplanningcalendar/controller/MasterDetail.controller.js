@@ -104,6 +104,7 @@ sap.ui.define(
             }
           });
         },
+
         onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
@@ -129,6 +130,9 @@ sap.ui.define(
               })
             ),
           });
+
+          this._loadWorkItems();
+          this._loadHierarchy();
 
           const router = this.getRouter();
           [
@@ -174,11 +178,11 @@ sap.ui.define(
           this.byId("masterList").bindItems({
             path: "/MyWorkItems",
             sorter: [
-              new Sorter("date", null, (context) => {
+              new Sorter("dateString", null, (context) => {
                 const workItems = model.getProperty("/MyWorkItems") || [];
-                const myDate = context.getProperty("date");
+                const myDate = context.getProperty("dateString");
                 const totalDuration = workItems
-                  .filter(({ date }) => date === myDate)
+                  .filter(({ dateString }) => dateString === myDate)
                   .reduce(
                     (sum, { activatedDate, completedDate }) =>
                       sum + (completedDate - activatedDate),
@@ -219,7 +223,8 @@ sap.ui.define(
           const workItem = {
             title: "",
             confirmed: true,
-            date: now,
+            date: new Date(),
+            // dateISOString: now,
             activatedDate: now,
             completedDate: addMinutes(now, 15),
           };
@@ -362,7 +367,7 @@ sap.ui.define(
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
           data.confirmed = true;
-          data.date = data.date.toISOString().substring(0, 10);
+          data.dateString = data.date.toISOString().substring(0, 10);
 
           // Update
           if (data.ID) {

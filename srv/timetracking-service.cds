@@ -49,7 +49,8 @@ service TimetrackingService @(requires : 'authenticated-user') {
     // TO_CHAR(
     TO_CHAR(
       activatedDate, 'YYYY-MM-DD'
-    )                                    as date : String               @(title : 'Date'),
+    )                                    as dateString : String         @(title : 'Date (String)'),
+    activatedDate                        as date                        @(title : 'Date'),
     activatedDate                                                       @(title : 'Activated Date'),
     assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title : 'User'),
     assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title : 'Manager'),
