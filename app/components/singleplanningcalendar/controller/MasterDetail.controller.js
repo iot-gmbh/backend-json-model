@@ -27,6 +27,10 @@ sap.ui.define(
       return result;
     }
 
+    function addMinutes(date, minutes) {
+      return new Date(date.getTime() + minutes * 60000);
+    }
+
     function getMondayMorning() {
       const date = new Date(new Date().setHours(0, 0, 0, 1));
       const day = date.getDay();
@@ -37,6 +41,17 @@ sap.ui.define(
     function msToHM(ms) {
       // https://stackoverflow.com/questions/29816872/how-can-i-convert-milliseconds-to-hhmmss-format-using-javascript
       return new Date(parseInt(ms, 10)).toISOString().substring(11, 16);
+    }
+
+    function roundTimeToQuarterHour(time) {
+      const timeToReturn = new Date(time);
+
+      timeToReturn.setMilliseconds(
+        Math.round(timeToReturn.getMilliseconds() / 1000) * 1000
+      );
+      timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
+      timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
+      return timeToReturn;
     }
 
     return BaseController.extend(
@@ -55,8 +70,7 @@ sap.ui.define(
             router.getRoute("masterDetail"),
           ].forEach((route) => {
             route.attachPatternMatched(
-              () =>
-                Promise.all([this._loadAppointments(), this._loadHierarchy()]),
+              () => Promise.all([this._loadWorkItems(), this._loadHierarchy()]),
               this
             );
           });
@@ -139,7 +153,7 @@ sap.ui.define(
         },
 
         async refreshMasterList() {
-          await this._loadAppointments();
+          await this._loadWorkItems();
 
           this._bindMasterList();
         },
@@ -158,7 +172,7 @@ sap.ui.define(
             filters.push(new Filter("confirmed", "EQ", false));
           }
 
-          this.byId("workItemsList").bindItems({
+          this.byId("masterList").bindItems({
             path: "/MyWorkItems",
             sorter: [
               new Sorter("date", null, (context) => {
@@ -194,9 +208,28 @@ sap.ui.define(
               );
               return item;
             },
-            template: this.byId("workItemsListItem"),
+            template: this.byId("masterListItem"),
             filters,
           });
+        },
+
+        onCreateWorkItem() {
+          const model = this.getModel();
+          const now = roundTimeToQuarterHour(Date.now());
+
+          const workItem = {
+            title: "",
+            confirmed: true,
+            date: now,
+            activatedDate: now,
+            completedDate: addMinutes(now, 15),
+          };
+
+          model.setProperty("/MyWorkItems/NEW", workItem);
+          model.setProperty("/MyCategoriesNestedAndFiltered", []);
+
+          this.byId("detailPage").bindElement("/MyWorkItems/NEW");
+          this.byId("titleInput").focus();
         },
 
         onSelectionChange(event) {
@@ -207,6 +240,7 @@ sap.ui.define(
             .findIndex(({ ID }) => ID === selectedID);
 
           this.byId("detailPage").bindElement(`/MyWorkItems/${index}`);
+          this.getModel().setProperty("/MyCategoriesNestedAndFiltered", []);
         },
 
         onSelectHierarchy(event) {
@@ -278,10 +312,11 @@ sap.ui.define(
 
         async onSubmitEntry() {
           const model = this.getModel();
-          const appointment = this.getView().getBindingContext().getObject();
-          const path = this.getView().getBindingContext().getPath();
+          const bindingContext = this.byId("detailPage").getBindingContext();
+          const workItem = bindingContext.getObject();
+          const path = bindingContext.getPath();
 
-          if (appointment.isAllDay) {
+          if (workItem.isAllDay) {
             MessageToast.show(
               this.getResourceBundle().getText(
                 "message.allDayEventsAreNotEditable"
@@ -290,51 +325,60 @@ sap.ui.define(
             return;
           }
 
-          model.setProperty("/dialogBusy", true);
+          model.setProperty("/busy", true);
 
-          appointment.localPath = path;
+          workItem.localPath = path;
 
-          model.setProperty("/dialogBusy", false);
+          model.setProperty("/busy", false);
 
           try {
-            await this._submitEntry(appointment);
+            const { ID } = await this._submitEntry(workItem);
+
+            this._bindMasterList();
+
+            const masterList = this.byId("masterList");
+            const selectedItem = masterList
+              .getItems()
+              .find(
+                (item) =>
+                  item.getBindingContext() &&
+                  item.getBindingContext().getProperty("ID") === ID
+              );
+
+            masterList.setSelectedItem(selectedItem);
+            selectedItem.focus();
           } catch (error) {
             Log.error(error);
           }
         },
 
-        async _submitEntry(appointment) {
-          const data = appointment;
+        async _submitEntry(workItem) {
+          const data = workItem;
           const model = this.getModel();
           const { MyCategories } = model.getData();
           const parent = MyCategories.find(
-            (cat) => cat.path === appointment.parentPath
+            (cat) => cat.path === workItem.parentPath
           );
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
           data.confirmed = true;
+          data.date = data.date.toISOString().substring(0, 10);
 
           // Update
           if (data.ID) {
-            await model.update(data);
-
-            // const appointments = model.getProperty("/MyWorkItemDrafts");
-            // model.setProperty(
-            //   "/MyWorkItemDrafts",
-            //   appointments.filter(({ confirmed }) => !confirmed)
-            // );
+            const updatedItem = await model.update(data);
 
             this.byId("hierarchySearch").focus();
             model.setProperty("/MyCategoriesNestedAndFiltered", []);
-          } else {
-            await model.create("/MyWorkItems", data);
 
-            model.setProperty("/MyWorkItems/NEW", {});
+            return updatedItem;
           }
+
+          return model.create("/MyWorkItems", data);
         },
 
-        async _loadAppointments() {
+        async _loadWorkItems() {
           const model = this.getModel();
           const { start, end } = model.getProperty("/filters/date");
 
@@ -350,10 +394,10 @@ sap.ui.define(
             }
           );
 
-          const appointments = workItems.map(
-            ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
-              ...appointment,
-              tags: appointment.tags.results,
+          const myWorkItems = workItems.map(
+            ({ completedDate, activatedDate, isAllDay, ...workItem }) => ({
+              ...workItem,
+              tags: workItem.tags.results,
               // completedDate,
               // activatedDate,
               activatedDate: isAllDay
@@ -365,7 +409,7 @@ sap.ui.define(
             })
           );
 
-          model.setProperty("/MyWorkItems", appointments);
+          model.setProperty("/MyWorkItems", myWorkItems);
           // model.setProperty(
           //   "/MyWorkItemDrafts",
           //   appointments.filter(({ confirmed }) => !confirmed)

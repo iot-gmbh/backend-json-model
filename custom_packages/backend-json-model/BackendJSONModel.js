@@ -180,6 +180,8 @@ sap.ui.define(
         data.push(merge);
 
         this.setProperty(dataLocation, data);
+
+        return merge;
       },
 
       _flattenResults(obj) {
@@ -252,6 +254,8 @@ sap.ui.define(
           data.push(mergeWithExisting);
           this.setProperty(parentPath, data);
         }
+
+        return mergeWithExisting;
       },
 
       isEmpty(obj) {
@@ -295,6 +299,8 @@ sap.ui.define(
         }
 
         this.setProperty(localPath, merge);
+
+        return merge;
       },
 
       async remove(obj) {
