@@ -1,10 +1,7 @@
+/* eslint-disable no-restricted-globals */
+
 sap.ui.define(
-  [
-    "sap/ui/model/odata/v2/ODataModel",
-    "sap/ui/model/json/JSONModel",
-    // "sap/base/util/deepExtend",
-    // "thirdparty/deepmerge/dist/umd",
-  ],
+  ["sap/ui/model/odata/v2/ODataModel", "sap/ui/model/json/JSONModel"],
   (ODataModel, JSONModel) => {
     function _promisify(model, method, paramsIndex) {
       // eslint-disable-next-line func-names
@@ -263,9 +260,9 @@ sap.ui.define(
       },
 
       getEntityTypeFrom(parentPath) {
-        const entitySetName = parentPath.substring(1);
+        const entityTypeName = parentPath.substring(1);
         const entityType = this.entityTypes.find(
-          ({ name }) => name === entitySetName || `${name}Set` === entitySetName
+          ({ name }) => name === entityTypeName
         );
         return entityType;
       },

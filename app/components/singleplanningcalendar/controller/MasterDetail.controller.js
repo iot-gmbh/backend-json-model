@@ -61,19 +61,8 @@ sap.ui.define(
 
         async onInit() {
           const bundle = this.getResourceBundle();
-          const router = this.getRouter();
 
           this.byId("detailPage").bindElement("/MyWorkItems/0");
-
-          [
-            router.getRoute("singleEntry"),
-            router.getRoute("masterDetail"),
-          ].forEach((route) => {
-            route.attachPatternMatched(
-              () => Promise.all([this._loadWorkItems(), this._loadHierarchy()]),
-              this
-            );
-          });
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -115,7 +104,6 @@ sap.ui.define(
             }
           });
         },
-
         onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
@@ -140,6 +128,17 @@ sap.ui.define(
                 type,
               })
             ),
+          });
+
+          const router = this.getRouter();
+          [
+            router.getRoute("singleEntry"),
+            router.getRoute("masterDetail"),
+          ].forEach((route) => {
+            route.attachPatternMatched(
+              () => Promise.all([this._loadWorkItems(), this._loadHierarchy()]),
+              this
+            );
           });
 
           this._bindMasterList();
