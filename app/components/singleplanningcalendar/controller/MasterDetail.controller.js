@@ -431,12 +431,14 @@ sap.ui.define(
                   item.getBindingContext().getProperty("ID") === ID
               );
 
+            this.byId("hierarchyTree").clearSelection(true);
+
             this._resetInitialWorkItem(workItem.completedDate);
             // First select new item
             masterList.setSelectedItem(selectedItem);
             // Focus it to scroll down
             selectedItem.focus();
-            // Focus the title input to seamlessly create a new item  
+            // Focus the title input to seamlessly create a new item
             this.byId("titleInput").focus();
           } catch (error) {
             Log.error(error);
