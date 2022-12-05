@@ -54,6 +54,18 @@ sap.ui.define(
       return timeToReturn;
     }
 
+    function combineDateAndTime(date, time) {
+      const dateTime = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        time.getHours(),
+        time.getMinutes(),
+        time.getSeconds()
+      );
+      return dateTime;
+    }
+
     return BaseController.extend(
       "iot.planner.components.singleplanningcalendar.controller.SingleEntry",
       {
@@ -327,7 +339,6 @@ sap.ui.define(
         },
 
         _filterHierarchyByPath(query) {
-          const filters = [];
           const model = this.getModel();
           const { MyCategoriesNested } = model.getData();
 
@@ -366,12 +377,10 @@ sap.ui.define(
 
           workItem.localPath = path;
 
-          model.setProperty("/busy", false);
-
           try {
             const { ID } = await this._submitEntry(workItem);
 
-            this._bindMasterList();
+            // this._bindMasterList();
 
             const masterList = this.byId("masterList");
             const selectedItem = masterList
@@ -387,6 +396,8 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
+
+          model.setProperty("/busy", false);
         },
 
         async _submitEntry(workItem) {
@@ -401,6 +412,15 @@ sap.ui.define(
           data.parent_ID = parent.ID;
           data.confirmed = true;
           data.dateString = data.date.toISOString().substring(0, 10);
+          data.activatedDate = combineDateAndTime(
+            data.date,
+            data.activatedDate
+          );
+          data.completedDate = combineDateAndTime(
+            data.date,
+            data.completedDate
+          );
+          data.date = data.activatedDate;
 
           // Update
           if (data.ID) {

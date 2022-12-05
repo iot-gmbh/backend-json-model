@@ -28,15 +28,15 @@
         </detailPages>
         <masterPages>
             <Page id="masterPage" title="Work Items">
-                <List busyIndicatorDelay="0" id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange">
+                <List busyIndicatorDelay="0" id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange" sticky="HeaderToolbar">
                     <headerToolbar>
                         <Toolbar >
                             <DateRangeSelection dateValue="{/filters/date/start}" secondDateValue="{/filters/date/end}" change="refreshMasterList" />
                         </Toolbar>
                     </headerToolbar>
                     <dependents>
-                        <StandardListItem id="masterListItem" title="{title}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/>
-                        <!-- <StandardListItem id="workItemsListItem" title="{= ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ', ' + ${title}}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/> -->
+                        <!-- <StandardListItem id="masterListItem" title="{title}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/> -->
+                        <StandardListItem id="masterListItem" title="{= ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ', ' + ${title}}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/>
                     </dependents>
                 </List>
                 <footer>
