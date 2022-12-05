@@ -40,6 +40,16 @@ sap.ui.define(
       return new Date(date.setDate(diff));
     }
 
+    function getFirstDayOfMonth() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+
+    function getLastDayOfMonth() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    }
+
     function msToHM(ms) {
       // https://stackoverflow.com/questions/29816872/how-can-i-convert-milliseconds-to-hhmmss-format-using-javascript
       return new Date(parseInt(ms, 10)).toISOString().substring(11, 16);
@@ -119,15 +129,14 @@ sap.ui.define(
           });
         },
 
-        onBeforeRendering() {
+        async onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
-          const now = new Date();
           const filters = {
             showConfirmed: true,
             date: {
-              start: new Date(now.getFullYear(), now.getMonth(), 1),
-              end: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+              start: getMondayMorning(),
+              end: addDays(getMondayMorning(), 5),
             },
           };
 
@@ -145,11 +154,9 @@ sap.ui.define(
             ),
           });
 
-          this._loadWorkItems();
-          this._loadHierarchy();
-
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
+          await Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
         },
 
         onAfterRendering() {
@@ -263,9 +270,10 @@ sap.ui.define(
               styleClasses.forEach((styleClass) =>
                 item.addStyleClass(styleClass)
               );
+
               return item;
             },
-            factory: (_, context) => {
+            factory: (controlID, context) => {
               const workItems = model.getProperty("/MyWorkItems") || [];
               const {
                 ID: myID,
@@ -286,28 +294,31 @@ sap.ui.define(
 
               template.setHighlight(overlap ? "Error" : "None");
 
-              return template.clone();
+              return template.clone(controlID);
             },
+            // template,
             filters,
           });
         },
 
-        onCreateWorkItem() {
+        _resetInitialWorkItem(startDate = roundTimeToQuarterHour(Date.now())) {
           const model = this.getModel();
-          const now = roundTimeToQuarterHour(Date.now());
 
           const workItem = {
             title: "",
             confirmed: true,
-            date: new Date(),
+            date: startDate,
             // dateISOString: now,
-            activatedDate: now,
-            completedDate: addMinutes(now, 15),
+            activatedDate: startDate,
+            completedDate: addMinutes(startDate, 15),
           };
 
           model.setProperty("/MyWorkItems/NEW", workItem);
           model.setProperty("/MyCategoriesNestedAndFiltered", []);
+        },
 
+        onCreateWorkItem() {
+          this._resetInitialWorkItem();
           this.byId("detailPage").bindElement("/MyWorkItems/NEW");
           this.byId("titleInput").focus();
         },
@@ -411,8 +422,6 @@ sap.ui.define(
           try {
             const { ID } = await this._submitEntry(workItem);
 
-            // this._bindMasterList();
-
             const masterList = this.byId("masterList");
             const selectedItem = masterList
               .getItems()
@@ -422,8 +431,13 @@ sap.ui.define(
                   item.getBindingContext().getProperty("ID") === ID
               );
 
+            this._resetInitialWorkItem(workItem.completedDate);
+            // First select new item
             masterList.setSelectedItem(selectedItem);
+            // Focus it to scroll down
             selectedItem.focus();
+            // Focus the title input to seamlessly create a new item  
+            this.byId("titleInput").focus();
           } catch (error) {
             Log.error(error);
           }
