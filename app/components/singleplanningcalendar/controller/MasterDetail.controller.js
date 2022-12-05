@@ -9,6 +9,7 @@ sap.ui.define(
     "sap/base/Log",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "sap/m/StandardListItem",
     "sap/ui/model/Sorter",
   ],
   (
@@ -19,6 +20,7 @@ sap.ui.define(
     Log,
     MessageBox,
     MessageToast,
+    StandardListItem,
     Sorter
   ) => {
     function addDays(date, days) {
@@ -220,30 +222,37 @@ sap.ui.define(
             filters.push(new Filter("confirmed", "EQ", false));
           }
 
+          const template = this.byId("masterListItem");
+
           this.byId("masterList").bindItems({
             path: "/MyWorkItems",
             sorter: [
               new Sorter("dateString", null, (context) => {
                 const workItems = model.getProperty("/MyWorkItems") || [];
-                const myDate = context.getProperty("dateString");
+                const {
+                  dateString,
+                  activatedDate: myActivatedDate,
+                  completedDate: myCompletedDate,
+                } = context.getObject();
                 const totalDuration = workItems
-                  .filter(({ dateString }) => dateString === myDate)
+                  .filter((item) => item.dateString === dateString)
                   .reduce(
                     (sum, { activatedDate, completedDate }) =>
                       sum + (completedDate - activatedDate),
                     0
                   )
                   .toFixed(2);
+
                 return {
-                  key: myDate,
-                  title: `${myDate} ${totalDuration}`,
+                  key: dateString,
+                  title: `${dateString} ${totalDuration}`,
                   number: msToHM(totalDuration),
                 };
               }),
               new Sorter("activatedDate"),
             ],
             groupHeaderFactory({ key, number, title }) {
-              const item = new sap.m.StandardListItem({
+              const item = new StandardListItem({
                 title: key,
                 info: `${number}`,
               });
@@ -256,7 +265,29 @@ sap.ui.define(
               );
               return item;
             },
-            template: this.byId("masterListItem"),
+            factory: (_, context) => {
+              const workItems = model.getProperty("/MyWorkItems") || [];
+              const {
+                ID: myID,
+                activatedDate: myActivatedDate,
+                completedDate: myCompletedDate,
+              } = context.getObject();
+              const overlap = workItems
+                .filter(({ ID }) => !!ID && ID !== myID)
+                .find(
+                  ({ activatedDate, completedDate }) =>
+                    (myActivatedDate < activatedDate &&
+                      activatedDate < myCompletedDate) ||
+                    (myActivatedDate < completedDate &&
+                      completedDate < myCompletedDate) ||
+                    (myActivatedDate.toString() === activatedDate.toString() &&
+                      myCompletedDate.toString() === completedDate.toString())
+                );
+
+              template.setHighlight(overlap ? "Error" : "None");
+
+              return template.clone();
+            },
             filters,
           });
         },
