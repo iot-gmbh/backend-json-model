@@ -1,0 +1,27 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc">
+    <Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" class="sapUiSizeCompact" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="640px">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="{/createItemDialogTitle} {= !${confirmed} ? ${i18n>appointmentDialog.draftIndicator} : ''}"/>
+                </contentLeft>
+                <contentRight>
+                    <Button press="onPressResetAppointment" text="{i18n>resetEntry.button.text}" tooltip="{i18n>resetEntry.button.tooltip}" enabled="{= ${source} !== 'Manual' &amp;&amp; !!${confirmed} &amp;&amp; !${isAllDay}}"/>
+                    <Button press="onPressDeleteAppointment" text="{i18n>deleteEntry.button.text}" tooltip="{i18n>deleteEntry.button.tooltip}" enabled="{= !${isAllDay}}"/>
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <MessageStrip text="{i18n>message.allDayEventsAreNotEditable}" visible="{= !!${isAllDay}}" class="sapUiTinyMargin"/>
+
+        <core:Fragment fragmentName="iot.planner.components.singleplanningcalendar.view.dialogs.CreateEntry" type="XML"/>
+        <buttons>
+            <Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${parentPath} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+            <Button text="{i18n>close}" press="onCloseDialog" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

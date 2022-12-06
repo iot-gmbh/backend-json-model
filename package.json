@@ -62,7 +62,7 @@
     "start": "npm run set-default-env:dev && run-p start:cds start:ui5",
     "start:ui5": "ui5 serve",
     "start:cds": "cds run",
-    "start:test": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
+    "test": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
     "lint": "eslint srv && eslint app",
     "lint:fix:app": "eslint app --fix",
     "lint:fix:srv": "eslint srv --fix",

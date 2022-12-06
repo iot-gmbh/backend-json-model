@@ -1,9 +1,10 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
     xmlns="sap.m" displayBlock="true">
-    <Page showHeader="false">
+    <Page showHeader="false" showFooter="false">
         <content>
             <GenericTile class="sapUiTinyMargin" header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar')"/>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>masterDetail}" press="navToMasterDetail"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>fastEntry}" press=".navTo($event, 'fastEntry')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>workItems}" press=".navTo($event, 'workItems')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems}" press=".navTo($event, 'IOTWorkItems')"/>

@@ -104,9 +104,19 @@
       },
       "routes": [
         {
-          "pattern": "",
+          "pattern": "calendar",
           "name": "calendar",
           "target": "calendar"
+        },
+        {
+          "pattern": "singleEntry",
+          "name": "singleEntry",
+          "target": "singleEntry"
+        },
+        {
+          "pattern": "masterDetail",
+          "name": "masterDetail",
+          "target": "masterDetail"
         }
       ],
       "targets": {
@@ -115,6 +125,18 @@
           "viewId": "spc",
           "viewLevel": 0,
           "title": "SinglePlanningCalendar"
+        },
+        "singleEntry": {
+          "viewName": "SingleEntry",
+          "viewId": "singleEntry",
+          "viewLevel": 0,
+          "title": "Single Entry"
+        },
+        "masterDetail": {
+          "viewName": "MasterDetail",
+          "viewId": "masterDetail",
+          "viewLevel": 0,
+          "title": "Entries"
         }
       }
     }

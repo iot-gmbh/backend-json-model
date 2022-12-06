@@ -1,35 +1,34 @@
 // This is the service worker with the Advanced caching
-
 const CACHE = "advanced-caching-1668068768867";
 const precacheFiles = [
-"/view/App.view.xml",
-"/controller/Home.controller.js",
-"/controller/App.controller.js",
-"/controller/NotFound-dbg.controller.js",
-"/controller/Home-dbg.controller.js",
-"/controller/App-dbg.controller.js",
-"/index.html",
-"/view/NotFound.view.xml",
-"/view/Home.view.xml",
-"/controller/NotFound.controller.js",
-"/offline.html",];
+  "/view/App.view.xml",
+  "/controller/Home.controller.js",
+  "/controller/App.controller.js",
+  "/controller/NotFound-dbg.controller.js",
+  "/controller/Home-dbg.controller.js",
+  "/controller/App-dbg.controller.js",
+  "/index.html",
+  "/view/NotFound.view.xml",
+  "/view/Home.view.xml",
+  "/controller/NotFound.controller.js",
+  "/offline.html",
+];
 
 const offlineFallbackPage = "offline.html";
 
-const networkFirstPaths = [
-"/\/v2\/.*/",];
-
-const avoidCachingPaths = [
-
-    "/\/auth/\/.*/",
-  "/\/login.microsoftonline.com/\/.*/",
-];
+const networkFirstPaths = ["/v2"];
 
 const neverRespondToPaths = [
+  "/auth/signin",
+  // "/authorize",
+  "/auth/redirect",
+  // "login.microsoft.com",
 ];
 
+const avoidCachingPaths = [];
+
 function pathComparer(requestUrl, pathRegEx) {
-  return requestUrl.match(new RegExp(pathRegEx));
+  return requestUrl.includes(pathRegEx);
 }
 
 function comparePaths(requestUrl, pathsArray) {
@@ -55,7 +54,9 @@ self.addEventListener("install", (event) => {
     caches.open(CACHE).then((cache) => {
       console.log("[Service Worker] Caching pages during install");
 
-      return cache.addAll(precacheFiles).then(() => cache.add(offlineFallbackPage));
+      return cache
+        .addAll(precacheFiles)
+        .then(() => cache.add(offlineFallbackPage));
     })
   );
 });
@@ -87,14 +88,16 @@ function cacheFirstFetch(event) {
         // This is where we call the server to get the newest version of the
         // file to use the next time we show view
         event.waitUntil(
-          fetch(event.request).then((response) => updateCache(event.request, response))
+          fetch(event.request).then((response) =>
+            updateCache(event.request, response)
+          )
         );
 
         return response;
       },
-      () => 
+      () =>
         // The response was not found in the cache so we look for it on the server
-         fetch(event.request)
+        fetch(event.request)
           .then((response) => {
             // If request was success, add or update it in the cache
             event.waitUntil(updateCache(event.request, response.clone()));
@@ -103,17 +106,21 @@ function cacheFirstFetch(event) {
           })
           .catch((error) => {
             // The following validates that the request was for a navigation to a new document
-            if (event.request.destination !== "document" || event.request.mode !== "navigate") {
+            if (
+              event.request.destination !== "document" ||
+              event.request.mode !== "navigate"
+            ) {
               return;
             }
 
-            console.log(`[Service Worker] Network request failed and no cache.${  error}`);
+            console.log(
+              `[Service Worker] Network request failed and no cache.${error}`
+            );
             // Use the precached offline page as fallback
             return caches.open(CACHE).then((cache) => {
               cache.match(offlineFallbackPage);
             });
           })
-      
     )
   );
 }
@@ -127,7 +134,9 @@ function networkFirstFetch(event) {
         return response;
       })
       .catch((error) => {
-        console.log(`[Service Worker] Network request Failed. Serving content from cache: ${  error}`);
+        console.log(
+          `[Service Worker] Network request Failed. Serving content from cache: ${error}`
+        );
         return fromCache(event.request);
       })
   );
@@ -137,13 +146,15 @@ function fromCache(request) {
   // Check to see if you have it in the cache
   // Return response
   // If not in the cache, then return error page
-  return caches.open(CACHE).then((cache) => cache.match(request).then((matching) => {
+  return caches.open(CACHE).then((cache) =>
+    cache.match(request).then((matching) => {
       if (!matching || matching.status === 404) {
         return Promise.reject("no-match");
       }
 
       return matching;
-    }));
+    })
+  );
 }
 
 function updateCache(request, response) {

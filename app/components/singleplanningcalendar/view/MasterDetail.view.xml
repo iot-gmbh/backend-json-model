@@ -1,0 +1,52 @@
+<mvc:View controllerName="iot.planner.components.singleplanningcalendar.controller.MasterDetail"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc">
+    <SplitApp>
+        <detailPages>
+            <Page id="detailPage" backgroundDesign="Solid" showFooter="true">
+                <customHeader>
+                    <Bar>
+                        <contentLeft>
+                            <Text text = "{= !${ID} ? 'New Entry: ' + ${title} : ${title}}"/>
+                        </contentLeft>
+
+                        <contentRight>
+                            <Button text="Delete" press="onPressDeleteWorkItem" />
+                        </contentRight>
+                    </Bar>
+                </customHeader>
+                <core:Fragment fragmentName="iot.planner.components.singleplanningcalendar.view.dialogs.CreateEntry" type="XML"/>
+                <footer>
+                    <Toolbar >
+                        <ToolbarSpacer />
+                        <Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${parentPath} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+                    </Toolbar>
+                </footer>
+            </Page>
+        </detailPages>
+        <masterPages>
+            <Page id="masterPage" title="Work Items">
+                <List busyIndicatorDelay="0" id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange" sticky="HeaderToolbar">
+                    <headerToolbar>
+                        <Toolbar >
+                            <DateRangeSelection dateValue="{/filters/date/start}" secondDateValue="{/filters/date/end}" change="refreshMasterList" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <dependents>
+                        <!-- <StandardListItem id="masterListItem" title="{title}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/> -->
+                        <StandardListItem id="masterListItem" title="{= ${path: 'activatedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ' - ' + ${path: 'completedDate', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'HH:mm'}} + ', ' + ${title}}" info="{parts: ['activatedDate', 'completedDate'], formatter: '.formatter.getDuration'}" infoState="{= ${confirmed} ? 'None' : 'Warning'}"/>
+                    </dependents>
+                </List>
+                <footer>
+                    <Toolbar >
+                        <CheckBox selected="{/filters/showConfirmed}" text="Show Confirmed?" select="refreshMasterList" />
+                        <ToolbarSpacer />
+                        <Button icon="sap-icon://add" type="Emphasized" press="onCreateWorkItem"/>
+                    </Toolbar>
+                </footer>
+            </Page>
+        </masterPages>
+    </SplitApp>
+</mvc:View>
