@@ -1,4 +1,5 @@
 // This is the service worker with the Advanced caching
+
 const CACHE = "advanced-caching-1668068768867";
 const precacheFiles = [
   "/view/App.view.xml",
@@ -16,19 +17,14 @@ const precacheFiles = [
 
 const offlineFallbackPage = "offline.html";
 
-const networkFirstPaths = ["/v2"];
-
-const neverRespondToPaths = [
-  "/auth/signin",
-  // "/authorize",
-  "/auth/redirect",
-  // "login.microsoft.com",
-];
+const networkFirstPaths = ["//v2/.*/"];
 
 const avoidCachingPaths = [];
 
+const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
+
 function pathComparer(requestUrl, pathRegEx) {
-  return requestUrl.includes(pathRegEx);
+  return requestUrl.match(new RegExp(pathRegEx));
 }
 
 function comparePaths(requestUrl, pathsArray) {
