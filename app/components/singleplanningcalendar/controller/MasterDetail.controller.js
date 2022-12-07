@@ -458,7 +458,7 @@ sap.ui.define(
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
           data.confirmed = true;
-          data.dateString = data.date.toISOString().substring(0, 10);
+          data.dateString = data.date.toLocaleDateString("en-CA");
           data.activatedDate = combineDateAndTime(
             data.date,
             data.activatedDate

@@ -69,7 +69,7 @@
     "format": "prettier --write --plugin-search-dir=. .",
     "build": "cds build --production && npm run build:ui:pwa",
     "build:ui": "ui5 build self-contained --clean-dest --all",
-    "build:pwa": "ui5 build && cp app/index.html dist/index.html && cp pwa/service-worker.js dist/service-worker.js",
+    "build:pwa": "ui5 build && cp app/index.html dist/index.html && cp pwa/service-worker.js dist/service-worker.js && cp pwa/manifest.webmanifest dist/manifest.webmanifest",
     "build:ui:pwa": "ui5 build self-contained --clean-dest --all && cp app/index.html dist/index.html",
     "build:ui:dev": "ui5 build dev --clean-dest --all",
     "deploy": "npm run set-default-env:dev && cds-pg-migra",
