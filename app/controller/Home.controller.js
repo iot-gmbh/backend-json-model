@@ -1,7 +1,16 @@
 sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) =>
   Controller.extend("iot.planner.controller.Home", {
-    navTo(event, target) {
-      this.getOwnerComponent().getRouter().navTo(target, {}, {});
+    navTo(event, pattern, target, deepRoute) {
+      let deepRoutingConfig = {};
+
+      if (target && deepRoute) {
+        deepRoutingConfig = {
+          [target]: { route: deepRoute },
+        };
+      }
+      this.getOwnerComponent()
+        .getRouter()
+        .navTo(pattern, {}, deepRoutingConfig);
     },
 
     navToMasterDetail() {
@@ -12,7 +21,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) =>
           "trackViaCalendar",
           {},
           {
-            calendar: {
+            spc: {
               route: "masterDetail",
             },
           }

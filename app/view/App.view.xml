@@ -2,6 +2,6 @@
     xmlns:f="sap.f"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <!-- <f:ShellBar id="sapFShellBarSample" title="{i18n>appTitle}" secondTitle="{i18n>appDescription}" homeIcon="./iot_logo.png"/> -->
-    <App id="app" height="99.5%"/>
+    <!-- Make it 99% to prevent ugly 'double' scroll-bars -->
+    <App id="app" height="99%"/>
 </mvc:View>

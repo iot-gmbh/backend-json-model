@@ -115,15 +115,11 @@ sap.ui.define(
                 this.onSubmitEntry();
               } else if (evt.keyCode === 46) {
                 evt.preventDefault();
-
-                const appointmentControl = sap.ui
-                  .getCore()
-                  .byId(activeElementID);
-                const appointment = appointmentControl
+                const workItem = this.byId("detailPage")
                   .getBindingContext()
                   .getObject();
 
-                this._deleteWorkItem(appointment);
+                this._deleteWorkItem(workItem);
               }
             }
           });
@@ -332,6 +328,7 @@ sap.ui.define(
 
           this.byId("detailPage").bindElement(`/MyWorkItems/${index}`);
           this.getModel().setProperty("/MyCategoriesNestedAndFiltered", []);
+          // this.byId("hierarchySearch").focus();
         },
 
         onSelectHierarchy(event) {
@@ -438,8 +435,11 @@ sap.ui.define(
             masterList.setSelectedItem(selectedItem);
             // Focus it to scroll down
             selectedItem.focus();
-            // Focus the title input to seamlessly create a new item
-            this.byId("titleInput").focus();
+
+            if (!workItem.ID) {
+              // Focus the title input to seamlessly create a new item
+              this.byId("titleInput").focus();
+            }
           } catch (error) {
             Log.error(error);
           }

@@ -74,8 +74,8 @@
           "name": "trackViaCalendar",
           "pattern": "trackViaCalendar",
           "target": {
-            "name": "calendar",
-            "prefix": "calendar"
+            "name": "spc",
+            "prefix": "spc"
           }
         },
         {
@@ -140,7 +140,7 @@
           "title": "Categories",
           "id": "manageCategories"
         },
-        "calendar": {
+        "spc": {
           "type": "Component",
           "usage": "calendarComponent",
           "title": "Calendar",
