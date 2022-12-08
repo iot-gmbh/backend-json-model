@@ -142,6 +142,16 @@ sap.ui.define(
             filters,
             categories: {},
             hierarchySuggestion: "",
+            activities: [
+              { title: "Durchführung" },
+              { title: "Reise-/Fahrzeit" },
+              { title: "Pendelfahrt Hotel/Einsatzort" },
+            ],
+            locations: [
+              { title: "IOT" },
+              { title: "Home-Office" },
+              { title: "Rottendorf" },
+            ],
             legendItems: Object.entries(legendItems.getItems()).map(
               ([key, { type }]) => ({
                 text: bundle.getText(`legendItems.${key}`),

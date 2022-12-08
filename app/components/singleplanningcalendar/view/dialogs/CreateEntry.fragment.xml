@@ -71,6 +71,20 @@
                         <f:FormElement label="{i18n>WorkItems.date}">
                             <DatePicker id="date" value="{ path: 'date', type: 'sap.ui.model.type.DateTime', formatOptions: {pattern: 'dd.MM.yyyy'}}"/>
                         </f:FormElement>
+                        <f:FormElement label="{i18n>formSelectActivity}">
+                            <Select id="selectActivityForm" items="{/activities}" selectedKey="{activity}">
+                                <items>
+                                    <core:Item key="{title}" text="{title}"/>
+                                </items>
+                            </Select>
+                        </f:FormElement>
+                        <f:FormElement label="{i18n>formComboBoxLocation}">
+                            <Select id="selectLocationForm" items="{/locations}" selectedKey="{location}">
+                                <items>
+                                    <core:Item key="{title}" text="{title}"/>
+                                </items>
+                            </Select>
+                        </f:FormElement>
                     </f:FormContainer>
                 </f:formContainers>
             </f:Form>

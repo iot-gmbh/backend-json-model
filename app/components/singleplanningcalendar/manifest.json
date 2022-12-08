@@ -137,6 +137,10 @@
           "viewId": "masterDetail",
           "viewLevel": 0,
           "title": "Entries"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewId": "notFound"
         }
       }
     }
