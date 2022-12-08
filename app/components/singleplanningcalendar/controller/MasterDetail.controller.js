@@ -136,6 +136,8 @@ sap.ui.define(
             },
           };
 
+          await model.metadataLoaded();
+
           model.setData({
             MyWorkItems: { NEW: {} },
             busy: true,
@@ -160,14 +162,14 @@ sap.ui.define(
             ),
           });
 
+          this._bindMasterList();
+
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
           await Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
         },
 
         onAfterRendering() {
-          this._bindMasterList();
-
           const router = this.getRouter();
           [
             router.getRoute("singleEntry"),
