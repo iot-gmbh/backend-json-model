@@ -7,7 +7,7 @@
 	xmlns:t="sap.ui.table"
 	xmlns:mvc="sap.ui.core.mvc">
 	<Page showHeader="false">
-		<SinglePlanningCalendar id="SPCalendar" appointments="{/MyWorkItems}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="8" endHour="18" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true" scaleFactor="1" busy="{/busy}" busyIndicatorDelay="0">
+		<SinglePlanningCalendar id="SPCalendar" appointments="{/MyWorkItems}" appointmentSelect="onPressAppointment" appointmentCreate="onCreateAppointment" appointmentResize="onEditAppointment" appointmentDrop="onEditAppointment" startDateChange="onStartDateChange" viewChange="onChangeView" startHour="8" endHour="18" fullDay="false" enableAppointmentsCreate="true" enableAppointmentsResize="true" enableAppointmentsDragAndDrop="true" scaleFactor="2" busy="{/busy}" busyIndicatorDelay="0">
 			<actions>
 				<Button id="createAppointment" text="{i18n>createAppointment.button.text}" press="onCreateAppointment" tooltip="{i18n>createAppointment.button.tooltip}" />
 				<Button id="displayLegend" text="{i18n>displayLegend.button.text}" press="onDisplayLegend" tooltip="{i18n>displayLegend.button.tooltip}" />
