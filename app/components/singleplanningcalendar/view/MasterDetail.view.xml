@@ -5,7 +5,7 @@
     xmlns:mvc="sap.ui.core.mvc">
     <SplitApp>
         <detailPages>
-            <Page id="detailPage" busy="{/busy}" busyIndicatorDelay="0" backgroundDesign="Solid" showFooter="true">
+            <Page id="detailPage" busy="{/busy}" busyIndicatorDelay="500" backgroundDesign="Solid" showFooter="true">
                 <customHeader>
                     <Bar>
                         <contentLeft>
@@ -27,7 +27,7 @@
             </Page>
         </detailPages>
         <masterPages>
-            <Page id="masterPage" busy="{/busy}" busyIndicatorDelay="0" title="Work Items">
+            <Page id="masterPage" busy="{/busy}" busyIndicatorDelay="500" title="Work Items">
                 <List id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange" sticky="HeaderToolbar">
                     <headerToolbar>
                         <Toolbar >

@@ -57,12 +57,12 @@
                 <f:formContainers>
                     <f:FormContainer >
                         <f:FormElement label="{i18n>WorkItems.activatedAndCompletedDate}">
-                            <TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" change="onChangeTime">
+                            <TimePicker value="{path: 'activatedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15">
                                 <layoutData>
                                     <l:GridData span="XL1 L2 M2 S6" />
                                 </layoutData>
                             </TimePicker>
-                            <TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15" change="onChangeTime">
+                            <TimePicker value="{path: 'completedDate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: {pattern : 'HH:mm'}}" minutesStep="15">
                                 <layoutData>
                                     <l:GridData span="XL1 L2 M2 S6" />
                                 </layoutData>

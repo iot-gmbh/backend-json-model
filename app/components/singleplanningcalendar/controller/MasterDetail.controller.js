@@ -213,10 +213,6 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
-        onChangeTime() {
-          this._bindMasterList();
-        },
-
         async refreshMasterList() {
           await this._loadWorkItems();
 
