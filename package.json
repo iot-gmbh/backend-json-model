@@ -13,6 +13,7 @@
   },
   "workspaces": {
     "packages": [
+      "custom_packages/cds-pg",
       "custom_packages/cds-msal-auth",
       "custom_packages/errorhandler"
     ]
