@@ -19,11 +19,11 @@ const offlineFallbackPage = "offline.html";
 
 const networkFirstPaths = ["//v2/.*/", "/v2"];
 
-// const avoidCachingPaths = [];
-const avoidCachingPaths = ["/auth"];
+const avoidCachingPaths = [];
+// const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = [];
+const neverRespondToPaths = ["/auth"];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));

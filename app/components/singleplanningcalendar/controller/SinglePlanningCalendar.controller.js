@@ -97,8 +97,11 @@ sap.ui.define(
         onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
+          const modelData = model.getData() || {};
 
           model.setData({
+            ...modelData,
+
             MyWorkItems: { NEW: {} },
             busy: true,
             categories: {},

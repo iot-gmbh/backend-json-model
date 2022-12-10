@@ -128,6 +128,7 @@ sap.ui.define(
         async onBeforeRendering() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
+          const modelData = model.getData() || {};
           const filters = {
             showConfirmed: true,
             date: {
@@ -139,6 +140,8 @@ sap.ui.define(
           await model.metadataLoaded();
 
           model.setData({
+            ...modelData,
+
             MyWorkItems: { NEW: {} },
             busy: true,
             filters,
