@@ -6,7 +6,15 @@
     <App autoFocus="false" height="99.5%">
         <!-- <Page enableScrolling="false" -->
 
-        <Page enableScrolling="false" title="Project Planning" showNavButton="true">
+        <Page enableScrolling="false" title="Project Planning" showNavButton="false">
+            <customHeader>
+                <Toolbar >
+                    <Button icon="sap-icon://nav-back" press="onPressNavBack"/>
+                    <Title text="Project Planning"/>
+                    <ToolbarSpacer ></ToolbarSpacer>
+                    <Button icon="sap-icon://refresh" press="onPressRefreshPage"/>
+                </Toolbar>
+            </customHeader>
             <!-- <customHeader>
                 <f:ShellBar title="This bar is always visible">
                     <f:profile>
