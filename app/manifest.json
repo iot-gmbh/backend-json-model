@@ -33,7 +33,7 @@
       "viewName": "iot.planner.view.App",
       "type": "XML",
       "async": true,
-      "id": "app"
+      "id": "appView"
     },
     "resources": {
       "css": [

@@ -6,7 +6,7 @@
         {
             "src": "images/iot_logo.png",
             "type": "image/png",
-            "sizes": "198x199"
+            "sizes": "144x144"
         }
     ],
     "start_url": "/index.html",
