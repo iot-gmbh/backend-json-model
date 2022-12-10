@@ -4,7 +4,7 @@
     "description": "Register and analyse your work",
     "icons": [
         {
-            "src": "images/iot_logo.png",
+            "src": "images/iot_logo_144.png",
             "type": "image/png",
             "sizes": "144x144"
         }
