@@ -23,7 +23,7 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = ["/auth"];
+const neverRespondToPaths = ["/auth", "/v2", "/index.html", "/."];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
@@ -86,9 +86,14 @@ function cacheFirstFetch(event) {
         // This is where we call the server to get the newest version of the
         // file to use the next time we show view
         event.waitUntil(
-          fetch(event.request).then((response) =>
-            updateCache(event.request, response)
-          )
+          fetch(event.request)
+            .then((response) => {
+              updateCache(event.request, response);
+            })
+            .catch((error) => {
+              console.log(error);
+              console.log(event.request);
+            })
         );
 
         return response;
