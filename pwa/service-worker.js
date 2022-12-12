@@ -23,7 +23,7 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = ["/auth", "/v2", "/index.html"];
+const neverRespondToPaths = ["/auth", "/index.html"];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
@@ -69,6 +69,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (comparePaths(event.request.url, neverRespondToPaths)) return;
+  if (event.request.url.endsWith("/")) return;
 
   if (comparePaths(event.request.url, networkFirstPaths)) {
     networkFirstFetch(event);
