@@ -2,11 +2,11 @@
     xmlns:f="sap.f"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <!-- Make it 99% to prevent ugly 'double' scroll-bars -->
-    <App autoFocus="false" height="99.5%">
-        <!-- <Page enableScrolling="false" -->
 
-        <Page enableScrolling="false" title="Project Planning" showNavButton="false">
+    <App busyIndicatorDelay="0" id="app" class="sapUiSizeCozy"/>
+    <!-- Make it 99% to prevent ugly 'double' scroll-bars -->
+    <!-- <App autoFocus="false" height="99.5%">
+        <Page enableScrolling="false" title="Project Planning" showNavButton="false" showFooter="true">
             <customHeader>
                 <Toolbar >
                     <Button icon="sap-icon://nav-back" press="onPressNavBack"/>
@@ -15,16 +15,8 @@
                     <Button icon="sap-icon://refresh" press="onPressRefreshPage"/>
                 </Toolbar>
             </customHeader>
-            <!-- <customHeader>
-                <f:ShellBar title="This bar is always visible">
-                    <f:profile>
-                        <Avatar src="sap-icon://sap-ui5" />
-                    </f:profile>
-                </f:ShellBar>
-            </customHeader> -->
             <NavContainer id="app" autoFocus="false">
-                <!-- will be added by the Router -->
             </NavContainer>
         </Page>
-    </App>
+    </App> -->
 </mvc:View>

@@ -27,7 +27,7 @@
             </Page>
         </detailPages>
         <masterPages>
-            <Page showHeader="false" id="masterPage" busy="{/busy}" busyIndicatorDelay="500" title="Work Items">
+            <Page showHeader="false" id="masterPage" busy="{/busy}" busyIndicatorDelay="500" title="Work Items" showFooter="true">
                 <List id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange" sticky="HeaderToolbar">
                     <headerToolbar>
                         <Toolbar >
