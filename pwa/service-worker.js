@@ -13,6 +13,7 @@ const precacheFiles = [
   "/view/Home.view.xml",
   "/controller/NotFound.controller.js",
   "/offline.html",
+  "/resources/sap-ui-custom.js",
 ];
 
 const offlineFallbackPage = "offline.html";
