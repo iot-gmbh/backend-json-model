@@ -28,6 +28,7 @@
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
     "backend-json-model": "file:custom_packages/backend-json-model",
+    "cds-azure-ad": "^0.0.21",
     "cds-msal-auth": "file:custom_packages/cds-msal-auth",
     "cds-pg": "^0.1.30",
     "cds-swagger-ui-express": "^0.5.0",

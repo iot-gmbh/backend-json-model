@@ -1,13 +1,18 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History"],
-  (Controller, History) =>
-    Controller.extend("iot.planner.controller.App", {
-      onInit() {
-        // apply content density mode to root view
-        this.getView().addStyleClass(
-          this.getOwnerComponent().getContentDensityClass()
-        );
+  [
+    "../Authentication",
+    "./BaseController",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/json/JSONModel",
+  ],
+  (Authentication, BaseController, History, JSONModel) =>
+    BaseController.extend("iot.planner.controller.App", {
+      async onInit() {
+        const session = await Authentication.init();
+
+        this.setModel(new JSONModel(session), "session");
       },
+
       onPressNavBack() {
         const sPreviousHash = History.getInstance().getPreviousHash();
 

@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 sap.ui.define(
   [
-    "./BaseController",
+    "../../../controller/BaseController",
     "sap/ui/model/Filter",
     "../model/formatter",
     "../model/legendItems",

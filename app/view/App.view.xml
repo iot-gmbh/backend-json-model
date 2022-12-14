@@ -3,20 +3,23 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
 
-    <App busyIndicatorDelay="0" id="app" class="sapUiSizeCozy"/>
+    <!-- <App busyIndicatorDelay="0" id="app" class="sapUiSizeCozy"/> -->
     <!-- Make it 99% to prevent ugly 'double' scroll-bars -->
-    <!-- <App autoFocus="false" height="99.5%">
+    <App autoFocus="false" height="99.5%">
         <Page enableScrolling="false" title="Project Planning" showNavButton="false" showFooter="true">
             <customHeader>
                 <Toolbar >
                     <Button icon="sap-icon://nav-back" press="onPressNavBack"/>
                     <Title text="Project Planning"/>
                     <ToolbarSpacer ></ToolbarSpacer>
+                    <Text text="{session>/account/username}" visible="{= !!${session>/account}}"/>
+                    <Button text="Login" visible="{= !${session>/account}}" press="login"/>
+                    <Button text="Logout" visible="{= !!${session>/account}}" press="logout"/>
                     <Button icon="sap-icon://refresh" press="onPressRefreshPage"/>
                 </Toolbar>
             </customHeader>
             <NavContainer id="app" autoFocus="false">
             </NavContainer>
         </Page>
-    </App> -->
+    </App>
 </mvc:View>

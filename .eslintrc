@@ -21,7 +21,8 @@
     "location": true,
     "sap": true,
     "$": true,
-    "document": true
+    "document": true,
+    "msal": true
   },
   "rules": {
     "no-underscore-dangle": "off",

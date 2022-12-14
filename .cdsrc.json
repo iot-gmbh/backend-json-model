@@ -17,7 +17,7 @@
   "requires": {
     "auth": {
       "restrict_all_services": false,
-      "impl": "cds-msal-auth",
+      "impl": "cds-azure-ad",
       "[development]": {
         "kind": "jwt-auth"
       },
