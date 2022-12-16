@@ -2,7 +2,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
   config: {
     msalConfig: {
       auth: {
-        clientId: "f2ed7ade-4997-4d3c-8397-a595e2bccf14",
+        clientId: "0fca317b-6113-43e2-8cfd-bf7053bbbf12",
         authority: "https://login.microsoftonline.com/common",
         validateAuthority: false,
       },
@@ -11,10 +11,15 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
         storeAuthStateInCookie: true,
       },
     },
-    scopes: ["User.Read", "Calendars.Read"],
+    scopes: ["api://88af1bc6-ac4f-4ba6-bd0a-96c54b3aa437/.default"],
   },
 
-  getSession() {
+  async getSession() {
+    const sessionModel = sap.ui.getCore().getModel("UI5ProjectPlanningSession");
+    if (!sessionModel) {
+      await this._loginPromise;
+    }
+
     return sap.ui.getCore().getModel("UI5ProjectPlanningSession").getData();
   },
 
@@ -27,7 +32,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
     if (!this._myMsal) {
       this._myMsal = new msal.PublicClientApplication(this.config.msalConfig);
     }
-    const loginResponse = await this.login();
+    this._loginPromise = this.login();
+
+    const loginResponse = await this._loginPromise;
     this.setSession(loginResponse);
 
     return loginResponse;
@@ -40,16 +47,16 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
       account,
     };
 
-    try {
-      return await this._myMsal.acquireTokenSilent(accessTokenRequest);
-    } catch (error) {
-      // Acquire token silent failure, and send an interactive request
-      // eslint-disable-next-line no-undef
-      // if (error instanceof InteractionRequiredAuthError) {
-      return this._myMsal.acquireTokenPopup(accessTokenRequest);
-      // }
-      // throw Error(error);
-    }
+    // try {
+    //   return await this._myMsal.acquireTokenSilent(accessTokenRequest);
+    // } catch (error) {
+    //   // Acquire token silent failure, and send an interactive request
+    //   // eslint-disable-next-line no-undef
+    //   // if (error instanceof InteractionRequiredAuthError) {
+    //     // }
+    //     // throw Error(error);
+    //   }
+    return this._myMsal.acquireTokenPopup(accessTokenRequest);
   },
 
   async logout() {

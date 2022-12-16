@@ -13,6 +13,16 @@ sap.ui.define(
         this.setModel(new JSONModel(session), "session");
       },
 
+      login() {
+        Authentication.login();
+        this.getModel("session").setData(Authentication.getSession());
+      },
+
+      logout() {
+        Authentication.logout();
+        this.getModel("session").setData(Authentication.getSession());
+      },
+
       onPressNavBack() {
         const sPreviousHash = History.getInstance().getPreviousHash();
 

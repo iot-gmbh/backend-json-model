@@ -1,5 +1,48 @@
 const validator = require("validator");
 
+const fetch = require("node-fetch");
+const auth = require("./auth.json");
+
+async function getNewAccessToken(req) {
+  const [, tokenValue] = req.user.accessToken.split(" ");
+  // const tokenEndpoint = `https://${auth.authority}/${auth.tenantName}/oauth2/${auth.version}/token`;
+  const tokenEndpoint =
+    "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+
+  const myHeaders = new fetch.Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  const urlencoded = new URLSearchParams();
+  urlencoded.append(
+    "grant_type",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer"
+  );
+  urlencoded.append("client_id", auth.clientID);
+  urlencoded.append("client_secret", auth.clientSecret);
+  urlencoded.append("assertion", tokenValue);
+  // urlencoded.append("scope", "openid offline_access .default");
+  urlencoded.append("scope", "offline_access User.Read Calendars.Read");
+  urlencoded.append("requested_token_use", "on_behalf_of");
+
+  const options = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+  };
+
+  const response = await fetch(tokenEndpoint, options);
+
+  const json = await response.json();
+
+  if (json.error) {
+    return req.reject(json.error_description);
+  }
+
+  if (json.access_token) return json.access_token;
+
+  return req.reject("Access token is missing.");
+}
+
 module.exports = async function (srv) {
   const msGraphSrv = await cds.connect.to("microsoft.graph");
 
@@ -77,10 +120,12 @@ module.exports = async function (srv) {
       data: { startDateTime, endDateTime },
     } = req;
 
+    const accessToken = await getNewAccessToken(req);
+
     const events = await msGraphSrv.send({
       query: `/calendarview?startdatetime=${startDateTime}&enddatetime=${endDateTime}&$top=1000&$select=${select}`,
       headers: {
-        Authorization: `Bearer ${req.user.accessToken}`,
+        Authorization: accessToken,
       },
     });
 
@@ -90,6 +135,7 @@ module.exports = async function (srv) {
   });
 
   this.on("getWorkItemByID", async (req) => {
+    const accessToken = await getNewAccessToken(req);
     const {
       data: { ID },
     } = req;
@@ -101,7 +147,7 @@ module.exports = async function (srv) {
     const events = await msGraphSrv.send({
       query: `/events('${ID}')?$select=${select}`,
       headers: {
-        Authorization: `Bearer ${req.user.accessToken}`,
+        Authorization: accessToken,
       },
     });
 
@@ -109,10 +155,12 @@ module.exports = async function (srv) {
   });
 
   srv.on("READ", "WorkItems", async (req) => {
+    const accessToken = await getNewAccessToken(req);
+
     const events = await msGraphSrv.send({
       query: req.query,
       headers: {
-        Authorization: `Bearer ${req.user.accessToken}`,
+        Authorization: accessToken,
       },
     });
 
@@ -122,10 +170,11 @@ module.exports = async function (srv) {
   });
 
   srv.on("READ", "Users", async (req) => {
+    const accessToken = await getNewAccessToken(req);
     const myUser = await msGraphSrv.send({
       query: "GET /",
       headers: {
-        Authorization: `Bearer ${req.user.accessToken}`,
+        Authorization: accessToken,
       },
     });
 

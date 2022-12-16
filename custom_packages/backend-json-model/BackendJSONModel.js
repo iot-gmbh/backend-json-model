@@ -27,7 +27,7 @@ sap.ui.define(
         const { data = {}, observe = false, synchronize = true } = options;
         JSONModel.apply(this, data, observe);
 
-        const odataModel = new ODataModel(serviceURL);
+        const odataModel = new ODataModel(serviceURL, options);
 
         odataModel.metadataLoaded().then(() => {
           [this.schema] = odataModel.getServiceMetadata().dataServices.schema;

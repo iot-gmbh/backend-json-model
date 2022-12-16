@@ -34,6 +34,7 @@ sap.ui.define(
             headers: {
               Authorization: `Bearer ${session.accessToken}`,
             },
+            useBatch: false,
           });
 
           const ODataModel = backendJSONModel.getODataModel();
