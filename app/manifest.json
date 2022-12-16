@@ -143,6 +143,9 @@
         "spc": {
           "type": "Component",
           "usage": "calendarComponent",
+          "containerOptions": {
+            "propagateModel": true
+          },
           "title": "Calendar",
           "id": "calendar"
         },
@@ -181,6 +184,10 @@
           "usage": "UsersComponent",
           "title": "Users",
           "id": "users"
+        },
+        "notAuthenticated": {
+          "viewName": "NotAuthenticated",
+          "viewId": "notAuthenticated"
         }
       }
     },

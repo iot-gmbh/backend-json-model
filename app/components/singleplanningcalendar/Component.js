@@ -1,19 +1,9 @@
 sap.ui.define(
-  [
-    "iot/BackendJSONModel",
-    "errorhandler/ErrorHandler",
-    "./model/models",
-    "../../Authentication",
-    "sap/ui/core/UIComponent",
-  ],
-  (BackendJSONModel, ErrorHandler, models, Authentication, UIComponent) =>
+  ["./model/models", "sap/ui/core/UIComponent"],
+  (models, UIComponent) =>
     UIComponent.extend(
       "iot.planner.components.singleplanningcalendar.Component",
       {
-        metadata: {
-          manifest: "json",
-        },
-
         /**
          * The component is initialized by UI5 automatically during the startup of the app and calls the init method once.
          * @public
@@ -27,28 +17,6 @@ sap.ui.define(
 
           // set the device model
           this.setModel(models.createDeviceModel(), "device");
-
-          const session = await Authentication.getSession();
-
-          const backendJSONModel = new BackendJSONModel("/v2/timetracking/", {
-            headers: {
-              Authorization: `Bearer ${session.accessToken}`,
-            },
-            useBatch: false,
-          });
-
-          const ODataModel = backendJSONModel.getODataModel();
-
-          // call the base component's init function
-          this.setModel(backendJSONModel);
-          this.setModel(ODataModel, "OData");
-
-          ErrorHandler.cover([ODataModel]);
-        },
-
-        exit() {
-          this.getModel().destroy();
-          this.getModel("OData").destroy();
         },
       }
     )

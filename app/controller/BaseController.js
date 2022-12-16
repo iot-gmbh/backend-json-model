@@ -8,20 +8,6 @@ sap.ui.define(
     Controller.extend(
       "iot.planner.components.singleplanningcalendar.controller.BaseController",
       {
-        setSession(data) {
-          const model = new JSONModel(data);
-          sap.ui.getCore().setModel(model, "UI5ProjectPlanningSession");
-
-          this.setModel(model, "session");
-        },
-
-        getSession() {
-          return sap.ui
-            .getCore()
-            .getModel("UI5ProjectPlanningSession")
-            .getData();
-        },
-
         /**
          * Convenience method for accessing the router in every controller of the application.
          * @public
@@ -38,7 +24,10 @@ sap.ui.define(
          * @returns {sap.ui.model.Model} the model instance
          */
         getModel(sName) {
-          return this.getView().getModel(sName);
+          return (
+            this.getView().getModel(sName) ||
+            this.getOwnerComponent().getModel(sName)
+          );
         },
 
         /**

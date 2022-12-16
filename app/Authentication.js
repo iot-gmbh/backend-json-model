@@ -15,29 +15,19 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
   },
 
   async getSession() {
-    const sessionModel = sap.ui.getCore().getModel("UI5ProjectPlanningSession");
-    if (!sessionModel) {
-      await this._loginPromise;
-    }
-
-    return sap.ui.getCore().getModel("UI5ProjectPlanningSession").getData();
+    this.getView().getModel("session").getData();
   },
 
   setSession(data) {
-    const model = new JSONModel(data);
-    sap.ui.getCore().setModel(model, "UI5ProjectPlanningSession");
+    this.getView().getModel("session").setData(data);
   },
 
   async init() {
     if (!this._myMsal) {
       this._myMsal = new msal.PublicClientApplication(this.config.msalConfig);
     }
-    this._loginPromise = this.login();
 
-    const loginResponse = await this._loginPromise;
-    this.setSession(loginResponse);
-
-    return loginResponse;
+    return this.login();
   },
 
   async login() {
@@ -47,16 +37,22 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
       account,
     };
 
-    // try {
-    //   return await this._myMsal.acquireTokenSilent(accessTokenRequest);
-    // } catch (error) {
-    //   // Acquire token silent failure, and send an interactive request
-    //   // eslint-disable-next-line no-undef
-    //   // if (error instanceof InteractionRequiredAuthError) {
-    //     // }
-    //     // throw Error(error);
-    //   }
-    return this._myMsal.acquireTokenPopup(accessTokenRequest);
+    try {
+      return await this._myMsal.acquireTokenSilent(accessTokenRequest);
+    } catch (error) {
+      // Acquire token silent failure, and send an interactive request
+      // eslint-disable-next-line no-undef
+      if (error instanceof InteractionRequiredAuthError) {
+        // throw Error(error);
+      }
+    }
+
+    const loginResponse = await this._myMsal.acquireTokenPopup(
+      accessTokenRequest
+    );
+    this.setSession(loginResponse);
+
+    return loginResponse;
   },
 
   async logout() {
@@ -65,6 +61,6 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], (JSONModel) => ({
 
     await this._myMsal.logoutPopup(logoutRequest);
 
-    this.setSession();
+    this.setSession({});
   },
 }));

@@ -4,6 +4,14 @@ sap.ui.define(
     UIComponent.extend("iot.planner.Component", {
       metadata: {
         manifest: "json",
+        events: {
+          login: {
+            parameters: {
+              session: { type: "object" },
+            },
+          },
+          logout: { parameters: {} },
+        },
       },
 
       init(...args) {

@@ -1,12 +1,17 @@
 <mvc:View controllerName="iot.planner.controller.App"
     xmlns:f="sap.f"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:c="iot.planner.controls"
     xmlns="sap.m">
 
     <!-- <App busyIndicatorDelay="0" id="app" class="sapUiSizeCozy"/> -->
     <!-- Make it 99% to prevent ugly 'double' scroll-bars -->
     <App autoFocus="false" height="99.5%">
         <Page enableScrolling="false" title="Project Planning" showNavButton="false" showFooter="true">
+            <dependents>
+                <Dialog id="notAuthenticatedDialog" showHeader="false">
+                </Dialog>
+            </dependents>
             <customHeader>
                 <Toolbar >
                     <Button icon="sap-icon://nav-back" press="onPressNavBack"/>
@@ -19,7 +24,14 @@
                 </Toolbar>
             </customHeader>
             <NavContainer id="app" autoFocus="false">
+
+                <MessagePage id="notAuthenticatedPage" showHeader="false" text="{i18n>notAuthenticatedTitle}" icon="sap-icon://document" description="{i18n>notAuthenticatedText}">
+                    <customDescription>
+                        <Link id="link" text="{i18n>authenticate}" press="login"/>
+                    </customDescription>
+                </MessagePage>
             </NavContainer>
         </Page>
+
     </App>
 </mvc:View>

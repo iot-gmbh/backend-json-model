@@ -88,6 +88,20 @@ sap.ui.define(
 
           this.byId("detailPage").bindElement("/MyWorkItems/0");
 
+          this.rootComponent = this.getOwnerComponent()
+            .oContainer.getParent()
+            .getParent()
+            .getParent()
+            .getParent()
+            .getController()
+            .getOwnerComponent();
+
+          this.rootComponent.attachEvent("login", (session) =>
+            this.onLogin(session)
+          );
+
+          this.rootComponent.attachEvent("logout", (session) => {});
+
           $(document).keydown((evt) => {
             const activeElementID =
               $(document.activeElement) &&
@@ -127,8 +141,11 @@ sap.ui.define(
 
         async onBeforeRendering() {
           const bundle = this.getResourceBundle();
+          await this.rootComponent.awaitLogin;
+
           const model = this.getModel();
-          const modelData = model.getData() || {};
+          await model.metadataLoaded();
+
           const filters = {
             showConfirmed: true,
             date: {
@@ -137,11 +154,7 @@ sap.ui.define(
             },
           };
 
-          await model.metadataLoaded();
-
           model.setData({
-            ...modelData,
-
             MyWorkItems: { NEW: {} },
             busy: true,
             filters,
@@ -169,10 +182,7 @@ sap.ui.define(
 
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
-          await Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
-        },
 
-        onAfterRendering() {
           const router = this.getRouter();
           [
             router.getRoute("singleEntry"),
@@ -184,6 +194,12 @@ sap.ui.define(
             );
           });
         },
+
+        async onLogin() {
+          Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
+        },
+
+        async onAfterRendering() {},
 
         onPressDeleteWorkItem(event) {
           const workItem = event.getSource().getBindingContext().getObject();
