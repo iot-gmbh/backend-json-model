@@ -1,6 +1,6 @@
 sap.ui.define(
-  ["sap/ui/Device", "sap/ui/core/UIComponent"],
-  (Device, UIComponent) =>
+  ["sap/ui/Device", "sap/ui/model/json/JSONModel", "sap/ui/core/UIComponent"],
+  (Device, JSONModel, UIComponent) =>
     UIComponent.extend("iot.planner.Component", {
       metadata: {
         manifest: "json",
@@ -17,8 +17,12 @@ sap.ui.define(
       init(...args) {
         UIComponent.prototype.init.apply(this, ...args);
 
+        const router = this.getRouter();
+
+        this.setModel(new JSONModel({}), "session");
+
         // create the views based on the url/hash
-        this.getRouter().initialize();
+        router.initialize();
       },
 
       /**

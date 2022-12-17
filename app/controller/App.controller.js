@@ -3,11 +3,10 @@ sap.ui.define(
     // "../Authentication",
     "./BaseController",
     "sap/ui/core/routing/History",
-    "sap/ui/model/json/JSONModel",
     "iot/BackendJSONModel",
     "errorhandler/ErrorHandler",
   ],
-  (BaseController, History, JSONModel, BackendJSONModel, ErrorHandler) =>
+  (BaseController, History, BackendJSONModel, ErrorHandler) =>
     BaseController.extend("iot.planner.controller.App", {
       config: {
         msalConfig: {
@@ -25,15 +24,22 @@ sap.ui.define(
       },
 
       async onInit() {
-        this.setModel(new JSONModel({}), "session");
-
         this.init();
+        this._checkIsAuthenticated();
 
-        // this.byId("app").to(this.byId("notAuthenticatedPage"));
+        this.getRouter().attachBeforeRouteMatched((event) => {
+          this._checkIsAuthenticated(event);
+        });
       },
 
-      onAfterRendering() {
-        this._currentPage = this.byId("app").getCurrentPage();
+      async _checkIsAuthenticated() {
+        await this.getOwnerComponent().awaitLogin;
+
+        if (!this.getModel("session").getProperty("/idToken")) {
+          setTimeout(() =>
+            this.getRouter().getTargets().display("notAuthenticated")
+          );
+        }
       },
 
       async init() {
@@ -46,8 +52,6 @@ sap.ui.define(
         const account = this._myMsal.getAllAccounts()[0];
         if (account) {
           this.getOwnerComponent().awaitLogin = this.login(account);
-        } else {
-          this.byId("app").to(this.byId("notAuthenticatedPage"));
         }
       },
 
@@ -104,9 +108,13 @@ sap.ui.define(
 
         this.getOwnerComponent().fireEvent("login", loginResponse);
 
-        if (this._currentPage) {
-          this.byId("app").to(this._currentPage);
-        }
+        const router = this.getRouter();
+        const hash = router.getHashChanger().getHash();
+        const route = router.getRouteByHash(hash);
+
+        const targetName = route._oConfig.target;
+
+        router.getTargets().display(targetName);
 
         return loginResponse;
       },
@@ -121,10 +129,9 @@ sap.ui.define(
         this.getModel().destroy();
         this.getOwnerComponent().fireLogout();
 
-        const navContainer = this.byId("app");
-        this._currentPage = navContainer.getCurrentPage();
-
-        this.byId("app").to(this.byId("notAuthenticatedPage"));
+        setTimeout(() =>
+          this.getRouter().getTargets().display("notAuthenticated")
+        );
       },
 
       async getSession() {
