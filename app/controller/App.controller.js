@@ -24,17 +24,16 @@ sap.ui.define(
       },
 
       async onInit() {
-        this.init();
-        this._checkIsAuthenticated();
-
         this.getRouter().attachBeforeRouteMatched((event) => {
           this._checkIsAuthenticated(event);
         });
+
+        await this.init();
+
+        // this._checkIsAuthenticated();
       },
 
       async _checkIsAuthenticated() {
-        await this.getOwnerComponent().awaitLogin;
-
         if (!this.getModel("session").getProperty("/idToken")) {
           setTimeout(() =>
             this.getRouter().getTargets().display("notAuthenticated")
@@ -49,13 +48,22 @@ sap.ui.define(
           );
         }
 
-        const account = this._myMsal.getAllAccounts()[0];
-        if (account) {
-          this.getOwnerComponent().awaitLogin = this.login(account);
-        }
+        return this.login();
       },
 
-      async login(account) {
+      async login() {
+        this.getOwnerComponent().awaitLogin = this._login();
+
+        return this.getOwnerComponent().awaitLogin;
+      },
+
+      async _login() {
+        const ownerComponent = this.getOwnerComponent();
+        const account = this._myMsal.getAllAccounts()[0];
+
+        const previousPage = ownerComponent._previousPage; // set as variable so it won't be lost after the login-dialog
+        const previousTarget = ownerComponent._previousTarget; // set as variable so it won't be lost after the login-dialog
+
         const accessTokenRequest = {
           scopes: this.config.scopes,
           account,
@@ -86,7 +94,7 @@ sap.ui.define(
 
         if (this.getModel()) {
           // Destroy all previously loaded data
-          this.getModel().destroy();
+          // this.getModel().destroy();
         }
 
         this.setSession(loginResponse);
@@ -108,25 +116,31 @@ sap.ui.define(
 
         this.getOwnerComponent().fireEvent("login", loginResponse);
 
-        const router = this.getRouter();
-        const hash = router.getHashChanger().getHash();
-        const route = router.getRouteByHash(hash);
-
-        const targetName = route._oConfig.target;
-
-        router.getTargets().display(targetName);
+        if (previousTarget) {
+          this.getRouter().getTargets().display(previousTarget);
+        } else if (previousPage) {
+          this.byId("app").to(previousPage);
+        }
 
         return loginResponse;
       },
 
       async logout() {
+        const ownerComponent = this.getOwnerComponent();
+        const navContainer = this.byId("app");
+        const router = this.getRouter();
+        const hash = router.getHashChanger().getHash();
+        const route = router.getRouteByHash(hash);
+
+        ownerComponent._previousPage = navContainer.getCurrentPage();
+        ownerComponent._previousTarget = route._oConfig.target;
+
         const account = this._myMsal.getAllAccounts()[0];
         const logoutRequest = { account };
 
         await this._myMsal.logoutPopup(logoutRequest);
 
         this.setSession({});
-        this.getModel().destroy();
         this.getOwnerComponent().fireLogout();
 
         setTimeout(() =>
@@ -148,7 +162,7 @@ sap.ui.define(
         if (sPreviousHash !== undefined) {
           history.go(-1);
         } else {
-          this.getOwnerComponent().getRouter().to("home", {}, true);
+          this.getRouter().navTo("home", {}, true);
         }
       },
 

@@ -8,6 +8,16 @@ sap.ui.define(
     Controller.extend(
       "iot.planner.components.singleplanningcalendar.controller.BaseController",
       {
+        getRootComponent() {
+          return this.getOwnerComponent()
+            .oContainer.getParent()
+            .getParent()
+            .getParent()
+            .getParent()
+            .getController()
+            .getOwnerComponent();
+        },
+
         /**
          * Convenience method for accessing the router in every controller of the application.
          * @public

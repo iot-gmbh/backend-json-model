@@ -88,19 +88,21 @@ sap.ui.define(
 
           this.byId("detailPage").bindElement("/MyWorkItems/0");
 
-          this.rootComponent = this.getOwnerComponent()
-            .oContainer.getParent()
-            .getParent()
-            .getParent()
-            .getParent()
-            .getController()
-            .getOwnerComponent();
+          const rootComponent = this.getRootComponent();
+          const router = this.getRouter();
 
-          this.rootComponent.attachEvent("login", (session) =>
-            this.onLogin(session)
-          );
-
-          this.rootComponent.attachEvent("logout", (session) => {});
+          rootComponent.attachEvent("login", () => {
+            const hash = router.getHashChanger().getHash();
+            const route = router.getRouteByHash(hash);
+            if (
+              [
+                router.getRoute("singleEntry"),
+                router.getRoute("masterDetail"),
+              ].includes(route)
+            ) {
+              this.initModel();
+            }
+          });
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -139,11 +141,27 @@ sap.ui.define(
           });
         },
 
-        async onBeforeRendering() {
-          const bundle = this.getResourceBundle();
-          await this.rootComponent.awaitLogin;
+        onBeforeRendering() {
+          // use onBeforeRendering to make sure that this.getRootComponent().awaitLogin is defined (which gets defined in the parent App.controller)
+          const router = this.getRouter();
 
+          [
+            router.getRoute("singleEntry"),
+            router.getRoute("masterDetail"),
+          ].forEach((route) => {
+            route.attachPatternMatched(async () => {
+              await this.getRootComponent().awaitLogin;
+
+              await this.initModel();
+            }, this);
+          });
+        },
+
+        async initModel() {
+          const bundle = this.getResourceBundle();
           const model = this.getModel();
+
+          await this.getRootComponent().awaitLogin;
           await model.metadataLoaded();
 
           const filters = {
@@ -179,27 +197,11 @@ sap.ui.define(
           });
 
           this._bindMasterList();
-
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
 
-          const router = this.getRouter();
-          [
-            router.getRoute("singleEntry"),
-            router.getRoute("masterDetail"),
-          ].forEach((route) => {
-            route.attachPatternMatched(
-              () => Promise.all([this._loadWorkItems(), this._loadHierarchy()]),
-              this
-            );
-          });
-        },
-
-        async onLogin() {
           Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
         },
-
-        async onAfterRendering() {},
 
         onPressDeleteWorkItem(event) {
           const workItem = event.getSource().getBindingContext().getObject();

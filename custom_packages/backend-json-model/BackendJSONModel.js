@@ -99,16 +99,14 @@ sap.ui.define(
       },
 
       destroy(...args) {
-        this._ODataModel.destroy();
-        this._serviceURL = undefined;
-        this._promises = undefined;
-
-        this.isMetadataLoadingFailed = undefined;
-        this.attachMetadataFailed = undefined;
-        this.metadataLoaded = undefined;
-
+        // this._ODataModel.destroy();
+        // this._serviceURL = undefined;
+        // this._promises = undefined;
+        // this.isMetadataLoadingFailed = undefined;
+        // this.attachMetadataFailed = undefined;
+        // this.metadataLoaded = undefined;
         // call the base component's destroy function
-        JSONModel.prototype.destroy.apply(this, ...args);
+        // JSONModel.prototype.destroy.apply(this, ...args);
       },
 
       getODataModel() {
