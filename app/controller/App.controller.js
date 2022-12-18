@@ -116,7 +116,18 @@ sap.ui.define(
 
         this.getOwnerComponent().fireEvent("login", loginResponse);
 
+        const ODataModel2 =
+          previousPage.getModel().getMetadata().getName() ===
+          "sap.ui.model.odata.v2.ODataModel"
+            ? previousPage.getModel()
+            : previousPage.getModel().getODataModel(); // => For BackendJSONModel;
+
+        ODataModel2.setHeaders({
+          Authorization: `Bearer ${loginResponse.accessToken}`,
+        });
+
         if (previousTarget) {
+          // previousTarget.
           this.getRouter().getTargets().display(previousTarget);
         } else if (previousPage) {
           this.byId("app").to(previousPage);
