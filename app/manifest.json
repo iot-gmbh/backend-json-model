@@ -191,7 +191,7 @@
         }
       }
     },
-    " ": {
+    "componentUsages": {
       "manageCategoriesComponent": {
         "name": "iot.planner.components.managecategories",
         "settings": {},

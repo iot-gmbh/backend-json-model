@@ -1,3 +1,6 @@
+XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
+const oldFetch = window.fetch;
+
 sap.ui.define(
   [
     "sap/ui/Device",
@@ -63,17 +66,17 @@ sap.ui.define(
           this._checkIsAuthenticated(event);
         });
 
-        this.getRouter().attachRouteMatched((event) => {
-          const { view } = event.getParameters();
+        // this.getRouter().attachRouteMatched((event) => {
+        //   const { view } = event.getParameters();
 
-          const component = sap.ui.core.Component.registry.get(
-            view.getComponent()
-          );
+        //   const component = sap.ui.core.Component.registry.get(
+        //     view.getComponent()
+        //   );
 
-          component
-            .getModel()
-            .setHeaders({ Authorization: `Bearer ${session.accessToken}` });
-        });
+        //   component
+        //     .getModel()
+        //     .setHeaders({ Authorization: `Bearer ${session.accessToken}` });
+        // });
 
         // create the views based on the url/hash
         router.initialize();
@@ -105,7 +108,7 @@ sap.ui.define(
       async _login() {
         const account = this._myMsal.getAllAccounts()[0];
 
-        const previousPage = this._previousPage; // set as variable so it won't be lost after the login-dialog
+        // const previousPage = this._previousPage; // set as variable so it won't be lost after the login-dialog
         const previousTarget = this._previousTarget; // set as variable so it won't be lost after the login-dialog
 
         const accessTokenRequest = {
@@ -144,17 +147,33 @@ sap.ui.define(
         this.setSession(loginResponse);
         this.fireEvent("login", loginResponse);
 
-        if (previousPage) {
-          const ODataModel2 =
-            previousPage.getModel().getMetadata().getName() ===
-            "sap.ui.model.odata.v2.ODataModel"
-              ? previousPage.getModel()
-              : previousPage.getModel().getODataModel(); // => For BackendJSONModel;
+        $.ajaxSetup({
+          beforeSend(xhr) {
+            xhr.setRequestHeader(
+              "Authorization",
+              `Bearer ${loginResponse.accessToken}`
+            );
+          },
+        });
 
-          ODataModel2.setHeaders({
+        $.ajaxSetup({
+          headers: { Authorization: `Bearer ${loginResponse.accessToken}` },
+        });
+
+        XMLHttpRequest.prototype.open = function () {
+          this.origOpen.apply(this, arguments);
+          this.setRequestHeader(
+            "Authorization",
+            `Bearer ${loginResponse.accessToken}`
+          );
+        };
+
+        window.fetch = function () {
+          arguments[1].headers = {
             Authorization: `Bearer ${loginResponse.accessToken}`,
-          });
-        }
+          };
+          return oldFetch.apply(window, arguments);
+        };
 
         if (previousTarget) {
           // previousTarget.
@@ -164,12 +183,12 @@ sap.ui.define(
       },
 
       async logout() {
-        const navContainer = this.byId("app");
+        // const navContainer = this.byId("app");
         const router = this.getRouter();
         const hash = router.getHashChanger().getHash();
         const route = router.getRouteByHash(hash);
 
-        this._previousPage = navContainer.getCurrentPage();
+        // this._previousPage = navContainer.getCurrentPage();
         this._previousTarget = route._oConfig.target;
 
         const account = this._myMsal.getAllAccounts()[0];

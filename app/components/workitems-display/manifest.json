@@ -85,16 +85,6 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "uri": "i18n/i18n.properties"
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "synchronizationMode": "None",
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
-        }
       }
     },
     "routing": {
