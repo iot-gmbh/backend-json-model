@@ -1,6 +1,11 @@
 sap.ui.define(
-  ["./model/models", "sap/ui/core/UIComponent"],
-  (models, UIComponent) =>
+  [
+    "./model/models",
+    "sap/ui/core/UIComponent",
+    "iot/BackendJSONModel",
+    "errorhandler/ErrorHandler",
+  ],
+  (models, UIComponent, BackendJSONModel, ErrorHandler) =>
     UIComponent.extend(
       "iot.planner.components.singleplanningcalendar.Component",
       {
@@ -12,6 +17,19 @@ sap.ui.define(
         async init(...args) {
           // call the base component's init function
           UIComponent.prototype.init.apply(this, ...args);
+
+          const backendJSONModel = new BackendJSONModel("/v2/timetracking/", {
+            useBatch: false,
+          });
+
+          const ODataModel = backendJSONModel.getODataModel();
+
+          // call the base component's init function
+          this.setModel(backendJSONModel);
+          this.setModel(ODataModel, "OData");
+
+          ErrorHandler.cover([ODataModel]);
+
           // // enable routing
           this.getRouter().initialize();
 

@@ -26,18 +26,6 @@ service CategoriesService @(requires : 'authenticated-user') {
   @odata.create.enabled
   @odata.update.enabled
   entity Users @(restrict : [
-    // {
-    //   grant : 'READ',
-    //   to    : 'team-lead',
-    //   // Association paths are currently supported on SAP HANA only
-    //   // https://cap.cloud.sap/docs/guides/authorization#association-paths
-    //   where : 'managerPrincipalName = $user'
-    // },
-    // {
-    //   grant : 'READ',
-    //   to    : 'authenticated-user',
-    //   where : 'userPrincipalName = $user'
-    // },
     {
       grant : [
         'READ',

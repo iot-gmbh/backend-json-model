@@ -109,6 +109,10 @@ sap.ui.define(
         // JSONModel.prototype.destroy.apply(this, ...args);
       },
 
+      setHeaders(headers) {
+        this._ODataModel.setHeaders(headers);
+      },
+
       getODataModel() {
         return this._ODataModel;
       },

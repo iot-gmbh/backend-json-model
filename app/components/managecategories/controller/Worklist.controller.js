@@ -2,7 +2,7 @@
 
 sap.ui.define(
   [
-    "./BaseController",
+    "../../../controller/BaseController",
     "sap/ui/model/json/JSONModel",
     // "../model/formatter",
     "sap/ui/model/Filter",
