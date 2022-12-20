@@ -5,6 +5,7 @@ const auth = require("./auth.json");
 
 async function getNewAccessToken(req) {
   const [, tokenValue] = req.user.accessToken.split(" ");
+
   // const tokenEndpoint = `https://${auth.authority}/${auth.tenantName}/oauth2/${auth.version}/token`;
   const tokenEndpoint =
     "https://login.microsoftonline.com/common/oauth2/v2.0/token";

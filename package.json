@@ -13,8 +13,9 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/cds-pg",
+      "custom_packages/cds-azure-ad",
       "custom_packages/cds-msal-auth",
+      "custom_packages/cds-pg",
       "custom_packages/errorhandler"
     ]
   },
