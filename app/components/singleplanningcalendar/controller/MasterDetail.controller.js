@@ -95,13 +95,13 @@ sap.ui.define(
             router.getRoute("masterDetail"),
           ];
 
-          rootComponent.attachEvent("login", () => {
-            const hash = router.getHashChanger().getHash();
-            const route = router.getRouteByHash(hash);
-            if (relevantRoutes.includes(route)) {
-              this.initModel();
-            }
-          });
+          // rootComponent.attachEvent("login", () => {
+          //   const hash = router.getHashChanger().getHash();
+          //   const route = router.getRouteByHash(hash);
+          //   if (relevantRoutes.includes(route)) {
+          //     this.initModel();
+          //   }
+          // });
 
           relevantRoutes.forEach((route) => {
             route.attachPatternMatched(async () => {
@@ -157,6 +157,8 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const model = this.getModel();
 
+          model.setProperty("/busy", true);
+
           await this.getRootComponent().awaitLogin;
           await model.metadataLoaded();
 
@@ -196,7 +198,13 @@ sap.ui.define(
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
 
-          Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
+          try {
+            await Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
+          } catch (error) {
+            // ignore gracefully => handled by errorhandler
+          }
+
+          model.setProperty("/busy", false);
         },
 
         onPressDeleteWorkItem(event) {
@@ -511,8 +519,6 @@ sap.ui.define(
           const model = this.getModel();
           const { start, end } = model.getProperty("/filters/date");
 
-          model.setProperty("/busy", true);
-
           const { results: workItems } = await model.callFunction(
             "/getCalendarView",
             {
@@ -539,13 +545,10 @@ sap.ui.define(
           );
 
           model.setProperty("/MyWorkItems", myWorkItems);
-          model.setProperty("/busy", false);
         },
 
         async _loadHierarchy() {
           const model = this.getModel();
-
-          model.setProperty("/busy", true);
 
           try {
             const { results } = await model.callFunction("/getMyCategoryTree");
@@ -557,8 +560,6 @@ sap.ui.define(
           } catch (error) {
             Log.error(error);
           }
-
-          model.setProperty("/busy", false);
         },
 
         _getUser() {

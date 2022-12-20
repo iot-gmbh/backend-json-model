@@ -21,17 +21,17 @@ sap.ui.define(
       init(...args) {
         UIComponent.prototype.init.apply(this, ...args);
 
-        // const backendJSONModel = new BackendJSONModel("/v2/categories/");
-        // const ODataModel = backendJSONModel.getODataModel();
+        const backendJSONModel = new BackendJSONModel("/v2/categories/");
+        const ODataModel = backendJSONModel.getODataModel();
 
-        // // call the base component's init function
-        // this.setModel(backendJSONModel);
-        // this.setModel(ODataModel, "OData");
+        // call the base component's init function
+        this.setModel(backendJSONModel);
+        this.setModel(ODataModel, "OData");
 
-        // ErrorHandler.cover([ODataModel]);
+        ErrorHandler.cover([ODataModel]);
 
-        // // set the device model
-        // this.setModel(models.createDeviceModel(), "device");
+        // set the device model
+        this.setModel(models.createDeviceModel(), "device");
 
         // create the views based on the url/hash
         this.getRouter().initialize();

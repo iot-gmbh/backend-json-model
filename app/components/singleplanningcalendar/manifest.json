@@ -104,7 +104,7 @@
       },
       "routes": [
         {
-          "pattern": "",
+          "pattern": "calendar",
           "name": "calendar",
           "target": "calendar"
         },
@@ -122,7 +122,7 @@
       "targets": {
         "calendar": {
           "viewName": "SinglePlanningCalendar",
-          "viewId": "spc",
+          "viewId": "singlePlanningCalendar",
           "viewLevel": 0,
           "title": "SinglePlanningCalendar"
         },

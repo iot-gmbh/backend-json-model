@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 sap.ui.define(
   [
-    "./BaseController",
+    "../../../controller/BaseController",
     "sap/ui/model/Filter",
     "../model/formatter",
     "../model/legendItems",
@@ -47,11 +47,13 @@ sap.ui.define(
 
           this.getRouter()
             .getRoute("calendar")
-            .attachPatternMatched(
-              () =>
-                Promise.all([this._loadAppointments(), this._loadHierarchy()]),
-              this
-            );
+            .attachPatternMatched(async () => {
+              await this.getRootComponent().awaitLogin;
+
+              this.initModel();
+
+              Promise.all([this._loadAppointments(), this._loadHierarchy()]);
+            }, this);
 
           $(document).keydown((evt) => {
             const activeElementID =
@@ -94,7 +96,9 @@ sap.ui.define(
           });
         },
 
-        onBeforeRendering() {
+        async initModel() {
+          await this.getRootComponent().awaitLogin;
+
           const bundle = this.getResourceBundle();
           const model = this.getModel();
           const modelData = model.getData() || {};

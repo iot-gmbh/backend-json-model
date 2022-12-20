@@ -13,7 +13,7 @@ service CategoriesService @(requires : 'authenticated-user') {
 
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
 
-  @(restrict : [{to : 'admin'}])
+  // @(restrict : [{to : 'admin'}])
   function getCategoryTree(root : UUID, validAt : DateTime)                                                           returns array of Categories;
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;

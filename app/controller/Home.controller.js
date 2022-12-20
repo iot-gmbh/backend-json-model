@@ -3,7 +3,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], (Controller) =>
     navTo(event, pattern, target, deepRoute) {
       let deepRoutingConfig = {};
 
-      if (target && deepRoute) {
+      if (target) {
         deepRoutingConfig = {
           [target]: { route: deepRoute },
         };
