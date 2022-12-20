@@ -1,15 +1,8 @@
 XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
-// const oldFetch = window.fetch;
 
 sap.ui.define(
-  [
-    "sap/ui/Device",
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/core/UIComponent",
-    "iot/BackendJSONModel",
-    "errorhandler/ErrorHandler",
-  ],
-  (Device, JSONModel, UIComponent, BackendJSONModel, ErrorHandler) =>
+  ["sap/ui/Device", "sap/ui/model/json/JSONModel", "sap/ui/core/UIComponent"],
+  (Device, JSONModel, UIComponent) =>
     UIComponent.extend("iot.planner.Component", {
       config: {
         msalConfig: {
@@ -51,32 +44,12 @@ sap.ui.define(
           );
         }
 
-        const session = await this.login();
+        await this.login();
 
-        // const subcomponents = this.getSubcomponents();
-        // subcomponents.forEach((component) =>
-        //   component.attachEventOnce("init", (event) => {
-        //     component
-        //       .getModel()
-        //       .setHeaders({ Authorization: `Bearer ${session.accessToken}` });
-        //   })
-        // );
-
+        // const subcomponents = this.getSubcomponents()
         this.getRouter().attachBeforeRouteMatched((event) => {
           this._checkIsAuthenticated(event);
         });
-
-        // this.getRouter().attachRouteMatched((event) => {
-        //   const { view } = event.getParameters();
-
-        //   const component = sap.ui.core.Component.registry.get(
-        //     view.getComponent()
-        //   );
-
-        //   component
-        //     .getModel()
-        //     .setHeaders({ Authorization: `Bearer ${session.accessToken}` });
-        // });
 
         // create the views based on the url/hash
         router.initialize();
@@ -147,33 +120,13 @@ sap.ui.define(
         this.setSession(loginResponse);
         this.fireEvent("login", loginResponse);
 
-        // $.ajaxSetup({
-        //   beforeSend(xhr) {
-        //     xhr.setRequestHeader(
-        //       "Authorization",
-        //       `Bearer ${loginResponse.accessToken}`
-        //     );
-        //   },
-        // });
-
-        // $.ajaxSetup({
-        //   headers: { Authorization: `Bearer ${loginResponse.accessToken}` },
-        // });
-
-        XMLHttpRequest.prototype.open = function () {
-          this.origOpen.apply(this, arguments);
+        XMLHttpRequest.prototype.open = function (...args) {
+          this.origOpen(...args);
           this.setRequestHeader(
             "Authorization",
             `Bearer ${loginResponse.accessToken}`
           );
         };
-
-        // window.fetch = function () {
-        //   arguments[1].headers = {
-        //     Authorization: `Bearer ${loginResponse.accessToken}`,
-        //   };
-        //   return oldFetch.apply(window, arguments);
-        // };
 
         if (previousTarget) {
           // previousTarget.

@@ -22,7 +22,8 @@
     "sap": true,
     "$": true,
     "document": true,
-    "msal": true
+    "msal": true,
+    "XMLHttpRequest": true
   },
   "rules": {
     "no-underscore-dangle": "off",
