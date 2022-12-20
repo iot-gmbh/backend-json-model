@@ -1,5 +1,5 @@
 XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
-const oldFetch = window.fetch;
+// const oldFetch = window.fetch;
 
 sap.ui.define(
   [
@@ -147,18 +147,18 @@ sap.ui.define(
         this.setSession(loginResponse);
         this.fireEvent("login", loginResponse);
 
-        $.ajaxSetup({
-          beforeSend(xhr) {
-            xhr.setRequestHeader(
-              "Authorization",
-              `Bearer ${loginResponse.accessToken}`
-            );
-          },
-        });
+        // $.ajaxSetup({
+        //   beforeSend(xhr) {
+        //     xhr.setRequestHeader(
+        //       "Authorization",
+        //       `Bearer ${loginResponse.accessToken}`
+        //     );
+        //   },
+        // });
 
-        $.ajaxSetup({
-          headers: { Authorization: `Bearer ${loginResponse.accessToken}` },
-        });
+        // $.ajaxSetup({
+        //   headers: { Authorization: `Bearer ${loginResponse.accessToken}` },
+        // });
 
         XMLHttpRequest.prototype.open = function () {
           this.origOpen.apply(this, arguments);
@@ -168,18 +168,22 @@ sap.ui.define(
           );
         };
 
-        window.fetch = function () {
-          arguments[1].headers = {
-            Authorization: `Bearer ${loginResponse.accessToken}`,
-          };
-          return oldFetch.apply(window, arguments);
-        };
+        // window.fetch = function () {
+        //   arguments[1].headers = {
+        //     Authorization: `Bearer ${loginResponse.accessToken}`,
+        //   };
+        //   return oldFetch.apply(window, arguments);
+        // };
 
         if (previousTarget) {
           // previousTarget.
           this.getRouter().getTargets().display(previousTarget);
         }
         return loginResponse;
+      },
+
+      exit() {
+        XMLHttpRequest.prototype.open = XMLHttpRequest.prototype.origOpen;
       },
 
       async logout() {

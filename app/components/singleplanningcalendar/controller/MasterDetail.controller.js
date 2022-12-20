@@ -90,18 +90,25 @@ sap.ui.define(
 
           const rootComponent = this.getRootComponent();
           const router = this.getRouter();
+          const relevantRoutes = [
+            router.getRoute("singleEntry"),
+            router.getRoute("masterDetail"),
+          ];
 
           rootComponent.attachEvent("login", () => {
             const hash = router.getHashChanger().getHash();
             const route = router.getRouteByHash(hash);
-            if (
-              [
-                router.getRoute("singleEntry"),
-                router.getRoute("masterDetail"),
-              ].includes(route)
-            ) {
+            if (relevantRoutes.includes(route)) {
               this.initModel();
             }
+          });
+
+          relevantRoutes.forEach((route) => {
+            route.attachPatternMatched(async () => {
+              await this.getRootComponent().awaitLogin;
+
+              await this.initModel();
+            }, this);
           });
 
           $(document).keydown((evt) => {
@@ -141,21 +148,10 @@ sap.ui.define(
           });
         },
 
-        onBeforeRendering() {
-          // use onBeforeRendering to make sure that this.getRootComponent().awaitLogin is defined (which gets defined in the parent App.controller)
-          const router = this.getRouter();
-
-          [
-            router.getRoute("singleEntry"),
-            router.getRoute("masterDetail"),
-          ].forEach((route) => {
-            route.attachPatternMatched(async () => {
-              await this.getRootComponent().awaitLogin;
-
-              await this.initModel();
-            }, this);
-          });
-        },
+        // onBeforeRendering() {
+        //   // use onBeforeRendering to make sure that this.getRootComponent().awaitLogin is defined (which gets defined in the parent App.controller)
+        //   const router = this.getRouter();
+        // },
 
         async initModel() {
           const bundle = this.getResourceBundle();
