@@ -1,7 +1,7 @@
 using {iot.planner as my} from '../db/schema';
 
 
-service CategoriesService @(requires : 'authenticated-user') {
+service CategoriesService @(requires: 'authenticated-user') {
   entity Categories       as projection on my.Categories excluding {
     manager,
     // members,
@@ -13,7 +13,7 @@ service CategoriesService @(requires : 'authenticated-user') {
 
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
 
-  // @(restrict : [{to : 'admin'}])
+  @(restrict: [{to: 'admin'}])
   function getCategoryTree(root : UUID, validAt : DateTime)                                                           returns array of Categories;
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;
@@ -25,20 +25,20 @@ service CategoriesService @(requires : 'authenticated-user') {
   // @odata.draft.enabled : true
   @odata.create.enabled
   @odata.update.enabled
-  entity Users @(restrict : [
+  entity Users @(restrict: [
     {
-      grant : [
+      grant: [
         'READ',
         'WRITE'
       ],
-      to    : 'authenticated-user'
+      to   : 'authenticated-user'
     },
     {
-      grant : [
+      grant: [
         'READ',
         'WRITE'
       ],
-      to    : 'admin',
+      to   : 'admin',
     },
   ])                      as projection on my.Users;
 

@@ -21,7 +21,9 @@ sap.ui.define(
       init(...args) {
         UIComponent.prototype.init.apply(this, ...args);
 
-        const backendJSONModel = new BackendJSONModel("/v2/categories/");
+        const backendJSONModel = new BackendJSONModel("/v2/categories/", {
+          useBatch: false,
+        });
         const ODataModel = backendJSONModel.getODataModel();
 
         // call the base component's init function
