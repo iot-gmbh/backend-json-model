@@ -1,8 +1,13 @@
 XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
 
 sap.ui.define(
-  ["sap/ui/Device", "sap/ui/model/json/JSONModel", "sap/ui/core/UIComponent"],
-  (Device, JSONModel, UIComponent) =>
+  [
+    "sap/ui/Device",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/UIComponent",
+    "sap/ui/export/SpreadsheetExport",
+  ],
+  (Device, JSONModel, UIComponent, SpreadsheetExport) =>
     UIComponent.extend("iot.planner.Component", {
       config: {
         msalConfig: {
@@ -126,6 +131,16 @@ sap.ui.define(
             "Authorization",
             `Bearer ${loginResponse.accessToken}`
           );
+        };
+
+        // sap.ui.getCore()._httpAuth = ;
+        const orig = SpreadsheetExport.execute;
+        SpreadsheetExport.execute = function (mParams, fnCallback) {
+          mParams.dataSource.headers = {
+            ...mParams.dataSource.headers,
+            Authorization: `Bearer ${loginResponse.accessToken}`,
+          };
+          orig(mParams, fnCallback);
         };
 
         if (previousTarget) {

@@ -74,7 +74,7 @@ service TimetrackingService @(requires: 'authenticated-user') {
 
   Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
    */
-  @cds.redirection.target: true
+  // @cds.redirection.target: true
   entity IOTWorkItems                                                           @(restrict: [
     {
       grant: 'READ',

@@ -9,11 +9,11 @@
             <GenericTile class="sapUiTinyMargin" header="{i18n>fastEntry}" press=".navTo($event, 'fastEntry')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>workItems}" press=".navTo($event, 'workItems')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems}" press=".navTo($event, 'IOTWorkItems')"/>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>Users}" press=".navTo($event, 'Users')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>graph}" press="navToAnalytics"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALP}" press=".navTo($event, 'analyticsALP')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALPv2}" press=".navTo($event, 'analyticsALPv2')"/>
-            <!-- <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')"/> -->
         </content>
     </Page>
 </mvc:View>
