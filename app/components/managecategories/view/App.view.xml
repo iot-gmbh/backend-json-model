@@ -2,8 +2,6 @@
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
 
-    <Shell id="_IDGenShell1">
-        <App id="app" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}"/>
-    </Shell>
+    <App id="manageCategoriesApp" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}"/>
 
 </mvc:View>

@@ -93,7 +93,7 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "iot.planner.components.singleplanningcalendar.view",
-        "controlId": "app",
+        "controlId": "spcApp",
         "controlAggregation": "pages",
         "bypassed": {
           "target": [

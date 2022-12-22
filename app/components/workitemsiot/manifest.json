@@ -18,6 +18,7 @@
         "uri": "/work-items/",
         "type": "OData",
         "settings": {
+          "useBatch": false,
           "odataVersion": "4.0"
         }
       }

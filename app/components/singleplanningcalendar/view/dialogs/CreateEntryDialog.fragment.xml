@@ -4,7 +4,7 @@
     xmlns:t="sap.ui.table"
     xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc">
-    <Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" class="sapUiSizeCompact" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="640px">
+    <Dialog id="createItemDialog" busy="{/dialogBusy}" afterClose="onAfterCloseDialog" class="sapUiSizeCompact" afterOpen="onAfterOpenDialog" contentHeight="720px" contentWidth="1024px">
         <customHeader>
             <Bar>
                 <contentLeft>

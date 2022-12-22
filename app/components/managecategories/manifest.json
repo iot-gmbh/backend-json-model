@@ -61,7 +61,7 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "iot.planner.components.managecategories.view",
-        "controlId": "app",
+        "controlId": "manageCategoriesApp",
         "controlAggregation": "pages",
         "bypassed": {
           "target": [

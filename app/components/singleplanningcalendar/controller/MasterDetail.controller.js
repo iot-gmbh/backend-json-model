@@ -78,6 +78,16 @@ sap.ui.define(
       return dateTime;
     }
 
+    const gsDayNames = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
     return BaseController.extend(
       "iot.planner.components.singleplanningcalendar.controller.SingleEntry",
       {
@@ -148,10 +158,38 @@ sap.ui.define(
           });
         },
 
-        // onBeforeRendering() {
-        //   // use onBeforeRendering to make sure that this.getRootComponent().awaitLogin is defined (which gets defined in the parent App.controller)
-        //   const router = this.getRouter();
-        // },
+        _createColumnConfig() {
+          return [
+            "Datum",
+            "Beginn",
+            "Ende",
+            "Bemerkung",
+            "Projekt",
+            "Teilprojekt",
+            "Arbeitspaket",
+            "Taetigkeit",
+            "Nutzer",
+            "Einsatzort",
+          ];
+        },
+
+        onExport() {
+          let aCols;
+          let aProducts;
+          let oSettings;
+          let oSheet;
+
+          const columns = this._createColumnConfig();
+          const workitems = this.getModel().load("/IOTWorkItems");
+
+          oSheet = new Spreadsheet(oSettings);
+          oSheet
+            .build()
+            .then(() => {
+              MessageToast.show("Spreadsheet export has finished");
+            })
+            .finally(oSheet.destroy);
+        },
 
         async initModel() {
           const bundle = this.getResourceBundle();
@@ -265,11 +303,14 @@ sap.ui.define(
             sorter: [
               new Sorter("dateString", null, (context) => {
                 const workItems = model.getProperty("/MyWorkItems") || [];
+
                 const {
                   dateString,
                   activatedDate: myActivatedDate,
                   completedDate: myCompletedDate,
                 } = context.getObject();
+                const date = new Date(dateString);
+                const dayName = gsDayNames[date.getDay()];
                 const totalDuration = workItems
                   .filter((item) => item.dateString === dateString)
                   .reduce(
@@ -280,7 +321,7 @@ sap.ui.define(
                   .toFixed(2);
 
                 return {
-                  key: dateString,
+                  key: `${dayName}, ${dateString}`,
                   title: `${dateString} ${totalDuration}`,
                   number: msToHM(totalDuration),
                 };
@@ -309,6 +350,7 @@ sap.ui.define(
                 activatedDate: myActivatedDate,
                 completedDate: myCompletedDate,
               } = context.getObject();
+
               const overlap = workItems
                 .filter(({ ID }) => !!ID && ID !== myID)
                 .find(
@@ -321,9 +363,10 @@ sap.ui.define(
                       myCompletedDate.toString() === completedDate.toString())
                 );
 
-              template.setHighlight(overlap ? "Error" : "None");
+              const clone = template.clone(controlID);
+              clone.setInfoStateInverted(!!overlap);
 
-              return template.clone(controlID);
+              return clone;
             },
             // template,
             filters,
