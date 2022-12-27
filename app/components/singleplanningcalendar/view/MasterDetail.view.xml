@@ -13,7 +13,7 @@
                         </contentLeft>
 
                         <contentRight>
-                            <Button text="Delete" press="onPressDeleteWorkItem" />
+                            <Button text="Delete" press="onPressDeleteWorkItem" enabled="{= !!${__metadata/uri}}" />
                         </contentRight>
                     </Bar>
                 </customHeader>
@@ -28,10 +28,12 @@
         </detailPages>
         <masterPages>
             <Page showHeader="false" id="masterPage" busy="{/busy}" title="Work Items" showFooter="true">
-                <List id="masterList" mode="SingleSelectMaster" selectionChange="onSelectionChange" sticky="HeaderToolbar">
+                <List id="masterList" mode="SingleSelectMaster" updateFinished="onMasterListUpdateFinished" selectionChange="onSelectionChange" sticky="HeaderToolbar">
                     <headerToolbar>
                         <Toolbar >
                             <DateRangeSelection dateValue="{/filters/date/start}" secondDateValue="{/filters/date/end}" change="refreshMasterList" />
+                            <ProgressIndicator percentValue="{parts: ['/total/is', '/total/should'], formatter: '.formatter.getWorkingTimeQuote'}" displayValue="{/total/is} of {/total/should} h" showValue="true" width="7rem" />
+                            <!-- <Text text="{/total/is} of {/total/should} h" wrapping="false" width="7rem" textAlign="End"/> -->
                         </Toolbar>
                     </headerToolbar>
                     <dependents>

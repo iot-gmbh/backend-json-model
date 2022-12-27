@@ -78,6 +78,17 @@ sap.ui.define(
       return dateTime;
     }
 
+    function treatAsUTC(date) {
+      const result = new Date(date);
+      result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+      return result;
+    }
+
+    function daysBetween(startDate, endDate) {
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+      return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+    }
+
     const gsDayNames = [
       "Sunday",
       "Monday",
@@ -98,20 +109,11 @@ sap.ui.define(
 
           this.byId("detailPage").bindElement("/MyWorkItems/0");
 
-          const rootComponent = this.getRootComponent();
           const router = this.getRouter();
           const relevantRoutes = [
             router.getRoute("singleEntry"),
             router.getRoute("masterDetail"),
           ];
-
-          // rootComponent.attachEvent("login", () => {
-          //   const hash = router.getHashChanger().getHash();
-          //   const route = router.getRouteByHash(hash);
-          //   if (relevantRoutes.includes(route)) {
-          //     this.initModel();
-          //   }
-          // });
 
           relevantRoutes.forEach((route) => {
             route.attachPatternMatched(async () => {
@@ -158,39 +160,6 @@ sap.ui.define(
           });
         },
 
-        _createColumnConfig() {
-          return [
-            "Datum",
-            "Beginn",
-            "Ende",
-            "Bemerkung",
-            "Projekt",
-            "Teilprojekt",
-            "Arbeitspaket",
-            "Taetigkeit",
-            "Nutzer",
-            "Einsatzort",
-          ];
-        },
-
-        onExport() {
-          let aCols;
-          let aProducts;
-          let oSettings;
-          let oSheet;
-
-          const columns = this._createColumnConfig();
-          const workitems = this.getModel().load("/IOTWorkItems");
-
-          oSheet = new Spreadsheet(oSettings);
-          oSheet
-            .build()
-            .then(() => {
-              MessageToast.show("Spreadsheet export has finished");
-            })
-            .finally(oSheet.destroy);
-        },
-
         async initModel() {
           const bundle = this.getResourceBundle();
           const model = this.getModel();
@@ -213,6 +182,7 @@ sap.ui.define(
             busy: true,
             filters,
             categories: {},
+            total: { is: 0, should: 0 },
             hierarchySuggestion: "",
             activities: [
               { title: "Durchführung" },
@@ -232,12 +202,19 @@ sap.ui.define(
             ),
           });
 
+          this._setTargetWorkingTime();
           this._bindMasterList();
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
 
           try {
-            await Promise.all([this._loadWorkItems(), this._loadHierarchy()]);
+            await Promise.all([
+              this._loadWorkItems().then(() =>
+                // Initially only work items are perceived by the user => we don't need to wait for the hierarchy
+                model.setProperty("/busy", false)
+              ),
+              this._loadHierarchy(),
+            ]);
           } catch (error) {
             // ignore gracefully => handled by errorhandler
           }
@@ -245,7 +222,18 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
-        onPressDeleteWorkItem(event) {
+        onMasterListUpdateFinished() {
+          const total = this.byId("masterList")
+            .getItems()
+            .map((item) => item.getBindingContext()?.getProperty("duration"))
+            .map((value) => Number(value))
+            .filter(Boolean)
+            .reduce((sum, curr) => sum + curr, 0);
+
+          this.getModel().setProperty("/total/is", total.toFixed(1));
+        },
+
+        async onPressDeleteWorkItem(event) {
           const workItem = event.getSource().getBindingContext().getObject();
 
           this._deleteWorkItem(workItem);
@@ -253,6 +241,7 @@ sap.ui.define(
 
         async _deleteWorkItem(workItem) {
           const model = this.getModel();
+          const keyOfNextItem = this._getKeyOfNextItem();
 
           model.setProperty("/busy", true);
 
@@ -269,6 +258,8 @@ sap.ui.define(
                 },
               });
             }
+
+            setTimeout(() => this._selectItemByKey(keyOfNextItem));
           } catch (error) {
             Log.error(error);
           }
@@ -276,7 +267,60 @@ sap.ui.define(
           model.setProperty("/busy", false);
         },
 
+        _selectItemByKey(key) {
+          if (!key) return; // might be the last entry and we have no successor => return
+          const masterList = this.byId("masterList");
+          const item = masterList
+            .getItems()
+            .find((itm) => this._getItemKey(itm) === key);
+
+          masterList.setSelectedItem(item);
+          this.byId("detailPage").bindElement(
+            item.getBindingContext().getPath()
+          );
+        },
+
+        _getKeyOfNextItem() {
+          const masterList = this.byId("masterList");
+          const selectedIndex = masterList
+            .getItems()
+            .findIndex(
+              (item) =>
+                this._getItemKey(item) ===
+                this._getItemKey(masterList.getSelectedItem())
+            );
+
+          const nextItem = masterList.getItems()[selectedIndex + 1];
+          // If the next item is a group header => skip to the next but one
+          const nextButOneItem = masterList.getItems()[selectedIndex + 2];
+
+          if (nextItem && nextItem.getBindingContext())
+            return this._getItemKey(nextItem);
+          if (nextButOneItem && nextButOneItem.getBindingContext())
+            return this._getItemKey(nextButOneItem);
+
+          return undefined;
+        },
+
+        _getItemKey(item) {
+          if (!item.getBindingContext()) return false;
+          return item.getBindingContext().getObject().__metadata?.uri;
+        },
+
+        _setTargetWorkingTime() {
+          const model = this.getModel();
+          const {
+            filters: {
+              date: { end, start },
+            },
+          } = model.getData();
+          const noOfDaysBetween = daysBetween(start, end);
+
+          model.setProperty("/total/should", (noOfDaysBetween * 8).toFixed(0));
+        },
+
         async refreshMasterList() {
+          this._setTargetWorkingTime();
           await this._loadWorkItems();
 
           this._bindMasterList();
@@ -397,6 +441,8 @@ sap.ui.define(
 
         onSelectionChange(event) {
           const { listItem } = event.getParameters();
+          if (!listItem.getBindingContext()) return; // Group headers don't have a context
+
           const selectedID = listItem.getBindingContext().getProperty("ID");
           const index = this.getModel()
             .getProperty("/MyWorkItems")
