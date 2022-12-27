@@ -78,6 +78,17 @@ sap.ui.define(
       return dateTime;
     }
 
+    function treatAsUTC(date) {
+      const result = new Date(date);
+      result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+      return result;
+    }
+
+    function daysBetween(startDate, endDate) {
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+      return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+    }
+
     const gsDayNames = [
       "Sunday",
       "Monday",
@@ -171,6 +182,7 @@ sap.ui.define(
             busy: true,
             filters,
             categories: {},
+            total: { is: 0, should: 0 },
             hierarchySuggestion: "",
             activities: [
               { title: "Durchführung" },
@@ -190,6 +202,7 @@ sap.ui.define(
             ),
           });
 
+          this._setTargetWorkingTime();
           this._bindMasterList();
           // Otherwise new entries won't be displayed in the calendar
           model.setSizeLimit(300);
@@ -207,6 +220,17 @@ sap.ui.define(
           }
 
           model.setProperty("/busy", false);
+        },
+
+        onMasterListUpdateFinished() {
+          const total = this.byId("masterList")
+            .getItems()
+            .map((item) => item.getBindingContext()?.getProperty("duration"))
+            .map((value) => Number(value))
+            .filter(Boolean)
+            .reduce((sum, curr) => sum + curr, 0);
+
+          this.getModel().setProperty("/total/is", total.toFixed(1));
         },
 
         async onPressDeleteWorkItem(event) {
@@ -283,7 +307,20 @@ sap.ui.define(
           return item.getBindingContext().getObject().__metadata?.uri;
         },
 
+        _setTargetWorkingTime() {
+          const model = this.getModel();
+          const {
+            filters: {
+              date: { end, start },
+            },
+          } = model.getData();
+          const noOfDaysBetween = daysBetween(start, end);
+
+          model.setProperty("/total/should", (noOfDaysBetween * 8).toFixed(0));
+        },
+
         async refreshMasterList() {
+          this._setTargetWorkingTime();
           await this._loadWorkItems();
 
           this._bindMasterList();
