@@ -13,7 +13,7 @@
                         </contentLeft>
 
                         <contentRight>
-                            <Button text="Delete" press="onPressDeleteWorkItem" />
+                            <Button text="Delete" press="onPressDeleteWorkItem" enabled="{= !!${__metadata/uri}}" />
                         </contentRight>
                     </Bar>
                 </customHeader>
