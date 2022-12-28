@@ -4,28 +4,6 @@
     xmlns:core="sap.ui.core"
     xmlns:mvc="sap.ui.core.mvc">
     <SplitApp>
-        <detailPages>
-            <Page id="detailPage" busy="{/busy}" backgroundDesign="Solid" showFooter="true">
-                <customHeader>
-                    <Bar>
-                        <contentLeft>
-                            <Text text = "{= !${ID} ? 'New Entry: ' + ${title} : ${title}}"/>
-                        </contentLeft>
-
-                        <contentRight>
-                            <Button text="Delete" press="onPressDeleteWorkItem" enabled="{= !!${__metadata/uri}}" />
-                        </contentRight>
-                    </Bar>
-                </customHeader>
-                <core:Fragment fragmentName="iot.planner.components.singleplanningcalendar.view.dialogs.CreateEntry" type="XML"/>
-                <footer>
-                    <Toolbar >
-                        <ToolbarSpacer />
-                        <Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${parentPath} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
-                    </Toolbar>
-                </footer>
-            </Page>
-        </detailPages>
         <masterPages>
             <Page showHeader="false" id="masterPage" busy="{/busy}" title="Work Items" showFooter="true">
                 <List id="masterList" mode="SingleSelectMaster" updateFinished="onMasterListUpdateFinished" selectionChange="onSelectionChange" sticky="HeaderToolbar">
@@ -50,5 +28,27 @@
                 </footer>
             </Page>
         </masterPages>
+        <detailPages>
+            <Page id="detailPage" busy="{/busy}" backgroundDesign="Solid" showFooter="true">
+                <customHeader>
+                    <Bar>
+                        <contentLeft>
+                            <Text text = "{= !${ID} ? 'New Entry: ' + ${title} : ${title}}"/>
+                        </contentLeft>
+
+                        <contentRight>
+                            <Button text="Delete" press="onPressDeleteWorkItem" enabled="{= !!${__metadata/uri}}" />
+                        </contentRight>
+                    </Bar>
+                </customHeader>
+                <core:Fragment fragmentName="iot.planner.components.singleplanningcalendar.view.dialogs.CreateEntry" type="XML"/>
+                <footer>
+                    <Toolbar >
+                        <ToolbarSpacer />
+                        <Button id="submitButton" text="{i18n>OK}" press="onSubmitEntry" enabled="{= !!${title} &amp;&amp; !!${parentPath} &amp;&amp; !${isAllDay}}" type="Emphasized"/>
+                    </Toolbar>
+                </footer>
+            </Page>
+        </detailPages>
     </SplitApp>
 </mvc:View>

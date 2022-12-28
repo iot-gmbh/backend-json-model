@@ -166,8 +166,14 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
-          await this.getRootComponent().awaitLogin;
-          await model.metadataLoaded();
+          try {
+            await this.getRootComponent().awaitLogin;
+            await model.metadataLoaded();
+          } catch (error) {
+            // handled by errorhandler
+            model.setProperty("/busy", false);
+            return;
+          }
 
           const filters = {
             showConfirmed: true,
@@ -464,9 +470,15 @@ sap.ui.define(
           this.getModel().setProperty(`${path}/parentPath`, hierarchyPath);
         },
 
-        onChangeHierarchy(event) {
+        onLiveChangeHierarchy(event) {
           const { newValue } = event.getParameters();
           this._filterHierarchyByPath(newValue);
+        },
+
+        onChangeHierarchy(event) {
+          const hierarchySearch = event.getSource();
+          hierarchySearch.setValueState("None");
+          hierarchySearch.setValueStateText();
         },
 
         filterTree(array, texts) {
@@ -571,11 +583,27 @@ sap.ui.define(
 
         async _submitEntry(workItem) {
           const data = workItem;
+          const hierarchySearch = this.byId("hierarchySearch");
           const model = this.getModel();
           const { MyCategories } = model.getData();
           const parent = MyCategories.find(
             (cat) => cat.path === workItem.parentPath
           );
+
+          if (!parent) {
+            const error = new Error(
+              "No category selected. Please select an existing category from the hierarchy."
+            );
+            MessageBox.error(error.message);
+
+            hierarchySearch.setValueState("Error");
+            hierarchySearch.setValueStateText(error.message);
+
+            throw error;
+          } else {
+            hierarchySearch.setValueState("None");
+            hierarchySearch.setValueStateText();
+          }
 
           data.parentPath = parent.path;
           data.parent_ID = parent.ID;
@@ -590,6 +618,14 @@ sap.ui.define(
             data.completedDate
           );
           data.date = data.activatedDate;
+
+          if (data.completedDate <= data.activatedDate) {
+            const error = new Error(
+              "The completion date must be after the start date. Please provide a plausibel combination of dates."
+            );
+            MessageBox.error(error.message);
+            throw error;
+          }
 
           // Update
           if (data.ID) {
