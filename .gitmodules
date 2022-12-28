@@ -1,6 +1,3 @@
-[submodule "custom_packages/cds-msal-auth"]
-	path = custom_packages/cds-msal-auth
-	url = https://github.com/BenediktHoelker/cds-msal-auth.git
 [submodule "custom_packages/cds-pg-migra"]
 	path = custom_packages/cds-pg-migra
 	url = https://github.com/iot-gmbh/cds-pg-migra.git
@@ -13,3 +10,6 @@
 [submodule "custom_packages/cds-azure-ad"]
 	path = custom_packages/cds-azure-ad
 	url = https://github.com/iot-gmbh/cds-azure-ad.git
+[submodule "custom_packages/backend-json-model"]
+	path = custom_packages/backend-json-model
+	url = https://github.com/iot-gmbh/backend-json-model.git
