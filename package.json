@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "file:custom_packages/errorhandler",
+    "@iot/ui5-errorhandler": "https://github.com/BenediktHoelker/ui5-errorhandler.git",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
