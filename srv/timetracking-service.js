@@ -176,7 +176,9 @@ module.exports = cds.service.impl(async function () {
     } = req;
 
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
-      MSGraphSrv.send("getCalendarView", req.data),
+      req.user.is("msgraph")
+        ? MSGraphSrv.send("getCalendarView", req.data)
+        : [],
       this.run(
         SELECT.from(MyWorkItems).where(
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`

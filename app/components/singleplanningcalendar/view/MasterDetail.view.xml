@@ -21,7 +21,7 @@
                 </List>
                 <footer>
                     <Toolbar >
-                        <CheckBox selected="{/filters/showConfirmed}" text="Show Confirmed?" select="refreshMasterList" />
+                        <!-- <CheckBox selected="{/filters/showConfirmed}" text="Show Confirmed?" select="refreshMasterList" /> -->
                         <ToolbarSpacer />
                         <Button icon="sap-icon://add" type="Emphasized" press="onCreateWorkItem"/>
                     </Toolbar>
