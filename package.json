@@ -28,7 +28,7 @@
     "@sap/cds-odata-v2-adapter-proxy": "1.9.0",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
-    "backend-json-model": "1.0.0",
+    "backend-json-model": "^1.0.0",
     "cds-azure-ad": "^0.0.21",
     "cds-pg": "^0.1.30",
     "cds-swagger-ui-express": "^0.5.0",
