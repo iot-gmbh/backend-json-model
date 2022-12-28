@@ -9,7 +9,7 @@
 	url = https://github.com/BenediktHoelker/ui5-errorhandler.git
 [submodule "custom_packages/cds-pg"]
 	path = custom_packages/cds-pg
-	url = https://github.com/BenediktHoelker/cds-pg.git
+	url = https://github.com/iot-gmbh/cds-pg.git
 [submodule "custom_packages/cds-azure-ad"]
 	path = custom_packages/cds-azure-ad
-	url = https://github.com/BenediktHoelker/cds-azure-ad.git
+	url = https://github.com/iot-gmbh/cds-azure-ad.git
