@@ -176,6 +176,7 @@ module.exports = cds.service.impl(async function () {
     } = req;
 
     const [MSGraphEvents, localWorkItems, myCategories] = await Promise.all([
+      // load MSGraph appointments only if user is having the relevant role
       req.user.is("msgraph")
         ? MSGraphSrv.send("getCalendarView", req.data)
         : [],
