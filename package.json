@@ -13,23 +13,23 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/backend-json-model",
-      "custom_packages/cds-azure-ad",
-      "custom_packages/cds-pg",
-      "custom_packages/cds-pg-migra",
-      "custom_packages/errorhandler"
+      "packages/backend-json-model",
+      "packages/cds-azure-ad",
+      "packages/cds-pg",
+      "packages/cds-pg-migra",
+      "packages/errorhandler"
     ]
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "https://github.com/BenediktHoelker/ui5-errorhandler.git",
+    "@iot/ui5-errorhandler": "^2.2.19",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
-    "@sap/cds-odata-v2-adapter-proxy": "1.9.0",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.0",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
-    "backend-json-model": "https://github.com/iot-gmbh/backend-json-model.git",
+    "backend-json-model": "^1.0.0",
     "cds-azure-ad": "^0.0.21",
     "cds-pg": "^0.1.30",
     "cds-swagger-ui-express": "^0.5.0",
