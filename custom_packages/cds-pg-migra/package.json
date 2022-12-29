@@ -27,8 +27,7 @@
     "lint": "eslint . --ext .ts --ext .mts",
     "test:auto": "jest --coverage",
     "test:watch": "jest --watch",
-    "prettier": "prettier --config .prettierrc --write .",
-    "prepare": "husky install"
+    "prettier": "prettier --config .prettierrc --write ."
   },
   "dependencies": {
     "@sap/cds": "^5.9.8",
