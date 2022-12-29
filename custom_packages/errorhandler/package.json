@@ -1,0 +1,39 @@
+{
+    "name": "@iot/ui5-errorhandler",
+    "description": "Handle UI5- and OData-messages and display them in MessagePopover/-Box",
+    "version": "2.2.19",
+    "private": false,
+    "devDependencies": {
+        "@sap/ux-ui5-tooling": "1",
+        "@ui5/cli": "^2.14.3",
+        "@ui5/fs": "^2.0.6",
+        "@ui5/logger": "^2.0.1",
+        "minimist": "^1.2.5"
+    },
+    "dependencies": {
+        "ui5-task-flatten-library": "^0.2.3",
+        "ui5-task-zipper": "^0.4.7"
+    },
+    "ui5": {
+        "dependencies": [
+            "ui5-task-flatten-library",
+            "ui5-task-zipper"
+        ]
+    },
+    "keywords": [
+        "ui5",
+        "openui5",
+        "sapui5"
+    ],
+    "scripts": {
+        "lint": "eslint src",
+        "set-cloud-service": "node set-cloud-service --to=%npm_config_btpCloudService%",
+        "build": "ui5 build --include-task=generateCachebusterInfo --clean-dest && rimraf npm_dist && mkdir npm_dist && mkdir npm_dist\\src && mkdir npm_dist\\src\\errorhandler && cp -a dist\\. npm_dist\\src\\errorhandler && cp {ui5.yaml,.npmrc,package.json,xs-app.json} npm_dist && cp xs-app.json dist",
+        "release": "npm version patch && node update-versions && npm run build && cd npm_dist && npm publish",
+        "build:cf": "npm run build",
+        "deploy:cf": "cf deploy mta_archives/iot-errorhandler_0.0.1.mtar",
+        "release:cf": "mbt build && npm run deploy:cf",
+        "undeploy": "cf undeploy iot-errorhandler --delete-services --delete-service-keys -f"
+    },
+    "license": "UNLICENSED"
+}
