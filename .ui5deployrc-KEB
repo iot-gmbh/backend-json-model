@@ -1,0 +1,14 @@
+{
+    "cwd": "./dist",
+    "files": "**/*.*",
+    "server": "http://as-dehq-131.prod.local:8000",
+    "client": "010",
+    "useStrictSSL": false,
+    "package": "Z_IOT",
+    "bspContainer": "ZERRORHANDLER",
+    "bspContainerText": "UI5 Errorhandler der IOT GmbH",
+    "calculateApplicationIndex": true,
+    "createTransport": true,
+    "transportText": "UI5 Fehlerhandling",
+    "transportUseLocked": true
+}

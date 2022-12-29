@@ -1,0 +1,48 @@
+{
+  "version": "1.12.0",
+  "sap.app": {
+    "id": "errorhandler",
+    "type": "library",
+    "applicationVersion": {
+      "version": "2.2.18"
+    },
+    "title": "Errorhandler",
+    "description": "Handles errors and displays them in a popup",
+    "ach": "",
+    "offline": true
+  },
+  "sap.ui": {
+    "technology": "UI5"
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.52.0",
+      "libs": {
+        "sap.ui.core": {
+          "minUI5Version": "1.52.0"
+        }
+      }
+    },
+    "library": {
+      "i18n": "i18n/i18n.properties",
+      "css": true,
+      "content": {
+        "controls": [],
+        "elements": [],
+        "types": [],
+        "interfaces": []
+      }
+    }
+  },
+  "sap.platform.hcp": {
+    "uri": ""
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "reusecomponent"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "vonovia.hwk4"
+  }
+}
