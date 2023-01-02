@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-
+// test
 sap.ui.define(
   ["sap/ui/model/odata/v2/ODataModel", "sap/ui/model/json/JSONModel"],
   (ODataModel, JSONModel) => {
