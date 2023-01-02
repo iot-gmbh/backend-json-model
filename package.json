@@ -9,9 +9,6 @@
   },
   "author": "Benedikt Hölker",
   "license": "ISC",
-  "dependencies": {
-    "semantic-release": "^19.0.5"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/iot-gmbh/backend-json-model.git"
