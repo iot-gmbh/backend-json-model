@@ -1,6 +1,6 @@
 {
   "name": "backend-json-model",
-  "version": "0.0.0-development",
+  "version": "1.2.1",
   "description": "Merge JSON-model and ODataV2-model",
   "main": "index.js",
   "scripts": {
