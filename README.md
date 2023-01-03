@@ -38,7 +38,7 @@ It contains these folders and files, following our recommended project layout:
 
 This app is using multiple other git-repositories. They are included as git-subtrees (https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202).
 
-Push changes like `git subtree push --prefix subtreeDirectory https://github.com/newfivefour/vimrc.git master`.
+Push changes like `git subtree push --prefix subtreeDirectory https://github.com/newfivefour/vimrc.git master`. Pull like `git subtree pull --prefix subtreeDirectory`
 
 # UI5-apps
 
