@@ -1,0 +1,82 @@
+_schema-version: "3.2"
+ID: iot-errorhandler
+description: Error Handler
+version: 0.0.1
+modules:
+  - name: iot-errorhandler-dest-content
+    type: com.sap.application.content
+    requires:
+      - name: iot-errorhandler-dest-srv
+        parameters:
+          content-target: true
+      - name: iot-errorhandler-repo-host
+        parameters:
+          service-key:
+            name: iot-errorhandler-repo-host-key
+      - name: iot-errorhandler-uaa
+        parameters:
+          service-key:
+            name: iot-errorhandler-uaa-key
+    parameters:
+      content:
+        subaccount:
+          destinations:
+            - Name: iot-errorhandler_repo_host
+              ServiceInstanceName: iot-errorhandler-html5-srv
+              ServiceKeyName: iot-errorhandler-repo-host-key
+              sap.cloud.service: iot.errorhandler
+            - Authentication: OAuth2UserTokenExchange
+              Name: iot-errorhandler_uaa
+              ServiceInstanceName: iot-errorhandler-xsuaa-srv
+              ServiceKeyName: iot-errorhandler-uaa-key
+              sap.cloud.service: iot.errorhandler
+          existing_destinations_policy: update
+    build-parameters:
+      no-source: true
+  - name: iot-errorhandler-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: iot-errorhandler-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - iot-errorhandler.zip
+          name: iot-errorhandler
+          target-path: resources/
+  - name: iot-errorhandler
+    type: html5
+    path: .
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms: []
+resources:
+  - name: iot-errorhandler-dest-srv
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-name: iot-errorhandler-dest-srv
+      service-plan: lite
+  - name: iot-errorhandler-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: iot-errorhandler-xsuaa-srv
+      service-plan: application
+  - name: iot-errorhandler-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: iot-errorhandler-html5-srv
+      service-plan: app-host
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
