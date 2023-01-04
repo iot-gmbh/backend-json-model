@@ -1,0 +1,49 @@
+<mvc:View
+    controllerName="iot.planner.components.billing.controller.Object"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:semantic="sap.f.semantic">
+
+    <semantic:SemanticPage
+        id="page"
+        headerPinnable="false"
+        toggleHeaderOnTitleClick="false"
+        busy="{objectView>/busy}"
+        busyIndicatorDelay="{objectView>/delay}">
+
+        <semantic:titleHeading>
+            <Title
+                text="{ID}"
+                level="H2"/>
+        </semantic:titleHeading>
+
+        <semantic:headerContent>
+            <ObjectNumber />
+        </semantic:headerContent>
+
+        <semantic:content>
+            <l:VerticalLayout>
+                <ObjectStatus title="ID" text="{ID}"/>
+                <ObjectStatus title="User" text="{assignedToUserPrincipalName}"/>
+                <ObjectStatus title="Date" text="{workDate}"/>
+                <ObjectStatus title="Start Time" text="{startTime}"/>
+                <ObjectStatus title="End Time" text="{endTime}"/>
+                <ObjectStatus title="Duration" text="{duration}"/>
+                <ObjectStatus title="Title" text="{title}"/>                            
+                <ObjectStatus title="Customer" text="{customerText}"/>
+                <ObjectStatus title="Project" text="{projectText}"/>
+                <ObjectStatus title="Subproject" text="{subProjectText}"/>
+                <ObjectStatus title="Work Package" text="{workPackageText}"/>
+                <!-- <ObjectStatus title="Note" text="{note}"/> -->
+                <ObjectStatus title="Location" text="{location}"/>
+                <!-- <ObjectStatus title="Cost per hour" text="{hourlyCost}"/>
+                <ObjectStatus title="Expenses" text="{expense}"/>
+                <ObjectStatus title="Travel Cost" text="{travelCost}"/>
+                <ObjectStatus title="Total Cost" text="{totalCost}"/> -->
+            </l:VerticalLayout>
+        </semantic:content>
+
+    </semantic:SemanticPage>
+
+</mvc:View>

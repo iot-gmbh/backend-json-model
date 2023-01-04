@@ -43,10 +43,10 @@
                 }
             },
             applications: {
-                "iotplannerbilling-tile": {
+                "iotplannerbilling-display": {
                     title: "Billing",
                     description: "",
-                    additionalInformation: "SAPUI5.Component=iot.planner.billing",
+                    additionalInformation: "SAPUI5.Component=iot.planner.components.billing",
                     applicationType: "URL",
                     url: "../"
                 }
@@ -58,7 +58,7 @@
     <!-- Bootstrap the UI5 core library -->
     <script id="sap-ui-bootstrap"
         src="https://sapui5.hana.ondemand.com/1.109.3/resources/sap-ui-core.js"
-        data-sap-ui-libs=""
+        data-sap-ui-libs="sap.f,sap.m,sap.suite.ui.generic.template,sap.ui.comp,sap.ui.core,sap.ui.generic.app,sap.ui.table,sap.ushell"
         data-sap-ui-async="true"
         data-sap-ui-preload="async"
         data-sap-ui-theme="sap_horizon"

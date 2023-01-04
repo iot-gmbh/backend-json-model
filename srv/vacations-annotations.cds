@@ -26,7 +26,7 @@ annotate my.Vacations with @(
     endDate
   ]
 ) {
-  durationInDays @Common.FieldControl : #ReadOnly;
+  durationInDays @Core.Computed : true;
 };
 
 annotate my.Vacations with @(
@@ -99,12 +99,24 @@ annotate my.Vacations with @(
   Common.SideEffects #updateAfterEndChange   : {
     SourceProperties : ['endDate'],
     TargetProperties : ['durationInDays'],
+  },
+  Common.SideEffects #updateAfterDurationChange : {
+    SourceProperties : ['durationInDays'],
+    TargetProperties : ['user/vacDaysRemaining', 'user/vacDaysTotal']
+  },
+  Common.SideEffects #updateAfterUserSelection : {
+    SourceProperties : ['user_userPrincipalName'],
+    TargetProperties : [
+      'user/displayName',
+      'user/vacDaysRemaining',
+      'user/vacDaysTotal'
+    ]
   }
 );
 
 annotate my.Users with {
   userPrincipalName @Common.Label        : 'Principal Name';
   displayName       @Common.FieldControl : #ReadOnly;
-  vacDaysRemaining  @odata.Type          : 'Edm.String'  @Common.FieldControl : #ReadOnly;
-  vacDaysTotal      @odata.Type          : 'Edm.String'  @Common.FieldControl : #ReadOnly;
+  vacDaysRemaining  @odata.Type          : 'Edm.String'  @Core.Computed : true;
+  vacDaysTotal      @odata.Type          : 'Edm.String'  @Core.Computed : true;
 };

@@ -13,25 +13,16 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:worklist",
       "version": "1.7.5",
-      "toolsId": "a4136c1d-4860-4f2b-bf3c-52456f6244fd"
+      "toolsId": "6158784a-bbe0-424b-8341-5b28d75b183e"
     },
     "dataSources": {
       "mainService": {
         "uri": "/billing/",
         "type": "OData",
         "settings": {
-          "annotations": [
-            "annotation"
-          ],
+          "annotations": [],
           "localUri": "localService/metadata.xml",
           "odataVersion": "4.0"
-        }
-      },
-      "annotation": {
-        "type": "ODataAnnotation",
-        "uri": "annotations/annotation.xml",
-        "settings": {
-          "localUri": "annotations/annotation.xml"
         }
       }
     }
@@ -59,8 +50,12 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.ushell": {},
-        "sap.fe.templates": {}
+        "sap.f": {},
+        "sap.suite.ui.generic.template": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.ui.table": {},
+        "sap.ushell": {}
       }
     },
     "contentDensities": {
@@ -71,7 +66,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "iot.planner.billing.i18n.i18n"
+          "bundleName": "iot.planner.components.billing.i18n.i18n"
         }
       },
       "": {
@@ -83,65 +78,69 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
-      },
-      "@i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "uri": "i18n/i18n.properties"
       }
     },
     "resources": {
       "css": []
     },
     "routing": {
-      "config": {},
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "iot.planner.components.billing.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
+      },
       "routes": [
         {
-          "pattern": ":?query:",
-          "name": "MyWorkItemsList",
-          "target": "MyWorkItemsList"
+          "pattern": "",
+          "name": "worklist",
+          "target": [
+            "worklist"
+          ]
         },
         {
-          "pattern": "MyWorkItems({key}):?query:",
-          "name": "MyWorkItemsObjectPage",
-          "target": "MyWorkItemsObjectPage"
+          "pattern": "MyWorkItems/{objectId}",
+          "name": "object",
+          "target": [
+            "object"
+          ]
         }
       ],
       "targets": {
-        "MyWorkItemsList": {
-          "type": "Component",
-          "id": "MyWorkItemsList",
-          "name": "sap.fe.templates.ListReport",
-          "options": {
-            "settings": {
-              "entitySet": "MyWorkItems",
-              "variantManagement": "Page",
-              "hideFilterBar": true,
-              "navigation": {
-                "MyWorkItems": {
-                  "detail": {
-                    "route": "MyWorkItemsObjectPage"
-                  }
-                }
-              }
-            }
-          }
+        "worklist": {
+          "viewName": "Worklist",
+          "viewId": "worklist",
+          "viewLevel": 1,
+          "title": "{i18n>worklistViewTitle}"
         },
-        "MyWorkItemsObjectPage": {
-          "type": "Component",
-          "id": "MyWorkItemsObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "entitySet": "MyWorkItems"
-            }
-          }
+        "object": {
+          "viewName": "Object",
+          "viewId": "object",
+          "viewLevel": 2,
+          "title": "{i18n>objectViewTitle}"
+        },
+        "objectNotFound": {
+          "viewName": "ObjectNotFound",
+          "viewId": "objectNotFound"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewId": "notFound"
         }
       }
+    },
+    "rootView": {
+      "viewName": "iot.planner.components.billing.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
     }
-  },
-  "sap.fiori": {
-    "registrationIds": [],
-    "archeType": "transactional"
   }
 }

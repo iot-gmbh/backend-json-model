@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "^2.2.19",
+    "@iot-gmbh/ui5-errorhandler": "^2.2.19",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
-    "@sap/ux-specification": "^1.102.9",
+    "@sap/ux-specification": "^1.102.14",
     "@ui5/cli": "^2.14.9",
     "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",
@@ -89,12 +89,7 @@
     "set-default-env:test": "bash ./set-env.sh test",
     "set-default-env:prod": "bash ./set-env.sh production",
     "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning",
-<<<<<<< HEAD
-    "reload": "npm run deploy && npm start",
-    "watch-billing": "cds watch --open billing/webapp/index.html?sap-ui-xx-viewCache=false"
-=======
     "semantic-release": "semantic-release"
->>>>>>> origin/main
   },
   "files": [
     "db",
@@ -105,7 +100,7 @@
     "dependencies": [
       "ui5-middleware-simpleproxy",
       "ui5-task-pwa-enabler",
-      "@iot/ui5-errorhandler",
+      "@iot-gmbh/ui5-errorhandler",
       "backend-json-model"
     ]
   },
@@ -121,18 +116,9 @@
     }
   },
   "sapux": [
-<<<<<<< HEAD
-    "app/analytics-alp",
-    "app/billing",
-    "app/billing",
-    "app/billing"
-  ]
-}
-=======
     "app/analytics-alp"
   ],
   "publishConfig": {
     "access": "restricted"
   }
 }
->>>>>>> origin/main

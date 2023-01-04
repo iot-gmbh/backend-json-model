@@ -11,7 +11,6 @@ sap.ui.define([
         onPrint: function(oEvent) {
             let oModel = oEvent.getModel();
             let oBindings = oModel.getAllBindings();
-            console.log(oBindings);
 
             let data = {};
 

@@ -29,13 +29,6 @@ module.exports = cds.service.impl(async function () {
         return req.data.durationInDays = this.businessDays;
     });
 
-    // handles draft activations
-    this.before('draftActivate', 'Vacations', () => {
-
-        // updates the duration field in the vacations table
-        return UPDATE(Vacations).set({ durationInDays: this.businessDays }).where({ ID: this.id });
-    });
-
     /**
      * Calculates time span between two dates.
      * @param {string} startDate 

@@ -70,8 +70,10 @@
         "models": {
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/i18n.properties"
-            },
+                "settings": {
+                  "bundleName": "iot.planner.components.vacations.i18n.i18n"
+                }
+              },
             "": {
                 "dataSource": "mainService",
                 "preload": true,
