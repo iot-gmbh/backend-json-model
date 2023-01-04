@@ -62,12 +62,14 @@ module.exports = (req, res, next) => {
     DEBUG && DEBUG('token')
     DEBUG && DEBUG(token)
 
+    const roles = token.roles || []
+
     capUser = {
       id: token.preferred_username,
       accessToken: req.get('authorization'),
       tenant: token.tid,
       schema: formatSchema(token.tid),
-      _roles: ['authenticated-user', ...token.roles],
+      _roles: ['authenticated-user', ...roles],
     }
 
     req.user = new AzureADB2CUser(capUser)
