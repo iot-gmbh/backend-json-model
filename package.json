@@ -19,7 +19,6 @@
       "packages/backend-json-model",
       "packages/cds-azure-ad",
       "packages/cds-pg",
-      "packages/cds-pg-migra",
       "packages/errorhandler"
     ]
   },
