@@ -1,8 +1,11 @@
 {
   "name": "project-planning",
-  "version": "1.1.1",
+  "version": "0.0.0-development",
   "description": "Plan & Track projects",
-  "repository": "<Add your repository here>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iot-gmbh/project-planning.git"
+  },
   "author": {
     "name": "Benedikt Hölker und Daniel Mextorf"
   },
@@ -13,19 +16,20 @@
   },
   "workspaces": {
     "packages": [
-      "custom_packages/backend-json-model",
-      "custom_packages/cds-azure-ad",
-      "custom_packages/cds-pg",
-      "custom_packages/errorhandler"
+      "packages/backend-json-model",
+      "packages/cds-azure-ad",
+      "packages/cds-pg",
+      "packages/cds-pg-migra",
+      "packages/errorhandler"
     ]
   },
   "dependencies": {
     "@azure/msal-node": "^1.11.0",
-    "@iot/ui5-errorhandler": "file:custom_packages/errorhandler",
+    "@iot/ui5-errorhandler": "^2.2.19",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
-    "@sap/cds-odata-v2-adapter-proxy": "1.9.0",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.0",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
     "backend-json-model": "^1.0.0",
@@ -85,8 +89,12 @@
     "set-default-env:test": "bash ./set-env.sh test",
     "set-default-env:prod": "bash ./set-env.sh production",
     "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning",
+<<<<<<< HEAD
     "reload": "npm run deploy && npm start",
     "watch-billing": "cds watch --open billing/webapp/index.html?sap-ui-xx-viewCache=false"
+=======
+    "semantic-release": "semantic-release"
+>>>>>>> origin/main
   },
   "files": [
     "db",
@@ -113,9 +121,18 @@
     }
   },
   "sapux": [
+<<<<<<< HEAD
     "app/analytics-alp",
     "app/billing",
     "app/billing",
     "app/billing"
   ]
 }
+=======
+    "app/analytics-alp"
+  ],
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
+>>>>>>> origin/main

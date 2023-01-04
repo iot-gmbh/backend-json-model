@@ -1,0 +1,3 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<MessageItem title="{message}" subtitle="{additionalText}" type="{type}" activeTitle="{path: 'controlIds', formatter: '._isItemPositionable'}"/>
+</core:FragmentDefinition>

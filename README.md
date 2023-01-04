@@ -34,6 +34,12 @@ It contains these folders and files, following our recommended project layout:
 - Deploy to the PostgresDB with `npm run deploy`
 - Run `npm start`
 
+# Git subtrees
+
+This app is using multiple other git-repositories. They are included as git-subtrees (https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202).
+
+Add a submodule like `git subtree add --prefix {local directory being pulled into} {remote repo URL} {remote branch} --squash`. Push and pull are analogue.
+
 # UI5-apps
 
 The most important app is the [single-planning-calendar](/app/single-planning-calendar/). New work-items are registered via this app. Multiple admin apps provide functionality to edit projects, users or customers (...). The single-planning-calendar is as of 2022-03-02 the only "UI5-app", all other apps are "Fiori elements apps" - generated out of the service's annotations.
