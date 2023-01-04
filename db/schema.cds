@@ -41,6 +41,9 @@ entity Users : multitenant {
       officeLocation    : String;
       preferredLanguage : String;
       surname           : String;
+      yearlyVacDays     : Integer default 30;
+      vacDaysTotal      : Integer;
+      vacDaysRemaining  : Integer;
       manager           : Association to Users;
       categories        : Association to many Users2Categories
                             on categories.user = $self;
@@ -50,6 +53,8 @@ entity Users : multitenant {
                             on workItems.assignedTo = $self;
       travels           : Association to many Travels
                             on travels.user = $self;
+      vacations         : Association to many Vacations
+                            on vacations.user = $self;
 };
 
 entity Users2Categories : cuid, managed, multitenant {
@@ -209,4 +214,11 @@ entity CategoryLevels : multitenant {
 entity Travels : cuid, managed, multitenant {
   user   : Association to Users;
   parent : Association to Categories;
+}
+
+entity Vacations : cuid {
+    startDate       : Date;
+    endDate         : Date;
+    durationInDays  : Integer;
+    user            : Association to Users;
 }

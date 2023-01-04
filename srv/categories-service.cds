@@ -40,10 +40,18 @@ service CategoriesService @(requires : 'authenticated-user') {
       ],
       to    : 'admin',
     },
-  ])                      as projection on my.Users;
+  ])                      as projection on my.Users {
+    *,
+    sum(vacations.durationInDays)
+      as vacDaysTotal : Integer @odata.Type : 'Edm.String' @Common.Label:'{i18n>Users.vacDaysTotal}',
+    yearlyVacDays - sum(vacations.durationInDays) 
+      as vacDaysRemaining : Integer @odata.Type : 'Edm.String' @Common.Label:'{i18n>Users.vacDaysRemaining}'
+  } group by userPrincipalName;
 
   entity Users2Categories as projection on my.Users2Categories {
     *,
     user.displayName
   };
+
+  entity Vacations as projection on my.Vacations;
 }

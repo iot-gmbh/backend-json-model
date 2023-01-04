@@ -117,17 +117,42 @@ annotate my.Users with @(UI : {
     userPrincipalName,
     manager_userPrincipalName,
   ],
+  FieldGroup #Vacation  : {
+    $Type : 'UI.FieldGroupType',
+    Data  : [
+      {Value : yearlyVacDays},
+      {Value : vacDaysTotal},
+      {Value : vacDaysRemaining}
+    ],
+  },
   Facets              : [
     {
-      $Type  : 'UI.ReferenceFacet',
+      $Type  : 'UI.CollectionFacet',
       Label  : '{i18n>Identification}',
-      Target : '@UI.Identification'
-    },
+      ID     : 'IdentificationFacet',
+      Facets : [
+        {
+          $Type  : 'UI.ReferenceFacet',
+          Label  : '{i18n>Identification}',
+          Target : '@UI.Identification'
+        },
+        {
+          $Type  : 'UI.ReferenceFacet',
+          Label  : '{i18n>Vacation}',
+          Target : '@UI.FieldGroup#Vacation'
+        }
+      ]
+    },    
     {
       $Type  : 'UI.ReferenceFacet',
       Label  : '{i18n>Users.teamMembers}',
       Target : 'teamMembers/@UI.LineItem'
     },
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Label  : '{i18n>Vacations}',
+      Target : 'vacations/@UI.LineItem'
+    }
   ],
   LineItem            : [
     {
@@ -264,3 +289,20 @@ annotate my.Categories with @(UI : {
   hierarchyLevel @sap.hierarchy.level.for       : 'ID';
   drillDownState @sap.hierarchy.drill.state.for : 'ID';
 }
+
+annotate my.Vacations with @(
+  UI.LineItem    : [
+    {
+      $Type : 'UI.DataField',
+      Value : startDate,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : endDate,
+    },
+    {
+      $Type : 'UI.DataField',
+      Value : durationInDays,
+    },
+  ]
+);

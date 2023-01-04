@@ -86,7 +86,9 @@
     "set-default-env:dev": "bash ./set-env.sh development",
     "set-default-env:test": "bash ./set-env.sh test",
     "set-default-env:prod": "bash ./set-env.sh production",
-    "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning"
+    "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning",
+    "reload": "npm run deploy && npm start",
+    "watch-billing": "cds watch --open billing/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "files": [
     "db",
@@ -113,6 +115,9 @@
     }
   },
   "sapux": [
-    "app/analytics-alp"
+    "app/analytics-alp",
+    "app/billing",
+    "app/billing",
+    "app/billing"
   ]
 }

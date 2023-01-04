@@ -1,0 +1,164 @@
+{
+    "_version": "1.45.0",
+    "sap.app": {
+        "id": "iot.planner.components.vacations",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.7.5",
+            "toolsId": "e0885299-411b-4596-adac-6dc4c94083ec"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/vacations/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation"
+                    ],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "4.0"
+                }
+            },
+            "annotation": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation.xml",
+                "settings": {
+                    "localUri": "annotations/annotation.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.108.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "js": [
+				{
+					"uri": "pdfGenerator/pdf/pdfmake.min.js"
+				},
+				{
+					"uri": "pdfGenerator/pdf/vfs_fonts.js"
+				}
+			],
+            "css": []
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "VacationsList",
+                    "target": "VacationsList"
+                },
+                {
+                    "pattern": "Vacations({key}):?query:",
+                    "name": "VacationsObjectPage",
+                    "target": "VacationsObjectPage"
+                }
+            ],
+            "targets": {
+                "VacationsList": {
+                    "type": "Component",
+                    "id": "VacationsList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "entitySet": "Vacations",
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "Vacations": {
+                                    "detail": {
+                                        "route": "VacationsObjectPage"
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled"
+                        }
+                    }
+                },
+                "VacationsObjectPage": {
+                    "type": "Component",
+                    "id": "VacationsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "entitySet": "Vacations",
+                            "content": {
+                                "header": {
+                                    "actions": {
+                                        "PrintButton": {
+                                            "press": "iot.planner.components.vacations.custom.ObjectPageExtController.onPrint",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "text": "{i18n>print}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}
