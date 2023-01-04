@@ -1,0 +1,5 @@
+<mvc:View height="100%"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m">
+	<MessagePage icon="sap-icon://message-error" text="{appView>/errorOnStartupText}" description="" showHeader="false" />
+</mvc:View>

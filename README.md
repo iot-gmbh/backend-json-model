@@ -38,7 +38,15 @@ It contains these folders and files, following our recommended project layout:
 
 This app is using multiple other git-repositories. They are included as git-subtrees (https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202).
 
-Add a submodule like `git subtree add --prefix {local directory being pulled into} {remote repo URL} {remote branch} --squash`. Push and pull are analogue.
+Add a subtree like `git subtree add --prefix {local directory being pulled into} {remote repo URL} {remote branch} --squash`. Push and pull are analogue.
+
+Subtrees used:
+
+- https://github.com/iot-gmbh/cds-azure-ad.git
+- https://github.com/iot-gmbh/ui5-errorhandler.git
+- https://github.com/iot-gmbh/backend-json-model.git
+- https://github.com/iot-gmbh/cds-pg-migra.git
+- https://github.com/iot-gmbh/cds-pg.git
 
 # UI5-apps
 

@@ -1,11 +1,12 @@
 sap.ui.define(
   [
     "./model/models",
+    "sap/ui/model/json/JSONModel",
     "sap/ui/core/UIComponent",
     "iot/BackendJSONModel",
     "errorhandler/ErrorHandler",
   ],
-  (models, UIComponent, BackendJSONModel, ErrorHandler) =>
+  (models, JSONModel, UIComponent, BackendJSONModel, ErrorHandler) =>
     UIComponent.extend(
       "iot.planner.components.singleplanningcalendar.Component",
       {
@@ -23,18 +24,30 @@ sap.ui.define(
           });
 
           const ODataModel = backendJSONModel.getODataModel();
+          const appView = new JSONModel({
+            errorOnStartupText: "A general error occured",
+            busy: true,
+            delay: 0,
+          });
+
+          this.setModel(appView, "appView");
 
           // call the base component's init function
           this.setModel(backendJSONModel);
           this.setModel(ODataModel, "OData");
-
-          ErrorHandler.cover([ODataModel]);
-
-          // // enable routing
-          this.getRouter().initialize();
-
-          // set the device model
           this.setModel(models.createDeviceModel(), "device");
+
+          const router = this.getRouter();
+
+          try {
+            await ErrorHandler.cover([this.getModel()]);
+            router.initialize();
+          } catch (error) {
+            router.initialize();
+
+            appView.setProperty("/errorOnStartupText", error.message);
+            router.getTargets().display("errorOnStartup");
+          }
         },
       }
     )

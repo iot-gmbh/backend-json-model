@@ -133,16 +133,6 @@ sap.ui.define(
           );
         };
 
-        // sap.ui.getCore()._httpAuth = ;
-        const orig = SpreadsheetExport.execute;
-        SpreadsheetExport.execute = function (mParams, fnCallback) {
-          mParams.dataSource.headers = {
-            ...mParams.dataSource.headers,
-            Authorization: `Bearer ${loginResponse.accessToken}`,
-          };
-          orig(mParams, fnCallback);
-        };
-
         if (previousTarget) {
           // previousTarget.
           this.getRouter().getTargets().display(previousTarget);
