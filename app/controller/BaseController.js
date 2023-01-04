@@ -12,8 +12,6 @@ sap.ui.define(
           return this.getOwnerComponent()
             .oContainer.getParent()
             .getParent()
-            .getParent()
-            .getParent()
             .getController()
             .getOwnerComponent();
         },

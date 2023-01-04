@@ -4,6 +4,12 @@ sap.ui.define(["../model/legendItems"], (legendItems) => {
   }
 
   return {
+    getWorkingTimeQuote(is, should) {
+      const quote = (Number(is) / Number(should)).toFixed(2) * 100;
+      if (quote > 100) return 100;
+      return quote;
+    },
+
     getDisplayType(eventType, status) {
       // const allocationStatus = projectID ? "Allocated" : "NotAllocated";
       const billingStatus = status === "Billed" ? "Billed" : "NotBilled";

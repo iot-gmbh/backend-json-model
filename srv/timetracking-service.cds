@@ -1,57 +1,57 @@
 using {iot.planner as my} from '../db/schema';
 using {MSGraphService} from './msgraph-service';
 
-service TimetrackingService @(requires : 'authenticated-user') {
+service TimetrackingService @(requires: 'authenticated-user') {
 
   @odata.create.enabled
   @odata.update.enabled
-  entity MyWorkItems                                                    @(restrict : [
+  entity MyWorkItems                                                    @(restrict: [
     {
-      grant : '*',
-      to    : 'admin'
+      grant: '*',
+      to   : 'admin'
     },
     {
-      grant : '*',
-      to    : 'team-lead',
+      grant: '*',
+      to   : 'team-lead',
       // Association paths are currently supported on SAP HANA only
       // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where : 'managerUserPrincipalName = $user',
+      where: 'managerUserPrincipalName = $user',
     },
     {
-      grant : '*',
-      to    : 'project-lead',
-      where : '$user = level0Manager',
+      grant: '*',
+      to   : 'project-lead',
+      where: '$user = level0Manager',
     },
     {
-      grant : '*',
-      to    : 'project-lead',
-      where : '$user = level1Manager',
+      grant: '*',
+      to   : 'project-lead',
+      where: '$user = level1Manager',
     },
     {
-      grant : '*',
-      to    : 'project-lead',
-      where : '$user = level2Manager',
+      grant: '*',
+      to   : 'project-lead',
+      where: '$user = level2Manager',
     },
     {
-      grant : '*',
-      to    : 'project-lead',
-      where : '$user = level3Manager',
+      grant: '*',
+      to   : 'project-lead',
+      where: '$user = level3Manager',
     },
     {
-      grant : '*',
-      to    : 'authenticated-user',
-      where : 'assignedToUserPrincipalName = $user'
+      grant: '*',
+      to   : 'authenticated-user',
+      where: 'assignedToUserPrincipalName = $user'
     },
   ])                      as projection on my.WorkItems {
     *,
     // TO_CHAR(
     TO_CHAR(
       activatedDate, 'YYYY-MM-DD'
-    )                                    as dateString : String         @(title : 'Date (String)'),
-    activatedDate                        as date                        @(title : 'Date'),
-    activatedDate                                                       @(title : 'Activated Date'),
-    assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title : 'User'),
-    assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title : 'Manager'),
+    )                                    as dateString : String         @(title: 'Date (String)'),
+    activatedDate                        as date                        @(title: 'Date'),
+    activatedDate                                                       @(title: 'Activated Date'),
+    assignedTo.userPrincipalName         as assignedToUserPrincipalName @(title: 'User'),
+    assignedTo.manager.userPrincipalName as managerUserPrincipalName    @(title: 'Manager'),
     hierarchy.level0Title                as level0Title,
     hierarchy.level1Title                as level1Title,
     hierarchy.level2Title                as level2Title,
@@ -65,25 +65,70 @@ service TimetrackingService @(requires : 'authenticated-user') {
     hierarchy.level2Manager              as level2Manager,
     hierarchy.level3Manager              as level3Manager
 
-  }
+  };
+
   // where deleted is null
 
-  @cds.redirection.target : true
-  entity WorkItemsFastEntry @(restrict : [
+  /*
+  IOT Projektaufschreibung
+
+  Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
+   */
+  // @cds.redirection.target: true
+  entity IOTWorkItems                                                           @(restrict: [
     {
-      grant : 'READ',
-      where : 'assignedTo_userPrincipalName = $user'
+      grant: 'READ',
+      to   : 'team-lead',
+      // Association paths are currently supported on SAP HANA only
+      // https://cap.cloud.sap/docs/guides/authorization#association-paths
+      where: 'managerUserPrincipalName = $user'
     },
     {
-      grant : 'WRITE',
-      to    : 'authenticated-user'
+      grant: 'READ',
+      to   : 'authenticated-user',
+      where: 'Nutzer = $user'
+    },
+    {
+      grant: 'READ',
+      to   : 'admin',
+    },
+  ])                      as projection on my.WorkItems {
+    key ID                                                                      @UI.Hidden,
+        activatedDate                        as Datum             : String(10)  @(title: '{i18n>IOTWorkItems.Datum}'),
+        completedDate                        as DatumBis          : String(10)  @(title: '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden: true,
+        // Casting findet in work-items-service.js statt (mittels moment.js)
+        ''                                   as Beginn            : String(5)   @(title: '{i18n>IOTWorkItems.Beginn}'),
+        ''                                   as Ende              : String(5)   @(title: '{i18n>IOTWorkItems.Ende}'),
+        ''                                   as P1                : String      @(title: '{i18n>IOTWorkItems.P1}'),
+        hierarchy.level1Alias                as ProjektAlias      : String(150) @(title: '{i18n>IOTWorkItems.ProjektAlias}'),
+        hierarchy.level2Alias                as TeilprojektAlias  : String(150) @(title: '{i18n>IOTWorkItems.TeilprojektAlias}'),
+        hierarchy.level3Alias                as ArbeitspaketAlias : String(150) @(title: '{i18n>IOTWorkItems.ArbeitspaketAlias}'),
+        'Durchführung'                       as Taetigkeit        : String(30)  @(title: '{i18n>IOTWorkItems.Taetigkeit}'),
+        assignedTo.userPrincipalName         as Nutzer            : String      @(title: '{i18n>IOTWorkItems.Nutzer}'),
+        'GE'                                 as Einsatzort        : String      @(title: '{i18n>IOTWorkItems.Einsatzort}'),
+        title                                as Bemerkung         : String      @(title: '{i18n>IOTWorkItems.Bemerkung}'),
+        @UI.Hidden
+        tenant,
+        @UI.Hidden
+        assignedTo.manager.userPrincipalName as managerUserPrincipalName,
+  } where deleted is null;
+
+  @cds.redirection.target: true
+  entity WorkItemsFastEntry @(restrict: [
+    {
+      grant: 'READ',
+      where: 'assignedTo_userPrincipalName = $user'
+    },
+    {
+      grant: 'WRITE',
+      to   : 'authenticated-user'
     }
   ])                      as projection on my.WorkItems excluding {
     hierarchy
   };
 
   entity MSGraphWorkItems as projection on MSGraphService.WorkItems {
-    key ID                       : String @odata.Type : 'Edm.String',
+    key ID                       : String @odata.Type: 'Edm.String',
         title,
         activatedDate,
         completedDate,
@@ -117,37 +162,37 @@ service TimetrackingService @(requires : 'authenticated-user') {
 
   entity CategoriesLevel0 as projection on Categories {
         *,
-    key ID    @(title : 'Customer'),
-        title @(title : 'Customer')
+    key ID    @(title: 'Customer'),
+        title @(title: 'Customer')
   } where hierarchyLevel = '0';
 
   entity CategoriesLevel1 as projection on Categories {
         *,
-    key ID                          @(title : 'Project'),
-        title                       @(title : 'Project'),
-        parent.ID    as level0ID    @(title : 'Customer'),
-        parent.title as level0Title @(title : 'Customer'),
+    key ID                          @(title: 'Project'),
+        title                       @(title: 'Project'),
+        parent.ID    as level0ID    @(title: 'Customer'),
+        parent.title as level0Title @(title: 'Customer'),
   } where hierarchyLevel = '1';
 
   entity CategoriesLevel2 as projection on Categories {
         *,
-    key ID                                 @(title : 'Subproject'),
-        title                              @(title : 'Subproject'),
-        parent.ID           as level1ID    @(title : 'Project'),
-        parent.title        as level1Title @(title : 'Project'),
-        parent.parent.ID    as level0ID    @(title : 'Customer'),
-        parent.parent.title as level0Title @(title : 'Customer'),
+    key ID                                 @(title: 'Subproject'),
+        title                              @(title: 'Subproject'),
+        parent.ID           as level1ID    @(title: 'Project'),
+        parent.title        as level1Title @(title: 'Project'),
+        parent.parent.ID    as level0ID    @(title: 'Customer'),
+        parent.parent.title as level0Title @(title: 'Customer'),
   } where hierarchyLevel = '2';
 
   entity CategoriesLevel3 as projection on Categories {
         *,
-    key ID                                        @(title : 'Package'),
-        title                                     @(title : 'Package'),
-        parent.ID                  as level2ID    @(title : 'Subproject'),
-        parent.title               as level2Title @(title : 'Subproject'),
-        parent.parent.ID           as level1ID    @(title : 'Project'),
-        parent.parent.title        as level1Title @(title : 'Project'),
-        parent.parent.parent.ID    as level0ID    @(title : 'Customer'),
-        parent.parent.parent.title as level0Title @(title : 'Customer'),
+    key ID                                        @(title: 'Package'),
+        title                                     @(title: 'Package'),
+        parent.ID                  as level2ID    @(title: 'Subproject'),
+        parent.title               as level2Title @(title: 'Subproject'),
+        parent.parent.ID           as level1ID    @(title: 'Project'),
+        parent.parent.title        as level1Title @(title: 'Project'),
+        parent.parent.parent.ID    as level0ID    @(title: 'Customer'),
+        parent.parent.parent.title as level0Title @(title: 'Customer'),
   } where hierarchyLevel = '3';
 }
