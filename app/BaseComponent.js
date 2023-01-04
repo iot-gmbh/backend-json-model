@@ -23,6 +23,14 @@ sap.ui.define(
 
         const router = this.getRouter();
 
+        router.attachBeforeRouteMatched(() => {
+          if (this._metadataLoadingFailed) {
+            setTimeout(() => {
+              this.getRouter().getTargets().display("errorOnStartup");
+            });
+          }
+        });
+
         try {
           await ErrorHandler.cover([this.getModel()]);
           router.initialize();
@@ -36,6 +44,8 @@ sap.ui.define(
           router.initialize();
           // TODO: On consequent navigation, the target will be overwritten and invisible
           this.getRouter().getTargets().display("errorOnStartup");
+
+          this._metadataLoadingFailed = true;
         }
       },
 
