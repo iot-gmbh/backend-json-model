@@ -113,6 +113,10 @@
         "notFound": {
           "viewName": "NotFound",
           "viewId": "notFound"
+        },
+        "errorOnStartup": {
+          "viewName": "ErrorOnStartup",
+          "viewId": "errorOnStartup"
         }
       }
     },

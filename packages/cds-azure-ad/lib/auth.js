@@ -64,8 +64,6 @@ module.exports = (req, res, next) => {
 
     const roles = token.roles || []
 
-    return next(Error(token))
-
     capUser = {
       id: token.preferred_username,
       accessToken: req.get('authorization'),

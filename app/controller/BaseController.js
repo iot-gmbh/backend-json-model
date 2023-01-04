@@ -1,10 +1,6 @@
 sap.ui.define(
-  [
-    "sap/ui/core/mvc/Controller",
-    "sap/ui/core/routing/History",
-    "sap/ui/model/json/JSONModel",
-  ],
-  (Controller, History, JSONModel) =>
+  ["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History"],
+  (Controller, History) =>
     Controller.extend(
       "iot.planner.components.singleplanningcalendar.controller.BaseController",
       {
@@ -59,19 +55,14 @@ sap.ui.define(
           return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
 
-        /**
-         * Event handler for navigating back.
-         * It there is a history entry we go one step back in the browser history
-         * If not, it will replace the current entry of the browser history with the master route.
-         * @public
-         */
         onNavBack() {
           const sPreviousHash = History.getInstance().getPreviousHash();
 
           if (sPreviousHash !== undefined) {
+            // eslint-disable-next-line no-restricted-globals
             history.go(-1);
           } else {
-            this.getRouter().navTo("masterDetail", {}, true);
+            this.getOwnerComponent().getRouter().navTo("home", {}, true);
           }
         },
       }

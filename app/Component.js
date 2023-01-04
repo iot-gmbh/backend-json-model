@@ -1,13 +1,8 @@
 XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
 
 sap.ui.define(
-  [
-    "sap/ui/Device",
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/core/UIComponent",
-    "sap/ui/export/SpreadsheetExport",
-  ],
-  (Device, JSONModel, UIComponent, SpreadsheetExport) =>
+  ["sap/ui/Device", "sap/ui/model/json/JSONModel", "sap/ui/core/UIComponent"],
+  (Device, JSONModel, UIComponent) =>
     UIComponent.extend("iot.planner.Component", {
       config: {
         msalConfig: {

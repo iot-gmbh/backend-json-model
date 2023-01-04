@@ -3,22 +3,12 @@
 sap.ui.define(
   [
     "../../../controller/BaseController",
-    "sap/ui/model/Filter",
     "../model/formatter",
     "../model/legendItems",
     "sap/base/Log",
-    "sap/m/MessageBox",
     "sap/m/MessageToast",
   ],
-  (
-    BaseController,
-    Filter,
-    formatter,
-    legendItems,
-    Log,
-    MessageBox,
-    MessageToast
-  ) => {
+  (BaseController, formatter, legendItems, Log, MessageToast) => {
     function addDays(date, days) {
       const result = new Date(date);
       result.setDate(result.getDate() + days);
