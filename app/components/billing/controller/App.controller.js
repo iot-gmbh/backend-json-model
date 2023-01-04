@@ -1,14 +1,10 @@
-sap.ui.define([
-    "./BaseController"
-], function (BaseController) {
-    "use strict";
-
-    return BaseController.extend("iot.planner.components.billing.controller.App", {
-
-        onInit : function () {
-            // apply content density mode to root view
-            this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-        }
-    });
-
-});
+sap.ui.define(["./BaseController"], (BaseController) =>
+  BaseController.extend("iot.planner.components.billing.controller.App", {
+    onInit() {
+      // apply content density mode to root view
+      this.getView().addStyleClass(
+        this.getOwnerComponent().getContentDensityClass()
+      );
+    },
+  })
+);
