@@ -19,7 +19,6 @@
       "packages/backend-json-model",
       "packages/cds-azure-ad",
       "packages/cds-pg",
-      "packages/cds-pg-migra",
       "packages/errorhandler"
     ]
   },
@@ -47,7 +46,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
-    "@sap/ux-specification": "^1.102.9",
+    "@sap/ux-specification": "^1.102.14",
     "@ui5/cli": "^2.14.9",
     "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",

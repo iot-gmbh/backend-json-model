@@ -6,6 +6,7 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
     "sap/base/Log",
+
   ],
   (BaseController, formatter, Filter, FilterOperator, MessageToast, Log) => {
     function addMinutes(date, minutes) {
@@ -433,6 +434,8 @@ sap.ui.define(
 
           newWorkItem.activatedDate.setFullYear(year, month, day);
           newWorkItem.completedDate.setFullYear(year, month, day);
+
+          newWorkItem.ID = globalThis.crypto.randomUUID();
 
           this.checkCompleteness();
 
