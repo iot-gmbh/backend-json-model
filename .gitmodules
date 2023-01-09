@@ -1,0 +1,3 @@
+[submodule "packages/cds-msal-auth"]
+	path = packages/cds-msal-auth
+	url = https://github.com/BenediktHoelker/cds-msal-auth.git

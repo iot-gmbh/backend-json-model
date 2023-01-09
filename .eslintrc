@@ -33,5 +33,11 @@
     "require-atomic-updates": "off",
     "camelcase": "off",
     "@sap/cds/auth-valid-restrict-where": "off"
-  }
+  },
+  "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
+  ]
 }
