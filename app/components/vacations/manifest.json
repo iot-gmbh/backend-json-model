@@ -71,9 +71,9 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                  "bundleName": "iot.planner.components.vacations.i18n.i18n"
+                    "bundleName": "iot.planner.components.vacations.i18n.i18n"
                 }
-              },
+            },
             "": {
                 "dataSource": "mainService",
                 "preload": true,
@@ -91,13 +91,13 @@
         },
         "resources": {
             "js": [
-				{
-					"uri": "pdfGenerator/pdf/pdfmake.min.js"
-				},
-				{
-					"uri": "pdfGenerator/pdf/vfs_fonts.js"
-				}
-			],
+                {
+                    "uri": "pdfGenerator/pdf/pdfmake.min.js"
+                },
+                {
+                    "uri": "pdfGenerator/pdf/vfs_fonts.js"
+                }
+            ],
             "css": []
         },
         "routing": {

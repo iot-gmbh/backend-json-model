@@ -25,8 +25,8 @@ sap.ui.define(["sap/ui/core/format/DateFormat"], (DateFormat) => ({
           table: {
             widths: "auto",
             body: [
-              ["Nachname: ", names[1]],
-              ["Vorname: ", names[0]],
+              [`${i18n.getText("lastName")}: `, names[1]],
+              [`${i18n.getText("firstName")}: `, names[0]],
             ],
           },
           layout: { defaultBorder: false },
@@ -35,10 +35,14 @@ sap.ui.define(["sap/ui/core/format/DateFormat"], (DateFormat) => ({
         {
           table: {
             body: [
-              ["Ich beantrage Urlaub ", "vom", startDate],
-              ["", "bis einschl. ", endDate],
+              [
+                `${i18n.getText("requestText")} `,
+                `${i18n.getText("requestFrom")} `,
+                startDate,
+              ],
+              ["", `${i18n.getText("requestUntil")} `, endDate],
               [{ margin: [0, 0, 0, fontSize * 0.25], text: "" }, "", ""],
-              ["Anzahl Arbeitstage: ", data.businessDays, ""],
+              [`${i18n.getText("numOfVacDays")}: `, data.businessDays, ""],
             ],
           },
           layout: { defaultBorder: false },
@@ -48,12 +52,12 @@ sap.ui.define(["sap/ui/core/format/DateFormat"], (DateFormat) => ({
           table: {
             widths: ["auto", 250],
             body: [
-              ["Datum: ", today],
-              [{ margin: [0, 0, 0, fontSize], text: "" }, ""],
-              [
-                "Unterschrift:",
-                { border: [false, false, false, true], text: "" },
-              ],
+              [`${i18n.getText("date")}: `, today],
+              // [{ margin: [0, 0, 0, fontSize], text: "" }, ""],
+              // [
+              //   "Unterschrift:",
+              //   { border: [false, false, false, true], text: "" },
+              // ],
             ],
           },
           layout: { defaultBorder: false },

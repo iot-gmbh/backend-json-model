@@ -30,37 +30,67 @@ annotate my.Vacations with @(
 };
 
 annotate my.Vacations with @(
-  UI.HeaderInfo        : {
-    TypeName       : '{i18n>Vacations.user}',
-    TypeNamePlural : '{i18n>Vacations.user}',
-    Title          : {Value : user_userPrincipalName},
+  UI.ConnectedFields #vacationDates : {
+    $Type    : 'UI.ConnectedFieldsType',
+    Template : '{start} - {end}',
+    Data     : {
+      start : {
+        $Type : 'UI.DataField',
+        Value : startDate
+      },
+      end   : {
+        $Type : 'UI.DataField',
+        Value : endDate,
+      },
+    },
   },
-  UI.FieldGroup #User  : {
+  UI.HeaderInfo                     : {
+    TypeName       : '{i18n>Vacations.vacation}',
+    TypeNamePlural : '{i18n>Vacations.vacations}',
+    Title          : {
+      $Type  : 'UI.DataFieldForAnnotation',
+      Target : ![@UI.ConnectedFields#vacationDates]
+    }
+  },
+  UI.FieldGroup #Header             : {
+    $Type : 'UI.FieldGroupType',
+    Data  : [
+      {
+        $Type : 'UI.DataField',
+        Value : startDate
+      },
+      {
+        $Type : 'UI.DataField',
+        Value : endDate
+      }
+    ]
+  },
+  UI.FieldGroup #User               : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {
         $Type : 'UI.DataField',
         Value : user_userPrincipalName,
-        Label : 'Principal Name'
+        Label : '{i18n>Vacations.userPrincipalName}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.displayName,
-        Label : 'Name'
+        Label : '{i18n>Vacations.userDisplayName}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.vacDaysRemaining,
-        Label : 'Vacation Days Remaining'
+        Label : '{i18n>Vacations.vacDaysRemaining}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.vacDaysTotal,
-        Label : 'Vacation Days Spent'
+        Label : '{i18n>Vacations.vacDaysTotal}'
       }
     ],
   },
-  UI.FieldGroup #Dates : {
+  UI.FieldGroup #Dates              : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {
@@ -77,7 +107,7 @@ annotate my.Vacations with @(
       }
     ],
   },
-  UI.Facets            : [
+  UI.Facets                         : [
     {
       $Type  : 'UI.ReferenceFacet',
       Label  : '{i18n>Vacations.dates}',
@@ -92,19 +122,22 @@ annotate my.Vacations with @(
 );
 
 annotate my.Vacations with @(
-  Common.SideEffects #updateAfterStartChange : {
+  Common.SideEffects #updateAfterStartChange    : {
     SourceProperties : ['startDate'],
     TargetProperties : ['durationInDays'],
   },
-  Common.SideEffects #updateAfterEndChange   : {
+  Common.SideEffects #updateAfterEndChange      : {
     SourceProperties : ['endDate'],
     TargetProperties : ['durationInDays'],
   },
   Common.SideEffects #updateAfterDurationChange : {
     SourceProperties : ['durationInDays'],
-    TargetProperties : ['user/vacDaysRemaining', 'user/vacDaysTotal']
+    TargetProperties : [
+      'user/vacDaysRemaining',
+      'user/vacDaysTotal'
+    ]
   },
-  Common.SideEffects #updateAfterUserSelection : {
+  Common.SideEffects #updateAfterUserSelection  : {
     SourceProperties : ['user_userPrincipalName'],
     TargetProperties : [
       'user/displayName',
@@ -115,7 +148,7 @@ annotate my.Vacations with @(
 );
 
 annotate my.Users with {
-  userPrincipalName @Common.Label        : 'Principal Name';
+  userPrincipalName @Common.Label        : '{i18n>Vacations.userPrincipalName}';
   displayName       @Common.FieldControl : #ReadOnly;
   vacDaysRemaining  @odata.Type          : 'Edm.String'  @Core.Computed : true;
   vacDaysTotal      @odata.Type          : 'Edm.String'  @Core.Computed : true;

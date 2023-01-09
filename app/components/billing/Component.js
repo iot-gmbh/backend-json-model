@@ -6,7 +6,7 @@ sap.ui.define(
     "./controller/ErrorHandler",
   ],
   (UIComponent, Device, models, ErrorHandler) =>
-    UIComponent.extend("iot.planner.components.billing.Component", {
+    UIComponent.extend("iot.planner.billing.Component", {
       metadata: {
         manifest: "json",
       },
@@ -17,9 +17,9 @@ sap.ui.define(
        * @public
        * @override
        */
-      init() {
+      init(...args) {
         // call the base component's init function
-        UIComponent.prototype.init.apply(this, arguments);
+        UIComponent.prototype.init.apply(this, ...args);
 
         // initialize the error handler with the component
         this._oErrorHandler = new ErrorHandler(this);
@@ -37,10 +37,10 @@ sap.ui.define(
        * @public
        * @override
        */
-      destroy() {
+      destroy(...args) {
         this._oErrorHandler.destroy();
         // call the base component's destroy function
-        UIComponent.prototype.destroy.apply(this, arguments);
+        UIComponent.prototype.destroy.apply(this, ...args);
       },
 
       /**
@@ -52,7 +52,6 @@ sap.ui.define(
       getContentDensityClass() {
         if (this._sContentDensityClass === undefined) {
           // check whether FLP has already set the content density class; do nothing in this case
-          // eslint-disable-next-line sap-no-proprietary-browser-api
           if (
             document.body.classList.contains("sapUiSizeCozy") ||
             document.body.classList.contains("sapUiSizeCompact")
