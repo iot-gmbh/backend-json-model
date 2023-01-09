@@ -1,3 +1,4 @@
 [submodule "packages/cds-msal-auth"]
 	path = packages/cds-msal-auth
+	branch = feature/refresh-and-pwa-ready
 	url = https://github.com/BenediktHoelker/cds-msal-auth.git
