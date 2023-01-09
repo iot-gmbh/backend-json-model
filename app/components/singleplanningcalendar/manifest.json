@@ -126,21 +126,11 @@
           "viewLevel": 0,
           "title": "SinglePlanningCalendar"
         },
-        "singleEntry": {
-          "viewName": "SingleEntry",
-          "viewId": "singleEntry",
-          "viewLevel": 0,
-          "title": "Single Entry"
-        },
         "masterDetail": {
           "viewName": "MasterDetail",
           "viewId": "masterDetail",
           "viewLevel": 0,
           "title": "Entries"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewId": "notFound"
         },
         "errorOnStartup": {
           "viewName": "ErrorOnStartup",

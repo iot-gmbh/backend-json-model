@@ -226,10 +226,6 @@
           "usage": "billingComponent",
           "title": "Billing",
           "id": "billing"
-        },
-        "notAuthenticated": {
-          "viewName": "NotAuthenticated",
-          "viewId": "notAuthenticated"
         }
       }
     },
