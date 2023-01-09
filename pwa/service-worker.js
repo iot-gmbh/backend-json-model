@@ -2,17 +2,13 @@
 
 const CACHE = "advanced-caching-1668068768867";
 const precacheFiles = [
-  "/view/App.view.xml",
-  "/controller/Home.controller.js",
-  "/controller/App.controller.js",
-  "/controller/NotFound-dbg.controller.js",
-  "/controller/Home-dbg.controller.js",
-  "/controller/App-dbg.controller.js",
   "/index.html",
+  "/offline.html",
+  "/view/App.view.xml",
   "/view/NotFound.view.xml",
   "/view/Home.view.xml",
-  "/controller/NotFound.controller.js",
-  "/offline.html",
+  "/controller/Home.controller.js",
+  "/controller/App.controller.js",
   "/resources/sap-ui-custom.js",
 ];
 

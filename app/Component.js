@@ -38,18 +38,18 @@ sap.ui.define(
 
         this.setModel(new JSONModel({}), "session");
 
-        if (!this._myMsal) {
-          this._myMsal = new msal.PublicClientApplication(
-            this.config.msalConfig
-          );
-        }
+        // if (!this._myMsal) {
+        //   this._myMsal = new msal.PublicClientApplication(
+        //     this.config.msalConfig
+        //   );
+        // }
 
-        await this.login();
+        // await this.login();
 
-        // const subcomponents = this.getSubcomponents()
-        this.getRouter().attachBeforeRouteMatched((event) => {
-          this._checkIsAuthenticated(event);
-        });
+        // // const subcomponents = this.getSubcomponents()
+        // this.getRouter().attachBeforeRouteMatched((event) => {
+        //   this._checkIsAuthenticated(event);
+        // });
 
         // create the views based on the url/hash
         router.initialize();
