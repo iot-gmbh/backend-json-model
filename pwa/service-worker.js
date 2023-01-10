@@ -2,7 +2,7 @@
 
 const CACHE = "advanced-caching-1668068768867";
 const precacheFiles = [
-  "/index.html",
+  // "/index.html",
   "/offline.html",
   "/view/App.view.xml",
   "/view/NotFound.view.xml",
@@ -20,7 +20,7 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = ["/auth/signin"];
+const neverRespondToPaths = ["/auth/signin", "/index.html"];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
