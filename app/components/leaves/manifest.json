@@ -1,7 +1,7 @@
 {
     "_version": "1.45.0",
     "sap.app": {
-        "id": "iot.planner.components.vacations",
+        "id": "iot.planner.components.leaves",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -17,7 +17,7 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "/vacations/",
+                "uri": "/leaves/",
                 "type": "OData",
                 "settings": {
                     "annotations": [
@@ -71,7 +71,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "iot.planner.components.vacations.i18n.i18n"
+                    "bundleName": "iot.planner.components.leaves.i18n.i18n"
                 }
             },
             "": {
@@ -104,28 +104,28 @@
             "routes": [
                 {
                     "pattern": ":?query:",
-                    "name": "VacationsList",
-                    "target": "VacationsList"
+                    "name": "LeavesList",
+                    "target": "LeavesList"
                 },
                 {
-                    "pattern": "Vacations({key}):?query:",
-                    "name": "VacationsObjectPage",
-                    "target": "VacationsObjectPage"
+                    "pattern": "Leaves({key}):?query:",
+                    "name": "LeavesObjectPage",
+                    "target": "LeavesObjectPage"
                 }
             ],
             "targets": {
-                "VacationsList": {
+                "LeavesList": {
                     "type": "Component",
-                    "id": "VacationsList",
+                    "id": "LeavesList",
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings": {
-                            "entitySet": "Vacations",
+                            "entitySet": "Leaves",
                             "variantManagement": "Page",
                             "navigation": {
-                                "Vacations": {
+                                "Leaves": {
                                     "detail": {
-                                        "route": "VacationsObjectPage"
+                                        "route": "LeavesObjectPage"
                                     }
                                 }
                             },
@@ -133,19 +133,19 @@
                         }
                     }
                 },
-                "VacationsObjectPage": {
+                "LeavesObjectPage": {
                     "type": "Component",
-                    "id": "VacationsObjectPage",
+                    "id": "LeavesObjectPage",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
                             "editableHeaderContent": false,
-                            "entitySet": "Vacations",
+                            "entitySet": "Leaves",
                             "content": {
                                 "header": {
                                     "actions": {
                                         "PrintButton": {
-                                            "press": "iot.planner.components.vacations.custom.ObjectPageExtController.onPrint",
+                                            "press": "iot.planner.components.leaves.custom.ObjectPageExtController.onPrint",
                                             "visible": true,
                                             "enabled": true,
                                             "text": "{i18n>print}"

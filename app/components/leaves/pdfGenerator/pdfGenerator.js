@@ -16,7 +16,7 @@ sap.ui.define(["sap/ui/core/format/DateFormat"], (DateFormat) => ({
       pageSize: "A4",
       content: [
         {
-          text: i18n.getText("vacationRequest"),
+          text: i18n.getText("leaveRequest"),
           bold: true,
           fontSize: fontSize * 1.3,
           margin: [6, 0, 0, 0],

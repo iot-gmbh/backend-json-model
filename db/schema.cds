@@ -10,6 +10,8 @@ namespace iot.planner;
 using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
 
 aspect relevance {
+  billingRelevance : Boolean       @title : '{i18n>relevance.billingRelevance}';
+
   invoiceRelevance : Decimal(2, 1) @(
     title        : '{i18n>relevance.invoiceRelevance}',
     assert.range : [
@@ -53,8 +55,8 @@ entity Users : multitenant {
                             on workItems.assignedTo = $self;
       travels           : Association to many Travels
                             on travels.user = $self;
-      vacations         : Association to many Vacations
-                            on vacations.user = $self;
+      leaves            : Association to many Leaves
+                            on leaves.user = $self;
 };
 
 entity Users2Categories : cuid, managed, multitenant {
@@ -99,15 +101,9 @@ entity CategoriesCumulativeDurations as projection on Categories {
       tenant,
       parent,
       title,
-      cast(
-        '2021-05-02 14:55:08.091' as      DateTime
-      ) as activatedDate                : DateTime,
-      cast(
-        '2021-05-02 14:55:08.091' as      DateTime
-      ) as completedDate                : DateTime,
-      cast(
-        '' as                             String
-      ) as assignedTo_userPrincipalName : String,
+      cast('2021-05-02 14:55:08.091' as DateTime) as activatedDate                : DateTime,
+      cast('2021-05-02 14:55:08.091' as DateTime) as completedDate                : DateTime,
+      cast('' as                        String)   as assignedTo_userPrincipalName : String,
       // members,
       // tags,
       children,
@@ -134,16 +130,15 @@ entity Tags2WorkItems : cuid, multitenant {
 
 view CategoryTags as
   select from Tags2Categories {
-    key category.ID as categoryID : String,
-        tenant                    : String,
+    key category.ID       as categoryID : String,
+        tenant                          : String,
         // TODO: Make independent of DB (string_agg) is a postgres-function
         string_agg(
-          tag.title, ' '
-        )           as tags       : String,
-  }
-  group by
-    category.ID,
-    tenant;
+          tag.title, ' ') as tags       : String,
+    }
+    group by
+      category.ID,
+      tenant;
 
 entity WorkItems : managed, relevance, multitenant {
   key ID                          : String @odata.Type : 'Edm.String';
@@ -216,9 +211,9 @@ entity Travels : cuid, managed, multitenant {
   parent : Association to Categories;
 }
 
-entity Vacations : cuid {
-    startDate       : Date;
-    endDate         : Date;
-    durationInDays  : Integer;
-    user            : Association to Users;
+entity Leaves : cuid {
+  startDate      : Date @mandatory;
+  endDate        : Date @mandatory;
+  durationInDays : Integer;
+  user           : Association to Users;
 }

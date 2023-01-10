@@ -1,7 +1,7 @@
 using {iot.planner as my} from '../db/schema';
 
-service VacationsService @(requires : 'authenticated-user') {
-  entity Vacations @(restrict : [
+service LeavesService @(requires : 'authenticated-user') {
+  entity Leaves @(restrict : [
     {
       grant : '*',
       to    : 'team-lead',
@@ -18,7 +18,7 @@ service VacationsService @(requires : 'authenticated-user') {
       grant : '*',
       to    : 'admin',
     },
-  ]) as projection on my.Vacations {
+  ]) as projection on my.Leaves {
     *,
     user.manager.userPrincipalName as userManager
   };
@@ -29,7 +29,7 @@ service VacationsService @(requires : 'authenticated-user') {
       to    : 'team-lead',
       // Association paths are currently supported on SAP HANA only
       // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where : 'manager = $user'
+      where : 'userManager = $user'
     },
     {
       grant : '*',
@@ -42,17 +42,16 @@ service VacationsService @(requires : 'authenticated-user') {
     },
   ]) as projection on my.Users {
     *,
-
-    // vacDaysTotal is either the sum of all vacation
-    // days or 0
+    manager.userPrincipalName as userManager,
+    // vacDaysTotal is either the sum of all leave days or 0
     coalesce(
       sum(
-        vacations.durationInDays
-      ), 0) as vacDaysTotal     : Integer,
+        leaves.durationInDays
+      ), 0)                   as vacDaysTotal     : Integer,
 
     yearlyVacDays - coalesce(
       sum(
-        vacations.durationInDays
-      ), 0) as vacDaysRemaining : Integer
+        leaves.durationInDays
+      ), 0)                   as vacDaysRemaining : Integer
     } group by userPrincipalName
 }

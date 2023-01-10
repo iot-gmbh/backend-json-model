@@ -33,13 +33,13 @@ annotate my.Categories {
   deepReference     @title : '{i18n>Categories.deepReference}';
 };
 
-annotate my.Vacations {
-  ID                     @title : '{i18n>Vacations.id}';
-  startDate              @title : '{i18n>Vacations.startDate}';
-  endDate                @title : '{i18n>Vacations.endDate}';
-  durationInDays         @title : '{i18n>Vacations.durationInDays}';
-  user                   @title : '{i18n>Vacations.user}';
-  user_userPrincipalName @title : '{i18n>Vacations.user}'
+annotate my.Leaves {
+  ID                     @title : '{i18n>Leaves.id}';
+  startDate              @title : '{i18n>Leaves.startDate}';
+  endDate                @title : '{i18n>Leaves.endDate}';
+  durationInDays         @title : '{i18n>Leaves.durationInDays}';
+  user                   @title : '{i18n>Leaves.user}';
+  user_userPrincipalName @title : '{i18n>Leaves.user}'
 };
 
 annotate my.WorkItems {

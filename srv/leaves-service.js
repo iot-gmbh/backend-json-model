@@ -26,16 +26,16 @@ module.exports = cds.service.impl(async function () {
   };
 
   // handles patches
-  this.before("PATCH", "Vacations", async (req) => {
+  this.before("PATCH", "Leaves", async (req) => {
     const id = req.data.ID;
 
     // req only has data from selected field, other data need to be fetched from draft entity
-    const vacation = await SELECT.from(
-      "vacationsservice_vacations_drafts"
-    ).where({ ID: id });
-    const startDate = new Date(vacation[0].startdate).toString();
-    const endDate = new Date(vacation[0].enddate).toString();
-    this.businessDays = vacation[0].durationindays;
+    const leave = await SELECT.from("leavesservice_leaves_drafts").where({
+      ID: id,
+    });
+    const startDate = new Date(leave[0].startdate).toString();
+    const endDate = new Date(leave[0].enddate).toString();
+    this.businessDays = leave[0].durationindays;
 
     // calculate business days
     if (req.data.startDate) {
@@ -45,7 +45,7 @@ module.exports = cds.service.impl(async function () {
     }
   });
 
-  this.before(["NEW", "EDIT"], "Vacations", async (req) => {
+  this.before(["NEW", "EDIT"], "Leaves", async (req) => {
     req.data.user_userPrincipalName = req.user.id;
   });
 });

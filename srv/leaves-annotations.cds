@@ -1,8 +1,21 @@
-using {VacationsService as my} from './vacations-service';
+using {LeavesService as my} from './leaves-service';
 
-annotate my.Vacations with @(
+annotate my.Leaves with @(
   odata.draft.enabled,
-  UI.LineItem        : [
+  SelectionPresentationVariant : {
+    $Type               : 'UI.SelectionPresentationVariantType',
+    PresentationVariant : ![@UI.PresentationVariant]
+  },
+  UI.PresentationVariant       : {
+    $Type          : 'UI.PresentationVariantType',
+    SortOrder      : [{
+      $Type      : 'Common.SortOrderType',
+      Property   : startDate,
+      Descending : true,
+    }, ],
+    Visualizations : ['@UI.LineItem', ],
+  },
+  UI.LineItem                  : [
     {
       $Type : 'UI.DataField',
       Value : user_userPrincipalName
@@ -20,7 +33,7 @@ annotate my.Vacations with @(
       Value : durationInDays
     },
   ],
-  UI.SelectionFields : [
+  UI.SelectionFields           : [
     user_userPrincipalName,
     startDate,
     endDate
@@ -29,8 +42,8 @@ annotate my.Vacations with @(
   durationInDays @Core.Computed : true;
 };
 
-annotate my.Vacations with @(
-  UI.ConnectedFields #vacationDates : {
+annotate my.Leaves with @(
+  UI.ConnectedFields #leaveDates : {
     $Type    : 'UI.ConnectedFieldsType',
     Template : '{start} - {end}',
     Data     : {
@@ -44,15 +57,15 @@ annotate my.Vacations with @(
       },
     },
   },
-  UI.HeaderInfo                     : {
-    TypeName       : '{i18n>Vacations.vacation}',
-    TypeNamePlural : '{i18n>Vacations.vacations}',
+  UI.HeaderInfo                  : {
+    TypeName       : '{i18n>Leaves.leave}',
+    TypeNamePlural : '{i18n>Leaves.leaves}',
     Title          : {
       $Type  : 'UI.DataFieldForAnnotation',
-      Target : ![@UI.ConnectedFields#vacationDates]
+      Target : ![@UI.ConnectedFields#leaveDates]
     }
   },
-  UI.FieldGroup #Header             : {
+  UI.FieldGroup #Header          : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {
@@ -65,32 +78,32 @@ annotate my.Vacations with @(
       }
     ]
   },
-  UI.FieldGroup #User               : {
+  UI.FieldGroup #User            : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {
         $Type : 'UI.DataField',
         Value : user_userPrincipalName,
-        Label : '{i18n>Vacations.userPrincipalName}'
+        Label : '{i18n>Leaves.userPrincipalName}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.displayName,
-        Label : '{i18n>Vacations.userDisplayName}'
+        Label : '{i18n>Leaves.userDisplayName}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.vacDaysRemaining,
-        Label : '{i18n>Vacations.vacDaysRemaining}'
+        Label : '{i18n>Leaves.vacDaysRemaining}'
       },
       {
         $Type : 'UI.DataField',
         Value : user.vacDaysTotal,
-        Label : '{i18n>Vacations.vacDaysTotal}'
+        Label : '{i18n>Leaves.vacDaysTotal}'
       }
     ],
   },
-  UI.FieldGroup #Dates              : {
+  UI.FieldGroup #Dates           : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {
@@ -107,21 +120,21 @@ annotate my.Vacations with @(
       }
     ],
   },
-  UI.Facets                         : [
+  UI.Facets                      : [
     {
       $Type  : 'UI.ReferenceFacet',
-      Label  : '{i18n>Vacations.dates}',
+      Label  : '{i18n>Leaves.dates}',
       Target : '@UI.FieldGroup#Dates',
     },
     {
       $Type  : 'UI.ReferenceFacet',
-      Label  : '{i18n>Vacations.user}',
+      Label  : '{i18n>Leaves.user}',
       Target : '@UI.FieldGroup#User',
     },
   ]
 );
 
-annotate my.Vacations with @(
+annotate my.Leaves with @(
   Common.SideEffects #updateAfterStartChange    : {
     SourceProperties : ['startDate'],
     TargetProperties : ['durationInDays'],
@@ -148,7 +161,7 @@ annotate my.Vacations with @(
 );
 
 annotate my.Users with {
-  userPrincipalName @Common.Label        : '{i18n>Vacations.userPrincipalName}';
+  userPrincipalName @Common.Label        : '{i18n>Leaves.userPrincipalName}';
   displayName       @Common.FieldControl : #ReadOnly;
   vacDaysRemaining  @odata.Type          : 'Edm.String'  @Core.Computed : true;
   vacDaysTotal      @odata.Type          : 'Edm.String'  @Core.Computed : true;

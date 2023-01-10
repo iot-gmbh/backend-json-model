@@ -9,6 +9,6 @@ using from './timetracking-service';
 using from './timetracking-annotations';
 using from './work-items-service';
 using from './work-items-annotations';
-using from './vacations-service';
-using from './vacations-annotations';
+using from './leaves-service';
+using from './leaves-annotations';
 using from './visualize-with-swagger';

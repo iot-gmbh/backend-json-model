@@ -44,11 +44,11 @@ service CategoriesService @(requires : 'authenticated-user') {
     *,
     coalesce(
       sum(
-        vacations.durationInDays
+        leaves.durationInDays
       ), 0) as vacDaysTotal     : Integer @odata.Type : 'Edm.String'  @Common.Label : '{i18n>Users.vacDaysTotal}',
     yearlyVacDays - coalesce(
       sum(
-        vacations.durationInDays
+        leaves.durationInDays
       ), 0) as vacDaysRemaining : Integer @odata.Type : 'Edm.String'  @Common.Label : '{i18n>Users.vacDaysRemaining}'
     } group by userPrincipalName;
 
@@ -57,5 +57,5 @@ service CategoriesService @(requires : 'authenticated-user') {
     user.displayName
   };
 
-  entity Vacations        as projection on my.Vacations;
+  entity Leaves           as projection on my.Leaves;
 }
