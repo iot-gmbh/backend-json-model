@@ -4,7 +4,7 @@ using {iot.planner as my} from '../db/schema';
 service CategoriesService @(requires: 'authenticated-user') {
   entity Categories       as projection on my.Categories excluding {
     manager,
-    members,
+    // members,
     tags,
     // parent,
     // children,
