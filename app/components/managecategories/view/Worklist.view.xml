@@ -6,9 +6,8 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:fb="sap.ui.comp.filterbar"
     xmlns:semantic="sap.f.semantic">
-
     <Page showHeader="false">
-        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="loadData" showRestoreButton="true" showClearButton="true" useToolbar="false" showGoOnFB="true">
+        <fb:FilterBar header="{i18n>worklistTitle}" considerGroupTitle="true" reset="onReset" search="loadData" showRestoreButton="true" showClearButton="true" showGoOnFB="true">
             <fb:filterGroupItems >
                 <fb:FilterGroupItem label="{i18n>search}" groupName="search" name="search" partOfCurrentVariant="true" visibleInFilterBar="true">
                     <fb:control>
@@ -29,14 +28,21 @@
                     </fb:control>
                 </fb:FilterGroupItem>
             </fb:filterGroupItems>
-
         </fb:FilterBar>
         <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: [{path: 'shallowReference'}], 
-        parameters: {numberOfExpandedLevels: 0, expand : 'members', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, expand : 'members', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort" class="sapUiResponsiveMargin">
             <t:noData>
-                <Text text=""></Text>
+                <Title text=""/>
             </t:noData>
+            <t:extension>
+                <OverflowToolbar >
+                    <Title text="Categories"/>
+                    <ToolbarSpacer/>
+                    <Button text="{i18n>create}" press="onPressCreateCategory"/>
+                    <Button text="{i18n>delete}" press="onPressDeleteCategories"/>
+                </OverflowToolbar>
+            </t:extension>
             <t:rowActionTemplate>
                 <t:RowAction>
                     <t:RowActionItem type="Custom" icon="sap-icon://add" press="onPressAddCategory"/>
@@ -44,13 +50,6 @@
                     <!-- <t:RowActionItem type="Custom" icon="sap-icon://delete" press="onPressDeleteCategory"/> -->
                 </t:RowAction>
             </t:rowActionTemplate>
-            <t:extension>
-                <OverflowToolbar >
-                    <ToolbarSpacer/>
-                    <Button text="{i18n>create}" press="onPressCreateCategory"/>
-                    <Button text="{i18n>delete}" press="onPressDeleteCategories"/>
-                </OverflowToolbar>
-            </t:extension>
             <t:columns>
                 <t:Column label="{i18n>title}" width="30%">
                     <t:template>
@@ -132,12 +131,5 @@
                 </endButton>
             </Dialog>
         </dependents>
-        <!-- <footer>
-            <Bar>
-                <contentRight>
-                    <Button type="Emphasized" text="Submit" press="onPressSubmit"/>
-                </contentRight>
-            </Bar>
-        </footer> -->
     </Page>
 </mvc:View>

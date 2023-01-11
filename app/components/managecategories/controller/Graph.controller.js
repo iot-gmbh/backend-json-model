@@ -51,6 +51,15 @@ sap.ui.define(
           model.setProperty("/CategoriesCumulativeDurations", categoriesNested);
         },
 
+        sortDecimals(value1, value2) {
+          const val1 = parseFloat(value1);
+          const val2 = parseFloat(value2);
+
+          if (val1 < val2) return 1;
+          if (val1 === val2) return 0;
+          return -1;
+        },
+
         expand() {
           const model = this.getModel("viewModel");
           const { expandToLevel } = model.getData();
@@ -83,12 +92,21 @@ sap.ui.define(
               .getBindingContext()
               .getObject();
 
+            const relativeDurationParsed =
+              parseFloat(relativeDuration).toFixed(0);
+            const relativeAccDurationParsed =
+              parseFloat(relativeAccDuration).toFixed(0);
+
             if (table.isExpanded(index)) {
-              progressIndicatorCell.setPercentValue(relativeDuration);
-              progressIndicatorCell.setDisplayValue(`${relativeDuration}%`);
+              progressIndicatorCell.setPercentValue(relativeDurationParsed);
+              progressIndicatorCell.setDisplayValue(
+                `${relativeDurationParsed}%`
+              );
             } else {
-              progressIndicatorCell.setPercentValue(relativeAccDuration);
-              progressIndicatorCell.setDisplayValue(`${relativeAccDuration}%`);
+              progressIndicatorCell.setPercentValue(relativeAccDurationParsed);
+              progressIndicatorCell.setDisplayValue(
+                `${relativeAccDurationParsed}%`
+              );
             }
           });
         },
