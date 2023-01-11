@@ -18,6 +18,8 @@ AS WITH RECURSIVE cte AS (
         description,
         validFrom,
         validTo,
+        invoiceRelevance,
+        bonusRelevance,
         absoluteReference,
         shallowReference,
         shallowReference as deepReference,
@@ -36,6 +38,8 @@ AS WITH RECURSIVE cte AS (
         this.description,
         this.validFrom,
         this.validTo,
+        this.invoiceRelevance,
+        this.bonusRelevance,
         this.absoluteReference,
         this.shallowReference,
         CAST(

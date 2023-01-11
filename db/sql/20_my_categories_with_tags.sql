@@ -14,6 +14,8 @@ group by
     cat.hierarchyLevel,
     cat.validFrom,
     cat.validTo,
+    cat.invoiceRelevance,
+    cat.bonusRelevance,
     cat.description,
     cat.absoluteReference,
     cat.path,

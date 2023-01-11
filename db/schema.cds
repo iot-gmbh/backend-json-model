@@ -10,8 +10,6 @@ namespace iot.planner;
 using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
 
 aspect relevance {
-  billingRelevance : Boolean       @title : '{i18n>relevance.billingRelevance}';
-
   invoiceRelevance : Decimal(2, 1) @(
     title        : '{i18n>relevance.invoiceRelevance}',
     assert.range : [

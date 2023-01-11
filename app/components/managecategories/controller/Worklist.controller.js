@@ -55,7 +55,7 @@ sap.ui.define(
 
           this.getRouter()
             .getRoute("worklist")
-            .attachPatternMatched(this._loadCategories, this);
+            .attachPatternMatched(this.loadData, this);
         },
 
         async _loadCategories() {
@@ -79,6 +79,25 @@ sap.ui.define(
 
           model.setProperty("/Categories", categoriesNested);
           viewModel.setProperty("/busy", false);
+        },
+
+        async _toggleRelevanceVisibility() {
+          const view = this.getView();
+          const model = this.getModel();
+          const { checkIfUserIsAdmin: userIsAdmin } = await model.callFunction(
+            "/checkIfUserIsAdmin"
+          );
+          if (userIsAdmin) {
+            view.byId("invoiceRelevanceInput").setVisible(true);
+            view.byId("invoiceRelevanceColumn").setVisible(true);
+            view.byId("bonusRelevanceInput").setVisible(true);
+            view.byId("bonusRelevanceColumn").setVisible(true);
+          } else {
+            view.byId("invoiceRelevanceInput").setVisible(false);
+            view.byId("invoiceRelevanceColumn").setVisible(false);
+            view.byId("bonusRelevanceInput").setVisible(false);
+            view.byId("bonusRelevanceColumn").setVisible(false);
+          }
         },
         // async onToggleOpenState(event) {
         //   const model = this.getModel();
@@ -316,6 +335,7 @@ sap.ui.define(
         },
 
         loadData() {
+          this._toggleRelevanceVisibility();
           this._loadCategories();
         },
 

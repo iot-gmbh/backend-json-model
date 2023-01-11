@@ -21,6 +21,7 @@ service CategoriesService @(requires : 'authenticated-user') {
   function getMyProjects(root : UUID, validAt : DateTime)                                                             returns array of Categories;
   function getMySubprojects(root : UUID, validAt : DateTime)                                                          returns array of Categories;
   function getMyWorkPackages(root : UUID, validAt : DateTime)                                                         returns array of Categories;
+  function checkIfUserIsAdmin()                                                                                       returns Boolean;
 
   // @odata.draft.enabled : true
   @odata.create.enabled
