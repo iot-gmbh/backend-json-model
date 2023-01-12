@@ -3,17 +3,11 @@
     xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
     xmlns="sap.m"
     xmlns:f="sap.f" displayBlock="true">
-    <Page showFooter="false" showHeader="false" backgroundDesign="List">
-        <uxap:ObjectPageLayout upperCaseAnchorBar="false">
-            <uxap:ObjectPageSection titleUppercase="false" title="Erfassung">
-                <uxap:ObjectPageSubSection title=" " titleUppercase="false">
+    <Page showFooter="false" showHeader="false">
+        <uxap:ObjectPageLayout upperCaseAnchorBar="false" subSectionLayout="TitleOnLeft">
+            <uxap:ObjectPageSection title="Erfassung">
+                <uxap:ObjectPageSubSection>
                     <f:GridContainer>
-                        <f:layout>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="1rem" />
-                        </f:layout>
-                        <f:layoutS>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="0.5rem" />
-                        </f:layoutS>
                         <GenericTile header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')">
                             <layoutData>
                                 <f:GridContainerItemLayoutData minRows="2" columns="2" />
@@ -32,15 +26,9 @@
                     </f:GridContainer>
                 </uxap:ObjectPageSubSection>
             </uxap:ObjectPageSection>
-            <uxap:ObjectPageSection titleUppercase="false" title="Auswertungen">
-                <uxap:ObjectPageSubSection title=" " titleUppercase="false">
+            <uxap:ObjectPageSection title="Auswertungen">
+                <uxap:ObjectPageSubSection >
                     <f:GridContainer>
-                        <f:layout>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="1rem" />
-                        </f:layout>
-                        <f:layoutS>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="0.5rem" />
-                        </f:layoutS>
                         <GenericTile header="{i18n>graph}" press="navToAnalytics">
                             <layoutData>
                                 <f:GridContainerItemLayoutData minRows="2" columns="2" />
@@ -64,17 +52,9 @@
                     </f:GridContainer>
                 </uxap:ObjectPageSubSection>
             </uxap:ObjectPageSection>
-            <uxap:ObjectPageSection titleUppercase="false" title="Stammdaten">
-                <uxap:ObjectPageSubSection title=" " titleUppercase="false">
-                    <layout:HorizontalLayout >
-                    </layout:HorizontalLayout>
+            <uxap:ObjectPageSection title="Stammdaten">
+                <uxap:ObjectPageSubSection>
                     <f:GridContainer>
-                        <f:layout>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="1rem" />
-                        </f:layout>
-                        <f:layoutS>
-                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="0.5rem" />
-                        </f:layoutS>
                         <GenericTile header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')">
                             <layoutData>
                                 <f:GridContainerItemLayoutData minRows="2" columns="2" />
