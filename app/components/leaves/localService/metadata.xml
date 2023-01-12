@@ -6,12 +6,12 @@
     <edmx:DataServices>
         <Schema Namespace="EmployeeService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
             <EntityContainer Name="EntityContainer">
-                <EntitySet Name="Vacations" EntityType="EmployeeService.Vacations">
+                <EntitySet Name="Leaves" EntityType="EmployeeService.Leaves">
                     <NavigationPropertyBinding Path="employee" Target="Employees"/>
                 </EntitySet>
                 <EntitySet Name="Employees" EntityType="EmployeeService.Employees"/>
             </EntityContainer>
-            <EntityType Name="Vacations">
+            <EntityType Name="Leaves">
                 <Key>
                     <PropertyRef Name="ID"/>
                 </Key>
@@ -30,8 +30,8 @@
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
                 <Property Name="firstName" Type="Edm.String"/>
                 <Property Name="lastName" Type="Edm.String"/>
-                <Property Name="numVacationDays" Type="Edm.Int32"/>
-                <Property Name="vacationDaysLeft" Type="Edm.Int32"/>
+                <Property Name="numLeaveDays" Type="Edm.Int32"/>
+                <Property Name="leaveDaysLeft" Type="Edm.Int32"/>
             </EntityType>
         </Schema>
     </edmx:DataServices>

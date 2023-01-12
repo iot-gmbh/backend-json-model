@@ -135,10 +135,10 @@
           }
         },
         {
-          "name": "vacations",
-          "pattern": "vacations",
+          "name": "leaves",
+          "pattern": "leaves",
           "target": {
-            "name": "vacations",
+            "name": "leaves",
             "prefix": "v"
           }
         },
@@ -215,11 +215,11 @@
           "title": "Users",
           "id": "users"
         },
-        "vacations": {
+        "leaves": {
           "type": "Component",
-          "usage": "vacationsComponent",
-          "title": "Vacations",
-          "id": "vacations"
+          "usage": "leavesComponent",
+          "title": "Leaves",
+          "id": "leaves"
         },
         "billing": {
           "type": "Component",
@@ -284,8 +284,8 @@
         "componentData": {},
         "lazy": true
       },
-      "vacationsComponent": {
-        "name": "iot.planner.components.vacations",
+      "leavesComponent": {
+        "name": "iot.planner.components.leaves",
         "settings": {},
         "componentData": {},
         "lazy": true

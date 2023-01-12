@@ -2,7 +2,8 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Tags, Tags2Categories, Categories } = db.entities("iot.planner");
+  const { Tags, Tags2Categories /* , Categories */ } =
+    db.entities("iot.planner");
 
   function transformCategories(rawCategories, sum = 1) {
     return rawCategories.map(
@@ -21,6 +22,8 @@ module.exports = cds.service.impl(async function () {
         shallowreference,
         deepreference,
         accumulatedduration,
+        invoicerelevance,
+        bonusrelevance,
       }) => ({
         ID: id,
         tenant,
@@ -47,6 +50,8 @@ module.exports = cds.service.impl(async function () {
         absoluteReference: absolutereference,
         shallowReference: shallowreference,
         deepReference: deepreference,
+        invoiceRelevance: invoicerelevance,
+        bonusRelevance: bonusrelevance,
       })
     );
   }
@@ -138,6 +143,8 @@ module.exports = cds.service.impl(async function () {
 
     return transformCategories(results, sum);
   });
+
+  this.on("checkIfUserIsAdmin", async (req) => req.user.is("admin"));
 
   this.on("CREATE", "Tags", async (req) => {
     const tags = await this.read(Tags).where({ title: req.data.title });

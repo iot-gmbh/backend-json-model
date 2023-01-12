@@ -30,8 +30,8 @@
             </fb:filterGroupItems>
         </fb:FilterBar>
         <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
-        sorter: [{path: 'shallowReference'}], 
-        parameters: {numberOfExpandedLevels: 0, expand : 'members', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort" class="sapUiResponsiveMargin">
+        sorter: [{path: 'shallowReference'}],
+        parameters: {numberOfExpandedLevels: 0, expand : 'members', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
             <t:noData>
                 <Title text=""/>
             </t:noData>
@@ -86,6 +86,16 @@
                         <Text text="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     </t:template>
                 </t:Column>
+                <t:Column label="{i18n>invoiceRelevance}" id="invoiceRelevanceColumn" width="10%" visible="false">
+                    <t:template>
+                        <Text text="{invoiceRelevance}"/>
+                    </t:template>
+                </t:Column>
+                <t:Column label="{i18n>bonusRelevance}" id="bonusRelevanceColumn" width="10%" visible="false">
+                    <t:template>
+                        <Text text="{bonusRelevance}"/>
+                    </t:template>
+                </t:Column>
             </t:columns>
         </t:TreeTable>
         <dependents>
@@ -103,6 +113,10 @@
                     <DatePicker value="{path: 'validFrom', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     <Label text="{i18n>validTo}"/>
                     <DatePicker value="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
+                    <Label text="{i18n>invoiceRelevance}"/>
+                    <Input id="invoiceRelevanceInput" value="{invoiceRelevance}" visible="false"/>
+                    <Label text="{i18n>bonusRelevance}"/>
+                    <Input id="bonusRelevanceInput" value="{bonusRelevance}" visible="false"/>
                     <Label text="{i18n>members}"/>
                     <MultiInput tokens="{path: 'members'}" suggestionItems="{
                                     path: 'OData>/Users',

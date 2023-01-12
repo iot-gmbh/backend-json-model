@@ -23,17 +23,16 @@
                 <items>
                     <IconTabFilter
                         key="all"
-                        showAll="true"
                         text="{i18n>allWorkItems}"/>
                     <IconTabSeparator/>
                     <IconTabFilter
                         key="byDate"
                         text="{i18n>groupByDate}"/>
                     <IconTabFilter
-                        key="byCustomer"
-                        text="{i18n>groupByCustomer}"/>
+                        key="byProject"
+                        text="{i18n>groupByProject}"/>
                     <IconTabFilter
-                        key="by User"
+                        key="byUser"
                         text="{i18n>groupByUser}"/>
                 </items>
                 <content>
@@ -43,7 +42,7 @@
                         items="{
                             path: '/MyWorkItems',
                             sorter: {
-                                path: 'ID',
+                                path: 'workDate',
                                 descending: false
                             }
                         }"

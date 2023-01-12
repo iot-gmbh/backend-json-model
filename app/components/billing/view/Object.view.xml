@@ -1,7 +1,7 @@
 <mvc:View
     controllerName="iot.planner.components.billing.controller.Object"
     xmlns="sap.m"
-    xmlns:l="sap.ui.layout"
+    xmlns:l="sap.ui.layout.form"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:semantic="sap.f.semantic">
 
@@ -14,17 +14,18 @@
 
         <semantic:titleHeading>
             <Title
-                text="{ID}"
+                text="{Title}"
                 level="H2"/>
         </semantic:titleHeading>
 
         <semantic:headerContent>
-            <ObjectNumber />
         </semantic:headerContent>
 
         <semantic:content>
+            <form:SimpleForm>
+                
+            </form:SimpleForm>
             <l:VerticalLayout>
-                <ObjectStatus title="ID" text="{ID}"/>
                 <ObjectStatus title="User" text="{assignedToUserPrincipalName}"/>
                 <ObjectStatus title="Date" text="{workDate}"/>
                 <ObjectStatus title="Start Time" text="{startTime}"/>

@@ -14,7 +14,7 @@
             <GenericTile class="sapUiTinyMargin" header="{i18n>graph}" press="navToAnalytics"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALP}" press=".navTo($event, 'analyticsALP')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALPv2}" press=".navTo($event, 'analyticsALPv2')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>vacations}" press=".navTo($event, 'vacations')"/>
+            <GenericTile class="sapUiTinyMargin" header="{i18n>leaves}" press=".navTo($event, 'leaves')"/>
             <GenericTile class="sapUiTinyMargin" header="{i18n>billing}" press=".navTo($event, 'billing')"/>
             <!-- <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')"/> -->
         </content>

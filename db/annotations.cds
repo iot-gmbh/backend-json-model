@@ -117,7 +117,7 @@ annotate my.Users with @(UI : {
     userPrincipalName,
     manager_userPrincipalName,
   ],
-  FieldGroup #Vacation  : {
+  FieldGroup #Leave   : {
     $Type : 'UI.FieldGroupType',
     Data  : [
       {Value : yearlyVacDays},
@@ -138,11 +138,11 @@ annotate my.Users with @(UI : {
         },
         {
           $Type  : 'UI.ReferenceFacet',
-          Label  : '{i18n>Vacation}',
-          Target : '@UI.FieldGroup#Vacation'
+          Label  : '{i18n>Leave}',
+          Target : '@UI.FieldGroup#Leave'
         }
       ]
-    },    
+    },
     {
       $Type  : 'UI.ReferenceFacet',
       Label  : '{i18n>Users.teamMembers}',
@@ -150,8 +150,8 @@ annotate my.Users with @(UI : {
     },
     {
       $Type  : 'UI.ReferenceFacet',
-      Label  : '{i18n>Vacations}',
-      Target : 'vacations/@UI.LineItem'
+      Label  : '{i18n>Leaves}',
+      Target : 'leaves/@UI.LineItem'
     }
   ],
   LineItem            : [
@@ -290,19 +290,17 @@ annotate my.Categories with @(UI : {
   drillDownState @sap.hierarchy.drill.state.for : 'ID';
 }
 
-annotate my.Vacations with @(
-  UI.LineItem    : [
-    {
-      $Type : 'UI.DataField',
-      Value : startDate,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : endDate,
-    },
-    {
-      $Type : 'UI.DataField',
-      Value : durationInDays,
-    },
-  ]
-);
+annotate my.Leaves with @(UI.LineItem : [
+  {
+    $Type : 'UI.DataField',
+    Value : startDate,
+  },
+  {
+    $Type : 'UI.DataField',
+    Value : endDate,
+  },
+  {
+    $Type : 'UI.DataField',
+    Value : durationInDays,
+  },
+]);
