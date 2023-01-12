@@ -9,6 +9,7 @@ sap.ui.define(
   (BaseController, History, JSONModel, ErrorHandler) =>
     BaseController.extend("iot.planner.controller.App", {
       onInit() {
+        // Show the general header but keep the app-specific footer visible as well
         const headerToolbarHeight = 49;
         const heightWithoutHeaderToolbar =
           $(document).height() - headerToolbarHeight;
@@ -18,14 +19,6 @@ sap.ui.define(
           }),
           "viewModel"
         );
-      },
-
-      login() {
-        return this.getOwnerComponent().login();
-      },
-
-      async logout() {
-        return this.getOwnerComponent().logout();
       },
 
       onPressNavBack() {

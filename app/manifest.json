@@ -133,6 +133,22 @@
             "name": "Users",
             "prefix": "u"
           }
+        },
+        {
+          "name": "vacations",
+          "pattern": "vacations",
+          "target": {
+            "name": "vacations",
+            "prefix": "v"
+          }
+        },
+        {
+          "name": "billing",
+          "pattern": "billing",
+          "target": {
+            "name": "billing",
+            "prefix": "b"
+          }
         }
       ],
       "targets": {
@@ -199,9 +215,17 @@
           "title": "Users",
           "id": "users"
         },
-        "notAuthenticated": {
-          "viewName": "NotAuthenticated",
-          "viewId": "notAuthenticated"
+        "vacations": {
+          "type": "Component",
+          "usage": "vacationsComponent",
+          "title": "Vacations",
+          "id": "vacations"
+        },
+        "billing": {
+          "type": "Component",
+          "usage": "billingComponent",
+          "title": "Billing",
+          "id": "billing"
         }
       }
     },
@@ -256,6 +280,18 @@
       },
       "UsersComponent": {
         "name": "iot.planner.components.usersv2",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "vacationsComponent": {
+        "name": "iot.planner.components.vacations",
+        "settings": {},
+        "componentData": {},
+        "lazy": true
+      },
+      "billingComponent": {
+        "name": "iot.planner.components.billing",
         "settings": {},
         "componentData": {},
         "lazy": true

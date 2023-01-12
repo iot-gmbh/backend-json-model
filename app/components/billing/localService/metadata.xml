@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="BillingService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Hierarchies" EntityType="BillingService.Hierarchies"/>
+                <EntitySet Name="Categories" EntityType="BillingService.Categories">
+                    <NavigationPropertyBinding Path="parent" Target="Categories"/>
+                    <NavigationPropertyBinding Path="children" Target="Categories"/>
+                </EntitySet>
+                <EntitySet Name="MyWorkItems" EntityType="BillingService.MyWorkItems"/>
+            </EntityContainer>
+            <EntityType Name="Hierarchies">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="level0" Type="Edm.String"/>
+                <Property Name="level1" Type="Edm.String"/>
+                <Property Name="level2" Type="Edm.String"/>
+                <Property Name="level3" Type="Edm.String"/>
+                <Property Name="level0Title" Type="Edm.String"/>
+                <Property Name="level1Title" Type="Edm.String"/>
+                <Property Name="level2Title" Type="Edm.String"/>
+                <Property Name="level3Title" Type="Edm.String"/>
+                <Property Name="level0Alias" Type="Edm.String"/>
+                <Property Name="level1Alias" Type="Edm.String"/>
+                <Property Name="level2Alias" Type="Edm.String"/>
+                <Property Name="level3Alias" Type="Edm.String"/>
+                <Property Name="level0Manager" Type="Edm.String"/>
+                <Property Name="level1Manager" Type="Edm.String"/>
+                <Property Name="level2Manager" Type="Edm.String"/>
+                <Property Name="level3Manager" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="invoiceRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="bonusRelevance" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <Property Name="tenant" Type="Edm.String"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="description" Type="Edm.String"/>
+                <Property Name="absoluteReference" Type="Edm.String"/>
+                <Property Name="mappingID" Type="Edm.String"/>
+                <Property Name="drillDownState" Type="Edm.String" DefaultValue="expanded"/>
+                <Property Name="path" Type="Edm.String"/>
+                <Property Name="hierarchyLevel" Type="Edm.String"/>
+                <Property Name="shallowReference" Type="Edm.String"/>
+                <Property Name="deepReference" Type="Edm.String"/>
+                <Property Name="totalDuration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="accumulatedDuration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="relativeDuration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="relativeAccDuration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="grandTotal" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="validFrom" Type="Edm.DateTimeOffset"/>
+                <Property Name="validTo" Type="Edm.DateTimeOffset"/>
+                <Property Name="manager_userPrincipalName" Type="Edm.String"/>
+                <NavigationProperty Name="parent" Type="BillingService.Categories" Partner="children">
+                    <ReferentialConstraint Property="parent_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="parent_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="children" Type="Collection(BillingService.Categories)" Partner="parent">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="MyWorkItems">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false"/>
+                <Property Name="title" Type="Edm.String"/>
+                <Property Name="location" Type="Edm.String"/>
+                <Property Name="duration" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="workDate" Type="Edm.String"/>
+                <Property Name="startTime" Type="Edm.String"/>
+                <Property Name="endTime" Type="Edm.String"/>
+                <Property Name="assignedToUserPrincipalName" Type="Edm.String"/>
+                <Property Name="managerUserPrincipalName" Type="Edm.String"/>
+                <Property Name="customer" Type="Edm.String"/>
+                <Property Name="project" Type="Edm.String"/>
+                <Property Name="subProject" Type="Edm.String"/>
+                <Property Name="workPackage" Type="Edm.String"/>
+                <Property Name="customerText" Type="Edm.String"/>
+                <Property Name="projectText" Type="Edm.String"/>
+                <Property Name="subProjectText" Type="Edm.String"/>
+                <Property Name="workPackageText" Type="Edm.String"/>
+            </EntityType>
+            <Annotations Target="BillingService.Hierarchies/level0">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level1">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level2">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level3">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level0Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level1Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level2Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level3Title">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level0Alias">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level1Alias">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level2Alias">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level3Alias">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level0Manager">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level1Manager">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level2Manager">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Hierarchies/level3Manager">
+                <Annotation Term="Core.Computed" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BillingService.Categories/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="BillingService.Categories/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="BillingService.Categories/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="BillingService.Categories/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="BillingService.Categories/invoiceRelevance">
+                                        <Annotation Term="Common.Label" String="{i18n>relevance.invoiceRelevance}"/>
+                                            <Annotation Term="Validation.Minimum" Int="0"/>
+                                            <Annotation Term="Validation.Maximum" Int="1"/>
+                                        </Annotations>
+                                        <Annotations Target="BillingService.Categories/bonusRelevance">
+                                            <Annotation Term="Common.Label" String="{i18n>relevance.bonusRelevance}"/>
+                                                <Annotation Term="Validation.Minimum" Int="0"/>
+                                                <Annotation Term="Validation.Maximum" Int="1"/>
+                                            </Annotations>
+                                            <Annotations Target="BillingService.MyWorkItems">
+                                                <Annotation Term="UI.HeaderInfo">
+                                                    <Record Type="UI.HeaderInfoType">
+                                                        <PropertyValue Property="TypeName" String="{i18n>Billing.Item}"/>
+                                                            <PropertyValue Property="TypeNamePlural" String="{i18n>Billing.Items}"/>
+                                                            </Record>
+                                                        </Annotation>
+                                                        <Annotation Term="UI.LineItem">
+                                                            <Collection>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="workDate"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="startTime"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="endTime"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="duration"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="title"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="customerText"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="projectText"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="subProjectText"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="workPackageText"/>
+                                                                </Record>
+                                                                <Record Type="UI.DataField">
+                                                                    <PropertyValue Property="Value" Path="location"/>
+                                                                </Record>
+                                                            </Collection>
+                                                        </Annotation>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/startTime">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/customer">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/project">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/subProject">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/workPackage">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/customerText">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/projectText">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/subProjectText">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                    <Annotations Target="BillingService.MyWorkItems/workPackageText">
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                    </Annotations>
+                                                </Schema>
+                                            </edmx:DataServices>
+                                        </edmx:Edmx>

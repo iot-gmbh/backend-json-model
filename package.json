@@ -17,9 +17,9 @@
   "workspaces": {
     "packages": [
       "packages/backend-json-model",
+      "packages/cds-msal-auth",
       "packages/cds-azure-ad",
       "packages/cds-pg",
-      "packages/cds-pg-migra",
       "packages/errorhandler"
     ]
   },
@@ -29,11 +29,12 @@
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@sap/audit-logging": "^5.5.4",
     "@sap/cds": "^5.9.8",
-    "@sap/cds-odata-v2-adapter-proxy": "^1.9.0",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.17",
     "axios": "^0.27.2",
     "azure-devops-node-api": "^11.2.0",
     "backend-json-model": "^1.0.0",
     "cds-azure-ad": "^0.0.21",
+    "cds-msal-auth": "https://github.com/BenediktHoelker/cds-msal-auth.git",
     "cds-pg": "^0.1.30",
     "cds-swagger-ui-express": "^0.5.0",
     "cors": "^2.8.5",
@@ -47,7 +48,7 @@
   },
   "devDependencies": {
     "@sap/eslint-plugin-cds": "^2.4.1",
-    "@sap/ux-specification": "^1.102.9",
+    "@sap/ux-specification": "^1.102.14",
     "@ui5/cli": "^2.14.9",
     "cds-pg-migra": "^1.1.1",
     "cross-env": "^7.0.3",

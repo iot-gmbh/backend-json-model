@@ -38,18 +38,18 @@ sap.ui.define(
 
         this.setModel(new JSONModel({}), "session");
 
-        if (!this._myMsal) {
-          this._myMsal = new msal.PublicClientApplication(
-            this.config.msalConfig
-          );
-        }
+        // if (!this._myMsal) {
+        //   this._myMsal = new msal.PublicClientApplication(
+        //     this.config.msalConfig
+        //   );
+        // }
 
-        await this.login();
+        // await this.login();
 
-        // const subcomponents = this.getSubcomponents()
-        this.getRouter().attachBeforeRouteMatched((event) => {
-          this._checkIsAuthenticated(event);
-        });
+        // // const subcomponents = this.getSubcomponents()
+        // this.getRouter().attachBeforeRouteMatched((event) => {
+        //   this._checkIsAuthenticated(event);
+        // });
 
         // create the views based on the url/hash
         router.initialize();
@@ -61,112 +61,6 @@ sap.ui.define(
         ).map(({ name }) => sap.ui.component(name));
 
         return subcomponents;
-      },
-
-      async _checkIsAuthenticated() {
-        const session = this.getModel("session");
-        if (!session.getProperty("/idToken")) {
-          setTimeout(() =>
-            this.getRouter().getTargets().display("notAuthenticated")
-          );
-        }
-      },
-
-      async login() {
-        this.awaitLogin = this._login();
-
-        return this.awaitLogin;
-      },
-
-      async _login() {
-        const account = this._myMsal.getAllAccounts()[0];
-
-        // const previousPage = this._previousPage; // set as variable so it won't be lost after the login-dialog
-        const previousTarget = this._previousTarget; // set as variable so it won't be lost after the login-dialog
-
-        const accessTokenRequest = {
-          scopes: this.config.scopes,
-          account,
-        };
-
-        let loginResponse = {};
-
-        if (account) {
-          try {
-            loginResponse = await this._myMsal.acquireTokenSilent(
-              accessTokenRequest
-            );
-          } catch (error) {
-            // Acquire token silent failure, and send an interactive request
-            // eslint-disable-next-line no-undef
-            if (error) {
-              console.log(error);
-              loginResponse = await this._myMsal.acquireTokenPopup(
-                accessTokenRequest
-              );
-            }
-          }
-        } else {
-          loginResponse = await this._myMsal.acquireTokenPopup(
-            accessTokenRequest
-          );
-        }
-
-        if (this.getModel()) {
-          // Destroy all previously loaded data
-          // this.getModel().destroy();
-        }
-
-        this.setSession(loginResponse);
-        this.fireEvent("login", loginResponse);
-
-        XMLHttpRequest.prototype.open = function (...args) {
-          this.origOpen(...args);
-          this.setRequestHeader(
-            "Authorization",
-            `Bearer ${loginResponse.accessToken}`
-          );
-        };
-
-        if (previousTarget) {
-          // previousTarget.
-          this.getRouter().getTargets().display(previousTarget);
-        }
-        return loginResponse;
-      },
-
-      exit() {
-        XMLHttpRequest.prototype.open = XMLHttpRequest.prototype.origOpen;
-      },
-
-      async logout() {
-        // const navContainer = this.byId("app");
-        const router = this.getRouter();
-        const hash = router.getHashChanger().getHash();
-        const route = router.getRouteByHash(hash);
-
-        // this._previousPage = navContainer.getCurrentPage();
-        this._previousTarget = route._oConfig.target;
-
-        const account = this._myMsal.getAllAccounts()[0];
-        const logoutRequest = { account };
-
-        await this._myMsal.logoutPopup(logoutRequest);
-
-        this.setSession({});
-        this.fireLogout();
-
-        setTimeout(() =>
-          this.getRouter().getTargets().display("notAuthenticated")
-        );
-      },
-
-      async getSession() {
-        this.getModel("session").getData();
-      },
-
-      setSession(data) {
-        this.getModel("session").setData(data);
       },
 
       /**

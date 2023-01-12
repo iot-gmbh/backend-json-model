@@ -2,17 +2,13 @@
 
 const CACHE = "advanced-caching-1668068768867";
 const precacheFiles = [
+  // "/index.html",
+  "/offline.html",
   "/view/App.view.xml",
-  "/controller/Home.controller.js",
-  "/controller/App.controller.js",
-  "/controller/NotFound-dbg.controller.js",
-  "/controller/Home-dbg.controller.js",
-  "/controller/App-dbg.controller.js",
-  "/index.html",
   "/view/NotFound.view.xml",
   "/view/Home.view.xml",
-  "/controller/NotFound.controller.js",
-  "/offline.html",
+  "/controller/Home.controller.js",
+  "/controller/App.controller.js",
   "/resources/sap-ui-custom.js",
 ];
 
@@ -24,7 +20,7 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = [];
+const neverRespondToPaths = ["/auth/signin", "/index.html"];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
@@ -70,6 +66,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (comparePaths(event.request.url, neverRespondToPaths)) return;
+  if (event.request.url === "https://project-planning.herokuapp.com/") return;
   if (event.request.url.endsWith("/")) return;
 
   if (comparePaths(event.request.url, networkFirstPaths)) {

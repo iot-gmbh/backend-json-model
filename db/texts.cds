@@ -11,6 +11,9 @@ annotate my.Users with {
   officeLocation    @title : '{i18n>Users.officeLocation}';
   preferredLanguage @title : '{i18n>Users.preferredLanguage}';
   surname           @title : '{i18n>Users.surname}';
+  yearlyVacDays     @title : '{i18n>Users.yearlyVacDays}';
+  vacDaysTotal      @title : '{i18n>Users.vacDaysTotal}';
+  vacDaysRemaining  @title : '{i18n>Users.vacDaysRemaining}';
   manager           @title : '{i18n>Users.manager}';
   projects          @title : '{i18n>Users.projects}';
   managedProjects   @title : '{i18n>Users.managedProjects}';
@@ -28,7 +31,16 @@ annotate my.Categories {
   validTo           @title : '{i18n>Categories.validTo}';
   absoluteReference @title : '{i18n>Categories.absoluteReference}';
   deepReference     @title : '{i18n>Categories.deepReference}';
-}
+};
+
+annotate my.Vacations {
+  ID                     @title : '{i18n>Vacations.id}';
+  startDate              @title : '{i18n>Vacations.startDate}';
+  endDate                @title : '{i18n>Vacations.endDate}';
+  durationInDays         @title : '{i18n>Vacations.durationInDays}';
+  user                   @title : '{i18n>Vacations.user}';
+  user_userPrincipalName @title : '{i18n>Vacations.user}'
+};
 
 annotate my.WorkItems {
   ID                           @title : '{i18n>WorkItems.ID}';
