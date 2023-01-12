@@ -1,37 +1,26 @@
-<mvc:View
-    controllerName="iot.planner.components.billing.controller.Object"
+<mvc:View controllerName="iot.planner.components.billing.controller.Object"
     xmlns="sap.m"
-    xmlns:l="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:semantic="sap.f.semantic">
 
-    <semantic:SemanticPage
-        id="page"
-        headerPinnable="false"
-        toggleHeaderOnTitleClick="false"
-        busy="{objectView>/busy}"
-        busyIndicatorDelay="{objectView>/delay}">
+    <semantic:SemanticPage id="page" headerPinnable="false" toggleHeaderOnTitleClick="false" busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}">
 
         <semantic:titleHeading>
-            <Title
-                text="{Title}"
-                level="H2"/>
+            <Title text="{Title}" level="H2"/>
         </semantic:titleHeading>
 
         <semantic:headerContent>
         </semantic:headerContent>
 
         <semantic:content>
-            <form:SimpleForm>
-                
-            </form:SimpleForm>
             <l:VerticalLayout>
                 <ObjectStatus title="User" text="{assignedToUserPrincipalName}"/>
                 <ObjectStatus title="Date" text="{workDate}"/>
                 <ObjectStatus title="Start Time" text="{startTime}"/>
                 <ObjectStatus title="End Time" text="{endTime}"/>
                 <ObjectStatus title="Duration" text="{duration}"/>
-                <ObjectStatus title="Title" text="{title}"/>                            
+                <ObjectStatus title="Title" text="{title}"/>
                 <ObjectStatus title="Customer" text="{customerText}"/>
                 <ObjectStatus title="Project" text="{projectText}"/>
                 <ObjectStatus title="Subproject" text="{subProjectText}"/>
