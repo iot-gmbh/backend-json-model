@@ -3,9 +3,36 @@
     xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
     xmlns="sap.m"
     xmlns:f="sap.f" displayBlock="true">
-    <Page showFooter="false" showHeader="false">
+    <Page showFooter="false" showHeader="false" backgroundDesign="List">
         <uxap:ObjectPageLayout upperCaseAnchorBar="false">
             <uxap:ObjectPageSection titleUppercase="false" title="Erfassung">
+                <uxap:ObjectPageSubSection title=" " titleUppercase="false">
+                    <f:GridContainer>
+                        <f:layout>
+                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="1rem" />
+                        </f:layout>
+                        <f:layoutS>
+                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="0.5rem" />
+                        </f:layoutS>
+                        <GenericTile header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar', 'spc', 'calendar')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>leaves}" press=".navTo($event, 'leaves')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                    </f:GridContainer>
+                </uxap:ObjectPageSubSection>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection titleUppercase="false" title="Auswertungen">
                 <uxap:ObjectPageSubSection title=" " titleUppercase="false">
                     <f:GridContainer>
                         <f:layout>
@@ -19,7 +46,7 @@
                                 <f:GridContainerItemLayoutData minRows="2" columns="2" />
                             </layoutData>
                         </GenericTile>
-                        <GenericTile header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOgTWorkItemsV2')">
+                        <GenericTile header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')">
                             <layoutData>
                                 <f:GridContainerItemLayoutData minRows="2" columns="2" />
                             </layoutData>
@@ -37,21 +64,30 @@
                     </f:GridContainer>
                 </uxap:ObjectPageSubSection>
             </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection titleUppercase="false" title="Stammdaten">
+                <uxap:ObjectPageSubSection title=" " titleUppercase="false">
+                    <layout:HorizontalLayout >
+                    </layout:HorizontalLayout>
+                    <f:GridContainer>
+                        <f:layout>
+                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="1rem" />
+                        </f:layout>
+                        <f:layoutS>
+                            <f:GridContainerSettings rowSize="5rem" columnSize="5rem" gap="0.5rem" />
+                        </f:layoutS>
+                        <GenericTile header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>Users}" press=".navTo($event, 'Users')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                    </f:GridContainer>
+                </uxap:ObjectPageSubSection>
+            </uxap:ObjectPageSection>
         </uxap:ObjectPageLayout>
-        <IconTabBar id="idIconTabBar" select="handleIconTabBarSelect" headerBackgroundDesign="Transparent" class="sapUiResponsiveContentPadding sapUiSmallMarginBegin" headerMode="Standard">
-            <items>
-                <IconTabFilter text="Erfassung">
-                </IconTabFilter>
-                <IconTabFilter text="Auswertungen">
-                    <GenericTile header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')"/>
-                    <GenericTile header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar', 'spc', 'calendar')"/>
-                    <GenericTile header="{i18n>leaves}" press=".navTo($event, 'leaves')"/>
-                </IconTabFilter>
-                <IconTabFilter text="Stammdaten">
-                    <GenericTile class="sapUiTinyMargin" header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')"/>
-                    <GenericTile class="sapUiTinyMargin" header="{i18n>Users}" press=".navTo($event, 'Users')"/>
-                </IconTabFilter>
-            </items>
-        </IconTabBar>
     </Page>
 </mvc:View>
