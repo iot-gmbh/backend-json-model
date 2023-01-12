@@ -62,6 +62,13 @@ module.exports = cds.service.impl(async function () {
     req.data.tenant = tenant;
   });
 
+  this.before("CREATE", "Categories", async (req) => {
+    const { tenant } = req.user;
+    req.data.tenant = tenant;
+    // eslint-disable-next-line no-return-assign, no-param-reassign
+    req.data.members.forEach((member) => (member.tenant = tenant));
+  });
+
   this.on("getMyCategoryTree", async (req) => {
     const results = await db.run(
       SELECT.from("iot_planner_my_categories")

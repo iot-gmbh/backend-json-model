@@ -32,7 +32,7 @@ sap.ui.define(
         });
 
         try {
-          await ErrorHandler.cover([this.getModel()]);
+          await ErrorHandler.cover([ODataModel]);
           router.initialize();
         } catch (error) {
           // Metadata or authorization errors

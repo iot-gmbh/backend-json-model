@@ -164,10 +164,14 @@ sap.ui.define(
           }));
       },
 
-      async create(path, { localPath = `${path}/X`, ...object } = {}) {
+      async create(
+        path,
+        { localPath = `${path}/X`, ...object } = {},
+        synchronize = true
+      ) {
         let resultWithoutNavProps = {};
 
-        if (this._synchronize) {
+        if (this._synchronize && synchronize) {
           const result = await this._promises.create(path, object);
           resultWithoutNavProps = this.removeNavPropsFrom(result);
         }
@@ -286,10 +290,10 @@ sap.ui.define(
       },
 
       // create new obj => nav-Props will be deleted so don't use reference
-      async update({ localPath, ...obj }) {
+      async update({ localPath, ...obj }, synchronize = true) {
         let merge = obj;
 
-        if (this._synchronize) {
+        if (this._synchronize && synchronize) {
           const odataPath = this.getODataPathFrom(obj);
           const data = this.removeNavPropsFrom(obj);
           const result = await this._promises.update(odataPath, data);
@@ -302,11 +306,11 @@ sap.ui.define(
         return merge;
       },
 
-      async remove(obj) {
+      async remove(obj, synchronize = true) {
         const path = this.getODataPathFrom(obj);
         const entityName = path.split("(")[0];
 
-        if (this._synchronize) {
+        if (this._synchronize && synchronize) {
           await this._promises.remove(path);
         }
 
