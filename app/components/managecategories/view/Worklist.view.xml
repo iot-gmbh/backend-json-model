@@ -31,7 +31,7 @@
         </fb:FilterBar>
         <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: [{path: 'shallowReference'}],
-        parameters: {numberOfExpandedLevels: 0, expand : 'members', arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
+        parameters: {numberOfExpandedLevels: 0, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
             <t:noData>
                 <Title text=""/>
             </t:noData>
@@ -59,11 +59,6 @@
                 <t:Column label="{i18n>childrenLength}" width="8%" hAlign="End">
                     <t:template>
                         <Text text="{= ${children}.length}" />
-                    </t:template>
-                </t:Column>
-                <t:Column label="{i18n>members}" width="8%" hAlign="End">
-                    <t:template>
-                        <Text text="{= ${members}.length}" />
                     </t:template>
                 </t:Column>
                 <t:Column label="{i18n>shallowReference}" width="10%">

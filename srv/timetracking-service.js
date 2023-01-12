@@ -185,7 +185,7 @@ module.exports = cds.service.impl(async function () {
           `activatedDate >= '${startDateTime}' and completedDate <= '${endDateTime}'`
         )
       ),
-      catService.send("getMyCategoryTree", req.data),
+      // catService.send("getMyCategoryTree", req.data),
     ]);
 
     // Reihenfolge ist wichtig (bei gleicher ID wird erstes mit letzterem überschrieben)
@@ -220,15 +220,15 @@ module.exports = cds.service.impl(async function () {
 
     const results = Object.values(map)
       .filter(({ deleted }) => !deleted)
-      .map((workItem) => {
-        const parent = categorizeWorkItem(workItem, myCategories);
+      .map((workItem) =>
+        // const parent = categorizeWorkItem(workItem, myCategories);
 
-        return {
+        ({
           ...workItem,
-          parentPath: parent?.path,
-          parent,
-        };
-      });
+          // parentPath: parent?.path,
+          // parent,
+        })
+      );
 
     results.$count = results.length;
     return results;
