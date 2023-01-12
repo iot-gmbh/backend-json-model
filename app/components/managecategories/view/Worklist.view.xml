@@ -94,8 +94,9 @@
             </t:columns>
         </t:TreeTable>
         <dependents>
-            <Dialog id="editCategoryDialog" initialFocus="titleInput" contentWidth="420px" contentHeight="560px">
-                <f:SimpleForm>
+            <Dialog id="editCategoryDialog" initialFocus="titleInput" contentHeight="100%" contentWidth="73%">
+                <f:SimpleForm editable="true">
+                    <core:Title text="{i18n>reference}"/>
                     <Label text="{i18n>title}"/>
                     <TextArea id="titleInput" value="{title}"/>
                     <Label text="{i18n>shallowReference}"/>
@@ -104,16 +105,18 @@
                     <Input id="referenceInput" value="{absoluteReference}" />
                     <Label text="{i18n>mappingID}"/>
                     <Input id="mappingIdInput" value="{mappingID}" />
+                    <core:Title text="{i18n>validity}"/>
                     <Label text="{i18n>validFrom}"/>
                     <DatePicker value="{path: 'validFrom', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     <Label text="{i18n>validTo}"/>
                     <DatePicker value="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     <Label text="{i18n>invoiceRelevance}"/>
-                    <Input id="invoiceRelevanceInput" value="{invoiceRelevance}" visible="false"/>
+                    <Input id="invoiceRelevanceInput" value="{invoiceRelevance}"/>
                     <Label text="{i18n>bonusRelevance}"/>
-                    <Input id="bonusRelevanceInput" value="{bonusRelevance}" visible="false"/>
-                    <Label text="{i18n>members}"/>
-                    <MultiInput tokens="{path: 'members'}" suggestionItems="{
+                    <Input id="bonusRelevanceInput" value="{bonusRelevance}"/>
+                    <core:Title text="{i18n>members}"/>
+                    <Label text="{i18n>members}" labelFor="membersInput"/>
+                    <MultiInput id="membersInput" tokens="{path: 'members'}" suggestionItems="{
                                     path: 'OData>/Users',
                                     sorter: { path: 'displayName' }
                                 }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
@@ -136,7 +139,7 @@
                     </Bar>
                 </customHeader>
                 <endButton>
-                    <Button text="{i18n>OK}" press="onPressSubmitCategory"/>
+                    <Button type="Emphasized" text="{i18n>OK}" press="onPressSubmitCategory"/>
                 </endButton>
             </Dialog>
         </dependents>
