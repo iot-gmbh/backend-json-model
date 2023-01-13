@@ -1,7 +1,7 @@
 using {iot.planner as my} from '../db/schema';
 
 
-service CategoriesService @(requires : 'authenticated-user') {
+service CategoriesService @(requires: 'authenticated-user') {
   entity Categories       as projection on my.Categories excluding {
     manager,
     // members,
@@ -13,7 +13,7 @@ service CategoriesService @(requires : 'authenticated-user') {
 
   function getCumulativeCategoryDurations(dateFrom : DateTime, dateUntil : DateTime, excludeEmptyDurations : Boolean) returns array of Categories;
 
-  @(restrict : [{to : 'admin'}])
+  @(restrict: [{to: 'admin'}])
   function getCategoryTree(root : UUID, validAt : DateTime)                                                           returns array of Categories;
 
   function getMyCategoryTree(root : UUID, validAt : DateTime)                                                         returns array of Categories;
@@ -26,32 +26,19 @@ service CategoriesService @(requires : 'authenticated-user') {
   // @odata.draft.enabled : true
   @odata.create.enabled
   @odata.update.enabled
-  entity Users                            @(restrict : [
-    {
-      grant : [
-        'READ',
-        'WRITE'
-      ],
-      to    : 'authenticated-user'
-    },
-    {
-      grant : [
-        'READ',
-        'WRITE'
-      ],
-      to    : 'admin',
-    },
-  ])                      as projection on my.Users {
+  entity Users            as projection on my.Users {
     *,
     coalesce(
       sum(
         leaves.durationInDays
-      ), 0) as vacDaysTotal     : Integer @odata.Type : 'Edm.String'  @Common.Label : '{i18n>Users.vacDaysTotal}',
+      ), 0
+    ) as vacDaysTotal     : Integer  @odata.Type: 'Edm.String'  @Common.Label: '{i18n>Users.vacDaysTotal}',
     yearlyVacDays - coalesce(
       sum(
         leaves.durationInDays
-      ), 0) as vacDaysRemaining : Integer @odata.Type : 'Edm.String'  @Common.Label : '{i18n>Users.vacDaysRemaining}'
-    } group by userPrincipalName;
+      ), 0
+    ) as vacDaysRemaining : Integer  @odata.Type: 'Edm.String'  @Common.Label: '{i18n>Users.vacDaysRemaining}'
+  } group by userPrincipalName;
 
   entity Users2Categories as projection on my.Users2Categories {
     *,

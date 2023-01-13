@@ -11,15 +11,15 @@ using {iot.planner.hierarchies.Hierarchies as Hierarchies} from './hierarchies';
 
 aspect relevance {
   invoiceRelevance : Decimal(2, 1) @(
-    title        : '{i18n>relevance.invoiceRelevance}',
-    assert.range : [
+    title       : '{i18n>relevance.invoiceRelevance}',
+    assert.range: [
       0,
       1
     ],
   );
   bonusRelevance   : Decimal(2, 1) @(
-    title        : '{i18n>relevance.bonusRelevance}',
-    assert.range : [
+    title       : '{i18n>relevance.bonusRelevance}',
+    assert.range: [
       0,
       1
     ],
@@ -30,7 +30,7 @@ aspect multitenant {
   tenant : String
 }
 
-@assert.unique : {friendlyID : [userPrincipalName, ]}
+@assert.unique: {friendlyID: [userPrincipalName, ]}
 entity Users : multitenant {
   key userPrincipalName : String;
       displayName       : String;
@@ -58,11 +58,12 @@ entity Users : multitenant {
 };
 
 entity Users2Categories : cuid, managed, multitenant {
-  user     : Association to Users;
-  category : Association to Categories;
+  user        : Association to Users;
+  category    : Association to Categories;
+  displayName : String; // dummy-field that is needed when new categories are created, otherwise ignore it
 }
 
-@assert.unique : {ID : [ID]} // set explicit unique-constraint on ID. If we don't do this, Postgres will throw an error when upserting data ("es gibt keinen Unique-Constraint oder Exclusion-Constraint, der auf die ON-CONFLICT-Angabe passt"). See: https://stackoverflow.com/questions/42022362/no-unique-or-exclusion-constraint-matching-the-on-conflict
+@assert.unique: {ID: [ID]} // set explicit unique-constraint on ID. If we don't do this, Postgres will throw an error when upserting data ("es gibt keinen Unique-Constraint oder Exclusion-Constraint, der auf die ON-CONFLICT-Angabe passt"). See: https://stackoverflow.com/questions/42022362/no-unique-or-exclusion-constraint-matching-the-on-conflict
 entity Categories : cuid, managed, relevance, multitenant {
   title               : String;
   description         : String;
@@ -84,11 +85,13 @@ entity Categories : cuid, managed, relevance, multitenant {
                           on hierarchyLevel = level.hierarchyLevel;
   tags                : Association to many Tags2Categories
                           on tags.category = $self;
-  @assert.notNull : false
+
+  @assert.notNull: false
   manager             : Association to Users;
-  members             : Association to many Users2Categories
+  members             : Composition of many Users2Categories
                           on members.category = $self;
-  @assert.notNull : false
+
+  @assert.notNull: false
   parent              : Association to Categories;
   children            : Composition of many Categories
                           on children.parent = $self;
@@ -99,9 +102,15 @@ entity CategoriesCumulativeDurations as projection on Categories {
       tenant,
       parent,
       title,
-      cast('2021-05-02 14:55:08.091' as DateTime) as activatedDate                : DateTime,
-      cast('2021-05-02 14:55:08.091' as DateTime) as completedDate                : DateTime,
-      cast('' as                        String)   as assignedTo_userPrincipalName : String,
+      cast(
+        '2021-05-02 14:55:08.091' as      DateTime
+      ) as activatedDate                : DateTime,
+      cast(
+        '2021-05-02 14:55:08.091' as      DateTime
+      ) as completedDate                : DateTime,
+      cast(
+        '' as                             String
+      ) as assignedTo_userPrincipalName : String,
       // members,
       // tags,
       children,
@@ -128,18 +137,19 @@ entity Tags2WorkItems : cuid, multitenant {
 
 view CategoryTags as
   select from Tags2Categories {
-    key category.ID       as categoryID : String,
-        tenant                          : String,
+    key category.ID as categoryID : String,
+        tenant                    : String,
         // TODO: Make independent of DB (string_agg) is a postgres-function
         string_agg(
-          tag.title, ' ') as tags       : String,
-    }
-    group by
-      category.ID,
-      tenant;
+          tag.title, ' '
+        )           as tags       : String,
+  }
+  group by
+    category.ID,
+    tenant;
 
 entity WorkItems : managed, relevance, multitenant {
-  key ID                          : String @odata.Type : 'Edm.String';
+  key ID                          : String @odata.Type: 'Edm.String';
       tags                        : Composition of many Tags2WorkItems
                                       on tags.workItem = $self;
       date                        : DateTime;

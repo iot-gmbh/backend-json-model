@@ -10,15 +10,8 @@ service WorkItemsService @(requires: 'authenticated-user') {
   entity WorkItems @(restrict: [
     {
       grant: 'READ',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'managerUserPrincipalName = $user'
-    },
-    {
-      grant: 'READ',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user'
+      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
     },
     {
       grant: 'READ',
@@ -47,15 +40,8 @@ service WorkItemsService @(requires: 'authenticated-user') {
   entity IOTWorkItems                                                           @(restrict: [
     {
       grant: 'READ',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'managerUserPrincipalName = $user'
-    },
-    {
-      grant: 'READ',
       to   : 'authenticated-user',
-      where: 'Nutzer = $user'
+      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
     },
     {
       grant: 'READ',

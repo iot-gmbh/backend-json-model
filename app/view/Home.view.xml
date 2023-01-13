@@ -1,22 +1,73 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
-    xmlns="sap.m" displayBlock="true">
+<mvc:View xmlns:layout="sap.ui.layout"
+    xmlns:uxap="sap.uxap"
+    xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
+    xmlns="sap.m"
+    xmlns:f="sap.f" displayBlock="true">
     <Page showFooter="false" showHeader="false">
-        <content>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')"/>
-            <!-- <GenericTile class="sapUiTinyMargin" header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar')"/> -->
-            <GenericTile class="sapUiTinyMargin" header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar', 'spc', 'calendar')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>fastEntry}" press=".navTo($event, 'fastEntry')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>workItems}" press=".navTo($event, 'workItems')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems}" press=".navTo($event, 'IOTWorkItems')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>Users}" press=".navTo($event, 'Users')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>graph}" press="navToAnalytics"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALP}" press=".navTo($event, 'analyticsALP')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>analyticsALPv2}" press=".navTo($event, 'analyticsALPv2')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>leaves}" press=".navTo($event, 'leaves')"/>
-            <GenericTile class="sapUiTinyMargin" header="{i18n>billing}" press=".navTo($event, 'billing')"/>
-            <!-- <GenericTile class="sapUiTinyMargin" header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')"/> -->
-        </content>
+        <uxap:ObjectPageLayout upperCaseAnchorBar="false" subSectionLayout="TitleOnLeft">
+            <uxap:ObjectPageSection title="Erfassung">
+                <uxap:ObjectPageSubSection>
+                    <f:GridContainer>
+                        <GenericTile header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>calendar}" press=".navTo($event, 'trackViaCalendar', 'spc', 'calendar')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>leaves}" press=".navTo($event, 'leaves')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                    </f:GridContainer>
+                </uxap:ObjectPageSubSection>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection title="Auswertungen">
+                <uxap:ObjectPageSubSection >
+                    <f:GridContainer>
+                        <GenericTile header="{i18n>graph}" press="navToAnalytics">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>IOTWorkItems} V2" press=".navTo($event, 'IOTWorkItemsV2')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>analyticsALPv2}" press=".navTo($event, 'analyticsALPv2')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>billing}" press=".navTo($event, 'billing')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                    </f:GridContainer>
+                </uxap:ObjectPageSubSection>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection title="Stammdaten">
+                <uxap:ObjectPageSubSection>
+                    <f:GridContainer>
+                        <GenericTile header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                        <GenericTile header="{i18n>Users}" press=".navTo($event, 'Users')">
+                            <layoutData>
+                                <f:GridContainerItemLayoutData minRows="2" columns="2" />
+                            </layoutData>
+                        </GenericTile>
+                    </f:GridContainer>
+                </uxap:ObjectPageSubSection>
+            </uxap:ObjectPageSection>
+        </uxap:ObjectPageLayout>
     </Page>
 </mvc:View>

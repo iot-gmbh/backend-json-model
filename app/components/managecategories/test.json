@@ -1,0 +1,14 @@
+{
+    "parent_ID": "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb",
+    "hierarchyLevel": "-1",
+    "validFrom": "\/Date(1673545854776)\/",
+    "validTo": "\/Date(1732921200000)\/",
+    "members": [
+        {
+            "user_userPrincipalName": "Benedikt.Hoelker@iot-online.de",
+            "displayName": "Benedikt Hölker"
+        }
+    ],
+    "title": "Test2",
+    "children": []
+}

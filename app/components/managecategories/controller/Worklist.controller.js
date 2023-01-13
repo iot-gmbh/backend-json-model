@@ -63,22 +63,29 @@ sap.ui.define(
           const viewModel = this.getModel("worklistView");
           const { validAt, scope } = viewModel.getProperty("/filters");
 
+          viewModel.setProperty("/busyIndicatorDelay", 0);
           viewModel.setProperty("/busy", true);
 
-          const { results: categories } = await model.callFunction(
-            scope === "mine" ? "/getMyCategoryTree" : "/getCategoryTree",
-            {
-              urlParameters: {
-                root: null,
-                validAt: validAt.toISOString(),
-              },
-            }
-          );
+          try {
+            const { results: categories } = await model.callFunction(
+              scope === "mine" ? "/getMyCategoryTree" : "/getCategoryTree",
+              {
+                urlParameters: {
+                  root: null,
+                  validAt: validAt.toISOString(),
+                },
+              }
+            );
 
-          const categoriesNested = model.nest({ items: categories });
+            const categoriesNested = model.nest({ items: categories });
 
-          model.setProperty("/Categories", categoriesNested);
+            model.setProperty("/Categories", categoriesNested);
+          } catch (error) {
+            // errorhandler
+          }
+
           viewModel.setProperty("/busy", false);
+          viewModel.setProperty("/busyIndicatorDelay", 1000);
         },
 
         async _toggleRelevanceVisibility() {
@@ -87,6 +94,7 @@ sap.ui.define(
           const { checkIfUserIsAdmin: userIsAdmin } = await model.callFunction(
             "/checkIfUserIsAdmin"
           );
+
           if (userIsAdmin) {
             view.byId("invoiceRelevanceInput").setVisible(true);
             view.byId("invoiceRelevanceColumn").setVisible(true);
@@ -187,6 +195,7 @@ sap.ui.define(
             localPath,
             validFrom: new Date(),
             validTo: new Date(2024, 10, 30),
+            members: [],
           });
 
           viewModel.setProperty(
@@ -227,24 +236,31 @@ sap.ui.define(
           await this.getModel().update(category);
         },
 
-        async onPressSubmitCategory(event) {
+        async onPressSubmitCategory() {
           const model = this.getModel();
-          const dialog = event.getSource();
+          const dialog = this.byId("editCategoryDialog");
           const category = dialog.getBindingContext().getObject();
 
           if (!category.parent_ID) {
             delete category.parent_ID;
           }
 
-          this._closePopover();
+          dialog.setBusy(true);
 
-          if (category.ID) {
-            // Update
-            await model.update(category);
-          } else {
-            // Create
-            await model.create("/Categories", { ...category, children: [] });
+          try {
+            if (category.ID) {
+              // Update
+              await model.update(category);
+            } else {
+              // Create
+              await model.create("/Categories", { ...category, children: [] });
+            }
+            this._closePopover();
+          } catch (error) {
+            // errorhandler
           }
+
+          dialog.setBusy(false);
         },
 
         onPressClosePopover() {
@@ -335,7 +351,7 @@ sap.ui.define(
         },
 
         loadData() {
-          this._toggleRelevanceVisibility();
+          // this._toggleRelevanceVisibility();
           this._loadCategories();
         },
 
@@ -374,22 +390,31 @@ sap.ui.define(
 
           addedTokens.forEach((token) => {
             const user_userPrincipalName = token.getKey();
+            const displayName = token.getText();
             const category_ID = token.getBindingContext().getProperty("ID");
             const localPath = `${token
               .getBindingContext()
               .getPath()}/members/X`;
 
-            model.create("/Users2Categories", {
-              category_ID,
-              user_userPrincipalName,
-              localPath,
-            });
+            model.create(
+              "/Users2Categories",
+              {
+                category_ID,
+                user_userPrincipalName,
+                displayName,
+                localPath,
+              },
+              false // synchronize
+            );
           });
 
           removedTokens.forEach((token) => {
             const obj = token.getBindingContext().getObject();
 
-            model.remove(obj);
+            model.remove(
+              obj,
+              false // synchronize
+            );
           });
         },
 

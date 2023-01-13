@@ -11,4 +11,3 @@ using from './work-items-service';
 using from './work-items-annotations';
 using from './leaves-service';
 using from './leaves-annotations';
-using from './visualize-with-swagger';

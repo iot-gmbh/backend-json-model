@@ -12,35 +12,14 @@ service TimetrackingService @(requires: 'authenticated-user') {
     },
     {
       grant: '*',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'managerUserPrincipalName = $user',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level0Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level1Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level2Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level3Manager',
-    },
-    {
-      grant: '*',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user'
+      where: `assignedToUserPrincipalName = $user or 
+        managerUserPrincipalName = $user or
+        level0Manager = $user or 
+        level1Manager = $user or 
+        level2Manager = $user or 
+        level3Manager = $user
+        `,
     },
   ])                      as projection on my.WorkItems {
     *,
@@ -64,7 +43,6 @@ service TimetrackingService @(requires: 'authenticated-user') {
     hierarchy.level1Manager              as level1Manager,
     hierarchy.level2Manager              as level2Manager,
     hierarchy.level3Manager              as level3Manager
-
   };
 
   // where deleted is null
@@ -75,24 +53,7 @@ service TimetrackingService @(requires: 'authenticated-user') {
   Datum |	Von | Bis | P1 | Projekt | Teilprojekt | Arbeitspaket | Tätigkeit | Nutzer | Einsatzort | Bemerkung
    */
   // @cds.redirection.target: true
-  entity IOTWorkItems                                                           @(restrict: [
-    {
-      grant: 'READ',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'managerUserPrincipalName = $user'
-    },
-    {
-      grant: 'READ',
-      to   : 'authenticated-user',
-      where: 'Nutzer = $user'
-    },
-    {
-      grant: 'READ',
-      to   : 'admin',
-    },
-  ])                      as projection on my.WorkItems {
+  entity IOTWorkItems     as projection on my.WorkItems {
     key ID                                                                      @UI.Hidden,
         activatedDate                        as Datum             : String(10)  @(title: '{i18n>IOTWorkItems.Datum}'),
         completedDate                        as DatumBis          : String(10)  @(title: '{i18n>IOTWorkItems.DatumBis}')  @UI.Hidden: true,
