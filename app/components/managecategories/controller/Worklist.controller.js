@@ -63,6 +63,7 @@ sap.ui.define(
           const viewModel = this.getModel("worklistView");
           const { validAt, scope } = viewModel.getProperty("/filters");
 
+          viewModel.setProperty("/busyIndicatorDelay", 0);
           viewModel.setProperty("/busy", true);
 
           try {
@@ -84,6 +85,7 @@ sap.ui.define(
           }
 
           viewModel.setProperty("/busy", false);
+          viewModel.setProperty("/busyIndicatorDelay", 1000);
         },
 
         async _toggleRelevanceVisibility() {

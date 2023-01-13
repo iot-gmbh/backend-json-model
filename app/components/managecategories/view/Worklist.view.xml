@@ -29,7 +29,7 @@
                 </fb:FilterGroupItem>
             </fb:filterGroupItems>
         </fb:FilterBar>
-        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="1000" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
+        <t:TreeTable busy="{worklistView>/busy}" busyIndicatorDelay="{worklistView>/busyIndicatorDelay}" id="treeTable" selectionMode="Multi" rowSelectionChange="onSelect" showNoData="true" rows="{path: '/Categories', 
         sorter: [{path: 'shallowReference'}],
         parameters: {numberOfExpandedLevels: 0, arrayNames: ['children']}}" visibleRowCount="20" selectionBehavior="Row" rowActionCount="3" sort="onSort">
             <t:noData>

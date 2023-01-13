@@ -164,6 +164,7 @@ sap.ui.define(
           const bundle = this.getResourceBundle();
           const model = this.getModel();
 
+          model.setProperty("/busyIndicatorDelay", 0);
           model.setProperty("/busy", true);
 
           try {
@@ -226,6 +227,7 @@ sap.ui.define(
           }
 
           model.setProperty("/busy", false);
+          model.setProperty("/busyIndicatorDelay", 1000);
         },
 
         onMasterListUpdateFinished() {
