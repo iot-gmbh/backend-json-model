@@ -238,7 +238,7 @@ sap.ui.define(
             .filter(Boolean)
             .reduce((sum, curr) => sum + curr, 0);
 
-          this.getModel().setProperty("/total/is", total.toFixed(1));
+          this.getModel().setProperty("/total/is", total.toFixed(0));
         },
 
         async onPressDeleteWorkItem(event) {
@@ -442,7 +442,11 @@ sap.ui.define(
         },
 
         onCreateWorkItem() {
-          this._resetInitialWorkItem();
+          const startDate = this.byId("detailPage")
+            .getBindingContext()
+            .getProperty("completedDate");
+
+          this._resetInitialWorkItem(startDate);
           this.byId("detailPage").bindElement("/MyWorkItems/NEW");
           this.byId("titleInput").focus();
         },

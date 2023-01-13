@@ -5,7 +5,7 @@
     xmlns:f="sap.f" displayBlock="true">
     <Page showFooter="false" showHeader="false">
         <uxap:ObjectPageLayout upperCaseAnchorBar="false" subSectionLayout="TitleOnLeft">
-            <uxap:ObjectPageSection title="Erfassung">
+            <uxap:ObjectPageSection title="{i18n>enterData}">
                 <uxap:ObjectPageSubSection>
                     <f:GridContainer>
                         <GenericTile header="{i18n>masterDetail}" press=".navTo($event, 'trackViaCalendar', 'spc', 'masterDetail')">
@@ -26,7 +26,7 @@
                     </f:GridContainer>
                 </uxap:ObjectPageSubSection>
             </uxap:ObjectPageSection>
-            <uxap:ObjectPageSection title="Auswertungen">
+            <uxap:ObjectPageSection title="{i18n>analysis}">
                 <uxap:ObjectPageSubSection >
                     <f:GridContainer>
                         <GenericTile header="{i18n>graph}" press="navToAnalytics">
@@ -52,7 +52,7 @@
                     </f:GridContainer>
                 </uxap:ObjectPageSubSection>
             </uxap:ObjectPageSection>
-            <uxap:ObjectPageSection title="Stammdaten">
+            <uxap:ObjectPageSection title="{i18n>baseData}">
                 <uxap:ObjectPageSubSection>
                     <f:GridContainer>
                         <GenericTile header="{i18n>manageCategories}" press=".navTo($event, 'manageCategories')">
