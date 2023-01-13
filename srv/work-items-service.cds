@@ -11,11 +11,12 @@ service WorkItemsService @(requires: 'authenticated-user') {
     {
       grant: 'READ',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
+      where: 'tenant = $user.tenant and (assignedToUser_userPrincipalName = $user or managerUserPrincipalName = $user)'
     },
     {
       grant: 'READ',
       to   : 'admin',
+      where: 'tenant = $user.tenant',
     },
   ])                 as projection on my.WorkItems {
     *,
@@ -41,7 +42,7 @@ service WorkItemsService @(requires: 'authenticated-user') {
     {
       grant: 'READ',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
+      where: 'assignedToUser_userPrincipalName = $user or managerUserPrincipalName = $user'
     },
     {
       grant: 'READ',

@@ -34,11 +34,12 @@ service AnalyticsService {
     {
       grant: 'READ',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
+      where: 'tenant = $user.tenant and (assignedToUserPrincipalName = $user or managerUserPrincipalName = $user)'
     },
     {
       grant: 'READ',
       to   : 'admin',
+      where: 'tenant = $user.tenant'
     },
   ])
   entity WorkItems        as projection on my.WorkItems {

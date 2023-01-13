@@ -11,11 +11,12 @@ service BillingService @(requires: 'authenticated-user') {
     {
       grant: 'READ',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user or managerUserPrincipalName = $user'
+      where: 'tenant = $user.tenant and (assignedToUserPrincipalName = $user or managerUserPrincipalName = $user)'
     },
     {
       grant: 'READ',
       to   : 'admin',
+      where: 'tenant = $user.tenant'
     },
   ])                 as
     select from my.WorkItems {

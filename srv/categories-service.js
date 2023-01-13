@@ -2,8 +2,7 @@ const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Tags, Tags2Categories /* , Categories */ } =
-    db.entities("iot.planner");
+  const { Tags, Tags2Categories, Categories } = db.entities("iot.planner");
 
   function transformCategories(rawCategories, sum = 1) {
     return rawCategories.map(
@@ -56,13 +55,7 @@ module.exports = cds.service.impl(async function () {
     );
   }
 
-  this.before("CREATE", "*", async (req) => {
-    // req.reject("Oh no!");
-    const { tenant } = req.user;
-    req.data.tenant = tenant;
-  });
-
-  this.before("CREATE", "Categories", async (req) => {
+  this.before("CREATE", "Categories", (req) => {
     const { tenant } = req.user;
     req.data.tenant = tenant;
     // eslint-disable-next-line no-return-assign, no-param-reassign

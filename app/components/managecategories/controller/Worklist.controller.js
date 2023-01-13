@@ -180,7 +180,7 @@ sap.ui.define(
         onPressCreateCategory() {
           this._createCategory({
             localPath: "/Categories/X",
-            hierarchyLevel: "-2",
+            hierarchyLevel: "-1",
             parent_ID: "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb", // Dummy
           });
         },

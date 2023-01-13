@@ -5,23 +5,17 @@ service TimetrackingService @(requires: 'authenticated-user') {
 
   @odata.create.enabled
   @odata.update.enabled
-  entity MyWorkItems                                                    @(restrict: [
-    {
-      grant: '*',
-      to   : 'admin'
-    },
-    {
-      grant: '*',
-      to   : 'authenticated-user',
-      where: `assignedToUserPrincipalName = $user or 
+  entity MyWorkItems                                                    @(restrict: [{
+    grant: '*',
+    to   : 'authenticated-user',
+    where: `assignedToUserPrincipalName = $user or 
         managerUserPrincipalName = $user or
         level0Manager = $user or 
         level1Manager = $user or 
         level2Manager = $user or 
         level3Manager = $user
         `,
-    },
-  ])                      as projection on my.WorkItems {
+  }, ])                   as projection on my.WorkItems {
     *,
     // TO_CHAR(
     TO_CHAR(
@@ -78,7 +72,7 @@ service TimetrackingService @(requires: 'authenticated-user') {
   entity WorkItemsFastEntry @(restrict: [
     {
       grant: 'READ',
-      where: 'assignedTo_userPrincipalName = $user'
+      where: 'assignedTo_userPrincipalName = $user and tenant = $user.tenant'
     },
     {
       grant: 'WRITE',

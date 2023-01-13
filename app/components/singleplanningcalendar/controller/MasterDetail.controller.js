@@ -106,9 +106,6 @@ sap.ui.define(
 
         async onInit() {
           const bundle = this.getResourceBundle();
-
-          this.byId("detailPage").bindElement("/MyWorkItems/0");
-
           const router = this.getRouter();
           const relevantRoutes = [
             router.getRoute("singleEntry"),
@@ -120,6 +117,17 @@ sap.ui.define(
               await this.getRootComponent().awaitLogin;
 
               await this.initModel();
+
+              const firstWorkItem =
+                this.getModel().getProperty("/MyWorkItems/0");
+              const detailPage = this.byId("detailPage");
+
+              if (firstWorkItem) {
+                detailPage.bindElement("/MyWorkItems/0");
+              } else {
+                this._initNewWorkItem();
+                detailPage.bindElement("/MyWorkItems/NEW");
+              }
             }, this);
           });
 
@@ -426,7 +434,7 @@ sap.ui.define(
           });
         },
 
-        _resetInitialWorkItem(startDate = roundTimeToQuarterHour(Date.now())) {
+        _initNewWorkItem(startDate = roundTimeToQuarterHour(Date.now())) {
           const model = this.getModel();
 
           const workItem = {
@@ -447,7 +455,7 @@ sap.ui.define(
             .getBindingContext()
             .getProperty("completedDate");
 
-          this._resetInitialWorkItem(startDate);
+          this._initNewWorkItem(startDate);
           this.byId("detailPage").bindElement("/MyWorkItems/NEW");
           this.byId("titleInput").focus();
         },
@@ -571,7 +579,7 @@ sap.ui.define(
 
             this.byId("hierarchyTree").clearSelection(true);
 
-            this._resetInitialWorkItem(workItem.completedDate);
+            this._initNewWorkItem(workItem.completedDate);
             // First select new item
             masterList.setSelectedItem(selectedItem);
             // Focus it to scroll down
