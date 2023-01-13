@@ -336,6 +336,7 @@ sap.ui.define(
 
         _bindMasterList() {
           const model = this.getModel();
+          const resBundle = this.getResourceBundle();
           const { date: dateFilter, showConfirmed } =
             model.getProperty("/filters");
 
@@ -362,7 +363,7 @@ sap.ui.define(
                   completedDate: myCompletedDate,
                 } = context.getObject();
                 const date = new Date(dateString);
-                const dayName = gsDayNames[date.getDay()];
+                const dayName = resBundle.getText(gsDayNames[date.getDay()]);
                 const totalDuration = workItems
                   .filter((item) => item.dateString === dateString)
                   .reduce(
