@@ -1,0 +1,34 @@
+{
+    "ID": "AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAANbowraAAA%3D",
+    "title": "Deployment IOT Komponenten inkl. Vorbereitung",
+    "date": "\/Date(1673599500000)\/",
+    "dateString": "2023-01-13",
+    "assignedTo_userPrincipalName": "Benedikt.Hoelker@iot-online.de",
+    "private": false,
+    "activity": null,
+    "location": null,
+    "source": "MSGraphEvent",
+    "duration": "1.5",
+    "confirmed": true,
+    "state": "incompleted",
+    "__metadata": {
+        "type": "TimetrackingService.MyWorkItems",
+        "uri": "https://project-planning.herokuapp.com/v2/timetracking/MyWorkItems('AAMkADU4OGIxYWUxLTgyZjgtNGMwZi05ZmIxLTkxMGI2YzJlNGVjOABGAAAAAAB5LWB-DiYYT786twlXpfQ2BwC1SDvZqskAQbYFdo98EdeKAAAAAAENAAC1SDvZqskAQbYFdo98EdeKAANbowraAAA%253D')"
+    },
+    "activatedDate": "\/Date(1673599500000)\/",
+    "completedDate": "\/Date(1673604000000)\/",
+    "parentPath": "KEB > Fiori-Repair-Documentation-Framework > Entwicklung",
+    "parent_ID": "63db49c3-eecc-2b11-c85e-cc9ab8ff52ac",
+    "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+    "activatedDateMonth": 1,
+    "activatedDateYear": 2023,
+    "activatedDateDay": 13,
+    "completedDateMonth": 1,
+    "completedDateYear": 2023,
+    "completedDateDay": 13,
+    "createdAt": "\/Date(1673610321623)\/",
+    "createdBy": "Benedikt.Hoelker@iot-online.de",
+    "modifiedAt": "\/Date(1673610321623)\/",
+    "modifiedBy": "Benedikt.Hoelker@iot-online.de"
+}
+-

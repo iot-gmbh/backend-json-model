@@ -128,7 +128,7 @@ annotate my.WorkItems with @(restrict: [
       'DELETE'
     ],
     to   : 'authenticated-user',
-    where: 'tenant = $user.tenant and assignedToUserPrincipalName = $user'
+    where: 'tenant = $user.tenant and assignedTo_userPrincipalName = $user'
   }
 ]);
 
