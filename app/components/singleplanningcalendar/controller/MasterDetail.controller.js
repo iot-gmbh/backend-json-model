@@ -652,7 +652,7 @@ sap.ui.define(
             return updatedItem;
           }
 
-          return model.create("/MyWorkItems", data);
+          return model.create("/WorkItemsSlim", data);
         },
 
         async _loadWorkItems() {
@@ -672,7 +672,7 @@ sap.ui.define(
           const myWorkItems = workItems.map(
             ({ completedDate, activatedDate, isAllDay, ...workItem }) => ({
               ...workItem,
-              tags: workItem.tags.results,
+              // tags: workItem.tags.results,
               // completedDate,
               // activatedDate,
               activatedDate: isAllDay

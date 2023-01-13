@@ -78,10 +78,10 @@ module.exports = cds.service.impl(async function () {
   const MSGraphSrv = await cds.connect.to("MSGraphService");
   const catService = await cds.connect.to("CategoriesService");
   const { Users, WorkItems } = db.entities("iot.planner");
-  const { MyWorkItems } = this.entities();
+  const { WorkItemsSlim, MyWorkItems } = this.entities();
   // const { MyWorkItems } = this.entities();
 
-  this.on("CREATE", MyWorkItems, async (req, next) => {
+  this.on("CREATE", WorkItemsSlim, async (req, next) => {
     // Create a V4 UUID (=> https://github.com/uuidjs/uuid#uuidv5name-namespace-buffer-offset)
     req.data.ID = uuid.v4();
     req.data.source = "Manual";
@@ -114,7 +114,7 @@ module.exports = cds.service.impl(async function () {
   this.on("READ", "MSGraphWorkItems", async (req) => MSGraphSrv.run(req.query));
 
   this.on("getMyCategoryTree", async (req) => {
-    const categories = await catService.send("getMyCategoryTree", req.data);
+    const categories = await catService.send("getMyCategoryTree", req);
 
     return categories;
   });
@@ -234,7 +234,7 @@ module.exports = cds.service.impl(async function () {
     return results;
   });
 
-  this.on("UPDATE", MyWorkItems, async (req) => {
+  this.on("UPDATE", WorkItemsSlim, async (req) => {
     const item = req.data;
     const tx = this.transaction(req);
 
