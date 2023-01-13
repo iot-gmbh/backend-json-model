@@ -81,12 +81,12 @@
                         <Text text="{path: 'validTo', type:'sap.ui.model.type.Date', formatOptions: {style: 'medium'}}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>invoiceRelevance}" id="invoiceRelevanceColumn" width="10%" visible="false">
+                <t:Column label="{i18n>invoiceRelevance}" id="invoiceRelevanceColumn" width="10%">
                     <t:template>
                         <Text text="{invoiceRelevance}"/>
                     </t:template>
                 </t:Column>
-                <t:Column label="{i18n>bonusRelevance}" id="bonusRelevanceColumn" width="10%" visible="false">
+                <t:Column label="{i18n>bonusRelevance}" id="bonusRelevanceColumn" width="10%">
                     <t:template>
                         <Text text="{bonusRelevance}"/>
                     </t:template>

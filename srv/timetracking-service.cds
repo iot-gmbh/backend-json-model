@@ -12,35 +12,14 @@ service TimetrackingService @(requires: 'authenticated-user') {
     },
     {
       grant: '*',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'managerUserPrincipalName = $user',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level0Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level1Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level2Manager',
-    },
-    {
-      grant: '*',
-      to   : 'project-lead',
-      where: '$user = level3Manager',
-    },
-    {
-      grant: '*',
       to   : 'authenticated-user',
-      where: 'assignedToUserPrincipalName = $user'
+      where: `assignedToUserPrincipalName = $user or 
+        managerUserPrincipalName = $user or
+        level0Manager = $user or 
+        level1Manager = $user or 
+        level2Manager = $user or 
+        level3Manager = $user
+        `,
     },
   ])                      as projection on my.WorkItems {
     *,

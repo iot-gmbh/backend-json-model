@@ -26,22 +26,7 @@ service CategoriesService @(requires: 'authenticated-user') {
   // @odata.draft.enabled : true
   @odata.create.enabled
   @odata.update.enabled
-  entity Users                       @(restrict: [
-    {
-      grant: [
-        'READ',
-        'WRITE'
-      ],
-      to   : 'authenticated-user'
-    },
-    {
-      grant: [
-        'READ',
-        'WRITE'
-      ],
-      to   : 'admin',
-    },
-  ])                      as projection on my.Users {
+  entity Users            as projection on my.Users {
     *,
     coalesce(
       sum(

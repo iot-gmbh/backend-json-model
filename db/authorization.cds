@@ -40,24 +40,12 @@ annotate my.CategoryLevels with @(restrict: [
   }
 ]);
 
-annotate my.Tags with @(restrict: [
-  {
-    grant: [
-      'READ',
-      'UPDATE',
-      'DELETE'
-    ],
-    to   : 'authenticated-user',
-    where: 'tenant = $user.tenant'
-  },
-  {
-    grant: 'CREATE',
-    to   : 'authenticated-user'
-  }
-]);
-
 annotate my.Tags2Categories with @(restrict: [
   {
+    grant: 'CREATE',
+    to   : 'authenticated-user'
+  },
+  {
     grant: [
       'READ',
       'UPDATE',
@@ -66,43 +54,14 @@ annotate my.Tags2Categories with @(restrict: [
     to   : 'authenticated-user',
     where: 'tenant = $user.tenant'
   },
-  {
-    grant: 'CREATE',
-    to   : 'authenticated-user'
-  }
 ]);
 
-annotate my.Travels with @(restrict: [
-  {
-    grant: [
-      'READ',
-      'UPDATE',
-      'DELETE'
-    ],
-    to   : 'admin',
-    where: 'tenant = $user.tenant',
-  },
-  {
-    grant: 'READ',
-    to   : 'authenticated-user',
-    where: 'tenant = $user.tenant',
-  },
-  {
-    grant: [
-      'READ',
-      'UPDATE',
-      'DELETE'
-    ],
-    to   : 'authenticated-user',
-    where: 'tenant = $user.tenant and userPrincipalName = $user'
-  },
-  {
-    grant: 'CREATE',
-    to   : 'authenticated-user'
-  },
-]);
 
 annotate my.Users with @(restrict: [
+  {
+    grant: 'CREATE',
+    to   : 'authenticated-user'
+  },
   {
     grant: [
       'READ',
@@ -121,13 +80,13 @@ annotate my.Users with @(restrict: [
     to   : 'authenticated-user',
     where: 'tenant = $user.tenant and (userPrincipalName = $user or manager_userPrincipalName = $user)'
   },
+]);
+
+annotate my.Users2Categories with @(restrict: [
   {
     grant: 'CREATE',
     to   : 'authenticated-user'
   },
-]);
-
-annotate my.Users2Categories with @(restrict: [
   {
     grant: [
       'READ',
@@ -145,14 +104,35 @@ annotate my.Users2Categories with @(restrict: [
     ],
     to   : 'authenticated-user',
     where: 'tenant = $user.tenant and user_userPrincipalName = $user'
-  },
+  }
+]);
+
+annotate my.WorkItems with @(restrict: [
   {
     grant: 'CREATE',
     to   : 'authenticated-user'
   },
+  {
+    grant: [
+      'READ',
+      'UPDATE',
+      'DELETE'
+    ],
+    to   : 'admin',
+    where: 'tenant = $user.tenant',
+  },
+  {
+    grant: [
+      'READ',
+      'UPDATE',
+      'DELETE'
+    ],
+    to   : 'authenticated-user',
+    where: 'tenant = $user.tenant and userPrincipalName = $user'
+  }
 ]);
 
-annotate my.WorkItems with @(restrict: [
+annotate my.Travels with @(restrict: [
   {
     grant: [
       'READ',
@@ -175,4 +155,20 @@ annotate my.WorkItems with @(restrict: [
     grant: 'CREATE',
     to   : 'authenticated-user'
   },
+]);
+
+annotate my.Tags with @(restrict: [
+  {
+    grant: [
+      'READ',
+      'UPDATE',
+      'DELETE'
+    ],
+    to   : 'authenticated-user',
+    where: 'tenant = $user.tenant'
+  },
+  {
+    grant: 'CREATE',
+    to   : 'authenticated-user'
+  }
 ]);

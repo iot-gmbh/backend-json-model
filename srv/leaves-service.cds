@@ -4,15 +4,8 @@ service LeavesService @(requires: 'authenticated-user') {
   entity Leaves @(restrict: [
     {
       grant: '*',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'userManager = $user'
-    },
-    {
-      grant: '*',
       to   : 'authenticated-user',
-      where: 'user_userPrincipalName = $user'
+      where: 'user_userPrincipalName = $user or userManager = $user'
     },
     {
       grant: '*',
@@ -26,15 +19,8 @@ service LeavesService @(requires: 'authenticated-user') {
   entity Users @(restrict: [
     {
       grant: '*',
-      to   : 'team-lead',
-      // Association paths are currently supported on SAP HANA only
-      // https://cap.cloud.sap/docs/guides/authorization#association-paths
-      where: 'userManager = $user'
-    },
-    {
-      grant: '*',
       to   : 'authenticated-user',
-      where: 'userPrincipalName = $user'
+      where: 'userPrincipalName = $user or userManager = $user'
     },
     {
       grant: '*',
