@@ -451,12 +451,15 @@ sap.ui.define(
         },
 
         onCreateWorkItem() {
-          const startDate = this.byId("detailPage")
+          const splitApp = this.byId("splitApp");
+          const detailPage = this.byId("detailPage");
+          const startDate = detailPage
             .getBindingContext()
             .getProperty("completedDate");
 
           this._initNewWorkItem(startDate);
-          this.byId("detailPage").bindElement("/MyWorkItems/NEW");
+          detailPage.bindElement("/MyWorkItems/NEW");
+          splitApp.hideMaster();
           this.byId("titleInput").focus();
         },
 
@@ -471,7 +474,17 @@ sap.ui.define(
 
           this.byId("detailPage").bindElement(`/MyWorkItems/${index}`);
           this.getModel().setProperty("/MyCategoriesNestedAndFiltered", []);
-          // this.byId("hierarchySearch").focus();
+          this.byId("splitApp").toDetail(this.byId("detailPage"));
+        },
+
+        onPressToggleMaster() {
+          const splitApp = this.byId("splitApp");
+
+          if (splitApp.isMasterShown()) {
+            splitApp.toDetail(this.byId("detailPage"));
+          } else {
+            splitApp.toMaster(this.byId("masterPage"));
+          }
         },
 
         onSelectHierarchy(event) {
