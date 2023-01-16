@@ -9,11 +9,7 @@ service TimetrackingService @(requires: 'authenticated-user') {
     grant: '*',
     to   : 'authenticated-user',
     where: `assignedToUserPrincipalName = $user or 
-        managerUserPrincipalName = $user or
-        level0Manager = $user or 
-        level1Manager = $user or 
-        level2Manager = $user or 
-        level3Manager = $user
+        managerUserPrincipalName = $user
         `,
   }, ])                   as projection on my.WorkItems {
     *,
@@ -106,6 +102,8 @@ service TimetrackingService @(requires: 'authenticated-user') {
         location,
         parentPath,
         parent.ID                    as parent_ID,
+        assignedToUserPrincipalName,
+        managerUserPrincipalName,
         assignedTo.userPrincipalName as assignedTo_userPrincipalName,
         title,
         type
