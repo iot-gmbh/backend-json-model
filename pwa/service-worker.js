@@ -20,7 +20,12 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = ["/auth/signin", "/index.html"];
+const neverRespondToPaths = [
+  "/auth/signin",
+  "/auth/signout",
+  "/auth/redirect",
+  "/index.html",
+];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
