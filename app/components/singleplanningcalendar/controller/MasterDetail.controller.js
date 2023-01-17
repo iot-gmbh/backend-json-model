@@ -261,6 +261,12 @@ sap.ui.define(
 
           model.setProperty("/busy", true);
 
+          // TODO: Refactor performance improvements
+          workItem.__metadata.uri = workItem.__metadata.uri.replace(
+            "WorkItemsSlim",
+            "MyWorkItems"
+          );
+
           try {
             await model.remove(workItem);
 
