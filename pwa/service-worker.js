@@ -72,6 +72,8 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (comparePaths(event.request.url, neverRespondToPaths)) return;
   if (event.request.url === "https://project-planning.herokuapp.com/") return;
+  if (event.request.url.includes("https://project-planning.herokuapp.com/#"))
+    return;
   if (event.request.url.endsWith("/")) return;
 
   if (comparePaths(event.request.url, networkFirstPaths)) {
