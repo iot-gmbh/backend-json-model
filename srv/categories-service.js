@@ -64,11 +64,20 @@ module.exports = cds.service.impl(async function () {
 
   this.on("getMyCategoryTree", async (req) => {
     const results = await db.run(
-      SELECT.from("iot_planner_my_categories")
+      SELECT.columns([
+        "ID",
+        "title",
+        "path",
+        "parent_ID",
+        "absoluteReference",
+        "shallowReference",
+        "deepReference",
+      ]).from("iot_planner_my_categories")
         .where`user_userPrincipalName = ${req.user.id} and tenant = ${req.user.tenant}`
     );
 
-    return transformCategories(results);
+    // return transformCategories(results);
+    return results;
   });
 
   this.on("getMyCustomers", async () => {

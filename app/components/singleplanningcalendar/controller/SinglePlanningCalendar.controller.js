@@ -515,7 +515,7 @@ sap.ui.define(
           const appointments = workItems.map(
             ({ completedDate, activatedDate, isAllDay, ...appointment }) => ({
               ...appointment,
-              tags: appointment.tags.results,
+              // tags: appointment.tags.results,
               // completedDate,
               // activatedDate,
               activatedDate: isAllDay

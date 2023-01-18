@@ -9,11 +9,7 @@ service TimetrackingService @(requires: 'authenticated-user') {
     grant: '*',
     to   : 'authenticated-user',
     where: `assignedToUserPrincipalName = $user or 
-        managerUserPrincipalName = $user or
-        level0Manager = $user or 
-        level1Manager = $user or 
-        level2Manager = $user or 
-        level3Manager = $user
+        managerUserPrincipalName = $user
         `,
   }, ])                   as projection on my.WorkItems {
     *,
@@ -93,12 +89,32 @@ service TimetrackingService @(requires: 'authenticated-user') {
         'MSGraphEvent' as source : String
   };
 
+  entity WorkItemsSlim    as projection on MyWorkItems {
+    key ID,
+        activatedDate,
+        completedDate,
+        date,
+        dateString,
+        confirmed,
+        duration,
+        isAllDay,
+        isPrivate,
+        location,
+        parentPath,
+        parent.ID                    as parent_ID,
+        assignedToUserPrincipalName,
+        managerUserPrincipalName,
+        assignedTo.userPrincipalName as assignedTo_userPrincipalName,
+        title,
+        type
+  };
+
   action   removeDraft(ID : String, activatedDate : DateTime, completedDate : DateTime);
   action   resetToDraft(ID : String)                                         returns MyWorkItems;
-  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of MyWorkItems;
+  function getCalendarView(startDateTime : DateTime, endDateTime : DateTime) returns array of WorkItemsSlim;
   function getWorkItemByID(ID : String)                                      returns MyWorkItems;
   function categorizeWorkItem(workItem : MyWorkItems)                        returns MyWorkItems;
-  function getMyCategoryTree()                                               returns array of Categories;
+  function getMyCategoryTree()                                               returns array of CategoriesSlim;
   function getMyCustomers()                                                  returns array of Categories;
   function getMyProjects()                                                   returns array of Categories;
   function getMySubprojects()                                                returns array of Categories;
@@ -114,6 +130,16 @@ service TimetrackingService @(requires: 'authenticated-user') {
   @cds.redirection.target
   entity Categories       as projection on my.Categories where validFrom <= NOW()
   and                                                          validTo   >  NOW();
+
+  entity CategoriesSlim   as projection on Categories {
+    key ID,
+        parent.ID as parent_ID,
+        title,
+        path,
+        absoluteReference,
+        shallowReference,
+        deepReference,
+  };
 
   entity CategoriesLevel0 as projection on Categories {
         *,

@@ -20,7 +20,12 @@ const avoidCachingPaths = [];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
-const neverRespondToPaths = ["/auth/signin", "/index.html"];
+const neverRespondToPaths = [
+  "/auth/signin",
+  "/auth/signout",
+  "/auth/redirect",
+  "/index.html",
+];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
@@ -67,6 +72,8 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (comparePaths(event.request.url, neverRespondToPaths)) return;
   if (event.request.url === "https://project-planning.herokuapp.com/") return;
+  if (event.request.url.includes("https://project-planning.herokuapp.com/#"))
+    return;
   if (event.request.url.endsWith("/")) return;
 
   if (comparePaths(event.request.url, networkFirstPaths)) {
