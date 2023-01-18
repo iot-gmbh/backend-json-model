@@ -2,14 +2,14 @@ sap.ui.define([], () => ({
   /**
    * Rounds the number unit value to 2 digits
    * @public
-   * @param {string} sValue the number string to be rounded
+   * @param {string} value the number string to be rounded
    * @returns {string} sValue with 2 digits rounded
    */
-  toFixed2(sValue) {
-    if (!sValue) {
+  toFixed0(value) {
+    if (!value) {
       return "";
     }
-    return parseFloat(sValue).toFixed(2);
+    return parseFloat(value).toFixed(0);
   },
 
   getRelativeDuration(

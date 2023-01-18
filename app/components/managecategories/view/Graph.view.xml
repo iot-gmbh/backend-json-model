@@ -58,12 +58,12 @@
                     </Column>
                     <Column label="{i18n>totalDuration}" hAlign="End" width="15%">
                         <template>
-                            <m:ObjectNumber number="{path: 'totalDuration', formatter: '.formatter.toFixed2'}" unit="{=${totalDuration} ? 'h' : ''}" textAlign="End"/>
+                            <m:ObjectNumber number="{path: 'totalDuration', formatter: '.formatter.toFixed0'}" unit="{=${totalDuration} ? 'h' : ''}" textAlign="End"/>
                         </template>
                     </Column>
                     <Column label="{i18n>accumulatedDuration}" hAlign="End" width="15%">
                         <template>
-                            <m:ObjectNumber number="{path: 'accumulatedDuration', formatter: '.formatter.toFixed2'}" unit="{=${accumulatedDuration} ? 'h' : ''}" textAlign="End"/>
+                            <m:ObjectNumber number="{path: 'accumulatedDuration', formatter: '.formatter.toFixed0'}" unit="{=${accumulatedDuration} ? 'h' : ''}" textAlign="End"/>
                         </template>
                     </Column>
                 </columns>
