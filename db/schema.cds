@@ -57,6 +57,31 @@ entity Users : multitenant {
                             on leaves.user = $self;
 };
 
+view CategoryMembers as
+  select from Categories
+  left outer join Users
+    on Users.tenant = Categories.tenant
+  left outer join Users2Categories
+    on  Users.userPrincipalName = Users2Categories.user.userPrincipalName
+    and Users.tenant            = Users2Categories.tenant
+    and Categories.ID           = Users2Categories.category.ID
+    and Categories.tenant       = Users2Categories.tenant
+  {
+    key Users.userPrincipalName,
+    key Categories.ID as category_ID,
+        Categories.title,
+        Categories.tenant,
+        Users.displayName,
+        case
+          when
+            Users2Categories.ID is not null
+          then
+            true
+          else
+            false
+        end           as isMapped : Boolean
+  };
+
 entity Users2Categories : cuid, managed, multitenant {
   user        : Association to Users;
   category    : Association to Categories;
@@ -81,6 +106,7 @@ entity Categories : cuid, managed, relevance, multitenant {
   grandTotal          : Decimal;
   validFrom           : DateTime;
   validTo             : DateTime;
+  localPath           : String;
   level               : Association to CategoryLevels
                           on hierarchyLevel = level.hierarchyLevel;
   tags                : Association to many Tags2Categories
@@ -88,8 +114,8 @@ entity Categories : cuid, managed, relevance, multitenant {
 
   @assert.notNull: false
   manager             : Association to Users;
-  members             : Composition of many Users2Categories
-                          on members.category = $self;
+  members             : Composition of many CategoryMembers
+                          on members.category_ID = ID;
 
   @assert.notNull: false
   parent              : Association to Categories;

@@ -217,7 +217,7 @@ sap.ui.define(
 
           await model.load(`${ODataPath}/members`, {
             into: `${path}/members`,
-            sorters: [new Sorter("user_userPrincipalName")],
+            sorters: [new Sorter("displayName")],
           });
 
           this.getModel("worklistView").setProperty(
@@ -242,7 +242,7 @@ sap.ui.define(
           const category = dialog.getBindingContext().getObject();
 
           if (!category.parent_ID) {
-            delete category.parent_ID;
+            category.parent_ID = "2e74e68d-57c3-4e0b-9cb9-52cfaf7dbfcb"; // Dummy for ref-constraints
           }
 
           dialog.setBusy(true);
@@ -250,14 +250,20 @@ sap.ui.define(
           try {
             if (category.ID) {
               // Update
-              await model.update(category);
-            } else {
-              // Create
-              await model.create("/Categories", { ...category, children: [] });
+              await model.deepCreate("/Categories", {
+                ...category,
+                members: category.members.filter(({ isMapped }) => !!isMapped),
+                children: [],
+              });
             }
+            // else {
+            //   // Create
+            //   await model.create("/Categories", { ...category, children: [] });
+            // }
             this._closePopover();
           } catch (error) {
             // errorhandler
+            console.log(error);
           }
 
           dialog.setBusy(false);
@@ -403,8 +409,8 @@ sap.ui.define(
                 user_userPrincipalName,
                 displayName,
                 localPath,
-              },
-              false // synchronize
+              }
+              // false // synchronize
             );
           });
 
@@ -412,8 +418,8 @@ sap.ui.define(
             const obj = token.getBindingContext().getObject();
 
             model.remove(
-              obj,
-              false // synchronize
+              obj
+              // false // synchronize
             );
           });
         },
