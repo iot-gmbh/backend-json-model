@@ -12,7 +12,7 @@ sap.ui.define(
         UIComponent.prototype.init.apply(this, ...args);
 
         const backendJSONModel = new BackendJSONModel(servicePath, {
-          // useBatch: false,
+          useBatch: false,
         });
 
         const ODataModel = backendJSONModel.getODataModel();

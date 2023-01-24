@@ -6,7 +6,7 @@ require("dotenv").config();
 
 cds.on("bootstrap", async (app) => {
   app.use(proxy());
-  await msalAuth(app);
+  app.use(msalAuth());
 });
 
 module.exports = cds.server;
