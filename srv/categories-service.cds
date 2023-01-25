@@ -42,7 +42,7 @@ service CategoriesService @(requires: 'authenticated-user') {
 
   entity Users2Categories as projection on my.Users2Categories {
     *,
-    user.displayName
+    user.displayName  
   };
 
   entity Leaves           as projection on my.Leaves;

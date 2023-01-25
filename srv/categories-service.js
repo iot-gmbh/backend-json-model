@@ -1,8 +1,21 @@
 const cds = require("@sap/cds");
 
+const UPSERT = (entity) => ({
+  with: (values) => ({
+    where: async (condition) => {
+      const existingResult = await SELECT.one.from(entity).where(condition);
+      if (existingResult === null) {
+        return INSERT.into(entity).entries([values]);
+      }
+      return UPDATE(entity).with(values).where(condition);
+    },
+  }),
+});
+
 module.exports = cds.service.impl(async function () {
   const db = await cds.connect.to("db");
-  const { Tags, Tags2Categories, Categories } = db.entities("iot.planner");
+  const { Tags, Tags2Categories, Categories, Users2Categories } =
+    db.entities("iot.planner");
 
   function transformCategories(rawCategories, sum = 1) {
     return rawCategories.map(
@@ -55,11 +68,38 @@ module.exports = cds.service.impl(async function () {
     );
   }
 
-  this.before("CREATE", "Categories", (req) => {
+  this.on("CREATE", "Categories", async (req) => {
+    const { tenant } = req.user;
+    req.data.tenant = tenant;
+
+    const { members, ...category } = req.data;
+    // eslint-disable-next-line no-return-assign, no-param-reassign
+
+    await UPSERT(Categories).with(category);
+
+    // eslint-disable-next-line no-await-in-loop
+    await DELETE.from(Users2Categories).where({ category_ID: category.ID });
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const member of members) {
+      member.tenant = tenant;
+
+      // eslint-disable-next-line no-await-in-loop
+      await INSERT.into(Users2Categories).entries({
+        user_userPrincipalName: member.userPrincipalName,
+        category_ID: member.category_ID,
+        tenant,
+      });
+    }
+
+    return category;
+  });
+
+  this.before("CREATE", "Users2Categories", (req) => {
     const { tenant } = req.user;
     req.data.tenant = tenant;
     // eslint-disable-next-line no-return-assign, no-param-reassign
-    req.data.members.forEach((member) => (member.tenant = tenant));
+    // req.data.members.forEach((member) => (member.tenant = tenant));
   });
 
   this.on("getMyCategoryTree", async (req) => {

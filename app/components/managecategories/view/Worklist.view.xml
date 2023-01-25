@@ -115,8 +115,11 @@
                     <Label text="{i18n>bonusRelevance}"/>
                     <Input id="bonusRelevanceInput" value="{bonusRelevance}"/>
                     <core:Title text="{i18n>members}"/>
-                    <Label text="{i18n>members}" labelFor="membersInput"/>
-                    <MultiInput id="membersInput" tokens="{path: 'members'}" suggestionItems="{
+                    <!-- <Label text="{i18n>members}" labelFor="membersInput"/> -->
+                    <List id="membersList" items="{members}" mode="MultiSelect">
+                        <StandardListItem title="{displayName}" selected="{isMapped}"/>
+                    </List>
+                    <!-- <MultiInput id="membersInput" tokens="{path: 'members'}" suggestionItems="{
                                     path: 'OData>/Users',
                                     sorter: { path: 'displayName' }
                                 }" showValueHelp="false" tokenUpdate="onUpdateUsers2Categories">
@@ -126,7 +129,7 @@
                         <tokens >
                             <Token key="{user_userPrincipalName}" text="{displayName}"/>
                         </tokens>
-                    </MultiInput>
+                    </MultiInput> -->
                 </f:SimpleForm>
                 <customHeader>
                     <Bar>

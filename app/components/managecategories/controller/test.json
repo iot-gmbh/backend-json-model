@@ -1,0 +1,231 @@
+--batch_b638-e17f-d98f
+Content-Type: multipart/mixed; boundary=changeset_08ac-ecdb-f621
+
+--changeset_08ac-ecdb-f621
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST Categories HTTP/1.1
+sap-contextid-accept: header
+Accept: application/json
+Accept-Language: en
+DataServiceVersion: 2.0
+MaxDataServiceVersion: 2.0
+X-Requested-With: XMLHttpRequest
+Content-Type: application/json
+Content-ID: id-1674252140553-48
+Content-Length: 7648
+
+{
+    "ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+    "title": "CAS AG",
+    "path": "CAS AG",
+    "absoluteReference": null,
+    "shallowReference": "CAS",
+    "deepReference": "CAS",
+    "members": [
+        {
+            "userPrincipalName": "Andreas.Schmidt@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Andreas Schmidt",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Andreas.Schmidt%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Benedikt.Hoelker@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Benedikt Hölker",
+            "IsMapped": true,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Benedikt.Hoelker%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "benedikt.hoelker@partner.esprit.com",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Benedikt Hölker (Esprit)",
+            "IsMapped": true,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='benedikt.hoelker%40partner.esprit.com',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "benedikt.hoelker@gmail.com",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Benedikt Hölker (Gmail)",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='benedikt.hoelker%40gmail.com',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Daniel.Mextorf@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Daniel Mextorf",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Daniel.Mextorf%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Dennis.Kiedrowicz@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Dennis Kiedrowicz",
+            "IsMapped": true,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Dennis.Kiedrowicz%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Leonhard.Tobisch@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Leonhard Tobisch",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Leonhard.Tobisch%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Markus.Lueck@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Markus Lück",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Markus.Lueck%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "martin.lipinski@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Martin Lipinski",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='martin.lipinski%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Nadine.Christ@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Nadine Christ",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Nadine.Christ%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "Nick.Obendorf@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Nick Obendorf",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='Nick.Obendorf%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "nick.obendorf@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "Nick Obendorf (kleingeschrieben)",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='nick.obendorf%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "pjp-admin@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "PJP Admin",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='pjp-admin%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "pjp-mitarbeiter@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "PJP Mitarbeiter",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='pjp-mitarbeiter%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "pjp-projektleiter@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "PJP Projektleiter",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='pjp-projektleiter%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        },
+        {
+            "userPrincipalName": "pjp-teamleiter@iot-online.de",
+            "category_ID": "988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869",
+            "title": "CAS AG",
+            "tenant": "d439e362-ecdf-4d78-8fed-86c7c639b131",
+            "displayName": "PJP Teamleiter",
+            "IsMapped": false,
+            "__metadata": {
+                "type": "CategoriesService.CategoryMembers",
+                "uri": "http://localhost:4004/v2/categories/CategoryMembers(userPrincipalName='pjp-teamleiter%40iot-online.de',category_ID=guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+            }
+        }
+    ],
+    "parent": {
+        "__deferred": {
+            "uri": "http://localhost:4004/v2/categories/Categories(guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')/parent"
+        }
+    },
+    "children": [],
+    "__metadata": {
+        "type": "CategoriesService.Categories",
+        "uri": "http://localhost:4004/v2/categories/Categories(guid'988d9c8a-3aa8-4c79-a5c5-6e7b0ace8869')"
+    },
+    "localPath": "/Categories/0"
+}
