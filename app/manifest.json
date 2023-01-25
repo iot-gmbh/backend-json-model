@@ -2,6 +2,13 @@
   "_version": "1.40.0",
   "sap.app": {
     "id": "iot.planner",
+    "i18n": {
+      "bundleUrl": "i18n/i18n.properties",
+      "supportedLocales": [
+        "en"
+      ],
+      "fallbackLocale": "en"
+    },
     "applicationVersion": {
       "version": "1.0.0"
     }
