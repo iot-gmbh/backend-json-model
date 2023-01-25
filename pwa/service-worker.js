@@ -14,9 +14,9 @@ const precacheFiles = [
 
 const offlineFallbackPage = "offline.html";
 
-const networkFirstPaths = ["//v2/.*/", "/v2"];
+const networkFirstPaths = [];
 
-const avoidCachingPaths = [];
+const avoidCachingPaths = ["//v2/.*/", "/v2"];
 // const avoidCachingPaths = ["/auth"];
 
 // const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];

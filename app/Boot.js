@@ -6,6 +6,7 @@ sap.ui.define(
     "sap/ui/core/library", // avoid library preload of sap.ui.core
     "sap/ui/comp/library", // avoid library preload of sap.ui.core
     "sap/ui/table/library", // avoid library preload of sap.ui.core
+    "sap/ui/layout/library", // avoid library preload of sap.ui.core
     "sap/uxap/library", // avoid library preload of sap.ui.core
     "errorhandler/library", // avoid library preload of sap.ui.core
   ],
@@ -17,6 +18,7 @@ sap.ui.define(
       Core.getLibraryResourceBundle("sap.f", true),
       Core.getLibraryResourceBundle("sap.ui.core", true),
       Core.getLibraryResourceBundle("sap.ui.comp", true),
+      Core.getLibraryResourceBundle("sap.ui.layout", true),
       Core.getLibraryResourceBundle("sap.ui.table", true),
       Core.getLibraryResourceBundle("sap.uxap", true),
       Core.getLibraryResourceBundle("errorhandler", true),
