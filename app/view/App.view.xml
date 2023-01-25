@@ -1,7 +1,5 @@
 <mvc:View controllerName="iot.planner.controller.App"
-    xmlns:f="sap.f"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns:c="iot.planner.controls"
     xmlns="sap.m">
 
     <!-- Make it 99% to prevent ugly 'double' scroll-bars -->

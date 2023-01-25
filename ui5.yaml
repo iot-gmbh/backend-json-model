@@ -49,14 +49,9 @@ builder:
             resolve: true
           - mode: preload
             filters:
-              - iot/planner/Component.js
-              - iot/planner/components/analyticsalpv2/Component.js
-              - iot/planner/components/billing/Component.js
-              - iot/planner/components/leaves/Component.js
-              - iot/planner/components/managecategories/Component.js
-              - iot/planner/components/singleplanningcalendar/Component.js
-              - iot/planner/components/usersv2/Component.js
-              - iot/planner/components/workitemsiotv2/Component.js
+              - iot/planner/**
+              # - iot/planner/components/**
+              - iot/planner/components/singleplanningcalendar/**
             resolve: true
             sort: true
       bundleOptions:
@@ -112,19 +107,20 @@ framework:
   libraries:
     - name: sap.m
     - name: sap.f
-    - name: sap.ushell
-    - name: sap.suite.ui.generic.template
-    - name: sap.ui.generic.app
+    # - name: sap.ushell
+    # - name: sap.suite.ui.generic.template
+    # - name: sap.ui.generic.app
+    - name: sap.uxap
     - name: sap.ui.comp
     - name: sap.ui.core
     - name: sap.ui.table
     - name: sap.ui.unified
     - name: sap.ui.layout
-    - name: sap.fe.templates
-    - name: sap.fe.macros
-    - name: sap.fe.common
-    - name: sap.fe.core
-    - name: sap.ui.mdc
+    # - name: sap.fe.templates
+    # - name: sap.fe.macros
+    # - name: sap.fe.common
     # - name: sap.fe.core
-    - name: themelib_sap_horizon
+    # - name: sap.ui.mdc
+    # - name: sap.fe.core
+    # - name: themelib_sap_horizon
     - name: themelib_sap_fiori_3

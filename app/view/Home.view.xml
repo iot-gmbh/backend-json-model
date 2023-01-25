@@ -1,6 +1,6 @@
-<mvc:View xmlns:layout="sap.ui.layout"
+<mvc:View controllerName="iot.planner.controller.Home"
+    xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
-    xmlns:mvc="sap.ui.core.mvc" controllerName="iot.planner.controller.Home"
     xmlns="sap.m"
     xmlns:f="sap.f" displayBlock="true">
     <Page showFooter="false" showHeader="false">

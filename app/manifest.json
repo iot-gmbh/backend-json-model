@@ -9,11 +9,13 @@
   "sap.ui5": {
     "dependencies": {
       "libs": {
+        "sap.ui.core": {},
         "sap.m": {},
         "sap.f": {},
-        "sap.ui.core": {},
-        "sap.ui.unified": {},
+        "sap.uxap": {},
         "sap.ui.comp": {},
+        "sap.ui.layout": {},
+        "sap.ui.unified": {},
         "sap.ui.table": {}
       }
     },
@@ -46,7 +48,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "path": "iot.planner.view",
+        "viewPath": "iot.planner.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
@@ -153,9 +155,9 @@
       ],
       "targets": {
         "home": {
-          "type": "View",
-          "id": "home",
-          "name": "Home",
+          "viewName": "Home",
+          "viewId": "home",
+          "viewLevel": 0,
           "title": "Home"
         },
         "manageCategories": {
