@@ -14,6 +14,10 @@
     "url": "https://github.com/iot-gmbh/backend-json-model.git"
   },
   "devDependencies": {
-    "semantic-release": "^19.0.5"
+    "semantic-release": "^19.0.5",
+    "ui5-tooling-modules": "^0.7.8"
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2"
   }
 }
