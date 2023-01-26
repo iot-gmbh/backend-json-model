@@ -176,8 +176,8 @@ sap.ui.define(
           model.setProperty("/busy", true);
 
           try {
-            await this.getRootComponent().awaitLogin;
-            await model.metadataLoaded();
+            // await this.getRootComponent().awaitLogin;
+            // await model.metadataLoaded();
           } catch (error) {
             // handled by errorhandler
             model.setProperty("/busy", false);
