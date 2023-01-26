@@ -1,7 +1,0 @@
-<mvc:View displayBlock="true"
-    xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc">
-
-    <App id="manageCategoriesApp" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}"/>
-
-</mvc:View>

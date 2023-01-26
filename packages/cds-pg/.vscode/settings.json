@@ -1,6 +1,0 @@
-{
-  "editor.formatOnSave": true,
-  "[sql]": {
-    "editor.formatOnSave": false
-  }
-}

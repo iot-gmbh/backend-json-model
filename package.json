@@ -1,111 +1,23 @@
 {
-  "name": "project-planning",
-  "version": "0.0.0-development",
-  "description": "Plan & Track projects",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iot-gmbh/project-planning.git"
-  },
-  "author": {
-    "name": "Benedikt Hölker und Daniel Mextorf"
-  },
-  "license": "UNLICENSED",
-  "private": true,
-  "engines": {
-    "node": "16"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/backend-json-model",
-      "packages/cds-msal-auth",
-      "packages/cds-azure-ad",
-      "packages/cds-pg",
-      "packages/errorhandler"
-    ]
-  },
-  "dependencies": {
-    "@azure/msal-node": "^1.11.0",
-    "@iot-gmbh/ui5-errorhandler": "^2.2.19",
-    "@microsoft/microsoft-graph-client": "^3.0.2",
-    "@sap/audit-logging": "^5.5.4",
-    "@sap/cds": "^5.9.8",
-    "@sap/cds-odata-v2-adapter-proxy": "^1.9.17",
-    "axios": "^0.27.2",
-    "azure-devops-node-api": "^11.2.0",
-    "backend-json-model": "^1.0.0",
-    "cds-azure-ad": "^0.0.21",
-    "cds-msal-auth": "https://github.com/BenediktHoelker/cds-msal-auth.git",
-    "cds-pg": "^0.1.30",
-    "cds-swagger-ui-express": "^0.5.0",
-    "cors": "^2.8.5",
-    "didyoumean2": "^5.0.0",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "moment": "^2.29.4",
-    "node-fetch": "^2.6.1",
-    "uuid": "^8.3.2",
-    "validator": "^13.7.0"
-  },
-  "devDependencies": {
-    "@sap/eslint-plugin-cds": "^2.4.1",
-    "@sap/ux-specification": "^1.102.14",
-    "@ui5/cli": "^2.14.9",
-    "cds-pg-migra": "^1.1.1",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.19.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "2.7.1",
-    "ui5-middleware-simpleproxy": "^0.9.1",
-    "ui5-task-pwa-enabler": "^0.3.1"
-  },
+  "name": "backend-json-model",
+  "version": "1.2.2",
+  "description": "Merge JSON-model and ODataV2-model",
+  "main": "index.js",
   "scripts": {
-    "start": "npm run set-default-env:dev && run-p start:cds start:ui5",
-    "start:ui5": "ui5 serve",
-    "start:cds": "cds run",
-    "test": "npm run set-default-env:test && cross-env PORT=8080 cds run --profile test",
-    "lint": "eslint srv && eslint app",
-    "lint:fix:app": "eslint app --fix",
-    "lint:fix:srv": "eslint srv --fix",
-    "format": "prettier --write --plugin-search-dir=. .",
-    "build": "cds build --production && npm run build:ui:pwa:sc",
-    "build:ui": "ui5 build --clean-dest self-contained --all",
-    "build:copy-pwa-config": "cp pwa/service-worker.js dist/service-worker.js && cp pwa/manifest.webmanifest dist/manifest.webmanifest && cp pwa/index.html dist/index.html",
-    "build:ui:pwa:sc": "ui5 build self-contained --all --clean-dest && npm run build:copy-pwa-config",
-    "build:ui:pwa": "ui5 build --clean-dest && npm run build:copy-pwa-config",
-    "build:ui:dev": "ui5 build dev --clean-dest --all",
-    "deploy": "npm run set-default-env:dev && cds-pg-migra",
-    "deploy:dev:overwrite": "npm run set-default-env:dev && cds-pg-migra -o",
-    "deploy:prod": "npm run set-default-env:prod && cds-pg-migra",
-    "deploy:prod:overwrite": "npm run set-default-env:prod && cds-pg-migra -o",
-    "release": "npm run build:ui:pwa && npm run build",
-    "docker:start:pg": "docker-compose -f docker-compose.yaml up -d",
-    "set-default-env:dev": "bash ./set-env.sh development",
-    "set-default-env:test": "bash ./set-env.sh test",
-    "set-default-env:prod": "bash ./set-env.sh production",
-    "dump-heroku": "heroku pg:backups:capture --app iot-project-planning && heroku pg:backups:download --app iot-project-planning",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release"
   },
-  "files": [
-    "db",
-    "srv",
-    "app"
-  ],
-  "ui5": {
-    "dependencies": [
-      "ui5-middleware-simpleproxy",
-      "ui5-task-pwa-enabler",
-      "@iot-gmbh/ui5-errorhandler",
-      "backend-json-model"
-    ]
+  "author": "Benedikt Hölker",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iot-gmbh/backend-json-model.git"
   },
-  "publishConfig": {
-    "access": "restricted"
+  "devDependencies": {
+    "semantic-release": "^19.0.5",
+    "ui5-tooling-modules": "^0.7.8"
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2"
   }
 }

@@ -1,5 +1,0 @@
-<mvc:View height="100%" controllerName="iot.planner.controller.Home"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m">
-	<MessagePage icon="sap-icon://message-error" text="Metadata could not be loaded probably due to lacking authorizations." description="" showHeader="false" />
-</mvc:View>
