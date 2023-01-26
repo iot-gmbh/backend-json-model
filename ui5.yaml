@@ -50,47 +50,13 @@ builder:
           - mode: preload
             filters:
               - iot/planner/**
-              # - iot/planner/components/**
               - iot/planner/components/singleplanningcalendar/**
+              - iot/planner/components/managecategories/**
             resolve: true
             sort: true
       bundleOptions:
         optimize: true
         usePredefineCalls: true
-  # customTasks:
-  # - name: ui5-task-pwa-enabler
-  #   afterTask: generateVersionInfo
-  #   configuration:
-  #     serviceWorker:
-  #       strategy: Advanced-Caching
-  #       offlinePage: offline.html
-  #       preCache:
-  #         - "controller/*"
-  #         - "*.html"
-  #         - "view/*"
-  #         - "images/*"
-  #       networkFirst:
-  #         - /\/v2\/.*/
-  #       avoidCaching:
-  #         - /\/auth\/signin\/.*/
-  #         - /\/auth\/.*/
-  #         # - https://login.microsoftonline.com/\/.*/
-  #     manifest:
-  #       short_name: PJP
-  #       name: IOT Project Planning
-  #       description: Register and analyse your work
-  #       icons:
-  #         - src: images/iot_logo.png
-  #           type: image/png
-  #           sizes: 198x199
-  #         # - src: images/iot_logo.png
-  #         #   type: image/png
-  #         #   sizes: 512x512
-  #       start_url: /index.html
-  #       scope: /
-  #       background_color: "#EFF4F9"
-  #       theme_color: "#3F5161"
-  #       display: standalone
 server:
   customMiddleware:
     - name: ui5-middleware-simpleproxy
@@ -99,7 +65,6 @@ server:
       configuration:
         excludePatterns:
           - "/resources/**"
-          # - "/launchpad.html"
         baseUri: http://localhost:4004/
 framework:
   name: SAPUI5
@@ -107,9 +72,8 @@ framework:
   libraries:
     - name: sap.m
     - name: sap.f
-    # - name: sap.ushell
-    # - name: sap.suite.ui.generic.template
-    # - name: sap.ui.generic.app
+    - name: sap.suite.ui.generic.template
+    - name: sap.ui.generic.app
     - name: sap.uxap
     - name: sap.ui.comp
     - name: sap.ui.core
@@ -121,6 +85,5 @@ framework:
     # - name: sap.fe.common
     # - name: sap.fe.core
     # - name: sap.ui.mdc
-    # - name: sap.fe.core
     # - name: themelib_sap_horizon
     - name: themelib_sap_fiori_3

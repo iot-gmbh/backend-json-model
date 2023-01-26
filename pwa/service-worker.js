@@ -11,7 +11,8 @@ const precacheFiles = [
   "/view/Home.view.xml",
   "/controller/Home.controller.js",
   "/controller/App.controller.js",
-  "/resources/sap-ui-custom.js",
+  "/resources/custom-boot.js",
+  "/Component-bundle.js",
 ];
 
 const offlineFallbackPage = "offline.html";

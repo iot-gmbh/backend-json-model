@@ -105,20 +105,6 @@
       "backend-json-model"
     ]
   },
-  "cds": {
-    "requires": {
-      "microsoft.graph": {
-        "kind": "odata",
-        "model": "srv\\external\\msgraph",
-        "credentials": {
-          "url": "https://graph.microsoft.com/v1.0/me"
-        }
-      }
-    }
-  },
-  "sapux": [
-    "app/analytics-alp"
-  ],
   "publishConfig": {
     "access": "restricted"
   }

@@ -15,6 +15,13 @@
     }
   },
   "requires": {
+    "microsoft.graph": {
+      "kind": "odata",
+      "model": "srv\\external\\msgraph",
+      "credentials": {
+        "url": "https://graph.microsoft.com/v1.0/me"
+      }
+    },
     "auth": {
       "restrict_all_services": false,
       "impl": "cds-msal-auth",
