@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-restricted-globals */
 // This is the service worker with the Advanced caching
 
 const CACHE = "advanced-caching-1668068768867";
@@ -13,24 +15,19 @@ const precacheFiles = [
 ];
 
 const offlineFallbackPage = "offline.html";
-
 const networkFirstPaths = [];
-
 const avoidCachingPaths = [];
-// const avoidCachingPaths = ["/auth"];
 
-// const neverRespondToPaths = ["//auth//.*/", "//login.microsoftonline.com//.*/"];
 const neverRespondToPaths = [
-  "/auth/signin",
-  "/auth/signout",
-  "/auth/redirect",
-  "/index.html",
-  "//v2/.*/",
-  "/v2",
+  /\/auth\/signin/,
+  /\/auth\/signout/,
+  /\/auth\/redirect/,
+  /\/index.html/,
+  /\/v2(?!.*\$metadata)/,
 ];
 
 function pathComparer(requestUrl, pathRegEx) {
-  return requestUrl.match(new RegExp(pathRegEx));
+  return requestUrl.match(pathRegEx);
 }
 
 function comparePaths(requestUrl, pathsArray) {
@@ -46,44 +43,28 @@ function comparePaths(requestUrl, pathsArray) {
   return false;
 }
 
-self.addEventListener("install", (event) => {
-  console.log("[Service Worker] Install Event processing");
+function fromCache(request) {
+  // Check to see if you have it in the cache
+  // Return response
+  // If not in the cache, then return error page
+  return caches.open(CACHE).then((cache) =>
+    cache.match(request).then((matching) => {
+      if (!matching || matching.status === 404) {
+        return Promise.reject("no-match");
+      }
 
-  console.log("[Service Worker] Skip waiting on install");
-  self.skipWaiting();
-
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => {
-      console.log("[Service Worker] Caching pages during install");
-
-      return cache
-        .addAll(precacheFiles)
-        .then(() => cache.add(offlineFallbackPage));
+      return matching;
     })
   );
-});
+}
 
-// Allow sw to control of current page
-self.addEventListener("activate", (event) => {
-  console.log("[Service Worker] Claiming clients for current page");
-  event.waitUntil(self.clients.claim());
-});
-
-// If any fetch fails, it will look for the request in the cache and serve it from there first
-self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-  if (comparePaths(event.request.url, neverRespondToPaths)) return;
-  if (event.request.url === "https://project-planning.herokuapp.com/") return;
-  if (event.request.url.includes("https://project-planning.herokuapp.com/#"))
-    return;
-  if (event.request.url.endsWith("/")) return;
-
-  if (comparePaths(event.request.url, networkFirstPaths)) {
-    networkFirstFetch(event);
-  } else {
-    cacheFirstFetch(event);
+function updateCache(request, response) {
+  if (!comparePaths(request.url, avoidCachingPaths)) {
+    return caches.open(CACHE).then((cache) => cache.put(request, response));
   }
-});
+
+  return Promise.resolve();
+}
 
 function cacheFirstFetch(event) {
   event.respondWith(
@@ -95,8 +76,8 @@ function cacheFirstFetch(event) {
         // file to use the next time we show view
         event.waitUntil(
           fetch(event.request)
-            .then((response) => {
-              updateCache(event.request, response);
+            .then((resp) => {
+              updateCache(event.request, resp);
             })
             .catch((error) => {
               console.log(error);
@@ -153,25 +134,41 @@ function networkFirstFetch(event) {
   );
 }
 
-function fromCache(request) {
-  // Check to see if you have it in the cache
-  // Return response
-  // If not in the cache, then return error page
-  return caches.open(CACHE).then((cache) =>
-    cache.match(request).then((matching) => {
-      if (!matching || matching.status === 404) {
-        return Promise.reject("no-match");
-      }
+self.addEventListener("install", (event) => {
+  console.log("[Service Worker] Install Event processing");
 
-      return matching;
+  console.log("[Service Worker] Skip waiting on install");
+  self.skipWaiting();
+
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => {
+      console.log("[Service Worker] Caching pages during install");
+
+      return cache
+        .addAll(precacheFiles)
+        .then(() => cache.add(offlineFallbackPage));
     })
   );
-}
+});
 
-function updateCache(request, response) {
-  if (!comparePaths(request.url, avoidCachingPaths)) {
-    return caches.open(CACHE).then((cache) => cache.put(request, response));
+// Allow sw to control of current page
+self.addEventListener("activate", (event) => {
+  console.log("[Service Worker] Claiming clients for current page");
+  event.waitUntil(self.clients.claim());
+});
+
+// If any fetch fails, it will look for the request in the cache and serve it from there first
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+  if (comparePaths(event.request.url, neverRespondToPaths)) return;
+  if (event.request.url === "https://project-planning.herokuapp.com/") return;
+  if (event.request.url.includes("https://project-planning.herokuapp.com/#"))
+    return;
+  if (event.request.url.endsWith("/")) return;
+
+  if (comparePaths(event.request.url, networkFirstPaths)) {
+    networkFirstFetch(event);
+  } else {
+    cacheFirstFetch(event);
   }
-
-  return Promise.resolve();
-}
+});
