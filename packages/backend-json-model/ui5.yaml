@@ -1,8 +1,0 @@
-specVersion: "2.6"
-type: module
-metadata:
-  name: backend-json-model
-resources:
-  configuration:
-    paths:
-      "/resources/iot/": "./" # note the trailing slash!

@@ -48,6 +48,9 @@ Subtrees used:
 - https://github.com/iot-gmbh/cds-pg-migra.git
 - https://github.com/iot-gmbh/cds-pg.git
 
+Templates:
+- git subtree pull --prefix packages/backend-json-model https://github.com/iot-gmbh/backend-json-model.git main --squash
+
 # UI5-apps
 
 The most important app is the [single-planning-calendar](/app/single-planning-calendar/). New work-items are registered via this app. Multiple admin apps provide functionality to edit projects, users or customers (...). The single-planning-calendar is as of 2022-03-02 the only "UI5-app", all other apps are "Fiori elements apps" - generated out of the service's annotations.
